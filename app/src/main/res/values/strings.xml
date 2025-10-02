@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Alumni_PortaL</string>
+    <string name="login">Login</string>
+    <string name="signup_prompt">New here? Sign Up</string>
+    <string name="signup_action_description">Sign up for a new account</string>
+    <string name="logo">Logo</string>
+</resources>
