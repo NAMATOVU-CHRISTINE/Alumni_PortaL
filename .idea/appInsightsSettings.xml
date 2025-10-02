@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.christine.alumniportal" />
+                  <option name="mobileSdkAppId" value="1:511866402860:android:c488db0a7a32cea8f3b989" />
+                  <option name="projectId" value="alumniportal-198ec" />
+                  <option name="projectNumber" value="511866402860" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

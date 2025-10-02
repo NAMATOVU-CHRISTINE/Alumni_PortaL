@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/signupMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background_dark"
-    tools:context=".MainActivity">
+    tools:context=".SignupActivity">
 
     <!-- Circle Logo -->
     <de.hdodenhof.circleimageview.CircleImageView
@@ -28,7 +28,7 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alumni Portal"
+        android:text="Alumni Signup"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -39,7 +39,7 @@
 
     <!-- Card for Inputs -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/loginCard"
+        android:id="@+id/signupCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -58,21 +58,45 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Email Input -->
+            <!-- Full Name -->
             <EditText
-                android:id="@+id/email"
+                android:id="@+id/fullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
+                android:hint="Full Name"
+                android:inputType="textPersonName"
+                android:padding="14dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:background="@drawable/input_dark"/>
+
+            <!-- Student ID -->
+            <EditText
+                android:id="@+id/studentID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Student ID / Reg. Number"
+                android:inputType="text"
+                android:padding="14dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:background="@drawable/input_dark"/>
+
+            <!-- Personal Email -->
+            <EditText
+                android:id="@+id/personalEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Personal Email"
                 android:inputType="textEmailAddress"
                 android:padding="14dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AAAAAA"
-                android:background="@drawable/input_dark"
-                android:importantForAutofill="yes"
-                android:autofillHints="emailAddress" />
+                android:background="@drawable/input_dark"/>
 
-            <!-- Password Input -->
+            <!-- Password -->
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
@@ -83,44 +107,42 @@
                 android:padding="14dp"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AAAAAA"
-                android:background="@drawable/input_dark"
-                android:importantForAutofill="yes"
-                android:autofillHints="password"/>
+                android:background="@drawable/input_dark"/>
 
-            <!-- Toggle Password Visibility -->
-            <ImageView
-                android:id="@+id/togglePassword"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="end"
-                android:layout_marginTop="-40dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_visibility"
-                android:contentDescription="Show/Hide Password"
-                android:clickable="true"
-                android:focusable="true"/>
+            <!-- Confirm Password -->
+            <EditText
+                android:id="@+id/confirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:padding="14dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:background="@drawable/input_dark"/>
 
-            <!-- Login Button -->
+            <!-- Sign Up Button -->
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/signupButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Login"
+                android:text="Sign Up"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:background="@drawable/btn_gradient_dark"
-                android:enabled="false"
-                android:padding="12dp" />
+                android:padding="12dp"/>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Sign Up Link -->
+    <!-- Back to Login Link -->
     <TextView
-        android:id="@+id/signupText"
+        android:id="@+id/backToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New here? Sign Up"
+        android:text="Already have an account? Login"
         android:textColor="#1DB954"
         android:textStyle="bold"
         android:layout_marginBottom="32dp"
