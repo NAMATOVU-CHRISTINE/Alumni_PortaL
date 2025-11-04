@@ -1,12 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Alumni_Portal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primaryGreen</item>
-        <item name="colorPrimaryVariant">@color/primaryGreenDark</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/primaryGreen</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <item name="materialButtonStyle">@style/Widget.MaterialComponents.Button</item>
+    <!-- Base application theme for night mode. -->
+    <style name="Theme.Alumni_Portal" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary brand color (Green). -->
+        <item name="colorPrimary">@color/must_green</item>
+        <item name="colorPrimaryVariant">@color/must_green_dark</item>
+        <item name="colorOnPrimary">@color/white</item> <!-- Text on green surfaces. -->
+
+        <!-- Secondary brand color (Gold). -->
+        <item name="colorSecondary">@color/must_gold</item>
+        <item name="colorOnSecondary">@color/black</item> <!-- Text on gold surfaces. -->
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Set background and surface to dark gray. -->
+        <item name="android:colorBackground">@color/dark_gray</item>
+        <item name="colorSurface">@color/dark_gray</item>
+
+        <!-- Set default text colors to white for readability. -->
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+
     </style>
-
-
 </resources>

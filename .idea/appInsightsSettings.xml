@@ -3,13 +3,27 @@
   <component name="AppInsightsSettings">
     <option name="tabSettings">
       <map>
+        <entry key="Android Vitals">
+          <value>
+            <InsightsFilterSettings>
+              <option name="connection">
+                <ConnectionSetting>
+                  <option name="appId" value="micheal.must.signuplogin" />
+                </ConnectionSetting>
+              </option>
+              <option name="signal" value="SIGNAL_UNSPECIFIED" />
+              <option name="timeIntervalDays" value="SEVEN_DAYS" />
+              <option name="visibilityType" value="ALL" />
+            </InsightsFilterSettings>
+          </value>
+        </entry>
         <entry key="Firebase Crashlytics">
           <value>
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.christine.alumniportal" />
-                  <option name="mobileSdkAppId" value="1:511866402860:android:c488db0a7a32cea8f3b989" />
+                  <option name="appId" value="com.example.alumni_portal" />
+                  <option name="mobileSdkAppId" value="1:511866402860:android:5ac7f30fd0cea70ff3b989" />
                   <option name="projectId" value="alumniportal-198ec" />
                   <option name="projectNumber" value="511866402860" />
                 </ConnectionSetting>

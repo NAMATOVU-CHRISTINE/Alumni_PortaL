@@ -110,7 +110,7 @@ public class SignupActivity extends AppCompatActivity {
                         sendVerificationEmail(firebaseUser, newUser);
                     }
                 } else {
-                    if (auth.getException() instanceof FirebaseAuthUserCollisionException) {
+                    if (authTask.getException() instanceof FirebaseAuthUserCollisionException) {
                         binding.personalEmail.setError("This email address is already registered.");
                     } else {
                         Log.e(TAG, "createUserWithEmail failed", authTask.getException());

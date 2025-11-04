@@ -8,7 +8,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.christine.alumniportal"
+        applicationId = "com.example.alumni_portal"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -38,14 +38,49 @@ android {
 dependencies {
 
     implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.activity)
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation("com.google.firebase:firebase-auth:23.0.0")
-    implementation("com.google.firebase:firebase-firestore:25.0.0")
+
+    // Firebase - Bill of Materials (BOM)
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-database")
+
+    // MVVM & Lifecycle Components - Using explicit versions
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.8.0")
+    implementation("androidx.activity:activity:1.9.0")
+    implementation("androidx.fragment:fragment:1.7.1")
     
+    // Material Design for UI - Using explicit version
+    implementation("com.google.android.material:material:1.12.0")
+
+    // Room Database for Offline Storage
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-guava:$room_version") // For ListenableFuture
+    
+    // WorkManager for Background Sync
+    val work_version = "2.9.0"
+    implementation("androidx.work:work-runtime:$work_version")
+
+    // Image Loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Web Scraping
+    implementation("org.jsoup:jsoup:1.17.2")
+
+    // Networking
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Guava dependency for ListenableFuture
+    implementation("com.google.guava:guava:33.0.0-android")
 }

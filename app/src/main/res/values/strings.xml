@@ -1,8 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Alumni_PortaL</string>
+    <string name="app_name">Alumni Portal</string>
+
+    <!-- Welcome Messages for Home Screen -->
+    <string name="welcome_message">Welcome, %1$s!</string>
+    <string name="welcome_default">Welcome!</string>
+    <string name="connect_learn_grow_together">Connect. Learn. Grow Together.</string>
+
+    <!-- Home Screen UI Strings -->
+    <string name="search_hint">Search alumni, jobs, events</string>
+    <string name="profile_completion">Profile Completion</string>
+    <string name="connect">Connect</string>
+    <string name="my_profile">My Profile</string>
+    <string name="find_a_mentor">Find a Mentor</string>
+    <string name="find_mentees">Find Mentees</string>
+    <string name="discover">Discover</string>
+    <string name="jobs_and_internships">Jobs &amp; Internships</string>
+    <string name="upcoming_events">Upcoming Events</string>
+    <string name="knowledge_hub">Knowledge Hub</string>
+
+    <!-- Content Descriptions for Accessibility -->
+    <string name="profile_image_description">User profile picture</string>
+
+    <!-- Strings for Login, Signup, and Forgot Password from build errors -->
+    <string name="alumni_portal">Alumni Portal</string>
+    <string name="email_hint">Email</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="full_name_hint">Full Name</string>
+    <string name="student_id_hint">Student ID</string>
+    <string name="personal_email_hint">Personal Email</string>
     <string name="login">Login</string>
-    <string name="signup_prompt">New here? Sign Up</string>
-    <string name="signup_action_description">Sign up for a new account</string>
-    <string name="logo">Logo</string>
-    <string name="invalid_email_or_password">Invalid email or password</string>
+    <string name="signup_prompt">Don\'t have an account? Sign Up</string>
+    <string name="signup_title">Create Account</string>
+    <string name="back_to_login_prompt">Back to Login</string>
+    <string name="forgot_password_prompt">Forgot Password?</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
+    <string name="signup_button_text">Sign Up</string>
+    <string name="fetch_users_from_api">Fetch Users from API</string>
+
 </resources>

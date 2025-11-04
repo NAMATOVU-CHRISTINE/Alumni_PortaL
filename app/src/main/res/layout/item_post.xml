@@ -1,53 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/postTitleText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Career Tips for Final Year Students" />
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            tools:text="This is a Sample Post Title" />
 
         <TextView
-            android:id="@+id/authorNameText"
-            android:layout_width="0dp"
+            android:id="@+id/postAuthorText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textStyle="italic"
-            app:layout_constraintTop_toBottomOf="@id/postTitleText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="by Jane Doe" />
+            android:textSize="14sp"
+            tools:text="by Christine M."/>
 
         <TextView
-            android:id="@+id/postSnippetText"
-            android:layout_width="0dp"
+            android:id="@+id/postContentSnippetText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:maxLines="2"
+            android:maxLines="3"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/authorNameText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Here are some essential tips to help final year students navigate the job market successfully. First, focus on building a strong online presence..." />
+            tools:text="This is a short snippet of the post content to give the user a preview of what the post is about. It will be truncated if it is too long..." />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

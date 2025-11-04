@@ -1,8 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryGreen">#1DB954</color>
-    <color name="primaryGreenDark">#1ED760</color>
-    <color name="darkBackground">#121212</color>
-    <color name="inputHint">#AAAAAA</color>
+    <!-- MUST Official Theme Colors -->
+    <color name="must_green">#005A36</color>
+    <color name="must_green_dark">#003d1a</color>
+    <color name="must_gold">#FFC107</color>
+
+    <!-- Standard Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="dark_gray">#121212</color>
+
+    <!-- Component Colors -->
+    <color name="stroke_color">#CAC4D0</color>
 </resources>

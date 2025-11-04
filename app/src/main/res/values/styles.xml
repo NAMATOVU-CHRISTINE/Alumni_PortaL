@@ -1,8 +1,42 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="ClickableTextPrompt">
-        <item name="android:textColor">@color/primaryGreen</item>
+        <item name="android:textColor">@color/must_green</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Home Screen Styles - Updated for Material 3 -->
+    <style name="home_section_header">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="home_dashboard_card" parent="Widget.Material3.CardView.Elevated">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="cardCornerRadius">12dp</item>
+    </style>
+
+    <style name="home_menu_card" parent="Widget.Material3.CardView.Outlined">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="home_menu_card_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:drawableTint" tools:targetApi="m">?attr/colorPrimary</item>
+    </style>
+
 </resources>

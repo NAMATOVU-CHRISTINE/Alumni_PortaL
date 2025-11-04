@@ -2,17 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <application
+        android:name=".AlumniApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Alumni_Portal">
         <activity
-            android:name=".MainActivity"
+            android:name=".SignupActivity"
+            android:exported="true" />
+        <!-- FIX: LoginActivity is now the starting point of the app -->
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +32,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".EventsActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".MentorSearchActivity" />
+        <activity android:name=".JobsActivity" />
+        <activity android:name=".KnowledgeHubActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".MentorDetailActivity" />
+        <activity android:name=".JobDetailActivity" />
+        <activity android:name=".CreatePostActivity" /> <!-- Static Receiver for System-Wide Events -->
+        <receiver
+            android:name=".NetworkReceiver"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- Listen for network connectivity changes -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <!-- Listen for power connected and disconnected events -->
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
