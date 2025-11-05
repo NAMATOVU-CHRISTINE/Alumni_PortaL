@@ -19,7 +19,7 @@ public class DataSyncWorker extends Worker {
 
     @NonNull
     @Override
-    public Result doWork() {
+    public androidx.work.ListenableWorker.Result doWork() {
         Log.d(TAG, "Running data sync");
         try {
             // Get Firestore instance
@@ -68,10 +68,10 @@ public class DataSyncWorker extends Worker {
                 }
             }
 
-            return Result.success();
+            return androidx.work.ListenableWorker.Result.success();
         } catch (Exception e) {
             Log.w(TAG, "Data sync failed", e);
-            return Result.retry();
+            return androidx.work.ListenableWorker.Result.retry();
         }
     }
 }
