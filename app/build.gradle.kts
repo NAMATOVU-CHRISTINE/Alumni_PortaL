@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
 }
 
@@ -70,6 +71,10 @@ dependencies {
     // WorkManager for Background Sync
     val work_version = "2.9.0"
     implementation("androidx.work:work-runtime:$work_version")
+    // KTX helpers for WorkManager (CoroutineWorker, etc.)
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+    // Kotlin stdlib (required when adding Kotlin sources)
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.16.0")

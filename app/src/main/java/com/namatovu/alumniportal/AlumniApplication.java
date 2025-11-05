@@ -32,11 +32,29 @@ public class AlumniApplication extends Application {
     public void scheduleDataSync() {
         Log.d(TAG, "scheduleDataSync() called — scheduling periodic work");
         try {
-            androidx.work.PeriodicWorkRequest request = new androidx.work.PeriodicWorkRequest.Builder(
-                    DataSyncWorker.class,
-                    java.time.Duration.ofHours(12))
-                    .build();
-            androidx.work.WorkManager.getInstance(this).enqueue(request);
+        // Constraints: require network
+        androidx.work.Constraints constraints = new androidx.work.Constraints.Builder()
+            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+            .build();
+
+        // One-time immediate sync to refresh cache right away
+        androidx.work.OneTimeWorkRequest oneTime = new androidx.work.OneTimeWorkRequest.Builder(
+            DataSyncCoroutineWorker.class)
+            .setConstraints(constraints)
+            .build();
+
+        // Periodic sync every 12 hours (use unique name to avoid duplicate scheduling)
+        androidx.work.PeriodicWorkRequest periodic = new androidx.work.PeriodicWorkRequest.Builder(
+            DataSyncCoroutineWorker.class,
+            java.time.Duration.ofHours(12))
+            .setConstraints(constraints)
+            .build();
+
+        androidx.work.WorkManager wm = androidx.work.WorkManager.getInstance(this);
+        // Enqueue unique one-time (will run immediately)
+        wm.enqueueUniqueWork("alumni_data_sync_once", androidx.work.ExistingWorkPolicy.KEEP, oneTime);
+        // Enqueue or replace periodic work
+        wm.enqueueUniquePeriodicWork("alumni_data_sync_periodic", androidx.work.ExistingPeriodicWorkPolicy.KEEP, periodic);
         } catch (Exception e) {
             Log.w(TAG, "Failed to schedule data sync", e);
         }
