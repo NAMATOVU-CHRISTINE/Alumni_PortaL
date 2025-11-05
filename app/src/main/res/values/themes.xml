@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.AlumniPortal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
+    <!-- App theme using Material 3 (Material You) - single source of truth -->
+    <style name="Theme.Alumni_Portal" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Core colors (refer to colors.xml) -->
         <item name="colorPrimary">@color/must_green</item>
-        <item name="colorPrimaryVariant">@color/must_green_dark</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/must_gold</item>
-        <item name="colorSecondaryVariant">@color/must_gold</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Material3 specific color roles (fallback to primary/secondary) -->
+        <item name="android:colorBackground">@color/light_gray</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+
+        <!-- App bar and system bars -->
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+
+        <!-- Elevation and shapes -->
+        <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
     </style>
 
-    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+    <!-- Small shape overlay for rounded elements -->
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent">
         <item name="cornerSize">50%</item>
     </style>
 
