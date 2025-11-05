@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.alumni_portal"
+    namespace = "com.namatovu.alumniportal"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.alumni_portal"
+    applicationId = "com.namatovu.alumniportal"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

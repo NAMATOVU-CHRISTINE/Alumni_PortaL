@@ -45,9 +45,11 @@ To run this project, you will need to configure your own Firebase backend.
 2.  **Open in Android Studio:** Open the cloned directory as a new project in Android Studio.
 3.  **Connect to Firebase:**
     *   Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
-    *   Add an Android app to your Firebase project with the package name `com.christine.alumniportal`.
+    *   Add an Android app to your Firebase project with the package name `com.namatovu.alumniportal`.
     *   Follow the setup steps to download the `google-services.json` file.
-    *   Place the downloaded `google-services.json` file into the `app/` directory of this project.
+    *   Place the downloaded `google-services.json` file into the `app/` directory of this project. Make sure the `package_name`/`applicationId` inside the file matches `com.namatovu.alumniportal`. If you keep a different `applicationId`, re-download the correct `google-services.json` from the Firebase console and replace the existing one.
+
+    Note: This project currently uses the Java package `com.namatovu.alumniportal`. If you prefer a different applicationId (for example `com.example.alumni_portal`), update `app/build.gradle.kts`'s `applicationId` and `namespace` accordingly and download the matching `google-services.json` from Firebase.
 4.  **Enable Firebase Services:** In the Firebase Console, ensure you have enabled the following services:
     *   **Authentication:** Enable the "Email/Password" sign-in method.
     *   **Firestore:** Create a new Firestore database.

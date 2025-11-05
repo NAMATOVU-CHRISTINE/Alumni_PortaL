@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:511866402860:android:5ac7f30fd0cea70ff3b989",
         "android_client_info": {
-          "package_name": "com.example.alumni_portal"
+          "package_name": "com.namatovu.alumniportal"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "511866402860-013bd8ad5s6ro7gm6nrp1jg0sa28ia5v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.alumni_portal",
+            "package_name": "com.namatovu.alumniportal",
             "certificate_hash": "1f83566ddd22b4600b151cf0240dd1813a1d72e2"
           }
         },
