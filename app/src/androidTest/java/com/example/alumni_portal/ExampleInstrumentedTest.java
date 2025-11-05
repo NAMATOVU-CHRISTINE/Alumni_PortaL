@@ -1,4 +1,4 @@
-package com.example.alumni_portal;
+package com.namatovu.alumniportal;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.alumni_portal", appContext.getPackageName());
+    assertEquals("com.namatovu.alumniportal", appContext.getPackageName());
     }
 }
