@@ -6,14 +6,14 @@ This is a native Android application for the alumni of Mbarara University of Sci
 
 ## Core Features
 
-*   **Complete User Authentication:** Secure login, signup, and password reset functionality using Firebase Authentication.
-*   **Username Login:** Users can sign up with an email but log in with a unique username for convenience.
-*   **Profile Management:** Users can view and edit their profiles, including their name, bio, career information, and personal skills. 
-*   **Profile Picture Uploads:** Users can upload and update their profile pictures, which are stored securely in Firebase Storage.
-*   **Dynamic Home Dashboard:** A central screen that welcomes the user by name and provides easy navigation to all app features.
-*   **Live News Feed:** The "News & Events" page displays the latest news directly from the official MUST website by parsing its RSS feed, ensuring reliable and up-to-date content.
-*   **Embedded Web Content:** The home screen features an integrated `WebView` displaying the MUST homepage.
-*   **Feature-Rich Navigation:** Includes dedicated sections for Job Postings, Mentor Search, and a Knowledge Hub (functionality to be implemented).
+- **Complete User Authentication:** Secure login, signup, and password reset functionality using Firebase Authentication.
+- **Username Login:** Users can sign up with an email but log in with a unique username for convenience.
+- **Profile Management:** Users can view and edit their profiles, including their name, bio, career information, and personal skills.
+- **Profile Picture Uploads:** Users can upload and update their profile pictures, which are stored securely in Firebase Storage.
+- **Dynamic Home Dashboard:** A central screen that welcomes the user by name and provides easy navigation to all app features.
+- **Live News Feed:** The "News & Events" page displays the latest news directly from the official MUST website by parsing its RSS feed, ensuring reliable and up-to-date content.
+- **Embedded Web Content:** The home screen features an integrated `WebView` displaying the MUST homepage.
+- **Feature-Rich Navigation:** Includes dedicated sections for Job Postings, Mentor Search, and a Knowledge Hub (functionality to be implemented).
 
 ## Technology Stack
 

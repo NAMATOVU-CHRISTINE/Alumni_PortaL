@@ -30,7 +30,15 @@ public class AlumniApplication extends Application {
      * desired.
      */
     public void scheduleDataSync() {
-        Log.d(TAG, "scheduleDataSync() called — no-op stub");
-        // TODO: Implement WorkManager periodic sync tasks.
+        Log.d(TAG, "scheduleDataSync() called — scheduling periodic work");
+        try {
+            androidx.work.PeriodicWorkRequest request = new androidx.work.PeriodicWorkRequest.Builder(
+                    DataSyncWorker.class,
+                    java.time.Duration.ofHours(12))
+                    .build();
+            androidx.work.WorkManager.getInstance(this).enqueue(request);
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to schedule data sync", e);
+        }
     }
 }
