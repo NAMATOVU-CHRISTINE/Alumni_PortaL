@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import androidx.work.ListenableWorker.Result;
 
 /**
  * Simple WorkManager worker that can be expanded to sync remote data (jobs, events, etc.).
@@ -16,10 +17,9 @@ public class DataSyncWorker extends Worker {
     public DataSyncWorker(@NonNull Context context, @NonNull WorkerParameters params) {
         super(context, params);
     }
-
     @NonNull
     @Override
-    public androidx.work.ListenableWorker.Result doWork() {
+    public Result doWork() {
         Log.d(TAG, "Running data sync");
         try {
             // Get Firestore instance
@@ -68,10 +68,10 @@ public class DataSyncWorker extends Worker {
                 }
             }
 
-            return androidx.work.ListenableWorker.Result.success();
+            return Result.success();
         } catch (Exception e) {
             Log.w(TAG, "Data sync failed", e);
-            return androidx.work.ListenableWorker.Result.retry();
+            return Result.retry();
         }
     }
-}
+    }
