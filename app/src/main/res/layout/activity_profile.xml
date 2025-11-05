@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="?attr/android:colorBackground"
     tools:context=".ProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -27,11 +26,13 @@
                 android:src="@drawable/login_background_dark"
                 app:layout_collapseMode="parallax" />
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                android:background="?attr/colorPrimary"
+                app:titleTextColor="?attr/colorOnPrimary" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -64,9 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="60dp" 
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/App.TextAppearance.Title"
                 tools:text="Christine Namatovu" />
 
             <TextView
@@ -75,16 +74,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
-                android:textSize="16sp"
+                android:textAppearance="@style/App.TextAppearance.Subtitle"
                 tools:text="2023bcs004@std.must.ac.ug" />
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:contentPadding="16dp">
+                style="@style/App.Material3.Card"
+                app:contentPadding="16dp"
+                android:backgroundTint="?attr/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bio"
-                        android:textSize="18sp"
+                        android:textAppearance="@style/App.TextAppearance.Subtitle"
                         android:textStyle="bold" />
 
                     <TextView
@@ -103,17 +104,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textAppearance="@style/App.TextAppearance.Body"
                         tools:text="Computer Science student at Mbarara University of Science and Technology, passionate about mobile development and AI." />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:contentPadding="16dp">
+                style="@style/App.Material3.Card"
+                app:contentPadding="16dp"
+                android:backgroundTint="?attr/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -124,7 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Career"
-                        android:textSize="18sp"
+                        android:textAppearance="@style/App.TextAppearance.Subtitle"
                         android:textStyle="bold" />
 
                     <TextView
@@ -132,17 +136,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:textAppearance="@style/App.TextAppearance.Body"
                         tools:text="Aspiring Mobile App Developer" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
-                app:contentPadding="16dp">
+                style="@style/App.Material3.Card"
+                app:contentPadding="16dp"
+                android:backgroundTint="?attr/colorSurface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -153,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Skills"
-                        android:textSize="18sp"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:textStyle="bold" />
 
                     <com.google.android.material.chip.ChipGroup
@@ -163,7 +170,7 @@
                         android:layout_marginTop="8dp" />
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

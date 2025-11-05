@@ -39,4 +39,50 @@
         <item name="android:drawableTint" tools:targetApi="m">?attr/colorPrimary</item>
     </style>
 
+    <!-- Centralized Material 3 app styles (used by converted layouts) -->
+    <!-- App typography shortcuts -->
+    <style name="App.TextAppearance.Title" parent="TextAppearance.Material3.TitleLarge" />
+    <style name="App.TextAppearance.Subtitle" parent="TextAppearance.Material3.TitleMedium" />
+    <style name="App.TextAppearance.Body" parent="TextAppearance.Material3.BodyMedium" />
+
+    <!-- Shape appearances -->
+    <style name="Shape.App.Small" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="Shape.App.Medium" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="Shape.App.Rounded" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <!-- Material 3 Button style used across the app -->
+    <style name="App.Material3.Button" parent="Widget.Material3.Button">
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="shapeAppearance">@style/Shape.App.Medium</item>
+    </style>
+
+    <!-- TextInputLayout (outlined) consistent style -->
+    <style name="App.Material3.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="hintTextColor">?attr/colorOnSurface</item>
+        <item name="helperTextTextAppearance">@style/TextAppearance.Material3.BodySmall</item>
+        <item name="shapeAppearance">@style/Shape.App.Small</item>
+    </style>
+
+    <!-- Card style for list items and content containers -->
+    <style name="App.Material3.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+
 </resources>
