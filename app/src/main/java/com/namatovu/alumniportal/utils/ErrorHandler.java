@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.FirebaseTimeoutException;
+// import com.google.firebase.FirebaseTimeoutException;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.namatovu.alumniportal.LoginActivity;

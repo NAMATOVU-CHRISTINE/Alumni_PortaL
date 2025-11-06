@@ -55,6 +55,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-messaging")
 
     // MVVM & Lifecycle Components - Using explicit versions
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
