@@ -200,4 +200,21 @@ public class JobPosting {
         jobMap.put("applicationCount", applicationCount);
         return jobMap;
     }
+
+    // Alias methods for adapter compatibility
+    public String getPosition() { 
+        return getTitle(); 
+    }
+    
+    public String getSalaryRange() { 
+        return getSalary(); 
+    }
+    
+    public String getType() { 
+        return getJobType(); 
+    }
+    
+    public java.util.Date getPostedDate() { 
+        return new java.util.Date(getPostedAt()); 
+    }
 }

@@ -217,6 +217,28 @@ public class AnalyticsHelper {
     }
     
     /**
+     * Generic event logging method
+     */
+    public static void logEvent(String eventName, Bundle params) {
+        if (mFirebaseAnalytics != null) {
+            mFirebaseAnalytics.logEvent(eventName, params);
+            Log.d(TAG, "Custom event logged: " + eventName);
+        }
+    }
+    
+    /**
+     * Simple event logging with string parameter
+     */
+    public static void logEvent(String eventName, String paramName, String paramValue) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(paramName, paramValue);
+            mFirebaseAnalytics.logEvent(eventName, bundle);
+            Log.d(TAG, "Event logged: " + eventName + " (" + paramName + "=" + paramValue + ")");
+        }
+    }
+    
+    /**
      * Log file operations
      */
     public static void logFileUpload(String fileType, long fileSize, String shareScope) {

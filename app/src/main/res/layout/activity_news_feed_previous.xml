@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".JobBoardActivity">
+    tools:context=".NewsFeedActivity">
 
     <!-- Top App Bar -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
-        app:title="Job Board"
+        app:title="News Feed"
         app:titleTextColor="?attr/colorOnPrimary"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:navigationIconTint="?attr/colorOnPrimary" />
@@ -31,7 +31,7 @@
             android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search jobs..."
+            android:hint="Search news..."
             app:startIconDrawable="@drawable/ic_search"
             app:endIconMode="clear_text"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -45,98 +45,101 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Filter Row -->
-        <LinearLayout
+        <!-- Category Filter Chips -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/categoryChipGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_marginTop="8dp"
+            app:singleSelection="false">
 
-            <!-- Job Type Filter -->
-            <Spinner
-                android:id="@+id/jobTypeFilterSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp" />
-
-            <!-- Experience Filter -->
-            <Spinner
-                android:id="@+id/experienceFilterSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
-
-            <!-- Clear Filters Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/clearFiltersButton"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAchievements"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Clear"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:text="Achievements"
+                style="@style/Widget.Material3.Chip.Filter" />
 
-        </LinearLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAnnouncements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Announcements"
+                style="@style/Widget.Material3.Chip.Filter" />
 
-        <!-- Results Count -->
-        <TextView
-            android:id="@+id/resultCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="25 jobs found" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipEvents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Events"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+        </com.google.android.material.chip.ChipGroup>
 
     </LinearLayout>
 
-    <!-- Content Container -->
-    <FrameLayout
+    <!-- Swipe Refresh Layout -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <!-- Jobs RecyclerView -->
+        <!-- News RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/jobsRecyclerView"
+            android:id="@+id/recyclerViewNews"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
+            android:padding="16dp"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_job_posting" />
+            tools:listitem="@layout/item_news_article" />
 
-        <!-- Progress Bar -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!-- No Results Text -->
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyStateLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_news"
+            app:tint="?attr/colorOutline" />
+
         <TextView
-            android:id="@+id/noResultsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:visibility="gone"
-            tools:text="No jobs found" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="No news articles available"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
-    </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="Pull down to refresh"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+    </LinearLayout>
 
     <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addJobFab"
+        android:id="@+id/fabCreatePost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white"
-        android:contentDescription="Add Job" />
+        android:contentDescription="Create News Post"
+        app:srcCompat="@drawable/ic_add_white" />
 
 </LinearLayout>

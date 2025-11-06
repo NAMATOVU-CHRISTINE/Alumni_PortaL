@@ -123,7 +123,7 @@ public class NewsFeedActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         adapter = new NewsAdapter(filteredArticles, currentUserId, new NewsAdapter.OnNewsActionListener() {
             @Override
-            public void onArticleClick(NewsArticle article) {
+            public void onNewsClick(NewsArticle article) {
                 Intent intent = new Intent(NewsFeedActivity.this, ArticleDetailsActivity.class);
                 intent.putExtra("articleId", article.getArticleId());
                 startActivity(intent);

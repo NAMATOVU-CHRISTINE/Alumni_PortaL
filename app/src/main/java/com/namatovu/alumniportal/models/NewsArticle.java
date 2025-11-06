@@ -277,4 +277,13 @@ public class NewsArticle {
         articleMap.put("metadata", metadata);
         return articleMap;
     }
+
+    // Alias methods for adapter compatibility
+    public String getAuthor() { 
+        return getAuthorName(); 
+    }
+    
+    public java.util.Date getPublishedDate() { 
+        return new java.util.Date(getPublishedAt()); 
+    }
 }
