@@ -87,17 +87,21 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Mentor card - placeholder for now with improved toast
-        binding.mentorCard.setOnClickListener(v -> 
-            Toast.makeText(this, "Find a Mentor - Coming Soon!", Toast.LENGTH_SHORT).show());
+        // Mentor card - navigate to alumni directory for mentor search
+        binding.mentorCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AlumniDirectoryActivity.class);
+            startActivity(intent);
+        });
         
         // Mentees card - placeholder for now with improved toast
         binding.menteesCard.setOnClickListener(v -> 
             Toast.makeText(this, "Find Mentees - Coming Soon!", Toast.LENGTH_SHORT).show());
         
-        // Jobs card - placeholder for now with improved toast
-        binding.jobsCard.setOnClickListener(v -> 
-            Toast.makeText(this, "Jobs & Internships - Coming Soon!", Toast.LENGTH_SHORT).show());
+        // Jobs card - navigate to job board
+        binding.jobsCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, JobBoardActivity.class);
+            startActivity(intent);
+        });
         
         // Events card - placeholder for now with improved toast
         binding.eventsCard.setOnClickListener(v -> 
