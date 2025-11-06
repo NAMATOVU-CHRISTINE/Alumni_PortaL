@@ -14,10 +14,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.activities.ChatActivity;
 import com.namatovu.alumniportal.activities.ChatListActivity;
-import com.namatovu.alumniportal.activities.EventsActivity;
-import com.namatovu.alumniportal.activities.JobBoardActivity;
-import com.namatovu.alumniportal.activities.MentorshipActivity;
-import com.namatovu.alumniportal.activities.NewsFeedActivity;
+import com.namatovu.alumniportal.EventsActivity;
+import com.namatovu.alumniportal.JobBoardActivity;
+import com.namatovu.alumniportal.MentorshipActivity;
+import com.namatovu.alumniportal.NewsFeedActivity;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.Map;

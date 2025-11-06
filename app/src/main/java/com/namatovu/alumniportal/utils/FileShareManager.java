@@ -575,7 +575,7 @@ public class FileShareManager {
         }
     }
     
-    private String getFileExtension(String fileName) {
+    private static String getFileExtension(String fileName) {
         int lastDot = fileName.lastIndexOf('.');
         return lastDot > 0 ? fileName.substring(lastDot + 1) : "";
     }

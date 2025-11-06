@@ -3,6 +3,7 @@ package com.namatovu.alumniportal.database.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 
 /**
  * Room entity for offline user profile storage
@@ -10,6 +11,8 @@ import androidx.room.ColumnInfo;
 @Entity(tableName = "users")
 public class UserEntity {
     @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "user_id")
     public String userId;
     
     @ColumnInfo(name = "email")

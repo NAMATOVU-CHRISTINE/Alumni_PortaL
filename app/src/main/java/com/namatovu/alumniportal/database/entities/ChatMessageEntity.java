@@ -3,6 +3,7 @@ package com.namatovu.alumniportal.database.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 
 /**
  * Room entity for offline chat message storage
@@ -10,6 +11,8 @@ import androidx.room.ColumnInfo;
 @Entity(tableName = "chat_messages")
 public class ChatMessageEntity {
     @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "message_id")
     public String messageId;
     
     @ColumnInfo(name = "chat_id")

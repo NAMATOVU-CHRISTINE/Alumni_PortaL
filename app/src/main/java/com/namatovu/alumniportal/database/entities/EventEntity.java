@@ -3,6 +3,7 @@ package com.namatovu.alumniportal.database.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 
 /**
  * Room entity for offline event storage
@@ -10,6 +11,8 @@ import androidx.room.ColumnInfo;
 @Entity(tableName = "events")
 public class EventEntity {
     @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "event_id")
     public String eventId;
     
     @ColumnInfo(name = "title")

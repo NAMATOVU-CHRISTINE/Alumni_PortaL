@@ -3,6 +3,7 @@ package com.namatovu.alumniportal.database.entities;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
+import androidx.annotation.NonNull;
 
 /**
  * Room entity for offline job posting storage
@@ -10,6 +11,8 @@ import androidx.room.ColumnInfo;
 @Entity(tableName = "job_postings")
 public class JobPostingEntity {
     @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "job_id")
     public String jobId;
     
     @ColumnInfo(name = "company")
