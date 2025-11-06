@@ -402,6 +402,30 @@ public class SecurityHelper {
     }
     
     /**
+     * Clear user session data for logout
+     */
+    public static void clearUserSession(Context context) {
+        try {
+            // Clear encrypted preferences
+            if (encryptedPrefs != null) {
+                encryptedPrefs.edit().clear().apply();
+            }
+            
+            // Clear regular shared preferences
+            SharedPreferences prefs = context.getSharedPreferences("user_session", Context.MODE_PRIVATE);
+            prefs.edit().clear().apply();
+            
+            // Clear any cached user data
+            SharedPreferences cachePrefs = context.getSharedPreferences("user_cache", Context.MODE_PRIVATE);
+            cachePrefs.edit().clear().apply();
+            
+            Log.d(TAG, "User session cleared successfully");
+        } catch (Exception e) {
+            Log.e(TAG, "Error clearing user session", e);
+        }
+    }
+    
+    /**
      * Password validation result class
      */
     public static class PasswordValidationResult {

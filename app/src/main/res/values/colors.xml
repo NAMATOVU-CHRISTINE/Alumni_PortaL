@@ -10,6 +10,7 @@
     <color name="black">#000000</color>
     <color name="light_gray">#F5F5F5</color>
     <color name="dark_gray">#121212</color>
+    <color name="colorAccent">@color/must_gold</color>
 
     <!-- Component Colors -->
     <color name="stroke_color">#CAC4D0</color>
