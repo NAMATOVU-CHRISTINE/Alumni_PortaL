@@ -615,11 +615,24 @@ public class SearchAndFilterManager {
             case ALPHABETICAL:
                 users.sort((a, b) -> a.getFullName().compareToIgnoreCase(b.getFullName()));
                 break;
-            case GRADUATION_YEAR:
-                users.sort((a, b) -> Integer.compare(
-                    a.getGraduationYear() != null ? a.getGraduationYear() : 0,
-                    b.getGraduationYear() != null ? b.getGraduationYear() : 0
+            case DATE_NEWEST:
+                users.sort((a, b) -> Long.compare(
+                    b.getCreatedAt() > 0 ? b.getCreatedAt() : 0,
+                    a.getCreatedAt() > 0 ? a.getCreatedAt() : 0
                 ));
+                break;
+            case DATE_OLDEST:
+                users.sort((a, b) -> Long.compare(
+                    a.getCreatedAt() > 0 ? a.getCreatedAt() : 0,
+                    b.getCreatedAt() > 0 ? b.getCreatedAt() : 0
+                ));
+                break;
+            case GRADUATION_YEAR:
+                users.sort((a, b) -> {
+                    int yearA = parseGraduationYear(a.getGraduationYear());
+                    int yearB = parseGraduationYear(b.getGraduationYear());
+                    return Integer.compare(yearA, yearB);
+                });
                 break;
             case LOCATION:
                 users.sort((a, b) -> {
@@ -635,8 +648,23 @@ public class SearchAndFilterManager {
                     return companyA.compareToIgnoreCase(companyB);
                 });
                 break;
+            case RELEVANCE:
+            default:
+                // No sorting for relevance or unknown sort types
+                break;
         }
         return users;
+    }
+    
+    private int parseGraduationYear(String yearStr) {
+        if (yearStr == null || yearStr.trim().isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(yearStr.trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
     
     // Specific callback implementations to avoid type erasure issues
