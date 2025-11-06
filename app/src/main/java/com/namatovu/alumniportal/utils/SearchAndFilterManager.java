@@ -833,6 +833,12 @@ public class SearchAndFilterManager {
             case EVENTS:
                 popular.addAll(Arrays.asList("Networking", "Career Fair", "Alumni Mixer", "Tech Talk"));
                 break;
+            case NEWS:
+                popular.addAll(Arrays.asList("Technology", "Career", "Alumni News", "Industry Updates"));
+                break;
+            case ALL:
+                popular.addAll(Arrays.asList("Latest", "Popular", "Trending", "Featured"));
+                break;
         }
         
         return popular;
