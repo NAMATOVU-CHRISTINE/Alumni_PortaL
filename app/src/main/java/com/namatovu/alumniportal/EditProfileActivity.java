@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.utils.PermissionHelper;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
+import com.namatovu.alumniportal.utils.SecurityHelper;
+import com.namatovu.alumniportal.models.User;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
