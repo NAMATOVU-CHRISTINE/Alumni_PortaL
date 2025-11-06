@@ -210,6 +210,53 @@ public class JobPosting {
         return getSalary(); 
     }
     
+    // Methods for SearchAndFilterManager compatibility
+    public Integer getSalaryMin() {
+        String salaryStr = getSalary();
+        if (salaryStr == null || salaryStr.trim().isEmpty()) {
+            return null;
+        }
+        
+        // Try to parse salary range like "50000-80000" or just "50000"
+        try {
+            if (salaryStr.contains("-")) {
+                String[] parts = salaryStr.split("-");
+                if (parts.length >= 1) {
+                    return Integer.parseInt(parts[0].trim().replaceAll("[^0-9]", ""));
+                }
+            } else {
+                // Single salary value
+                return Integer.parseInt(salaryStr.replaceAll("[^0-9]", ""));
+            }
+        } catch (NumberFormatException e) {
+            // If parsing fails, return null
+        }
+        return null;
+    }
+    
+    public Integer getSalaryMax() {
+        String salaryStr = getSalary();
+        if (salaryStr == null || salaryStr.trim().isEmpty()) {
+            return null;
+        }
+        
+        // Try to parse salary range like "50000-80000" or just "50000"
+        try {
+            if (salaryStr.contains("-")) {
+                String[] parts = salaryStr.split("-");
+                if (parts.length >= 2) {
+                    return Integer.parseInt(parts[1].trim().replaceAll("[^0-9]", ""));
+                }
+            } else {
+                // Single salary value - use it as both min and max
+                return Integer.parseInt(salaryStr.replaceAll("[^0-9]", ""));
+            }
+        } catch (NumberFormatException e) {
+            // If parsing fails, return null
+        }
+        return null;
+    }
+    
     public String getType() { 
         return getJobType(); 
     }
