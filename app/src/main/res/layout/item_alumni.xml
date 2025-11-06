@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Profile Image -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_person"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/must_green" />
+
+        <!-- User Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Name and Verified Badge Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/nameText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Alumni Name"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/verifiedBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_verified"
+                    android:visibility="gone"
+                    app:tint="@color/must_green" />
+
+            </LinearLayout>
+
+            <!-- Major -->
+            <TextView
+                android:id="@+id/majorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Computer Science"
+                android:textSize="14sp"
+                android:textColor="@color/must_green"
+                android:layout_marginTop="2dp" />
+
+            <!-- Graduation Year -->
+            <TextView
+                android:id="@+id/yearText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Class of 2020"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="2dp" />
+
+            <!-- Current Job -->
+            <TextView
+                android:id="@+id/currentJobText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Software Engineer at Google"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
+
+            <!-- Location -->
+            <TextView
+                android:id="@+id/locationText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="San Francisco, CA"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="2dp"
+                android:visibility="gone"
+                android:drawableStart="@drawable/ic_location"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical" />
+
+            <!-- Bio -->
+            <TextView
+                android:id="@+id/bioText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Passionate about technology and innovation..."
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="6dp"
+                android:visibility="gone"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Skills -->
+            <TextView
+                android:id="@+id/skillsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Java • Python • Machine Learning"
+                android:textSize="11sp"
+                android:textColor="@color/must_green"
+                android:layout_marginTop="6dp"
+                android:visibility="gone"
+                android:background="@drawable/skills_background"
+                android:padding="6dp" />
+
+            <!-- Mentor Available -->
+            <TextView
+                android:id="@+id/mentorAvailableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Available for mentoring"
+                android:textSize="11sp"
+                android:textColor="@color/white"
+                android:background="@drawable/mentor_badge_background"
+                android:padding="4dp"
+                android:layout_marginTop="6dp"
+                android:visibility="gone"
+                android:drawableStart="@drawable/ic_mentor"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
