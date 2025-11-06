@@ -253,6 +253,155 @@ public class SecurityHelper {
     }
     
     /**
+     * Validate chat message content
+     */
+    public static boolean isValidMessageContent(String content) {
+        if (content == null || content.trim().isEmpty()) {
+            return false;
+        }
+        
+        // Check length limits
+        if (content.length() > 2000) {
+            return false;
+        }
+        
+        // Check for suspicious patterns
+        String[] suspiciousPatterns = {
+            "<script", "javascript:", "onload=", "onerror=", 
+            "data:text/html", "vbscript:", "expression("
+        };
+        
+        String lowerContent = content.toLowerCase();
+        for (String pattern : suspiciousPatterns) {
+            if (lowerContent.contains(pattern)) {
+                return false;
+            }
+        }
+        
+        // Check for excessive repetition (spam detection)
+        if (isExcessiveRepetition(content)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Validate chat data structure
+     */
+    public static boolean isValidChatData(Object chatData, String currentUserId) {
+        if (chatData == null || currentUserId == null) {
+            return false;
+        }
+        
+        // This would be expanded based on your Chat model structure
+        // For now, basic validation
+        return true;
+    }
+    
+    /**
+     * Validate message data structure
+     */
+    public static boolean isValidMessageData(Object messageData) {
+        if (messageData == null) {
+            return false;
+        }
+        
+        // This would be expanded based on your ChatMessage model structure
+        // For now, basic validation
+        return true;
+    }
+    
+    /**
+     * Check for excessive repetition in text (spam detection)
+     */
+    private static boolean isExcessiveRepetition(String text) {
+        if (text.length() < 10) return false;
+        
+        // Check for repeated characters
+        char prevChar = text.charAt(0);
+        int consecutiveCount = 1;
+        for (int i = 1; i < text.length(); i++) {
+            if (text.charAt(i) == prevChar) {
+                consecutiveCount++;
+                if (consecutiveCount > 10) { // More than 10 consecutive same characters
+                    return true;
+                }
+            } else {
+                consecutiveCount = 1;
+                prevChar = text.charAt(i);
+            }
+        }
+        
+        // Check for repeated words
+        String[] words = text.toLowerCase().split("\\s+");
+        if (words.length > 3) {
+            int repeatedWords = 0;
+            for (int i = 0; i < words.length - 1; i++) {
+                if (words[i].equals(words[i + 1]) && words[i].length() > 2) {
+                    repeatedWords++;
+                    if (repeatedWords > 3) { // More than 3 repeated words
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Validate file upload
+     */
+    public static boolean isValidFileUpload(String fileName, long fileSize, String mimeType) {
+        if (fileName == null || fileName.trim().isEmpty()) {
+            return false;
+        }
+        
+        // Check file size (limit to 10MB)
+        if (fileSize > 10 * 1024 * 1024) {
+            return false;
+        }
+        
+        // Check for dangerous file extensions
+        String[] dangerousExtensions = {
+            ".exe", ".bat", ".cmd", ".com", ".pif", ".scr", ".vbs", ".js", 
+            ".jar", ".app", ".deb", ".pkg", ".dmg", ".msi"
+        };
+        
+        String lowerFileName = fileName.toLowerCase();
+        for (String ext : dangerousExtensions) {
+            if (lowerFileName.endsWith(ext)) {
+                return false;
+            }
+        }
+        
+        // Validate MIME type if provided
+        if (mimeType != null) {
+            String[] allowedMimeTypes = {
+                "image/jpeg", "image/png", "image/gif", "image/webp",
+                "application/pdf", "text/plain", "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            };
+            
+            boolean isAllowed = false;
+            for (String allowed : allowedMimeTypes) {
+                if (mimeType.equals(allowed)) {
+                    isAllowed = true;
+                    break;
+                }
+            }
+            if (!isAllowed) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
      * Password validation result class
      */
     public static class PasswordValidationResult {
