@@ -26,6 +26,12 @@ public class JobPostingAdapter extends RecyclerView.Adapter<JobPostingAdapter.Jo
         void onJobClick(JobPosting jobPosting);
     }
     
+    // Constructor
+    public JobPostingAdapter(List<JobPosting> jobPostings, OnJobClickListener listener) {
+        this.jobPostings = jobPostings != null ? jobPostings : new ArrayList<>();
+        this.listener = listener;
+    }
+    
     public void setOnJobClickListener(OnJobClickListener listener) {
         this.listener = listener;
     }

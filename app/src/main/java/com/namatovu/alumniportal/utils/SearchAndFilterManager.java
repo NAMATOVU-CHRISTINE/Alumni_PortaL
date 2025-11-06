@@ -174,51 +174,15 @@ public class SearchAndFilterManager {
         // Perform search based on type
         switch (filter.type) {
             case ALUMNI:
-                searchAlumni(filter, new SearchCallback<User>() {
-                    @Override
-                    public void onSearchComplete(SearchResult<User> result) {
-                        PerformanceHelper.getInstance().endTiming("search_operation");
-                        callback.onSearchComplete(convertResult(result));
-                    }
-                    
-                    @Override
-                    public void onSearchError(String error) {
-                        PerformanceHelper.getInstance().endTiming("search_operation");
-                        callback.onSearchError(error);
-                    }
-                });
+                searchAlumni(filter, new AlumniSearchCallback(callback));
                 break;
                 
             case JOBS:
-                searchJobs(filter, new SearchCallback<JobPosting>() {
-                    @Override
-                    public void onSearchComplete(SearchResult<JobPosting> result) {
-                        PerformanceHelper.getInstance().endTiming("search_operation");
-                        callback.onSearchComplete(convertResult(result));
-                    }
-                    
-                    @Override
-                    public void onSearchError(String error) {
-                        PerformanceHelper.getInstance().endTiming("search_operation");
-                        callback.onSearchError(error);
-                    }
-                });
+                searchJobs(filter, new JobSearchCallback(callback));
                 break;
                 
             case EVENTS:
-                searchEvents(filter, new SearchCallback<AlumniEvent>() {
-                    @Override
-                    public void onSearchComplete(SearchResult<AlumniEvent> result) {
-                        PerformanceHelper.getInstance().endTiming("search_operation");
-                        callback.onSearchComplete(convertResult(result));
-                    }
-                    
-                    @Override
-                    public void onSearchError(String error) {
-                        PerformanceHelper.getInstance().endTiming("search_operation");
-                        callback.onSearchError(error);
-                    }
-                });
+                searchEvents(filter, new EventSearchCallback(callback));
                 break;
                 
             case ALL:
@@ -673,6 +637,70 @@ public class SearchAndFilterManager {
                 break;
         }
         return users;
+    }
+    
+    // Specific callback implementations to avoid type erasure issues
+    private class AlumniSearchCallback implements SearchCallback<User> {
+        private final SearchCallback<Object> originalCallback;
+        
+        AlumniSearchCallback(SearchCallback<Object> callback) {
+            this.originalCallback = callback;
+        }
+        
+        @Override
+        @SuppressWarnings("unchecked")
+        public void onSearchComplete(SearchResult result) {
+            PerformanceHelper.getInstance().endTiming("search_operation");
+            originalCallback.onSearchComplete(convertResult(result));
+        }
+        
+        @Override
+        public void onSearchError(String error) {
+            PerformanceHelper.getInstance().endTiming("search_operation");
+            originalCallback.onSearchError(error);
+        }
+    }
+    
+    private class JobSearchCallback implements SearchCallback<JobPosting> {
+        private final SearchCallback<Object> originalCallback;
+        
+        JobSearchCallback(SearchCallback<Object> callback) {
+            this.originalCallback = callback;
+        }
+        
+        @Override
+        @SuppressWarnings("unchecked")
+        public void onSearchComplete(SearchResult result) {
+            PerformanceHelper.getInstance().endTiming("search_operation");
+            originalCallback.onSearchComplete(convertResult(result));
+        }
+        
+        @Override
+        public void onSearchError(String error) {
+            PerformanceHelper.getInstance().endTiming("search_operation");
+            originalCallback.onSearchError(error);
+        }
+    }
+    
+    private class EventSearchCallback implements SearchCallback<AlumniEvent> {
+        private final SearchCallback<Object> originalCallback;
+        
+        EventSearchCallback(SearchCallback<Object> callback) {
+            this.originalCallback = callback;
+        }
+        
+        @Override
+        @SuppressWarnings("unchecked")
+        public void onSearchComplete(SearchResult result) {
+            PerformanceHelper.getInstance().endTiming("search_operation");
+            originalCallback.onSearchComplete(convertResult(result));
+        }
+        
+        @Override
+        public void onSearchError(String error) {
+            PerformanceHelper.getInstance().endTiming("search_operation");
+            originalCallback.onSearchError(error);
+        }
     }
     
     @SuppressWarnings("unchecked")

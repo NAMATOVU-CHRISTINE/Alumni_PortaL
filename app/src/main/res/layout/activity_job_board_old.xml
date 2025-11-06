@@ -45,93 +45,87 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Filter Row -->
-        <LinearLayout
+        <!-- Filter Chips -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_marginTop="8dp"
+            app:singleSelection="false">
 
-            <!-- Job Type Filter -->
-            <Spinner
-                android:id="@+id/jobTypeFilterSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp" />
-
-            <!-- Experience Filter -->
-            <Spinner
-                android:id="@+id/experienceFilterSpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
-
-            <!-- Clear Filters Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/clearFiltersButton"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFullTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Clear"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:text="Full Time"
+                style="@style/Widget.Material3.Chip.Filter" />
 
-        </LinearLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Part Time"
+                style="@style/Widget.Material3.Chip.Filter" />
 
-        <!-- Results Count -->
-        <TextView
-            android:id="@+id/resultCountText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="25 jobs found" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRemote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remote"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+        </com.google.android.material.chip.ChipGroup>
 
     </LinearLayout>
 
-    <!-- Content Container -->
-    <FrameLayout
+    <!-- Jobs RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewJobs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_job_posting" />
 
-        <!-- Jobs RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/jobsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_job_posting" />
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyStateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone">
 
-        <!-- Progress Bar -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_work"
+            android:alpha="0.6"
+            app:tint="?attr/colorOnSurfaceVariant" />
 
-        <!-- No Results Text -->
         <TextView
-            android:id="@+id/noResultsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:visibility="gone"
-            tools:text="No jobs found" />
+            android:layout_marginTop="16dp"
+            android:text="No jobs found"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
-    </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Try adjusting your search or filters"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+    </LinearLayout>
 
     <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addJobFab"
+        android:id="@+id/fabAddJob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

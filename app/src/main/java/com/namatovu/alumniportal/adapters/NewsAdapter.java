@@ -26,6 +26,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         void onNewsClick(NewsArticle newsArticle);
     }
     
+    public interface OnNewsActionListener {
+        void onNewsClick(NewsArticle newsArticle);
+        void onLikeClick(NewsArticle newsArticle);
+        void onShareClick(NewsArticle newsArticle);
+        void onCommentClick(NewsArticle newsArticle);
+        void onAuthorClick(String authorId);
+    }
+    
+    // Constructor with action listener
+    public NewsAdapter(List<NewsArticle> newsArticles, String currentUserId, OnNewsActionListener actionListener) {
+        this.newsArticles = newsArticles != null ? newsArticles : new ArrayList<>();
+        // Note: currentUserId can be used for additional functionality later
+    }
+    
     public void setOnNewsClickListener(OnNewsClickListener listener) {
         this.listener = listener;
     }

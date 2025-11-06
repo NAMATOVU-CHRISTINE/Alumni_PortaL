@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
-// import com.google.firebase.FirebaseTimeoutException;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.namatovu.alumniportal.LoginActivity;
@@ -166,7 +165,7 @@ public class ErrorHandler {
             return handleFirestoreException((FirebaseFirestoreException) throwable);
         } else if (throwable instanceof FirebaseNetworkException) {
             return handleNetworkException(throwable);
-        } else if (throwable instanceof FirebaseTimeoutException) {
+        } else if (isTimeoutException(throwable)) {
             return handleTimeoutException(throwable);
         } else if (isNetworkError(throwable)) {
             return handleNetworkException(throwable);
@@ -478,6 +477,15 @@ public class ErrorHandler {
             message.contains("ConnectException") ||
             message.contains("SocketTimeoutException") ||
             message.contains("IOException")
+        );
+    }
+    
+    private boolean isTimeoutException(Throwable throwable) {
+        String message = throwable.getMessage();
+        return message != null && (
+            message.contains("timeout") ||
+            message.contains("TimeoutException") ||
+            throwable.getClass().getSimpleName().contains("Timeout")
         );
     }
     
