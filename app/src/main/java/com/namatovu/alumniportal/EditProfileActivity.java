@@ -86,6 +86,9 @@ public class EditProfileActivity extends AppCompatActivity {
         // Initialize Analytics
         AnalyticsHelper.initialize(this);
         AnalyticsHelper.logNavigation("EditProfileActivity", "HomeActivity");
+        
+        // Initialize Security Helper
+        SecurityHelper.initialize(this);
 
         loadCurrentProfile();
     }
