@@ -15,8 +15,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-// import com.namatovu.alumniportal.adapters.JobPostingAdapter;
-// import com.namatovu.alumniportal.databinding.ActivityJobBoardBinding;
+import com.namatovu.alumniportal.adapters.JobPostingAdapter;
+import com.namatovu.alumniportal.databinding.ActivityJobBoardBinding;
 import com.namatovu.alumniportal.models.JobPosting;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
@@ -26,10 +26,10 @@ import java.util.List;
 public class JobBoardActivity extends AppCompatActivity {
     private static final String TAG = "JobBoardActivity";
     
-    // private ActivityJobBoardBinding binding;
+    private ActivityJobBoardBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    // private JobPostingAdapter adapter;
+    private JobPostingAdapter adapter;
     private List<JobPosting> allJobs;
     private List<JobPosting> filteredJobs;
     

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Advanced search and filtering system for alumni, jobs, events, and content
@@ -491,113 +492,79 @@ public class SearchAndFilterManager {
             }
         });
     }
-    
     /**
      * Search across all content types
      */
     private void searchAll(SearchFilter filter, SearchCallback<Object> callback) {
         List<Object> allResults = new ArrayList<>();
-        final int[] completedSearches = {0};
+        AtomicInteger completedSearches = new AtomicInteger(0);
         final int totalSearches = 3;
-        
+
         // Search alumni
         SearchFilter alumniFilter = new SearchFilter(filter.query);
         alumniFilter.type = SearchType.ALUMNI;
         alumniFilter.limit = 20;
-        
-        searchAlumni(alumniFilter, new SearchCallback<User>() {
-            @Override
-            public void onSearchComplete(SearchResult<User> result) {
-                synchronized (allResults) {
-                    allResults.addAll(result.results);
-                    completedSearches[0]++;
-                    checkSearchCompletion();
-                }
-            }
-            
-            @Override
-            public void onSearchError(String error) {
-                synchronized (allResults) {
-                    completedSearches[0]++;
-                    checkSearchCompletion();
-                }
-            }
-            
-            private void checkSearchCompletion() {
-                if (completedSearches[0] == totalSearches) {
-                    long searchTime = System.currentTimeMillis();
-                    SearchResult<Object> result = new SearchResult<>(allResults, filter.query, SearchType.ALL, searchTime);
-                    result.totalCount = allResults.size();
-                    callback.onSearchComplete(result);
-                }
-            }
-        });
-        
+
+        searchAlumni(alumniFilter, new AggregatingCallback<User>(allResults, completedSearches, totalSearches, callback, filter.query));
+
         // Search jobs
         SearchFilter jobFilter = new SearchFilter(filter.query);
         jobFilter.type = SearchType.JOBS;
         jobFilter.limit = 15;
-        
-        searchJobs(jobFilter, new SearchCallback<JobPosting>() {
-            @Override
-            public void onSearchComplete(SearchResult<JobPosting> result) {
-                synchronized (allResults) {
-                    allResults.addAll(result.results);
-                    completedSearches[0]++;
-                    checkSearchCompletion();
-                }
-            }
-            
-            @Override
-            public void onSearchError(String error) {
-                synchronized (allResults) {
-                    completedSearches[0]++;
-                    checkSearchCompletion();
-                }
-            }
-            
-            private void checkSearchCompletion() {
-                if (completedSearches[0] == totalSearches) {
-                    long searchTime = System.currentTimeMillis();
-                    SearchResult<Object> result = new SearchResult<>(allResults, filter.query, SearchType.ALL, searchTime);
-                    result.totalCount = allResults.size();
-                    callback.onSearchComplete(result);
-                }
-            }
-        });
-        
+
+        searchJobs(jobFilter, new AggregatingCallback<JobPosting>(allResults, completedSearches, totalSearches, callback, filter.query));
+
         // Search events
         SearchFilter eventFilter = new SearchFilter(filter.query);
         eventFilter.type = SearchType.EVENTS;
         eventFilter.limit = 15;
-        
-        searchEvents(eventFilter, new SearchCallback<AlumniEvent>() {
-            @Override
-            public void onSearchComplete(SearchResult<AlumniEvent> result) {
-                synchronized (allResults) {
-                    allResults.addAll(result.results);
-                    completedSearches[0]++;
-                    checkSearchCompletion();
-                }
-            }
-            
-            @Override
-            public void onSearchError(String error) {
-                synchronized (allResults) {
-                    completedSearches[0]++;
-                    checkSearchCompletion();
-                }
-            }
-            
-            private void checkSearchCompletion() {
-                if (completedSearches[0] == totalSearches) {
+
+        searchEvents(eventFilter, new AggregatingCallback<AlumniEvent>(allResults, completedSearches, totalSearches, callback, filter.query));
+    }
+
+    /**
+     * Aggregating callback used to collect results from multiple searches and invoke the final callback once complete.
+     */
+    private static class AggregatingCallback<T> implements SearchCallback<T> {
+        private final List<Object> allResults;
+        private final AtomicInteger completed;
+        private final int total;
+        private final SearchCallback<Object> finalCallback;
+        private final String query;
+
+        AggregatingCallback(List<Object> allResults, AtomicInteger completed, int total, SearchCallback<Object> finalCallback, String query) {
+            this.allResults = allResults;
+            this.completed = completed;
+            this.total = total;
+            this.finalCallback = finalCallback;
+            this.query = query;
+        }
+
+        @Override
+        public void onSearchComplete(SearchResult<T> result) {
+            synchronized (allResults) {
+                allResults.addAll(result.results);
+                if (completed.incrementAndGet() == total) {
                     long searchTime = System.currentTimeMillis();
-                    SearchResult<Object> result = new SearchResult<>(allResults, filter.query, SearchType.ALL, searchTime);
-                    result.totalCount = allResults.size();
-                    callback.onSearchComplete(result);
+                    SearchResult<Object> res = new SearchResult<>(allResults, query, SearchType.ALL, searchTime);
+                    res.totalCount = allResults.size();
+                    finalCallback.onSearchComplete(res);
                 }
             }
-        });
+        }
+
+        @Override
+        public void onSearchError(String error) {
+            synchronized (allResults) {
+                if (completed.incrementAndGet() == total) {
+                    long searchTime = System.currentTimeMillis();
+                    SearchResult<Object> res = new SearchResult<>(allResults, query, SearchType.ALL, searchTime);
+                    res.totalCount = allResults.size();
+                    finalCallback.onSearchComplete(res);
+                }
+            }
+        }
+    }
     }
     
     // Helper methods for filtering and sorting
