@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
 }
 
@@ -76,8 +76,6 @@ dependencies {
     implementation("androidx.work:work-runtime:$work_version")
     // KTX helpers for WorkManager (CoroutineWorker, etc.)
     implementation("androidx.work:work-runtime-ktx:$work_version")
-    // Kotlin stdlib (required when adding Kotlin sources)
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
