@@ -68,6 +68,9 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
         }
         
         public void bind(User user) {
+            // Start performance timing for bind operation
+            PerformanceHelper.getInstance().startTiming("alumni_adapter_bind");
+            
             // Basic info
             binding.nameText.setText(user.getFullName());
             binding.majorText.setText(user.getMajor() != null ? user.getMajor() : "Major not specified");
@@ -123,14 +126,13 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
                 binding.skillsText.setVisibility(View.GONE);
             }
             
-            // Profile image
+            // Profile image using optimized image loading
             if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
-                Glide.with(binding.getRoot().getContext())
-                        .load(user.getProfileImageUrl())
-                        .placeholder(R.drawable.ic_person)
-                        .error(R.drawable.ic_person)
-                        .circleCrop()
-                        .into(binding.profileImage);
+                ImageLoadingHelper.loadProfileImage(
+                    binding.getRoot().getContext(),
+                    user.getProfileImageUrl(),
+                    binding.profileImage
+                );
             } else {
                 binding.profileImage.setImageResource(R.drawable.ic_person);
             }
@@ -149,6 +151,9 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
             } else {
                 binding.mentorAvailableText.setVisibility(View.GONE);
             }
+            
+            // End performance timing
+            PerformanceHelper.getInstance().endTiming("alumni_adapter_bind");
         }
     }
 }
