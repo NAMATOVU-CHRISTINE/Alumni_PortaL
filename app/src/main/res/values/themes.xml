@@ -23,12 +23,4 @@
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>
     </style>
 
-    <!-- Base overlay placeholders used by components so overlays resolve during resource linking -->
-    <style name="ShapeAppearanceOverlay" />
-    <style name="ShapeAppearanceOverlay.App" />
-
-    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent">
-        <item name="cornerSize">50%</item>
-    </style>
-
 </resources>
