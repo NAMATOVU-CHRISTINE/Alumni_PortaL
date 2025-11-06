@@ -565,7 +565,6 @@ public class SearchAndFilterManager {
             }
         }
     }
-    }
     
     // Helper methods for filtering and sorting
     private Query applySorting(Query query, SortOption sortBy) {
