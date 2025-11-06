@@ -1,0 +1,120 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - users can only read/write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow reading basic profile info for other users (for alumni directory)
+      allow read: if request.auth != null && 
+                     resource.data.keys().hasAny(['fullName', 'major', 'graduationYear', 'profileImageUrl', 'bio']) &&
+                     !resource.data.keys().hasAny(['email', 'studentId', 'personalEmail']);
+    }
+    
+    // Public alumni directory - read-only access to limited user data
+    match /alumni_directory/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId &&
+                      validateAlumniData(request.resource.data);
+    }
+    
+    // Job postings - authenticated users can read, only verified alumni can post
+    match /job_postings/{postId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+                       isVerifiedAlumni() &&
+                       validateJobPosting(request.resource.data);
+      allow update, delete: if request.auth != null && 
+                               request.auth.uid == resource.data.postedBy;
+    }
+    
+    // Mentor connections - users can manage their own mentor relationships
+    match /mentor_connections/{connectionId} {
+      allow read, write: if request.auth != null && 
+                            (request.auth.uid == resource.data.mentorId || 
+                             request.auth.uid == resource.data.menteeId);
+      allow create: if request.auth != null &&
+                       validateMentorConnection(request.resource.data);
+    }
+    
+    // Events - authenticated users can read, admins can write
+    match /events/{eventId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && isAdmin();
+    }
+    
+    // News/Announcements - authenticated users can read, admins can write
+    match /news/{newsId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && isAdmin();
+    }
+    
+    // User feedback/reports - users can create, admins can read
+    match /feedback/{feedbackId} {
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId &&
+                       validateFeedback(request.resource.data);
+      allow read: if request.auth != null && isAdmin();
+    }
+    
+    // Private user data that should never be accessible to other users
+    match /private_user_data/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Functions to validate data and check permissions
+    function validateAlumniData(data) {
+      return data.keys().hasAll(['fullName', 'major', 'graduationYear']) &&
+             data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 50 &&
+             data.major is string && data.major.size() > 0 && data.major.size() <= 100 &&
+             data.graduationYear is number && data.graduationYear >= 1950 && data.graduationYear <= 2030 &&
+             (!data.keys().hasAny(['bio']) || (data.bio is string && data.bio.size() <= 500)) &&
+             (!data.keys().hasAny(['skills']) || (data.skills is string && data.skills.size() <= 200));
+    }
+    
+    function validateJobPosting(data) {
+      return data.keys().hasAll(['title', 'company', 'description', 'postedBy', 'postedAt']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.company is string && data.company.size() > 0 && data.company.size() <= 100 &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 2000 &&
+             data.postedBy == request.auth.uid &&
+             data.postedAt == request.time &&
+             (!data.keys().hasAny(['salary']) || data.salary is string) &&
+             (!data.keys().hasAny(['location']) || data.location is string) &&
+             (!data.keys().hasAny(['requirements']) || (data.requirements is string && data.requirements.size() <= 1000));
+    }
+    
+    function validateMentorConnection(data) {
+      return data.keys().hasAll(['mentorId', 'menteeId', 'status', 'requestedAt']) &&
+             (data.mentorId == request.auth.uid || data.menteeId == request.auth.uid) &&
+             data.mentorId != data.menteeId &&
+             data.status in ['pending', 'accepted', 'rejected', 'ended'] &&
+             data.requestedAt == request.time &&
+             (!data.keys().hasAny(['message']) || (data.message is string && data.message.size() <= 500));
+    }
+    
+    function validateFeedback(data) {
+      return data.keys().hasAll(['userId', 'type', 'message', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.type in ['bug_report', 'feature_request', 'general_feedback', 'inappropriate_content'] &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 1000 &&
+             data.createdAt == request.time;
+    }
+    
+    function isVerifiedAlumni() {
+      // Check if user is verified alumni - implement based on your verification system
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isVerified == true;
+    }
+    
+    function isAdmin() {
+      // Check if user has admin privileges
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+  }
+}

@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,6 +29,10 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase instances
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        
+        // Initialize Analytics
+        AnalyticsHelper.initialize(this);
+        AnalyticsHelper.logNavigation("LoginActivity", "App Launch");
 
         // Set click listeners
         binding.loginButton.setOnClickListener(v -> loginUser());
@@ -107,6 +112,12 @@ public class LoginActivity extends AppCompatActivity {
     
     private void navigateToHome() {
         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+        
+        // Log analytics event for successful login
+        AnalyticsHelper.logLogin("email");
+        if (mAuth.getCurrentUser() != null) {
+            AnalyticsHelper.setUserId(mAuth.getCurrentUser().getUid());
+        }
         
         // Schedule background data sync now that user is logged in
         if (getApplication() instanceof AlumniApplication) {

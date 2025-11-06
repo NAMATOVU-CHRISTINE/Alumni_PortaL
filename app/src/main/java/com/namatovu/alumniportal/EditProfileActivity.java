@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.namatovu.alumniportal.utils.PermissionHelper;
+import com.namatovu.alumniportal.utils.AnalyticsHelper;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,11 +71,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-            if (granted) {
-                openImagePicker();
-            } else {
-                Toast.makeText(this, "Permission required to pick images.", Toast.LENGTH_SHORT).show();
-            }
+            PermissionHelper.handlePermissionResult(this, granted, () -> openImagePicker());
         });
 
         binding.changeProfilePhotoText.setOnClickListener(v -> ensurePermissionAndPickImage());
@@ -82,24 +80,19 @@ public class EditProfileActivity extends AppCompatActivity {
         binding.skillTextInputLayout.setEndIconOnClickListener(v -> addSkillFromInput());
 
         binding.saveButton.setOnClickListener(v -> saveProfile());
+        
+        // Initialize Analytics
+        AnalyticsHelper.initialize(this);
+        AnalyticsHelper.logNavigation("EditProfileActivity", "HomeActivity");
 
         loadCurrentProfile();
     }
 
     private void ensurePermissionAndPickImage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Android 13+ uses READ_MEDIA_IMAGES
-            if (checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                openImagePicker();
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
-            }
+        if (PermissionHelper.hasStoragePermission(this)) {
+            openImagePicker();
         } else {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                openImagePicker();
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-            }
+            PermissionHelper.requestStoragePermission(this, requestPermissionLauncher);
         }
     }
 
@@ -209,10 +202,17 @@ public class EditProfileActivity extends AppCompatActivity {
         db.collection("users").document(uid).update(updates).addOnCompleteListener(task -> {
             binding.saveButton.setEnabled(true);
             if (task.isSuccessful()) {
+                // Log analytics event for profile update
+                String editType = selectedImageUri != null ? "with_photo" : "without_photo";
+                AnalyticsHelper.logProfileEdit(editType);
+                
                 Toast.makeText(EditProfileActivity.this, "Profile updated.", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 Toast.makeText(EditProfileActivity.this, "Failed to update profile.", Toast.LENGTH_SHORT).show();
+                AnalyticsHelper.logError("profile_update_failed", 
+                    task.getException() != null ? task.getException().getMessage() : "Unknown error", 
+                    "EditProfileActivity");
             }
         });
     }
