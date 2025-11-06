@@ -89,4 +89,7 @@ dependencies {
 
     // Guava dependency for ListenableFuture
     implementation("com.google.guava:guava:33.0.0-android")
+    
+    // Security - Encrypted SharedPreferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

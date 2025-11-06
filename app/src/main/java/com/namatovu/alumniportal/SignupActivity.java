@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -30,6 +31,10 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        
+        // Initialize Analytics
+        AnalyticsHelper.initialize(this);
+        AnalyticsHelper.logNavigation("SignupActivity", "LoginActivity");
 
         binding.signupButton.setEnabled(false);
 
@@ -137,6 +142,10 @@ public class SignupActivity extends AppCompatActivity {
     private void saveUserToDatabase(String userId, User newUser) {
         db.collection("users").document(userId).set(newUser)
                 .addOnSuccessListener(aVoid -> {
+                    // Log analytics event for successful signup
+                    AnalyticsHelper.logSignUp("email");
+                    AnalyticsHelper.setUserId(userId);
+                    
                     mAuth.signOut();
                     Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -146,6 +155,7 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error saving user data", e);
                     Toast.makeText(SignupActivity.this, "A critical error occurred while saving your profile.", Toast.LENGTH_LONG).show();
+                    AnalyticsHelper.logError("database_save_failed", e.getMessage(), "SignupActivity");
                 });
     }
 }
