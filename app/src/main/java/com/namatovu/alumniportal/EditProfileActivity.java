@@ -168,10 +168,26 @@ public class EditProfileActivity extends AppCompatActivity {
         String bio = binding.bioEditText.getText() != null ? binding.bioEditText.getText().toString().trim() : "";
         String career = binding.careerEditText.getText() != null ? binding.careerEditText.getText().toString().trim() : "";
 
+        // Validate and sanitize input
+        name = SecurityHelper.sanitizeInput(name);
+        bio = SecurityHelper.sanitizeInput(bio);
+        career = SecurityHelper.sanitizeInput(career);
+
+        // Validate profile data
+        if (!SecurityHelper.isValidProfileData(name, bio, null)) {
+            Toast.makeText(this, "Please check your input. Some fields contain invalid data.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         List<String> skills = new ArrayList<>();
         for (int i = 0; i < binding.skillsChipGroup.getChildCount(); i++) {
             View v = binding.skillsChipGroup.getChildAt(i);
-            if (v instanceof Chip) skills.add(((Chip) v).getText().toString());
+            if (v instanceof Chip) {
+                String skill = SecurityHelper.sanitizeInput(((Chip) v).getText().toString());
+                if (!skill.isEmpty()) {
+                    skills.add(skill);
+                }
+            }
         }
 
         binding.saveButton.setEnabled(false);
