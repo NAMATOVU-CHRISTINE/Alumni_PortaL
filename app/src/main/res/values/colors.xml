@@ -17,4 +17,7 @@
     <!-- Chat specific colors -->
     <color name="typing_background">#E8F5E8</color>
     <color name="camera_option_color">#4CAF50</color>
+    <color name="gallery_option_color">#2196F3</color>
+    <color name="file_option_color">#FF9800</color>
+    <color name="location_option_color">#9C27B0</color>
 </resources>
