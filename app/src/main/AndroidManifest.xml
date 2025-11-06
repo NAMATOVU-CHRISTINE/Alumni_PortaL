@@ -45,14 +45,10 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".EventsActivity" />
         <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".MentorSearchActivity" />
-        <activity android:name=".JobsActivity" />
-        <activity android:name=".KnowledgeHubActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".AlumniDirectoryActivity" />
         <activity android:name=".JobBoardActivity" />
         <activity android:name=".MentorshipActivity" />
-        <activity android:name=".EventsActivity" />
         <activity android:name=".NewsFeedActivity" />
         <activity android:name=".ViewProfileActivity" />
         <activity android:name=".JobDetailsActivity" />
@@ -63,19 +59,15 @@
         <activity android:name=".CreateArticleActivity" />
         <activity android:name=".MentorDetailActivity" />
         <activity android:name=".JobDetailActivity" />
-        <activity android:name=".CreatePostActivity" /> <!-- Static Receiver for System-Wide Events -->
-        <receiver
-            android:name=".NetworkReceiver"
-            android:exported="true">
-            <intent-filter>
-
-                <!-- Listen for network connectivity changes -->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <!-- Listen for power connected and disconnected events -->
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".CreatePostActivity" />
+        <activity android:name=".activities.ChatListActivity" />
+        <activity android:name=".activities.ChatActivity" />
+        <activity android:name=".activities.NotificationSettingsActivity" />
+        <activity android:name=".activities.PrivacySettingsActivity" />
+        
+        <!-- Services -->
+        <service android:name=".services.AlumniNotificationService" 
+            android:exported="false" />
     </application>
 
 </manifest>

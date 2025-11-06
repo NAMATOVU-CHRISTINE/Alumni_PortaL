@@ -308,7 +308,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="News & Updates"
+                                android:text="News &amp; Updates"
                                 android:textSize="16sp"
                                 android:textColor="?android:attr/textColorPrimary" />
 
