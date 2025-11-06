@@ -51,9 +51,16 @@
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".AlumniDirectoryActivity" />
         <activity android:name=".JobBoardActivity" />
+        <activity android:name=".MentorshipActivity" />
+        <activity android:name=".EventsActivity" />
+        <activity android:name=".NewsFeedActivity" />
         <activity android:name=".ViewProfileActivity" />
         <activity android:name=".JobDetailsActivity" />
         <activity android:name=".PostJobActivity" />
+        <activity android:name=".EventDetailsActivity" />
+        <activity android:name=".CreateEventActivity" />
+        <activity android:name=".ArticleDetailsActivity" />
+        <activity android:name=".CreateArticleActivity" />
         <activity android:name=".MentorDetailActivity" />
         <activity android:name=".JobDetailActivity" />
         <activity android:name=".CreatePostActivity" /> <!-- Static Receiver for System-Wide Events -->

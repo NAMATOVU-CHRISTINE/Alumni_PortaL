@@ -87,15 +87,17 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Mentor card - navigate to alumni directory for mentor search
+        // Mentor card - navigate to mentorship system
         binding.mentorCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AlumniDirectoryActivity.class);
+            Intent intent = new Intent(this, MentorshipActivity.class);
             startActivity(intent);
         });
         
-        // Mentees card - placeholder for now with improved toast
-        binding.menteesCard.setOnClickListener(v -> 
-            Toast.makeText(this, "Find Mentees - Coming Soon!", Toast.LENGTH_SHORT).show());
+        // Mentees card - also navigate to mentorship system
+        binding.menteesCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MentorshipActivity.class);
+            startActivity(intent);
+        });
         
         // Jobs card - navigate to job board
         binding.jobsCard.setOnClickListener(v -> {
@@ -103,13 +105,17 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Events card - placeholder for now with improved toast
-        binding.eventsCard.setOnClickListener(v -> 
-            Toast.makeText(this, "Upcoming Events - Coming Soon!", Toast.LENGTH_SHORT).show());
+        // Events card - navigate to events calendar
+        binding.eventsCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, EventsActivity.class);
+            startActivity(intent);
+        });
         
-        // Knowledge Hub card - placeholder for now with improved toast
-        binding.knowledgeHubCard.setOnClickListener(v -> 
-            Toast.makeText(this, "Knowledge Hub - Coming Soon!", Toast.LENGTH_SHORT).show());
+        // Knowledge Hub card - navigate to news feed
+        binding.knowledgeHubCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NewsFeedActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void loadUserProfile(String userId) {
