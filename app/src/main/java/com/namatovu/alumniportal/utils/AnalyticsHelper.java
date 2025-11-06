@@ -162,4 +162,31 @@ public class AnalyticsHelper {
             Log.d(TAG, "User ID set: " + userId);
         }
     }
+    
+    /**
+     * Log performance issues
+     */
+    public static void logPerformanceIssue(String operation, long duration) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("operation", operation);
+            bundle.putLong("duration_ms", duration);
+            mFirebaseAnalytics.logEvent("performance_issue", bundle);
+            Log.d(TAG, "Performance issue logged: " + operation + " (" + duration + "ms)");
+        }
+    }
+    
+    /**
+     * Log crash data for analysis
+     */
+    public static void logCrash(java.util.Map<String, String> crashData) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            for (java.util.Map.Entry<String, String> entry : crashData.entrySet()) {
+                bundle.putString(entry.getKey(), entry.getValue());
+            }
+            mFirebaseAnalytics.logEvent("app_crash", bundle);
+            Log.d(TAG, "Crash logged with data: " + crashData.size() + " fields");
+        }
+    }
 }
