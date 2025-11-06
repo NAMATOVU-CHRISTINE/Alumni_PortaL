@@ -189,4 +189,77 @@ public class AnalyticsHelper {
             Log.d(TAG, "Crash logged with data: " + crashData.size() + " fields");
         }
     }
+    
+    /**
+     * Log privacy setting changes
+     */
+    public static void logPrivacySettingChange(String settingKey, boolean value) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("setting_key", settingKey);
+            bundle.putBoolean("setting_value", value);
+            mFirebaseAnalytics.logEvent("privacy_setting_changed", bundle);
+            Log.d(TAG, "Privacy setting change logged: " + settingKey + " = " + value);
+        }
+    }
+    
+    /**
+     * Log search events
+     */
+    public static void logSearch(String query, String searchType) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("search_term", query);
+            bundle.putString("search_type", searchType);
+            mFirebaseAnalytics.logEvent("search", bundle);
+            Log.d(TAG, "Search logged: " + query + " (" + searchType + ")");
+        }
+    }
+    
+    /**
+     * Log file operations
+     */
+    public static void logFileUpload(String fileType, long fileSize, String shareScope) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("file_type", fileType);
+            bundle.putLong("file_size", fileSize);
+            bundle.putString("share_scope", shareScope);
+            mFirebaseAnalytics.logEvent("file_upload", bundle);
+            Log.d(TAG, "File upload logged: " + fileType + " (" + fileSize + " bytes)");
+        }
+    }
+    
+    public static void logFileDownload(String fileType, long fileSize) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("file_type", fileType);
+            bundle.putLong("file_size", fileSize);
+            mFirebaseAnalytics.logEvent("file_download", bundle);
+            Log.d(TAG, "File download logged: " + fileType);
+        }
+    }
+    
+    /**
+     * Log notification events
+     */
+    public static void logNotificationShown(String notificationType, String priority) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("notification_type", notificationType);
+            bundle.putString("priority", priority);
+            mFirebaseAnalytics.logEvent("notification_shown", bundle);
+            Log.d(TAG, "Notification shown logged: " + notificationType);
+        }
+    }
+    
+    public static void logTopicNotification(String topic, String notificationType) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("topic", topic);
+            bundle.putString("notification_type", notificationType);
+            mFirebaseAnalytics.logEvent("topic_notification", bundle);
+            Log.d(TAG, "Topic notification logged: " + topic);
+        }
+    }
 }
