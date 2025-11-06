@@ -75,13 +75,37 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupCardClickListeners() {
-        binding.profileCard.setOnClickListener(v -> Toast.makeText(this, "My Profile Clicked", Toast.LENGTH_SHORT).show());
-        binding.mentorCard.setOnClickListener(v -> Toast.makeText(this, "Find a Mentor Clicked", Toast.LENGTH_SHORT).show());
-        binding.menteesCard.setOnClickListener(v -> Toast.makeText(this, "Find Mentees Clicked", Toast.LENGTH_SHORT).show());
-        binding.jobsCard.setOnClickListener(v -> Toast.makeText(this, "Jobs & Internships Clicked", Toast.LENGTH_SHORT).show());
-        binding.eventsCard.setOnClickListener(v -> Toast.makeText(this, "Upcoming Events Clicked", Toast.LENGTH_SHORT).show());
-        binding.knowledgeHubCard.setOnClickListener(v -> Toast.makeText(this, "Knowledge Hub Clicked", Toast.LENGTH_SHORT).show());
-        binding.profileCompletionCard.setOnClickListener(v -> Toast.makeText(this, "Edit Profile Clicked", Toast.LENGTH_SHORT).show());
+        // Profile card - navigate to profile activity
+        binding.profileCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
+        
+        // Edit Profile card - navigate to edit profile activity
+        binding.profileCompletionCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, EditProfileActivity.class);
+            startActivity(intent);
+        });
+        
+        // Mentor card - placeholder for now with improved toast
+        binding.mentorCard.setOnClickListener(v -> 
+            Toast.makeText(this, "Find a Mentor - Coming Soon!", Toast.LENGTH_SHORT).show());
+        
+        // Mentees card - placeholder for now with improved toast
+        binding.menteesCard.setOnClickListener(v -> 
+            Toast.makeText(this, "Find Mentees - Coming Soon!", Toast.LENGTH_SHORT).show());
+        
+        // Jobs card - placeholder for now with improved toast
+        binding.jobsCard.setOnClickListener(v -> 
+            Toast.makeText(this, "Jobs & Internships - Coming Soon!", Toast.LENGTH_SHORT).show());
+        
+        // Events card - placeholder for now with improved toast
+        binding.eventsCard.setOnClickListener(v -> 
+            Toast.makeText(this, "Upcoming Events - Coming Soon!", Toast.LENGTH_SHORT).show());
+        
+        // Knowledge Hub card - placeholder for now with improved toast
+        binding.knowledgeHubCard.setOnClickListener(v -> 
+            Toast.makeText(this, "Knowledge Hub - Coming Soon!", Toast.LENGTH_SHORT).show());
     }
 
     private void loadUserProfile(String userId) {

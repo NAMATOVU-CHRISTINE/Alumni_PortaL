@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.namatovu.alumniportal.databinding.SignupBinding;
+import com.namatovu.alumniportal.databinding.ActivitySignupBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -18,14 +18,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
-    private SignupBinding binding;
+    private ActivitySignupBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = SignupBinding.inflate(getLayoutInflater());
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mAuth = FirebaseAuth.getInstance();
