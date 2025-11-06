@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/mentorNameText"
+            android:id="@+id/textMentorName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -34,15 +34,57 @@
             tools:text="John Doe" />
 
         <TextView
-            android:id="@+id/mentorExpertiseText"
+            android:id="@+id/textPosition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textAppearance="@style/App.TextAppearance.Body"
-            app:layout_constraintStart_toStartOf="@id/mentorNameText"
-            app:layout_constraintTop_toBottomOf="@id/mentorNameText"
+            app:layout_constraintStart_toStartOf="@id/textMentorName"
+            app:layout_constraintTop_toBottomOf="@id/textMentorName"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Software Engineer at Google" />
+            tools:text="Software Engineer" />
+
+        <TextView
+            android:id="@+id/textCompany"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/App.TextAppearance.Caption"
+            app:layout_constraintStart_toStartOf="@id/textMentorName"
+            app:layout_constraintTop_toBottomOf="@id/textPosition"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Google" />
+
+        <TextView
+            android:id="@+id/textSkills"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/App.TextAppearance.Caption"
+            app:layout_constraintStart_toStartOf="@id/textMentorName"
+            app:layout_constraintTop_toBottomOf="@id/textCompany"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Java, Android, Kotlin" />
+
+        <TextView
+            android:id="@+id/textRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="★★★★★"
+            android:textSize="12sp"
+            android:textColor="#FFD700"
+            app:layout_constraintStart_toStartOf="@id/textMentorName"
+            app:layout_constraintTop_toBottomOf="@id/textSkills" />
+
+        <Button
+            android:id="@+id/buttonConnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textSkills" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

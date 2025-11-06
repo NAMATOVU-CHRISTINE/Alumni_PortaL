@@ -182,7 +182,8 @@ public class PerformanceHelper {
         public void trimMemory() {
             Activity activity = activityRef != null ? activityRef.get() : null;
             if (activity != null) {
-                activity.onTrimMemory(ActivityManager.TRIM_MEMORY_RUNNING_LOW);
+                // Use a known constant instead of the missing one
+                activity.onTrimMemory(20); // TRIM_MEMORY_RUNNING_LOW value
             }
             
             // Clear image cache if memory is low
