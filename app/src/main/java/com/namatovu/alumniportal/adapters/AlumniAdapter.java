@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.databinding.ItemAlumniBinding;
 import com.namatovu.alumniportal.models.User;
+import com.namatovu.alumniportal.utils.ImageLoadingHelper;
+import com.namatovu.alumniportal.utils.PerformanceHelper;
 
 import java.util.List;
 
