@@ -49,6 +49,11 @@
         <activity android:name=".JobsActivity" />
         <activity android:name=".KnowledgeHubActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".AlumniDirectoryActivity" />
+        <activity android:name=".JobBoardActivity" />
+        <activity android:name=".ViewProfileActivity" />
+        <activity android:name=".JobDetailsActivity" />
+        <activity android:name=".PostJobActivity" />
         <activity android:name=".MentorDetailActivity" />
         <activity android:name=".JobDetailActivity" />
         <activity android:name=".CreatePostActivity" /> <!-- Static Receiver for System-Wide Events -->
