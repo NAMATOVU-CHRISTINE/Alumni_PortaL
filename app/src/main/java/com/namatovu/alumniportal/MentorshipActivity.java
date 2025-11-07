@@ -123,10 +123,7 @@ public class MentorshipActivity extends AppCompatActivity {
                 // TODO: implement
             }
 
-            @Override
-            public void onCompleteConnection(MentorshipConnection connection) {
-                // TODO: implement
-            }
+            // onCompleteConnection temporarily removed
         };
         
         adapter = new MentorshipAdapter(filteredConnections, currentUserId, listener);
