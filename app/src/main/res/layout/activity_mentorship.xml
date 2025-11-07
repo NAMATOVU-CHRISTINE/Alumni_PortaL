@@ -22,7 +22,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="#1565C0"
+            android:background="@color/must_green"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <LinearLayout
@@ -61,12 +61,12 @@
             android:layout_height="48dp"
             android:background="@color/white"
             app:tabTextColor="@color/dark_gray"
-            app:tabSelectedTextColor="#1565C0"
-            app:tabIndicatorColor="#1565C0"
+            app:tabSelectedTextColor="@color/must_green"
+            app:tabIndicatorColor="@color/must_green"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabRippleColor="#E3F2FD">
+            app:tabRippleColor="@color/light_green">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
