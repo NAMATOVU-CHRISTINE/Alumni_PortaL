@@ -204,6 +204,19 @@ public class AnalyticsHelper {
     }
     
     /**
+     * Track screen view events
+     */
+    public static void logScreenView(Context context, String screenName) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
+            bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, context.getClass().getSimpleName());
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
+            Log.d(TAG, "Screen view logged: " + screenName);
+        }
+    }
+    
+    /**
      * Log search events
      */
     public static void logSearch(String query, String searchType) {
@@ -213,6 +226,20 @@ public class AnalyticsHelper {
             bundle.putString("search_type", searchType);
             mFirebaseAnalytics.logEvent("search", bundle);
             Log.d(TAG, "Search logged: " + query + " (" + searchType + ")");
+        }
+    }
+    
+    /**
+     * Log search events with result count
+     */
+    public static void logSearch(String query, String searchType, int resultCount) {
+        if (mFirebaseAnalytics != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("search_term", query);
+            bundle.putString("search_type", searchType);
+            bundle.putInt("result_count", resultCount);
+            mFirebaseAnalytics.logEvent("search", bundle);
+            Log.d(TAG, "Search logged: " + query + " (" + searchType + ") with " + resultCount + " results");
         }
     }
     

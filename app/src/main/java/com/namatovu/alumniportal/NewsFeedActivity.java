@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +22,6 @@ import com.namatovu.alumniportal.models.NewsArticle;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class NewsFeedActivity extends AppCompatActivity {
@@ -31,7 +29,6 @@ public class NewsFeedActivity extends AppCompatActivity {
     
     private ActivityNewsFeedBinding binding;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
     private NewsAdapter adapter;
     private List<NewsArticle> allArticles;
     private List<NewsArticle> filteredArticles;
@@ -47,7 +44,7 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
         
         // Initialize Analytics
