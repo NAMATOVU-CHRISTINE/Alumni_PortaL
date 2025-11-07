@@ -165,13 +165,25 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
             tvDate.setText(article.getFormattedDate());
             tvTitle.setText(article.getTitle());
             tvDescription.setText(article.getDescription());
+            
+            // Set author
+            if (article.getAuthorName() != null && !article.getAuthorName().isEmpty()) {
+                tvAuthor.setText("By " + article.getAuthorName());
+                tvAuthor.setVisibility(View.VISIBLE);
+            } else {
+                tvAuthor.setVisibility(View.GONE);
+            }
+
+            // Update like button state
+            String likeText = article.isLiked() ? "❤️ " + article.getLikeCount() : "🤍 " + article.getLikeCount();
+            btnLike.setText(likeText);
 
             // Update bookmark button state
             if (article.isBookmarked()) {
-                btnBookmark.setText("✅ Saved");
+                btnBookmark.setText("✅");
                 btnBookmark.setTextColor(context.getColor(R.color.must_green));
             } else {
-                btnBookmark.setText("📖 Save");
+                btnBookmark.setText("📖");
                 btnBookmark.setTextColor(context.getColor(R.color.must_green));
             }
         }
