@@ -14,8 +14,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary" />
+            android:background="@color/light_gray"
+            app:titleTextColor="@color/black" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -55,12 +55,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:hint="Name">
+                android:hint="Name (From Signup)"
+                app:helperText="Name cannot be changed">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nameEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:clickable="false"
+                    android:background="@color/light_gray" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

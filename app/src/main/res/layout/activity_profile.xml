@@ -182,6 +182,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_menu_edit"
+        android:backgroundTint="@color/must_gold"
+        app:tint="@color/black"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|end" />
 
