@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.namatovu.alumniportal.R;
+import com.namatovu.alumniportal.AlumniDirectoryActivity;
 import com.namatovu.alumniportal.adapters.ChatListAdapter;
 import com.namatovu.alumniportal.models.Chat;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
