@@ -80,7 +80,8 @@ public class AddArticleActivity extends AppCompatActivity {
             return false;
         }
 
-        // Check if a category is selected
+        // Since we have selectionRequired="true" and one chip is checked by default,
+        // this should always have a selection, but let's keep the check for safety
         int checkedChipId = chipGroupCategory.getCheckedChipId();
         android.util.Log.d("AddArticle", "Checked chip ID: " + checkedChipId);
         
