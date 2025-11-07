@@ -90,6 +90,37 @@ public class Article {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
+    public int getLikeCount() { return likeCount; }
+    public void setLikeCount(int likeCount) { this.likeCount = likeCount; }
+
+    public List<String> getLikedByUsers() { return likedByUsers; }
+    public void setLikedByUsers(List<String> likedByUsers) { this.likedByUsers = likedByUsers; }
+
+    public boolean isLiked() { return isLiked; }
+    public void setLiked(boolean liked) { isLiked = liked; }
+
+    // Method to toggle like
+    public void toggleLike(String userId) {
+        if (likedByUsers == null) {
+            likedByUsers = new ArrayList<>();
+        }
+        
+        if (likedByUsers.contains(userId)) {
+            likedByUsers.remove(userId);
+            likeCount = Math.max(0, likeCount - 1);
+            isLiked = false;
+        } else {
+            likedByUsers.add(userId);
+            likeCount++;
+            isLiked = true;
+        }
+    }
+
+    // Method to check if user has liked
+    public boolean hasUserLiked(String userId) {
+        return likedByUsers != null && likedByUsers.contains(userId);
+    }
+
     // Helper method to get category icon
     private String getCategoryIcon(String category) {
         switch (category) {
