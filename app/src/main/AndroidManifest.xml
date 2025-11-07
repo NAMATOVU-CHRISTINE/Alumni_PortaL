@@ -50,6 +50,7 @@
         <activity android:name=".JobBoardActivity" />
         <activity android:name=".MentorshipActivity" />
         <activity android:name=".MentorSearchActivity" />
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".NewsFeedActivity" />
         <activity android:name=".ViewProfileActivity" />
         <activity android:name=".JobDetailsActivity" />
