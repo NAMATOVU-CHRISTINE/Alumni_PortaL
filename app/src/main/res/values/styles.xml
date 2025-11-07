@@ -44,6 +44,7 @@
     <style name="App.TextAppearance.Title" parent="TextAppearance.Material3.TitleLarge" />
     <style name="App.TextAppearance.Subtitle" parent="TextAppearance.Material3.TitleMedium" />
     <style name="App.TextAppearance.Body" parent="TextAppearance.Material3.BodyMedium" />
+    <style name="App.TextAppearance.Caption" parent="TextAppearance.Material3.BodySmall" />
 
     <!-- Shape appearances -->
     <style name="Shape.App.Small" parent="ShapeAppearance.Material3.SmallComponent">
