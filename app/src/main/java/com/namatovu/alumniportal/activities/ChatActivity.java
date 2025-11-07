@@ -603,6 +603,23 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         return super.onOptionsItemSelected(item);
     }
     
+    private void loadCurrentUserName() {
+        db.collection("users").document(currentUserId)
+                .get()
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc.exists()) {
+                        currentUserName = userDoc.getString("fullName");
+                        if (currentUserName == null) currentUserName = "Unknown User";
+                    } else {
+                        currentUserName = "Unknown User";
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading current user name", e);
+                    currentUserName = "Unknown User";
+                });
+    }
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();
