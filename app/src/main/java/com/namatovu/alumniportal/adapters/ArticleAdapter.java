@@ -28,6 +28,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         void onArticleClick(Article article);
         void onBookmarkClick(Article article);
         void onShareClick(Article article);
+        void onLikeClick(Article article);
     }
 
     public ArticleAdapter(Context context, List<Article> articles) {
