@@ -2,22 +2,37 @@ package com.namatovu.alumniportal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.namatovu.alumniportal.adapters.CommentAdapter;
+import com.namatovu.alumniportal.models.Comment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Article Detail Activity - Full view of an article with content and actions
+ * Article Detail Activity - Full view of an article with content, comments and actions
  */
-public class ArticleDetailActivity extends AppCompatActivity {
+public class ArticleDetailActivity extends AppCompatActivity implements CommentAdapter.OnCommentInteractionListener {
 
     private TextView tvTitle, tvCategory, tvAuthor, tvDate, tvContent;
-    private MaterialButton btnBookmark, btnShare;
+    private MaterialButton btnBookmark, btnShare, btnLike, btnSendComment;
     private FloatingActionButton fabShare;
+    private RecyclerView recyclerViewComments;
+    private EditText etComment;
+    
+    private CommentAdapter commentAdapter;
+    private List<Comment> comments;
+    private boolean isArticleLiked = false;
+    private int articleLikeCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +43,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
         setupToolbar();
         loadArticleData();
         setupActionButtons();
+        setupComments();
+        loadSampleComments();
     }
 
     private void initializeViews() {
