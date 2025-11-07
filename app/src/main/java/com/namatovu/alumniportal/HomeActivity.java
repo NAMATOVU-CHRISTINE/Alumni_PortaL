@@ -327,9 +327,9 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Knowledge Hub card - navigate to news feed
+        // Knowledge Hub card - navigate to knowledge section
         binding.knowledgeHubCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NewsFeedActivity.class);
+            Intent intent = new Intent(this, KnowledgeActivity.class);
             startActivity(intent);
         });
         
