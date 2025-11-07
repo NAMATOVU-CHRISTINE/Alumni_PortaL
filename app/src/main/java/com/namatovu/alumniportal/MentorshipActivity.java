@@ -75,6 +75,9 @@ public class MentorshipActivity extends AppCompatActivity {
     }
 
     private void setupTabs() {
+        // Clear any existing tabs first
+        binding.tabLayout.removeAllTabs();
+        
         // Only add 2 tabs: As Mentor and As Mentee
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("As Mentor"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("As Mentee"));
