@@ -351,13 +351,14 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_notifications"
+                            android:contentDescription="@string/notifications"
                             app:tint="@color/must_green"/>
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="3 new mentorship requests"
+                            android:text="@string/mentorship_requests_notification"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
                             android:layout_marginStart="12dp"/>
@@ -365,7 +366,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2h ago"
+                            android:text="@string/time_2h_ago"
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"/>
                     </LinearLayout>
@@ -381,13 +382,14 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_work"
+                            android:contentDescription="@string/jobs_and_internships"
                             app:tint="@color/must_green"/>
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="5 new job postings in your field"
+                            android:text="@string/job_postings_notification"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
                             android:layout_marginStart="12dp"/>
@@ -395,7 +397,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4h ago"
+                            android:text="@string/time_4h_ago"
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"/>
                     </LinearLayout>
@@ -410,13 +412,14 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_event"
+                            android:contentDescription="@string/upcoming_events"
                             app:tint="@color/must_green"/>
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Alumni networking event this Friday"
+                            android:text="@string/networking_event_notification"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
                             android:layout_marginStart="12dp"/>
@@ -424,7 +427,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1d ago"
+                            android:text="@string/time_1d_ago"
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"/>
                     </LinearLayout>
@@ -432,9 +435,10 @@
                     <Button
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="View All Notifications"
+                        android:layout_height="48dp"
+                        android:text="@string/view_all_notifications"
                         android:textSize="12sp"
+                        android:minHeight="48dp"
                         android:layout_gravity="end"
                         android:layout_marginTop="8dp"/>
 
@@ -452,7 +456,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Connect & Grow"
+                    android:text="@string/connect_and_grow"
                     android:textAppearance="@style/App.TextAppearance.Title"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
@@ -460,9 +464,10 @@
                 <Button
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:text="See All"
+                    android:layout_height="48dp"
+                    android:text="@string/see_all"
                     android:textSize="12sp"
+                    android:minHeight="48dp"
                     app:cornerRadius="18dp"/>
             </LinearLayout>
 
@@ -495,13 +500,14 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_person"
+                            android:contentDescription="@string/my_profile"
                             app:tint="@color/must_green"
                             android:layout_marginBottom="8dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="My Profile"
+                            android:text="@string/my_profile"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
                             android:textAlignment="center"/>
@@ -509,7 +515,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View & Edit"
+                            android:text="@string/view_and_edit"
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"
                             android:textAlignment="center"
@@ -540,13 +546,14 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_people"
+                            android:contentDescription="@string/find_mentees"
                             app:tint="@color/must_green"
                             android:layout_marginBottom="8dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Find Mentees"
+                            android:text="@string/find_mentees"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
                             android:textAlignment="center"/>
@@ -554,7 +561,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Share Knowledge"
+                            android:text="@string/share_knowledge"
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"
                             android:textAlignment="center"
@@ -591,13 +598,14 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_star"
+                            android:contentDescription="@string/profile_completion"
                             app:tint="@color/must_gold"/>
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Complete Your Profile"
+                            android:text="@string/complete_your_profile"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
                             android:textStyle="bold"
                             android:textColor="@color/black"
@@ -606,7 +614,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="60%"
+                            android:text="@string/percentage_60"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textStyle="bold"
                             android:textColor="@color/must_gold"/>
