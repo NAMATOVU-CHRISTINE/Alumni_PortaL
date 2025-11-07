@@ -17,6 +17,7 @@ import androidx.core.view.GestureDetectorCompat;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.namatovu.alumniportal.databinding.ActivityCareerTipsBinding;
 import com.namatovu.alumniportal.models.CareerTip;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
@@ -36,8 +37,8 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
     private static final String PREFS_NAME = "CareerTipsPrefs";
     private static final String SAVED_TIPS_KEY = "saved_tips";
     private static final int AUTO_ROTATE_DELAY = 20000; // 20 seconds
-    private static final int MIN_SWIPE_DISTANCE = 120;
-    private static final int MIN_SWIPE_VELOCITY = 200;
+    private static final int MIN_SWIPE_DISTANCE = 30;
+    private static final int MIN_SWIPE_VELOCITY = 50;
 
     private ActivityCareerTipsBinding binding;
     private List<CareerTip> allTips;
@@ -49,6 +50,9 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
     private GestureDetectorCompat gestureDetector;
     private SharedPreferences sharedPreferences;
     private Set<String> savedTipIds;
+    
+    // Navigation buttons
+    private FloatingActionButton fabPrevious, fabNext;
     private boolean isAutoRotateEnabled = true;
 
     // Animation objects
@@ -73,6 +77,9 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         // Display first tip
         displayCurrentTip();
         
+        // Show swipe hint after a short delay
+        showSwipeHint();
+        
         // Log analytics
         AnalyticsHelper.logNavigation("CareerTipsActivity", "HomeActivity");
     }
@@ -95,8 +102,21 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("Career Tips");
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
         }
+        
+        // Ensure proper green background and white text
+        binding.toolbar.setBackgroundColor(getResources().getColor(R.color.must_green, null));
+        binding.toolbar.setTitleTextColor(getResources().getColor(android.R.color.white, null));
+        binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        
+        // Set navigation icon color to white
+        if (binding.toolbar.getNavigationIcon() != null) {
+            binding.toolbar.getNavigationIcon().setTint(getResources().getColor(android.R.color.white, null));
+        }
+        
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
@@ -125,9 +145,67 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
      */
     private void setupGestureDetector() {
         gestureDetector = new GestureDetectorCompat(this, this);
-        binding.tipCard.setOnTouchListener((v, event) -> {
-            gestureDetector.onTouchEvent(event);
-            return true;
+        
+        // Apply gesture detection to the tip card with improved handling
+        binding.tipCard.setOnTouchListener(new View.OnTouchListener() {
+            private float startX = 0;
+            private float startY = 0;
+            private boolean isDragging = false;
+            
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disable parent scroll when touching the tip card
+                binding.getRoot().requestDisallowInterceptTouchEvent(true);
+                
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startX = event.getX();
+                        startY = event.getY();
+                        isDragging = false;
+                        break;
+                        
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaX = Math.abs(event.getX() - startX);
+                        float deltaY = Math.abs(event.getY() - startY);
+                        if (deltaX > 20 || deltaY > 20) {
+                            isDragging = true;
+                        }
+                        break;
+                        
+                    case MotionEvent.ACTION_UP:
+                        if (isDragging) {
+                            float diffX = event.getX() - startX;
+                            float diffY = event.getY() - startY;
+                            
+                            // Check for horizontal swipe
+                            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                                pauseAutoRotation();
+                                
+                                if (diffX > 0) {
+                                    // Swipe right - previous tip
+                                    showPreviousTip();
+                                    Toast.makeText(CareerTipsActivity.this, "Previous tip", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Swipe left - next tip
+                                    showNextTip();
+                                    Toast.makeText(CareerTipsActivity.this, "Next tip", Toast.LENGTH_SHORT).show();
+                                }
+                                return true;
+                            }
+                        }
+                        
+                    case MotionEvent.ACTION_CANCEL:
+                        // Re-enable parent scroll when touch ends
+                        binding.getRoot().requestDisallowInterceptTouchEvent(false);
+                        isDragging = false;
+                        break;
+                }
+                
+                // Also try gesture detector
+                boolean gestureResult = gestureDetector.onTouchEvent(event);
+                v.performClick(); // For accessibility
+                return gestureResult || isDragging;
+            }
         });
     }
 
@@ -135,6 +213,21 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
      * Setup all click listeners for buttons and interactions
      */
     private void setupClickListeners() {
+        // Initialize navigation buttons
+        fabPrevious = findViewById(R.id.fabPrevious);
+        fabNext = findViewById(R.id.fabNext);
+        
+        // Navigation button listeners
+        fabPrevious.setOnClickListener(v -> {
+            showPreviousTip();
+            startAutoRotation();
+        });
+        
+        fabNext.setOnClickListener(v -> {
+            showNextTip();
+            startAutoRotation();
+        });
+        
         // Action buttons
         binding.btnSave.setOnClickListener(v -> toggleSaveTip());
         binding.btnShare.setOnClickListener(v -> shareCurrentTip());
@@ -1205,22 +1298,39 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         float diffX = e2.getX() - e1.getX();
         float diffY = e2.getY() - e1.getY();
         
-        if (Math.abs(diffX) > Math.abs(diffY) && 
-            Math.abs(diffX) > MIN_SWIPE_DISTANCE && 
-            Math.abs(velocityX) > MIN_SWIPE_VELOCITY) {
+        // Check if horizontal swipe is dominant and meets minimum distance
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > MIN_SWIPE_DISTANCE) {
             
             pauseAutoRotation();
             
             if (diffX > 0) {
                 // Swipe right - previous tip
                 showPreviousTip();
+                Toast.makeText(this, "Previous tip", Toast.LENGTH_SHORT).show();
             } else {
                 // Swipe left - next tip
                 showNextTip();
+                Toast.makeText(this, "Next tip", Toast.LENGTH_SHORT).show();
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Show temporary swipe navigation hint
+     */
+    private void showSwipeHint() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            // Create and show a toast message for swipe hint
+            Toast swipeHint = Toast.makeText(this, "👈 Swipe to navigate 👉", Toast.LENGTH_SHORT);
+            swipeHint.show();
+            
+            // Hide it after 2 seconds
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                swipeHint.cancel();
+            }, 2000);
+        }, 1500); // Show hint after 1.5 seconds
     }
 
     @Override
