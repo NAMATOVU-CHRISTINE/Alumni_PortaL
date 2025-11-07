@@ -141,15 +141,26 @@ public class MentorshipActivity extends AppCompatActivity {
     }
 
     private void setupFAB() {
-        // FAB is not available in the current layout, commenting out for now
-        // TODO: Add FAB to layout if needed
-        /*
         binding.findMentorFab.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AlumniDirectoryActivity.class);
+            // Navigate to alumni directory or mentor search
+            Intent intent = new Intent(this, ProfileActivity.class); // Placeholder until AlumniDirectoryActivity exists
             intent.putExtra("mode", "mentor_search");
             startActivity(intent);
+            
+            // Log analytics
+            AnalyticsHelper.logMentorConnection("find_mentor_fab_clicked", currentUserId);
         });
-        */
+        
+        // Setup empty state button
+        if (binding.emptyStateFindMentorButton != null) {
+            binding.emptyStateFindMentorButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ProfileActivity.class); // Placeholder
+                intent.putExtra("mode", "mentor_search");
+                startActivity(intent);
+                
+                AnalyticsHelper.logMentorConnection("find_mentor_empty_state_clicked", currentUserId);
+            });
+        }
     }
 
     private void loadMentorshipConnections() {
@@ -216,8 +227,35 @@ public class MentorshipActivity extends AppCompatActivity {
     private void updateEmptyState() {
         if (filteredConnections.isEmpty()) {
             binding.emptyStateLayout.setVisibility(View.VISIBLE);
+            // Update empty state message based on current tab
+            updateEmptyStateMessage();
         } else {
             binding.emptyStateLayout.setVisibility(View.GONE);
+        }
+    }
+    
+    private void updateEmptyStateMessage() {
+        String title, message;
+        switch (currentTab) {
+            case "as_mentor":
+                title = "No mentees yet";
+                message = "When students request your mentorship, they'll appear here. Share your knowledge and help the next generation!";
+                break;
+            case "as_mentee":
+                title = "No mentors yet";
+                message = "Connect with experienced alumni to accelerate your career growth and gain valuable insights.";
+                break;
+            default:
+                title = "No mentorship connections yet";
+                message = "Start connecting with alumni mentors to grow your network and advance your career!";
+                break;
+        }
+        
+        if (binding.emptyStateTitle != null) {
+            binding.emptyStateTitle.setText(title);
+        }
+        if (binding.emptyStateMessage != null) {
+            binding.emptyStateMessage.setText(message);
         }
     }
 
@@ -245,16 +283,13 @@ public class MentorshipActivity extends AppCompatActivity {
         }
         
         adapter.notifyDataSetChanged();
+        updateEmptyState();
         
-        // Show/hide empty state
-        if (filteredConnections.isEmpty()) {
-            binding.emptyStateLayout.setVisibility(View.VISIBLE);
-        } else {
-            binding.emptyStateLayout.setVisibility(View.GONE);
+        // Update toolbar subtitle with connection count
+        String subtitle = filteredConnections.size() + " connection" + (filteredConnections.size() != 1 ? "s" : "");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setSubtitle(subtitle);
         }
-        
-        // Update connection count in toolbar subtitle if needed
-        // binding.toolbar.setSubtitle(filteredConnections.size() + " connections");
     }
 
     private String getEmptyMessage() {
