@@ -515,6 +515,20 @@ public class SyncWorker extends Worker {
                 .apply();
     }
     
+    private double parsePrice(String priceStr) {
+        if (priceStr == null || priceStr.trim().isEmpty()) {
+            return 0.0;
+        }
+        
+        try {
+            // Remove currency symbols and non-numeric characters except decimal point
+            String cleanPrice = priceStr.replaceAll("[^0-9.]", "");
+            return cleanPrice.isEmpty() ? 0.0 : Double.parseDouble(cleanPrice);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+    
     /**
      * Create input data for specific sync type
      */
