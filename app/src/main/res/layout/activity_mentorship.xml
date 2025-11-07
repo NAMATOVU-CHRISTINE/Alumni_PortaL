@@ -154,30 +154,6 @@
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="32dp"/>
 
-                <!-- Clean Call-to-Action Button -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/must_green">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="Use the search icon below to find mentors"
-                        android:textSize="14sp"
-                        android:textColor="@color/white"
-                        android:textStyle="normal"
-                        android:background="@android:color/transparent"
-                        android:paddingStart="32dp"
-                        android:paddingEnd="32dp"
-                        android:minWidth="200dp"
-                        android:gravity="center"/>
-
-                </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
 
         </FrameLayout>
