@@ -116,6 +116,11 @@ public class EditProfileActivity extends AppCompatActivity {
             chip.setText(skill);
             chip.setCloseIconVisible(true);
             chip.setOnCloseIconClickListener(v -> binding.skillsChipGroup.removeView(chip));
+            // Apply custom styling
+            chip.setChipBackgroundColorResource(R.color.light_gray);
+            chip.setTextColor(getColor(R.color.black));
+            chip.setChipStrokeColorResource(R.color.must_green);
+            chip.setChipStrokeWidth(2.0f);
             binding.skillsChipGroup.addView(chip);
             binding.skillEditText.setText("");
         }
@@ -155,6 +160,11 @@ public class EditProfileActivity extends AppCompatActivity {
             chip.setText(s);
             chip.setCloseIconVisible(true);
             chip.setOnCloseIconClickListener(v -> binding.skillsChipGroup.removeView(chip));
+            // Apply custom styling
+            chip.setChipBackgroundColorResource(R.color.light_gray);
+            chip.setTextColor(getColor(R.color.black));
+            chip.setChipStrokeColorResource(R.color.must_green);
+            chip.setChipStrokeWidth(2.0f);
             binding.skillsChipGroup.addView(chip);
         }
 
@@ -218,9 +228,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl) {
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
-        updates.put("fullName", name);
+        updates.put("fullName", name);  // Use "fullName" to match models.User
         updates.put("bio", bio);
-        updates.put("currentJob", career);
+        updates.put("currentJob", career);  // Use "currentJob" to match models.User
         updates.put("skills", skills);
         if (imageUrl != null) updates.put("profileImageUrl", imageUrl);
 

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.databinding.ActivityProfileBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
+import com.namatovu.alumniportal.models.User;
 
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (doc != null && doc.exists()) {
                     try {
                         User u = doc.toObject(User.class);
-                        if (u != null) updateUi(u);
+                        if (u != null) updateUIWithUserData(u);
                     } catch (RuntimeException e) {
                         Log.e(TAG, "Failed to deserialize user", e);
                     }
@@ -78,11 +79,11 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUi(@NonNull User user) {
-        binding.nameText.setText(user.getName());
+    private void updateUIWithUserData(User user) {
+        binding.nameText.setText(user.getFullName());
         binding.emailText.setText(user.getEmail());
         binding.bioText.setText(user.getBio());
-        binding.careerText.setText(user.getCareer());
+        binding.careerText.setText(user.getCurrentJob());
 
         // profile image
         String url = user.getProfileImageUrl();
@@ -100,6 +101,11 @@ public class ProfileActivity extends AppCompatActivity {
             c.setText(s);
             c.setClickable(false);
             c.setCheckable(false);
+            // Apply custom styling
+            c.setChipBackgroundColorResource(R.color.light_gray);
+            c.setTextColor(getColor(R.color.black));
+            c.setChipStrokeColorResource(R.color.must_green);
+            c.setChipStrokeWidth(2.0f);
             binding.skillsChipGroup.addView(c);
         }
     }
