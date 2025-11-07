@@ -38,6 +38,12 @@ import com.namatovu.alumniportal.databinding.ActivityEditProfileBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import android.content.SharedPreferences;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -375,8 +381,55 @@ public class EditProfileActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize Firebase Storage for root upload", e);
             binding.saveButton.setEnabled(true);
-            Toast.makeText(EditProfileActivity.this, "Storage initialization failed. Saving profile without image.", Toast.LENGTH_LONG).show();
+            // Attempt to save image locally for offline persistence
+            String localPath = saveImageLocally(selectedImageUri, fileName);
+            if (localPath != null) {
+                recordPendingUpload(user.getUid(), localPath);
+                Toast.makeText(EditProfileActivity.this, "Storage init failed. Image saved offline. Profile will be saved and upload retried later.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(EditProfileActivity.this, "Storage init failed. Saving profile without image.", Toast.LENGTH_LONG).show();
+            }
             saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
+        }
+    }
+
+    /**
+     * Save the selected image URI to internal app storage and return absolute path.
+     * Returns null on failure.
+     */
+    private String saveImageLocally(Uri uri, String fileName) {
+        if (uri == null) return null;
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = getContentResolver().openInputStream(uri);
+            if (in == null) return null;
+            File outFile = new File(getFilesDir(), fileName);
+            out = new FileOutputStream(outFile);
+            byte[] buf = new byte[8192];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            out.flush();
+            Log.d(TAG, "Saved image locally: " + outFile.getAbsolutePath());
+            return outFile.getAbsolutePath();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to save image locally", e);
+            return null;
+        } finally {
+            try { if (in != null) in.close(); } catch (IOException ignored) {}
+            try { if (out != null) out.close(); } catch (IOException ignored) {}
+        }
+    }
+
+    private void recordPendingUpload(String uid, String localPath) {
+        try {
+            SharedPreferences prefs = getSharedPreferences("alumni_prefs", MODE_PRIVATE);
+            prefs.edit().putString("pending_upload_" + uid, localPath).apply();
+            Log.d(TAG, "Recorded pending upload for " + uid + " -> " + localPath);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to record pending upload", e);
         }
     }
 
