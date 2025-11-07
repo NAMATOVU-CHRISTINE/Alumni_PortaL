@@ -314,10 +314,16 @@ public class EditProfileActivity extends AppCompatActivity {
                 }).addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to get download URL", e);
                     binding.saveButton.setEnabled(true);
-                    
-                    // If getting download URL fails, try alternative approach
+
+                    // If getting download URL fails, save image locally so user doesn't lose it
                     if (e.getMessage() != null && e.getMessage().contains("object")) {
-                        Toast.makeText(EditProfileActivity.this, "Upload completed but URL retrieval failed. Saving profile without image.", Toast.LENGTH_LONG).show();
+                        String localPath = saveImageLocally(selectedImageUri, fileName);
+                        if (localPath != null) {
+                            recordPendingUpload(user.getUid(), localPath);
+                            Toast.makeText(EditProfileActivity.this, "Upload completed but URL retrieval failed. Image saved offline; profile will be saved and upload retried later.", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(EditProfileActivity.this, "Upload completed but URL retrieval failed. Saving profile without image.", Toast.LENGTH_LONG).show();
+                        }
                         saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
                     } else {
                         Toast.makeText(EditProfileActivity.this, "Failed to get image URL: " + e.getMessage(), Toast.LENGTH_LONG).show();
