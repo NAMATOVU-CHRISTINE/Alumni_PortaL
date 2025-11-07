@@ -13,3 +13,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Kotlin compiler files
+*.kotlin_module
+kotlin-compiler-session*
+.kotlin/
+
+# Additional build artifacts
+*.tmp
+*.cache
