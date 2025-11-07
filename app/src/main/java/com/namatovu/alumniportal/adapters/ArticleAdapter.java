@@ -106,8 +106,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     }
 
     class ArticleViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCategoryIcon, tvCategory, tvDate, tvTitle, tvDescription;
-        MaterialButton btnBookmark, btnShare;
+        TextView tvCategoryIcon, tvCategory, tvDate, tvTitle, tvDescription, tvAuthor;
+        MaterialButton btnLike, btnBookmark, btnShare;
 
         public ArticleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,6 +116,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
+            tvAuthor = itemView.findViewById(R.id.tvAuthor);
+            btnLike = itemView.findViewById(R.id.btnLike);
             btnBookmark = itemView.findViewById(R.id.btnBookmark);
             btnShare = itemView.findViewById(R.id.btnShare);
 
