@@ -117,8 +117,6 @@ public class AddArticleActivity extends AppCompatActivity {
         
         setResult(RESULT_OK, resultIntent);
         finish();
-
-        Toast.makeText(this, "Article submitted successfully! 📚", Toast.LENGTH_SHORT).show();
     }
 
     private String getSelectedCategory(String chipText) {
