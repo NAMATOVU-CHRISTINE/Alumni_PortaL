@@ -74,64 +74,62 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     }
     
     class MentorViewHolder extends RecyclerView.ViewHolder {
-        private TextView textMentorName;
-    class MentorViewHolder extends RecyclerView.ViewHolder {
-        private TextView textMentorName;
-        private TextView textPosition;
-        private TextView textCompany;
-        private TextView textSkills;
-        private TextView textRating;
-        
-        public MentorViewHolder(@NonNull View itemView) {
-            super(itemView);
-            // Use generic text views since the exact layout might vary
-            textMentorName = itemView.findViewById(R.id.textMentorName);
-            textPosition = itemView.findViewById(R.id.textPosition);
-            textCompany = itemView.findViewById(R.id.textCompany);
-            textSkills = itemView.findViewById(R.id.textSkills);
-            textRating = itemView.findViewById(R.id.textRating);
+            private TextView textMentorName;
+            private TextView textPosition;
+            private TextView textCompany;
+            private TextView textSkills;
+            private TextView textRating;
             
-            itemView.setOnClickListener(v -> {
-                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    listener.onMentorClick(mentors.get(getAdapterPosition()));
-                }
-            });
-            
-            View buttonConnect = itemView.findViewById(R.id.buttonConnect);
-            if (buttonConnect != null) {
-                buttonConnect.setOnClickListener(v -> {
+            public MentorViewHolder(@NonNull View itemView) {
+                super(itemView);
+                // Use generic text views since the exact layout might vary
+                textMentorName = itemView.findViewById(R.id.textMentorName);
+                textPosition = itemView.findViewById(R.id.textPosition);
+                textCompany = itemView.findViewById(R.id.textCompany);
+                textSkills = itemView.findViewById(R.id.textSkills);
+                textRating = itemView.findViewById(R.id.textRating);
+                
+                itemView.setOnClickListener(v -> {
                     if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        listener.onConnectClick(mentors.get(getAdapterPosition()));
+                        listener.onMentorClick(mentors.get(getAdapterPosition()));
                     }
                 });
+                
+                View buttonConnect = itemView.findViewById(R.id.buttonConnect);
+                if (buttonConnect != null) {
+                    buttonConnect.setOnClickListener(v -> {
+                        if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                            listener.onConnectClick(mentors.get(getAdapterPosition()));
+                        }
+                    });
+                }
+            }
+            
+            public void bind(User mentor) {
+                if (mentor == null) return;
+                
+                if (textMentorName != null) {
+                    textMentorName.setText(mentor.getFullName());
+                }
+                
+                if (textPosition != null) {
+                    textPosition.setText(mentor.getCurrentJob());
+                }
+                
+                if (textCompany != null) {
+                    textCompany.setText(mentor.getCompany());
+                }
+                
+                if (textSkills != null) {
+                    textSkills.setText(mentor.getSkillsAsString());
+                }
+                
+                if (textRating != null) {
+                    // Default rating display
+                    textRating.setText("⭐ 4.5");
+                }
             }
         }
-        
-        public void bind(User mentor) {
-            if (mentor == null) return;
-            
-            if (textMentorName != null) {
-                textMentorName.setText(mentor.getFullName());
-            }
-            
-            if (textPosition != null) {
-                textPosition.setText(mentor.getCurrentJob());
-            }
-            
-            if (textCompany != null) {
-                textCompany.setText(mentor.getCompany());
-            }
-            
-            if (textSkills != null) {
-                textSkills.setText(mentor.getSkillsAsString());
-            }
-            
-            if (textRating != null) {
-                // Default rating display
-                textRating.setText("⭐ 4.5");
-            }
-        }
-    }
 
     // Minimal placeholder model classes so this adapter compiles independently.
     // If your project already provides com.namatovu.alumniportal.models.User and
