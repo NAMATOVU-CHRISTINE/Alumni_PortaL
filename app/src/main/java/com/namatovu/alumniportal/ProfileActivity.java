@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.namatovu.alumniportal.databinding.ActivityProfileBinding;
+import com.namatovu.alumniportal.utils.ImageLoadingHelper;
 
 import java.util.List;
 
@@ -86,11 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
         // profile image
         String url = user.getProfileImageUrl();
         if (url != null && !url.isEmpty()) {
-            Glide.with(this)
-                    .load(url)
-                    .placeholder(R.drawable.ic_person)
-                    .error(R.drawable.ic_person)
-                    .into(binding.profileImage);
+            ImageLoadingHelper.loadProfileImage(this, url, binding.profileImage);
         } else {
             binding.profileImage.setImageResource(R.drawable.ic_person);
         }

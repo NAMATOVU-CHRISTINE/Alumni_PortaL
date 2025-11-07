@@ -22,6 +22,7 @@ import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MentorshipActivity extends AppCompatActivity {
     private static final String TAG = "MentorshipActivity";
@@ -155,67 +156,69 @@ public class MentorshipActivity extends AppCompatActivity {
         // Show loading state - using visibility changes on existing views
         binding.emptyStateLayout.setVisibility(View.GONE);
 
-        // Query connections where current user is mentor
+        // First try to load any mentorship connections at all
         db.collection("mentor_connections")
-                .whereEqualTo("mentorId", currentUserId)
-                .orderBy("requestedAt", Query.Direction.DESCENDING)
+                .limit(20) // Start with a small number
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     allConnections.clear();
                     
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total connection documents");
+                    
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        MentorshipConnection connection = document.toObject(MentorshipConnection.class);
-                        connection.setConnectionId(document.getId());
-                        allConnections.add(connection);
+                        try {
+                            // Try to parse the document data
+                            Map<String, Object> data = document.getData();
+                            Log.d(TAG, "Connection document data: " + data.toString());
+                            
+                            MentorshipConnection connection = document.toObject(MentorshipConnection.class);
+                            connection.setConnectionId(document.getId());
+                            
+                            // Add all connections for now, we'll filter later
+                            allConnections.add(connection);
+                            
+                        } catch (Exception e) {
+                            Log.w(TAG, "Error parsing connection document: " + document.getId(), e);
+                        }
                     }
                     
-                    // Also query connections where current user is mentee
-                    loadMenteeConnections();
+                    // Filter connections for current user
+                    filterConnectionsForCurrentUser();
+                    
+                    Log.d(TAG, "Loaded " + allConnections.size() + " total connections, " + 
+                         filteredConnections.size() + " for current user");
                 })
                 .addOnFailureListener(e -> {
                     binding.emptyStateLayout.setVisibility(View.VISIBLE);
                     
-                    Toast.makeText(this, "Failed to load connections", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to load connections: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Error loading mentorship connections", e);
                     
                     AnalyticsHelper.logError("mentorship_load_failed", e.getMessage(), "MentorshipActivity");
                 });
     }
-
-    private void loadMenteeConnections() {
-        db.collection("mentor_connections")
-                .whereEqualTo("menteeId", currentUserId)
-                .orderBy("requestedAt", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        MentorshipConnection connection = document.toObject(MentorshipConnection.class);
-                        connection.setConnectionId(document.getId());
-                        
-                        // Avoid duplicates
-                        boolean exists = false;
-                        for (MentorshipConnection existing : allConnections) {
-                            if (existing.getConnectionId().equals(connection.getConnectionId())) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        
-                        if (!exists) {
-                            allConnections.add(connection);
-                        }
-                    }
-                    
-                    // Hide loading state - connections loaded successfully
-                    filterConnections();
-                    
-                    Log.d(TAG, "Loaded " + allConnections.size() + " mentorship connections");
-                })
-                .addOnFailureListener(e -> {
-                    // Hide loading and show empty state on error
-                    binding.emptyStateLayout.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "Error loading mentee connections", e);
-                });
+    
+    private void filterConnectionsForCurrentUser() {
+        filteredConnections.clear();
+        
+        for (MentorshipConnection connection : allConnections) {
+            // Check if current user is involved in this connection
+            if (currentUserId.equals(connection.getMentorId()) || 
+                currentUserId.equals(connection.getMenteeId())) {
+                filteredConnections.add(connection);
+            }
+        }
+        
+        adapter.notifyDataSetChanged();
+        updateEmptyState();
+    }
+    
+    private void updateEmptyState() {
+        if (filteredConnections.isEmpty()) {
+            binding.emptyStateLayout.setVisibility(View.VISIBLE);
+        } else {
+            binding.emptyStateLayout.setVisibility(View.GONE);
+        }
     }
 
     private void filterConnections() {

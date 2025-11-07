@@ -17,11 +17,54 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/white"
             app:title="@string/app_name"
-            app:titleTextColor="?attr/colorOnPrimary"
+            app:titleTextColor="@color/black"
             app:menu="@menu/home_menu"
-            app:popupTheme="@style/ThemeOverlay.Material3.Light"/>
+            app:popupTheme="@style/ThemeOverlay.Material3.Light">
+
+            <!-- Embedded Search View -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="56dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/stroke_color"
+                    app:strokeWidth="1dp"
+                    android:backgroundTint="@color/light_gray">
+
+                    <EditText
+                        android:id="@+id/searchBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:hint="Search people, jobs, events..."
+                        android:textSize="14sp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:textColorHint="@color/dark_gray"
+                        android:textColor="@color/black"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"
+                        android:drawableStart="@android:drawable/ic_menu_search"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -37,29 +80,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Search Bar -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/App.Material3.TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search_hint"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/searchBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:minHeight="48dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Profile Header Card -->
+            <!-- Profile Header Card - LinkedIn style -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/App.Material3.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardElevation="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,7 +99,7 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         app:cardCornerRadius="28dp"
-                        app:strokeColor="?attr/colorPrimary"
+                        app:strokeColor="@color/must_gold"
                         app:strokeWidth="2dp">
 
                         <ImageView
@@ -98,7 +125,8 @@
                             android:layout_height="wrap_content"
                             tools:text="@string/welcome_message"
                             android:textAppearance="@style/App.TextAppearance.Title"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
 
                         <TextView
                             android:id="@+id/homeSlogan"
@@ -106,18 +134,199 @@
                             android:layout_height="wrap_content"
                             android:text="@string/connect_learn_grow_together"
                             android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="?attr/colorOnSurfaceVariant"/>
+                            android:textColor="@color/dark_gray"/>
                     </LinearLayout>
+
+                    <Button
+                        android:id="@+id/viewProfileButton"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="View Profile"
+                        android:textSize="12sp"
+                        app:cornerRadius="18dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Dashboard / Stats Card -->
+            <!-- Quick Actions - LinkedIn style horizontal cards -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quick Actions"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="12dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/mentorCard"
+                        android:layout_width="140dp"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="1dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_school"
+                                app:tint="@color/must_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Find Mentors"
+                                android:textSize="12sp"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/jobsCard"
+                        android:layout_width="140dp"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="1dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_work"
+                                app:tint="@color/must_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Browse Jobs"
+                                android:textSize="12sp"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/eventsCard"
+                        android:layout_width="140dp"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="1dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_event"
+                                app:tint="@color/must_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Events"
+                                android:textSize="12sp"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/knowledgeHubCard"
+                        android:layout_width="140dp"
+                        android:layout_height="80dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="1dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_book"
+                                app:tint="@color/must_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Knowledge"
+                                android:textSize="12sp"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Recent Activity Feed - LinkedIn style -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recent Activity"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="12dp"/>
+
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/profileCompletionCard"
                 style="@style/App.Material3.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardElevation="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -125,163 +334,304 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_completion"
-                        android:textAppearance="@style/App.TextAppearance.Subtitle"
-                        android:textStyle="bold"/>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_notifications"
+                            app:tint="@color/must_green"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="3 new mentorship requests"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/black"
+                            android:layout_marginStart="12dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2h ago"
+                            android:textAppearance="@style/App.TextAppearance.Caption"
+                            android:textColor="@color/dark_gray"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_work"
+                            app:tint="@color/must_green"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="5 new job postings in your field"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/black"
+                            android:layout_marginStart="12dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4h ago"
+                            android:textAppearance="@style/App.TextAppearance.Caption"
+                            android:textColor="@color/dark_gray"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_event"
+                            app:tint="@color/must_green"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Alumni networking event this Friday"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/black"
+                            android:layout_marginStart="12dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1d ago"
+                            android:textAppearance="@style/App.TextAppearance.Caption"
+                            android:textColor="@color/dark_gray"/>
+                    </LinearLayout>
+
+                    <Button
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="View All Notifications"
+                        android:textSize="12sp"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="8dp"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Connect Section - LinkedIn style -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Connect & Grow"
+                    android:textAppearance="@style/App.TextAppearance.Title"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <Button
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="See All"
+                    android:textSize="12sp"
+                    app:cornerRadius="18dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileCard"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_person"
+                            app:tint="@color/must_green"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="My Profile"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/black"
+                            android:textAlignment="center"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View & Edit"
+                            android:textAppearance="@style/App.TextAppearance.Caption"
+                            android:textColor="@color/dark_gray"
+                            android:textAlignment="center"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/menteesCard"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_people"
+                            app:tint="@color/must_green"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Find Mentees"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/black"
+                            android:textAlignment="center"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Share Knowledge"
+                            android:textAppearance="@style/App.TextAppearance.Caption"
+                            android:textColor="@color/dark_gray"
+                            android:textAlignment="center"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Profile Completion Suggestion - LinkedIn style -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profileCompletionCard"
+                style="@style/App.Material3.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardElevation="1dp"
+                app:strokeColor="@color/must_gold"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_star"
+                            app:tint="@color/must_gold"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Complete Your Profile"
+                            android:textAppearance="@style/App.TextAppearance.Subtitle"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_marginStart="12dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="60%"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textStyle="bold"
+                            android:textColor="@color/must_gold"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Add your work experience and skills to get better mentor matches"
+                        android:textAppearance="@style/App.TextAppearance.Body"
+                        android:textColor="@color/dark_gray"
+                        android:layout_marginBottom="12dp"/>
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/profileProgressBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="12dp"
                         tools:progress="60"
-                        app:trackCornerRadius="8dp"/>
+                        app:trackCornerRadius="8dp"
+                        app:indicatorColor="@color/must_gold"/>
+
+                    <Button
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="Complete Profile"
+                        android:textSize="12sp"
+                        android:layout_gravity="end"
+                        app:cornerRadius="18dp"/>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Connect Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/connect"
-                android:textAppearance="@style/App.TextAppearance.Title"
-                android:layout_marginBottom="8dp"/>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/profileCard"
-                style="@style/App.Material3.Card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/my_profile"
-                        android:padding="16dp"
-                        android:textAppearance="@style/App.TextAppearance.Body"
-                        app:drawableStartCompat="@drawable/ic_person"
-                        android:drawablePadding="16dp"
-                        android:gravity="center_vertical"/>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mentorCard"
-                style="@style/Widget.Material3.CardView.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/find_a_mentor"
-                    android:padding="16dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    app:drawableStartCompat="@drawable/ic_school"
-                    android:drawablePadding="16dp"
-                    android:gravity="center_vertical"/>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/menteesCard"
-                style="@style/Widget.Material3.CardView.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/find_mentees"
-                    android:padding="16dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    app:drawableStartCompat="@drawable/ic_people"
-                    android:drawablePadding="16dp"
-                    android:gravity="center_vertical"/>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Discover Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/discover"
-                android:textAppearance="@style/App.TextAppearance.Title"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"/>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/jobsCard"
-                style="@style/Widget.Material3.CardView.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/jobs_and_internships"
-                    android:padding="16dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    app:drawableStartCompat="@drawable/ic_work"
-                    android:drawablePadding="16dp"
-                    android:gravity="center_vertical"/>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/eventsCard"
-                style="@style/Widget.Material3.CardView.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/upcoming_events"
-                    android:padding="16dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    app:drawableStartCompat="@drawable/ic_event"
-                    android:drawablePadding="16dp"
-                    android:gravity="center_vertical"/>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/knowledgeHubCard"
-                style="@style/Widget.Material3.CardView.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/knowledge_hub"
-                    android:padding="16dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    app:drawableStartCompat="@drawable/ic_book"
-                    android:drawablePadding="16dp"
-                    android:gravity="center_vertical"/>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
