@@ -66,19 +66,24 @@ public class AddArticleActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         String content = etContent.getText().toString().trim();
 
+        android.util.Log.d("AddArticle", "Validating - Title: '" + title + "', Description: '" + description + "', Content: '" + content + "'");
+
         if (title.isEmpty()) {
+            android.util.Log.d("AddArticle", "Validation failed - Title is empty");
             etTitle.setError("Title is required");
             etTitle.requestFocus();
             return false;
         }
 
         if (description.isEmpty()) {
+            android.util.Log.d("AddArticle", "Validation failed - Description is empty");
             etDescription.setError("Description is required");
             etDescription.requestFocus();
             return false;
         }
 
         if (content.isEmpty()) {
+            android.util.Log.d("AddArticle", "Validation failed - Content is empty");
             etContent.setError("Content is required");
             etContent.requestFocus();
             return false;
@@ -94,6 +99,8 @@ public class AddArticleActivity extends AppCompatActivity {
         String title = etTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         String content = etContent.getText().toString().trim();
+        
+        android.util.Log.d("AddArticle", "Submitting article - Title: " + title);
         
         // Get selected category with fallback
         int checkedChipId = chipGroupCategory.getCheckedChipId();
@@ -114,6 +121,8 @@ public class AddArticleActivity extends AppCompatActivity {
         resultIntent.putExtra("description", description);
         resultIntent.putExtra("content", content);
         resultIntent.putExtra("category", category);
+        
+        android.util.Log.d("AddArticle", "Setting result and finishing activity");
         
         setResult(RESULT_OK, resultIntent);
         finish();
