@@ -171,25 +171,33 @@ public class MentorshipActivity extends AppCompatActivity {
         // Show loading state - using visibility changes on existing views
         binding.emptyStateLayout.setVisibility(View.GONE);
 
-        // First try to load any mentorship connections at all
+        // Check if user is authenticated
+        if (currentUserId.isEmpty()) {
+            Log.w(TAG, "User not authenticated");
+            binding.emptyStateLayout.setVisibility(View.VISIBLE);
+            updateEmptyStateMessage();
+            return;
+        }
+
+        // Query connections where current user is either mentor or mentee
         db.collection("mentor_connections")
-                .limit(20) // Start with a small number
+                .where(
+                    com.google.firebase.firestore.Filter.or(
+                        com.google.firebase.firestore.Filter.equalTo("mentorId", currentUserId),
+                        com.google.firebase.firestore.Filter.equalTo("menteeId", currentUserId)
+                    )
+                )
+                .limit(50)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     allConnections.clear();
                     
-                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total connection documents");
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " connections for user");
                     
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         try {
-                            // Try to parse the document data
-                            Map<String, Object> data = document.getData();
-                            Log.d(TAG, "Connection document data: " + data.toString());
-                            
                             MentorshipConnection connection = document.toObject(MentorshipConnection.class);
                             connection.setConnectionId(document.getId());
-                            
-                            // Add all connections for now, we'll filter later
                             allConnections.add(connection);
                             
                         } catch (Exception e) {
@@ -197,72 +205,29 @@ public class MentorshipActivity extends AppCompatActivity {
                         }
                     }
                     
-                    // Filter connections for current user
-                    filterConnectionsForCurrentUser();
+                    // Apply current tab filter
+                    filterConnections();
                     
-                    Log.d(TAG, "Loaded " + allConnections.size() + " total connections, " + 
-                         filteredConnections.size() + " for current user");
+                    Log.d(TAG, "Loaded " + allConnections.size() + " total connections");
                 })
                 .addOnFailureListener(e -> {
-                    binding.emptyStateLayout.setVisibility(View.VISIBLE);
-                    
-                    Toast.makeText(this, "Failed to load connections: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Error loading mentorship connections", e);
+                    
+                    // Show empty state instead of error for better UX
+                    allConnections.clear();
+                    filteredConnections.clear();
+                    adapter.notifyDataSetChanged();
+                    updateEmptyState();
+                    
+                    // Only show error toast if it's not a permission error
+                    if (!e.getMessage().contains("PERMISSION_DENIED")) {
+                        Toast.makeText(this, "Unable to load connections", Toast.LENGTH_SHORT).show();
+                    }
                     
                     AnalyticsHelper.logError("mentorship_load_failed", e.getMessage(), "MentorshipActivity");
                 });
     }
     
-    private void filterConnectionsForCurrentUser() {
-        filteredConnections.clear();
-        
-        for (MentorshipConnection connection : allConnections) {
-            // Check if current user is involved in this connection
-            if (currentUserId.equals(connection.getMentorId()) || 
-                currentUserId.equals(connection.getMenteeId())) {
-                filteredConnections.add(connection);
-            }
-        }
-        
-        adapter.notifyDataSetChanged();
-        updateEmptyState();
-    }
-    
-    private void updateEmptyState() {
-        if (filteredConnections.isEmpty()) {
-            binding.emptyStateLayout.setVisibility(View.VISIBLE);
-            // Update empty state message based on current tab
-            updateEmptyStateMessage();
-        } else {
-            binding.emptyStateLayout.setVisibility(View.GONE);
-        }
-    }
-    
-    private void updateEmptyStateMessage() {
-        String title, message;
-        switch (currentTab) {
-            case "as_mentor":
-                title = "No mentees yet";
-                message = "When students request your mentorship, they'll appear here. Share your knowledge and help the next generation grow!";
-                break;
-            case "as_mentee":
-                title = "No mentors yet";
-                message = "Connect with experienced alumni to accelerate your career growth and gain valuable insights from industry professionals.";
-                break;
-            default:
-                title = "No mentorship connections yet";
-                message = "Start connecting with alumni mentors to grow your network and accelerate your career journey!";
-                break;
-        }
-        
-        if (binding.emptyStateTitle != null) {
-            binding.emptyStateTitle.setText(title);
-        }
-        if (binding.emptyStateMessage != null) {
-            binding.emptyStateMessage.setText(message);
-        }
-    }
-
     private void filterConnections() {
         filteredConnections.clear();
         
