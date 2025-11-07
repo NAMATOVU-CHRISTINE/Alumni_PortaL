@@ -11,6 +11,13 @@
     <color name="light_gray">#F5F5F5</color>
     <color name="dark_gray">#121212</color>
     <color name="colorAccent">@color/must_gold</color>
+    
+    <!-- Light Background Colors for Cards -->
+    <color name="light_blue">#E3F2FD</color>
+    <color name="light_green">#E8F5E8</color>
+    <color name="light_yellow">#FFF9C4</color>
+    <color name="light_purple">#F3E5F5</color>
+    <color name="light_orange">#FFF3E0</color>
 
     <!-- Component Colors -->
     <color name="stroke_color">#CAC4D0</color>

@@ -78,21 +78,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupCardClickListeners() {
-        // View Profile button - navigate to profile activity
-        binding.viewProfileButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
-        });
-        
         // Profile card - navigate to profile activity
         binding.profileCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
-        });
-        
-        // Edit Profile card - navigate to edit profile activity
-        binding.profileCompletionCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EditProfileActivity.class);
             startActivity(intent);
         });
         
@@ -102,9 +90,9 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Mentees card - also navigate to mentorship system
-        binding.menteesCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MentorshipActivity.class);
+        // Career Tips card - navigate to knowledge hub
+        binding.careerTipsCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NewsFeedActivity.class);
             startActivity(intent);
         });
         
@@ -123,6 +111,12 @@ public class HomeActivity extends AppCompatActivity {
         // Knowledge Hub card - navigate to news feed
         binding.knowledgeHubCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, NewsFeedActivity.class);
+            startActivity(intent);
+        });
+        
+        // Recommendations card - navigate to job board
+        binding.recommendationsCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, JobBoardActivity.class);
             startActivity(intent);
         });
     }
