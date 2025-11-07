@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.databinding.ActivityHomeBinding;
+import com.namatovu.alumniportal.utils.ImageLoadingHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -59,9 +60,10 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) {
-            mAuth.signOut();
-            redirectToLogin();
+        if (item.getItemId() == R.id.action_settings) {
+            // For now, open ProfileActivity as settings page until SettingsActivity is created
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -75,6 +77,12 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupCardClickListeners() {
+        // View Profile button - navigate to profile activity
+        binding.viewProfileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
+        
         // Profile card - navigate to profile activity
         binding.profileCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, ProfileActivity.class);
@@ -156,15 +164,12 @@ public class HomeActivity extends AppCompatActivity {
             binding.welcomeText.setText(getString(R.string.welcome_default));
         }
 
-        if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
-            Glide.with(this)
-                    .load(user.getProfileImageUrl()) 
-                    .placeholder(R.drawable.ic_person)
-                    .error(R.drawable.ic_person) 
-                    .into(binding.homeProfileImage);
-        } else {
-            binding.homeProfileImage.setImageResource(R.drawable.ic_person);
-        }
+        // Use ImageLoadingHelper for better image loading
+        ImageLoadingHelper.loadProfileImage(
+            this,
+            user.getProfileImageUrl(),
+            binding.homeProfileImage
+        );
 
         updateProfileCompletion(user);
     }

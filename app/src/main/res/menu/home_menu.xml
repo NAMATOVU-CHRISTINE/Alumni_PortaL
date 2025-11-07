@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_logout"
-        android:title="Logout"
-        android:icon="@drawable/ic_logout"
+        android:id="@+id/action_settings"
+        android:title="@string/app_settings"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="never" />
 
 </menu>
