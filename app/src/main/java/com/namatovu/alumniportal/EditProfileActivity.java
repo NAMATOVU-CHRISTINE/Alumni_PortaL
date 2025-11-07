@@ -60,10 +60,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference("profile_images");
+        
+        // Initialize Firebase Storage with default bucket
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        // Use root reference first, then create profile_images folder
+        storageRef = storage.getReference().child("profile_images");
         
         // Test Firebase Storage connection
         Log.d(TAG, "Firebase Storage reference created: " + storageRef.toString());
+        Log.d(TAG, "Storage bucket: " + storage.getApp().getOptions().getStorageBucket());
 
         setSupportActionBar(binding.toolbar);
 
@@ -270,34 +275,83 @@ public class EditProfileActivity extends AppCompatActivity {
         // If image selected, upload first
         if (selectedImageUri != null) {
             Log.d(TAG, "Starting image upload...");
-            String fileName = user.getUid() + "_" + System.currentTimeMillis() + ".jpg";
-            StorageReference ref = storageRef.child(fileName);
             
-            UploadTask uploadTask = ref.putFile(selectedImageUri);
+            // Use simpler file naming and path
+            String fileName = "profile_" + user.getUid() + ".jpg";
+            
+            // Try uploading to root first, then profile_images folder
+            StorageReference rootRef = FirebaseStorage.getInstance().getReference();
+            StorageReference imageRef = rootRef.child("profile_images").child(fileName);
+            
+            Log.d(TAG, "Upload path: " + imageRef.getPath());
+            Log.d(TAG, "Selected image URI: " + selectedImageUri.toString());
+            
+            UploadTask uploadTask = imageRef.putFile(selectedImageUri);
             uploadTask.addOnProgressListener(taskSnapshot -> {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 Log.d(TAG, "Upload progress: " + progress + "%");
             }).addOnSuccessListener(taskSnapshot -> {
                 Log.d(TAG, "Image upload successful, getting download URL...");
-                ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     String imageUrl = uri.toString();
                     Log.d(TAG, "Download URL obtained: " + imageUrl);
                     saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl);
                 }).addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to get download URL", e);
                     binding.saveButton.setEnabled(true);
-                    Toast.makeText(EditProfileActivity.this, "Failed to get image URL: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    
+                    // If getting download URL fails, try alternative approach
+                    if (e.getMessage() != null && e.getMessage().contains("object")) {
+                        Toast.makeText(EditProfileActivity.this, "Upload completed but URL retrieval failed. Saving profile without image.", Toast.LENGTH_LONG).show();
+                        saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
+                    } else {
+                        Toast.makeText(EditProfileActivity.this, "Failed to get image URL: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 });
             }).addOnFailureListener(e -> {
                 Log.e(TAG, "Image upload failed", e);
                 binding.saveButton.setEnabled(true);
-                Toast.makeText(EditProfileActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                
+                // Handle specific "object doesn't exist" error
+                if (e.getMessage() != null && e.getMessage().contains("object")) {
+                    Log.d(TAG, "Trying upload to root directory as fallback...");
+                    uploadToRootDirectory(user, finalName, finalBio, finalCareer, skills);
+                } else {
+                    Toast.makeText(EditProfileActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             });
         } else {
             Log.d(TAG, "No image selected, saving profile without image update");
             // No image change
             saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
         }
+    }
+
+    private void uploadToRootDirectory(FirebaseUser user, String finalName, String finalBio, String finalCareer, List<String> skills) {
+        Log.d(TAG, "Attempting upload to root directory...");
+        
+        String fileName = "profile_" + user.getUid() + ".jpg";
+        StorageReference rootRef = FirebaseStorage.getInstance().getReference().child(fileName);
+        
+        UploadTask uploadTask = rootRef.putFile(selectedImageUri);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "Root directory upload successful");
+            rootRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String imageUrl = uri.toString();
+                Log.d(TAG, "Root upload download URL: " + imageUrl);
+                saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl);
+            }).addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to get root upload URL", e);
+                binding.saveButton.setEnabled(true);
+                Toast.makeText(EditProfileActivity.this, "Image uploaded but failed to get URL. Saving profile without image.", Toast.LENGTH_LONG).show();
+                saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
+            });
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Root directory upload also failed", e);
+            binding.saveButton.setEnabled(true);
+            Toast.makeText(EditProfileActivity.this, "Image upload failed completely. Saving profile without image.", Toast.LENGTH_LONG).show();
+            saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
+        });
     }
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl) {
