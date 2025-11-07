@@ -19,9 +19,25 @@ public class PrivacySettingsAdapter extends RecyclerView.Adapter<PrivacySettings
     
     private List<PrivacySetting> settings = new ArrayList<>();
     private OnSettingChangeListener listener;
+    private OnPrivacySettingListener privacyListener;
+    
+    // Default constructor
+    public PrivacySettingsAdapter() {
+    }
+    
+    // Constructor with privacy listener
+    public PrivacySettingsAdapter(List<?> items, OnPrivacySettingListener privacyListener) {
+        this.privacyListener = privacyListener;
+        // Note: items parameter is not used in this simple implementation
+    }
     
     public interface OnSettingChangeListener {
         void onSettingChanged(PrivacySetting setting, boolean enabled);
+    }
+    
+    public interface OnPrivacySettingListener {
+        void onSwitchToggled(String settingKey, boolean isEnabled);
+        void onButtonClicked(String actionKey);
     }
     
     public void setOnSettingChangeListener(OnSettingChangeListener listener) {
