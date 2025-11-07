@@ -21,6 +21,13 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract EventDao eventDao();
     public abstract ChatMessageDao chatMessageDao();
 
+    public void clearAllData() {
+        userDao().clearAll();
+        jobPostingDao().clearAll();
+        eventDao().clearAll();
+        chatMessageDao().clearAll();
+    }
+
     private static volatile AppDatabase INSTANCE;
 
     public static AppDatabase getInstance(final Context context) {

@@ -97,7 +97,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (PermissionHelper.hasStoragePermission(this)) {
             openImagePicker();
         } else {
-            PermissionHelper.requestStoragePermission(this, requestPermissionLauncher);
+            PermissionHelper.requestStoragePermission(this);
         }
     }
 
@@ -141,9 +141,9 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void populateFields(@NonNull User u) {
-        binding.nameEditText.setText(u.getName());
+        binding.nameEditText.setText(u.getFullName());
         binding.bioEditText.setText(u.getBio());
-        binding.careerEditText.setText(u.getCareer());
+        binding.careerEditText.setText(u.getCurrentJob());
 
         binding.skillsChipGroup.removeAllViews();
         for (String s : u.getSkills()) {
@@ -214,9 +214,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl) {
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
-        updates.put("name", name);
+        updates.put("fullName", name);
         updates.put("bio", bio);
-        updates.put("career", career);
+        updates.put("currentJob", career);
         updates.put("skills", skills);
         if (imageUrl != null) updates.put("profileImageUrl", imageUrl);
 

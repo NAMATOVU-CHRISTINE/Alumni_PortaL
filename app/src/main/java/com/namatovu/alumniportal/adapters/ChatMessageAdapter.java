@@ -150,7 +150,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             switch (messageType) {
                 case "text":
                     textViewMessage.setVisibility(View.VISIBLE);
-                    textViewMessage.setText(message.getContent());
+                    textViewMessage.setText(message.getMessageText());
                     break;
                     
                 case "image":
@@ -166,12 +166,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case "file":
                     layoutFile.setVisibility(View.VISIBLE);
                     textViewFileName.setText(message.getFileName());
-                    textViewFileSize.setText(message.getFormattedFileSize());
+                    textViewFileSize.setText(message.getFileSizeFormatted());
                     break;
                     
                 case "location":
                     textViewMessage.setVisibility(View.VISIBLE);
-                    textViewMessage.setText("📍 " + message.getContent());
+                    textViewMessage.setText("📍 " + message.getMessageText());
                     break;
             }
             
@@ -183,30 +183,16 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         
         private void setMessageStatus(ChatMessage message) {
-            String status = message.getReadStatus();
-            
-            switch (status) {
-                case "sending":
-                    imageViewStatus.setImageResource(R.drawable.ic_access_time);
-                    textViewStatus.setText("Sending");
-                    break;
-                case "sent":
-                    imageViewStatus.setImageResource(R.drawable.ic_check);
-                    textViewStatus.setText("Sent");
-                    break;
-                case "delivered":
-                    imageViewStatus.setImageResource(R.drawable.ic_done_all);
-                    textViewStatus.setText("Delivered");
-                    break;
-                case "read":
-                    imageViewStatus.setImageResource(R.drawable.ic_done_all);
-                    imageViewStatus.setColorFilter(context.getColor(R.color.colorAccent));
-                    textViewStatus.setText("Read");
-                    break;
-                default:
-                    imageViewStatus.setImageResource(R.drawable.ic_error);
-                    textViewStatus.setText("Failed");
-                    break;
+            if (message.isRead()) {
+                imageViewStatus.setImageResource(R.drawable.ic_done_all);
+                imageViewStatus.setColorFilter(context.getColor(R.color.colorAccent));
+                textViewStatus.setText("Read");
+            } else if (message.isDelivered()) {
+                imageViewStatus.setImageResource(R.drawable.ic_done_all);
+                textViewStatus.setText("Delivered");
+            } else {
+                imageViewStatus.setImageResource(R.drawable.ic_check);
+                textViewStatus.setText("Sent");
             }
         }
     }
@@ -269,7 +255,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             switch (messageType) {
                 case "text":
                     textViewMessage.setVisibility(View.VISIBLE);
-                    textViewMessage.setText(message.getContent());
+                    textViewMessage.setText(message.getMessageText());
                     break;
                     
                 case "image":
@@ -285,12 +271,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case "file":
                     layoutFile.setVisibility(View.VISIBLE);
                     textViewFileName.setText(message.getFileName());
-                    textViewFileSize.setText(message.getFormattedFileSize());
+                    textViewFileSize.setText(message.getFileSizeFormatted());
                     break;
                     
                 case "location":
                     textViewMessage.setVisibility(View.VISIBLE);
-                    textViewMessage.setText("📍 " + message.getContent());
+                    textViewMessage.setText("📍 " + message.getMessageText());
                     break;
             }
             
@@ -319,7 +305,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         
         public void bind(ChatMessage message) {
-            textViewSystemMessage.setText(message.getContent());
+            textViewSystemMessage.setText(message.getMessageText());
             textViewTime.setText(message.getFormattedTime());
         }
     }
