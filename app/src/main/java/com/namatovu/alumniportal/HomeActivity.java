@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     private int currentTipIndex = 0;
     private String[] motivationalTips = {
        "Keep connecting, keep growing! 🌱",
-"Your network is your net worth 💎",
+    "Your network is your net worth 💎",
 "Every connection is a new opportunity 🚀",
 "Success is a journey, not a destination ⭐",
 "Learn from those who've walked your path 🎯",
