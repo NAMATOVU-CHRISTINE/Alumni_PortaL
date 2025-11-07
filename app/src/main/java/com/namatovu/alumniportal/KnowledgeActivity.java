@@ -91,6 +91,7 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
 
     private void setupRecyclerView() {
         articleAdapter = new ArticleAdapter(this, articles);
+        articleAdapter.setOnArticleClickListener(this); // Set the click listener
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         
         recyclerViewArticles.setLayoutManager(layoutManager);
