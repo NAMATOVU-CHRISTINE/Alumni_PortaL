@@ -173,17 +173,17 @@ public class EditProfileActivity extends AppCompatActivity {
         String career = binding.careerEditText.getText() != null ? binding.careerEditText.getText().toString().trim() : "";
 
         // Validate and sanitize input
-        name = SecurityHelper.sanitizeInput(name);
-        bio = SecurityHelper.sanitizeInput(bio);
-        career = SecurityHelper.sanitizeInput(career);
+        final String finalName = SecurityHelper.sanitizeInput(name);
+        final String finalBio = SecurityHelper.sanitizeInput(bio);
+        final String finalCareer = SecurityHelper.sanitizeInput(career);
 
         // Validate profile data
-        if (!SecurityHelper.isValidProfileData(name, bio, null)) {
+        if (!SecurityHelper.isValidProfileData(finalName, finalBio, null)) {
             Toast.makeText(this, "Please check your input. Some fields contain invalid data.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        List<String> skills = new ArrayList<>();
+        final List<String> skills = new ArrayList<>();
         for (int i = 0; i < binding.skillsChipGroup.getChildCount(); i++) {
             View v = binding.skillsChipGroup.getChildAt(i);
             if (v instanceof Chip) {
