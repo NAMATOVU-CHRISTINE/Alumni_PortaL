@@ -375,13 +375,27 @@ public class EditProfileActivity extends AppCompatActivity {
             }).addOnFailureListener(e -> {
                 Log.e(TAG, "Failed to get root upload URL", e);
                 binding.saveButton.setEnabled(true);
-                Toast.makeText(EditProfileActivity.this, "Image uploaded but failed to get URL. Saving profile without image.", Toast.LENGTH_LONG).show();
+                // Save image locally and record pending upload before saving profile without image
+                String localPath = saveImageLocally(selectedImageUri, fileName);
+                if (localPath != null) {
+                    recordPendingUpload(user.getUid(), localPath);
+                    Toast.makeText(EditProfileActivity.this, "Image uploaded but failed to get URL. Image saved offline; profile will be saved and upload retried later.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(EditProfileActivity.this, "Image uploaded but failed to get URL. Saving profile without image.", Toast.LENGTH_LONG).show();
+                }
                 saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
             });
         }).addOnFailureListener(e -> {
             Log.e(TAG, "Root directory upload also failed", e);
             binding.saveButton.setEnabled(true);
-            Toast.makeText(EditProfileActivity.this, "Image upload failed completely. Saving profile without image.", Toast.LENGTH_LONG).show();
+            // Save image locally and record pending upload
+            String localPath = saveImageLocally(selectedImageUri, fileName);
+            if (localPath != null) {
+                recordPendingUpload(user.getUid(), localPath);
+                Toast.makeText(EditProfileActivity.this, "Image upload failed. Image saved offline; profile will be saved and upload retried later.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(EditProfileActivity.this, "Image upload failed completely. Saving profile without image.", Toast.LENGTH_LONG).show();
+            }
             saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
         });
         } catch (Exception e) {
