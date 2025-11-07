@@ -251,11 +251,12 @@ public class EventsActivity extends AppCompatActivity {
             attendeeIds = new ArrayList<>();
         }
         attendeeIds.add(currentUserId);
+        final List<String> finalAttendeeIds = attendeeIds;
         
         db.collection("events").document(event.getEventId())
-                .update("attendeeIds", attendeeIds, "currentAttendees", event.getCurrentAttendees() + 1)
+                .update("attendeeIds", finalAttendeeIds, "currentAttendees", event.getCurrentAttendees() + 1)
                 .addOnSuccessListener(aVoid -> {
-                    event.setAttendeeIds(attendeeIds);
+                    event.setAttendeeIds(finalAttendeeIds);
                     event.incrementAttendees();
                     adapter.notifyDataSetChanged();
                     Toast.makeText(this, "Successfully registered for event!", Toast.LENGTH_SHORT).show();
