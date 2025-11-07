@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
     tools:context=".HomeActivity">
 
     <!-- App Bar -->
@@ -35,29 +36,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="16dp"
+            android:clipToPadding="false">
 
-            <!-- Profile Header Card - LinkedIn style -->
+            <!-- Welcome Header Section -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/App.Material3.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="1dp">
+                android:layout_marginBottom="24dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp"
+                    android:padding="20dp"
                     android:gravity="center_vertical">
 
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        app:cardCornerRadius="28dp"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        app:cardCornerRadius="32dp"
                         app:strokeColor="@color/must_gold"
-                        app:strokeWidth="2dp">
+                        app:strokeWidth="3dp"
+                        app:cardElevation="2dp">
 
                         <ImageView
                             android:id="@+id/homeProfileImage"
@@ -83,7 +90,8 @@
                             android:text="@string/welcome_default"
                             android:textAppearance="@style/App.TextAppearance.Title"
                             android:textStyle="bold"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black"
+                            android:textSize="22sp"/>
 
                         <TextView
                             android:id="@+id/motivationalQuote"
@@ -93,7 +101,8 @@
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/must_green"
                             android:textStyle="italic"
-                            android:layout_marginTop="4dp"/>
+                            android:layout_marginTop="4dp"
+                            android:textSize="12sp"/>
 
                         <TextView
                             android:id="@+id/homeSlogan"
@@ -102,20 +111,38 @@
                             android:text="@string/connect_learn_grow_together"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/dark_gray"
-                            android:layout_marginTop="2dp"/>
+                            android:layout_marginTop="2dp"
+                            android:textSize="14sp"/>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Quick Actions - LinkedIn style horizontal cards -->
-            <TextView
+            <!-- Grow Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/quick_actions"
-                android:textAppearance="@style/App.TextAppearance.Title"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginBottom="12dp"/>
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🌱 Grow"
+                    android:textAppearance="@style/App.TextAppearance.Title"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+
+                <Button
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/see_all"
+                    android:textSize="12sp"
+                    android:textColor="@color/must_green"
+                    app:cornerRadius="20dp"/>
+            </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -130,11 +157,11 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/mentorCard"
-                        android:layout_width="140dp"
-                        android:layout_height="80dp"
-                        android:layout_marginEnd="12dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        android:layout_width="160dp"
+                        android:layout_height="120dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="3dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -144,11 +171,12 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="12dp">
+                            android:padding="16dp"
+                            android:background="@color/light_blue">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
                                 android:src="@drawable/ic_school"
                                 android:contentDescription="@string/find_a_mentor"
                                 app:tint="@color/must_green" />
@@ -157,20 +185,30 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/find_mentors"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Connect with experts"
+                                android:textSize="11sp"
+                                android:textColor="@color/dark_gray"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/jobsCard"
-                        android:layout_width="140dp"
-                        android:layout_height="80dp"
-                        android:layout_marginEnd="12dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        android:id="@+id/careerTipsCard"
+                        android:layout_width="160dp"
+                        android:layout_height="120dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="3dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -180,57 +218,32 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="12dp">
+                            android:padding="16dp"
+                            android:background="@color/light_green">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_work"
-                                android:contentDescription="@string/jobs_and_internships"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_school"
+                                android:contentDescription="Career Tips"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/browse_jobs"
-                                android:textSize="12sp"
+                                android:text="Career Tips"
+                                android:textSize="14sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
-                                android:layout_marginTop="4dp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/eventsCard"
-                        android:layout_width="140dp"
-                        android:layout_height="80dp"
-                        android:layout_marginEnd="12dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_event"
-                                android:contentDescription="@string/upcoming_events"
-                                app:tint="@color/must_green" />
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/events"
-                                android:textSize="12sp"
-                                android:textColor="@color/black"
+                                android:text="Advance your career"
+                                android:textSize="11sp"
+                                android:textColor="@color/dark_gray"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
@@ -238,10 +251,10 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/knowledgeHubCard"
-                        android:layout_width="140dp"
-                        android:layout_height="80dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        android:layout_width="160dp"
+                        android:layout_height="120dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="3dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -251,11 +264,12 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="12dp">
+                            android:padding="16dp"
+                            android:background="@color/light_yellow">
 
                             <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
                                 android:src="@drawable/ic_book"
                                 android:contentDescription="@string/knowledge_hub"
                                 app:tint="@color/must_green" />
@@ -264,8 +278,18 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/knowledge"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Learning resources"
+                                android:textSize="11sp"
+                                android:textColor="@color/dark_gray"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
@@ -274,38 +298,7 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <!-- Recent Activity Feed - LinkedIn style -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/recent_activity"
-                android:textAppearance="@style/App.TextAppearance.Title"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginBottom="12dp"/>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/recentActivityCard"
-                style="@style/App.Material3.Card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone"
-                app:cardElevation="1dp">
-
-                <LinearLayout
-                    android:id="@+id/recentActivityContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Dynamic activity items will be added here -->
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Connect Section - LinkedIn style -->
+            <!-- Connect Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -316,19 +309,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/connect_and_grow"
+                    android:text="🤝 Connect"
                     android:textAppearance="@style/App.TextAppearance.Title"
                     android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
 
                 <Button
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:text="@string/see_all"
                     android:textSize="12sp"
-                    android:minHeight="48dp"
-                    app:cornerRadius="18dp"/>
+                    android:textColor="@color/must_green"
+                    app:cornerRadius="20dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -340,11 +334,11 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/profileCard"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground">
@@ -354,15 +348,16 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:background="@color/light_purple">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
                             android:src="@drawable/ic_person"
                             android:contentDescription="@string/my_profile"
                             app:tint="@color/must_green"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="12dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -370,7 +365,9 @@
                             android:text="@string/my_profile"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
-                            android:textAlignment="center"/>
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -379,18 +376,19 @@
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"
                             android:textAlignment="center"
-                            android:layout_marginTop="4dp"/>
+                            android:layout_marginTop="4dp"
+                            android:textSize="11sp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/menteesCard"
+                    android:id="@+id/eventsCard"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="1dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground">
@@ -400,52 +398,81 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:background="@color/light_orange">
 
                         <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_people"
-                            android:contentDescription="@string/find_mentees"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_event"
+                            android:contentDescription="@string/upcoming_events"
                             app:tint="@color/must_green"
-                            android:layout_marginBottom="8dp"/>
+                            android:layout_marginBottom="12dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/find_mentees"
+                            android:text="@string/events"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/black"
-                            android:textAlignment="center"/>
+                            android:textAlignment="center"
+                            android:textStyle="bold"
+                            android:textSize="14sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/share_knowledge"
+                            android:text="Upcoming meetups"
                             android:textAppearance="@style/App.TextAppearance.Caption"
                             android:textColor="@color/dark_gray"
                             android:textAlignment="center"
-                            android:layout_marginTop="4dp"/>
+                            android:layout_marginTop="4dp"
+                            android:textSize="11sp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Profile Completion Suggestion - LinkedIn style -->
+            <!-- For You Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="✨ For You"
+                    android:textAppearance="@style/App.TextAppearance.Title"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+
+                <Button
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Customize"
+                    android:textSize="12sp"
+                    android:textColor="@color/must_green"
+                    app:cornerRadius="20dp"/>
+            </LinearLayout>
+
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/profileCompletionCard"
+                android:id="@+id/recommendationsCard"
                 style="@style/App.Material3.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardElevation="1dp"
-                app:strokeColor="@color/must_gold"
-                app:strokeWidth="1dp">
+                android:layout_marginBottom="16dp"
+                app:cardElevation="3dp"
+                app:cardCornerRadius="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -457,55 +484,119 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_check"
-                            android:contentDescription="@string/profile_completion"
-                            app:tint="@color/must_gold"/>
+                            android:src="@drawable/ic_work"
+                            android:contentDescription="Recommendations"
+                            app:tint="@color/must_green"/>
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/complete_your_profile"
+                            android:text="Recommended Jobs"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:layout_marginStart="12dp"/>
+                            android:layout_marginStart="12dp"
+                            android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/percentage_60"
+                            android:text="3 new"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textStyle="bold"
-                            android:textColor="@color/must_gold"/>
+                            android:textColor="@color/must_green"
+                            android:textSize="12sp"/>
                     </LinearLayout>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_completion_message"
+                        android:text="Based on your profile and interests, we found exciting opportunities that match your skills in software development and data analysis."
                         android:textAppearance="@style/App.TextAppearance.Body"
                         android:textColor="@color/dark_gray"
-                        android:layout_marginBottom="12dp"/>
-
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/profileProgressBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        tools:progress="60"
-                        app:trackCornerRadius="8dp"
-                        app:indicatorColor="@color/must_gold"/>
+                        android:textSize="14sp"/>
 
                     <Button
+                        android:id="@+id/jobsCard"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="@string/complete_profile"
+                        android:layout_height="40dp"
+                        android:text="@string/browse_jobs"
                         android:textSize="12sp"
-                        android:minHeight="48dp"
                         android:layout_gravity="end"
-                        app:cornerRadius="18dp"/>
+                        android:textColor="@color/must_green"
+                        app:cornerRadius="20dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Recent Activity Enhanced Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="📈 @string/recent_activity"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="12dp"
+                android:textSize="20sp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/recentActivityCard"
+                style="@style/App.Material3.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="3dp"
+                app:cardCornerRadius="16dp">
+
+                <LinearLayout
+                    android:id="@+id/recentActivityContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:id="@+id/noActivityLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:padding="32dp">
+
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:src="@drawable/ic_event"
+                            android:contentDescription="No activities"
+                            app:tint="@color/light_gray"
+                            android:layout_marginBottom="16dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="No new activities yet"
+                            android:textAppearance="@style/App.TextAppearance.Subtitle"
+                            android:textColor="@color/dark_gray"
+                            android:textAlignment="center"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Check back soon for updates from your network!"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/light_gray"
+                            android:textAlignment="center"
+                            android:layout_marginTop="8dp"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+
+                    <!-- Dynamic activity items will be added here when available -->
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
