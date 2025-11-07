@@ -22,6 +22,31 @@
     <!-- Content Descriptions for Accessibility -->
     <string name="profile_image_description">User profile picture</string>
 
+    <!-- Home Screen Additional Strings -->
+    <string name="view_profile">View Profile</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="find_mentors">Find Mentors</string>
+    <string name="browse_jobs">Browse Jobs</string>
+    <string name="events">Events</string>
+    <string name="knowledge">Knowledge</string>
+    <string name="recent_activity">Recent Activity</string>
+    <string name="notifications">Notifications</string>
+    <string name="mentorship_requests_notification">3 new mentorship requests</string>
+    <string name="job_postings_notification">5 new job postings in your field</string>
+    <string name="networking_event_notification">Alumni networking event this Friday</string>
+    <string name="time_2h_ago">2h ago</string>
+    <string name="time_4h_ago">4h ago</string>
+    <string name="time_1d_ago">1d ago</string>
+    <string name="view_all_notifications">View All Notifications</string>
+    <string name="connect_and_grow">Connect &amp; Grow</string>
+    <string name="see_all">See All</string>
+    <string name="view_and_edit">View &amp; Edit</string>
+    <string name="share_knowledge">Share Knowledge</string>
+    <string name="complete_your_profile">Complete Your Profile</string>
+    <string name="percentage_60">60%</string>
+    <string name="profile_completion_message">Add your work experience and skills to get better mentor matches</string>
+    <string name="complete_profile">Complete Profile</string>
+
     <!-- Strings for Login, Signup, and Forgot Password from build errors -->
     <string name="alumni_portal">Alumni Portal</string>
     <string name="email_hint">Email</string>

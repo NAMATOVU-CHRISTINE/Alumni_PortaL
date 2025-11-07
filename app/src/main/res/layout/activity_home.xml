@@ -623,7 +623,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Add your work experience and skills to get better mentor matches"
+                        android:text="@string/profile_completion_message"
                         android:textAppearance="@style/App.TextAppearance.Body"
                         android:textColor="@color/dark_gray"
                         android:layout_marginBottom="12dp"/>
@@ -640,9 +640,10 @@
                     <Button
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Complete Profile"
+                        android:layout_height="48dp"
+                        android:text="@string/complete_profile"
                         android:textSize="12sp"
+                        android:minHeight="48dp"
                         android:layout_gravity="end"
                         app:cornerRadius="18dp"/>
                 </LinearLayout>
