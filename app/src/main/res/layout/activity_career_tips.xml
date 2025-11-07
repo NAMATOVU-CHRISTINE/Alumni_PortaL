@@ -8,228 +8,382 @@
     android:background="@color/light_background"
     tools:context=".CareerTipsActivity">
 
-    <!-- App Bar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- Enhanced App Bar with Gradient -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:backgroundTint="@color/must_green"
-        android:title="Career Tips"
-        android:titleTextColor="@color/white"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:navigationIcon="@drawable/ic_back"
-        app:popupTheme="@style/ThemeOverlay.Material3.Light" />
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        app:liftOnScroll="true">
 
-    <!-- Scrollable Content -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:backgroundTint="@color/must_green"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/ic_back"
+            app:popupTheme="@style/ThemeOverlay.Material3.Light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Career Tips"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Professional guidance for your success"
+                    android:textColor="#E8F5E8"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
-            <!-- Category Chips Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Category Selection Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="20dp">
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎯 Choose Your Focus Area"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="3dp"
+                    app:cardBackgroundColor="@color/white">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Categories"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/must_green"
-                        android:layout_marginBottom="12dp" />
-
-                    <HorizontalScrollView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="none">
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/categoryChips"
-                            android:layout_width="wrap_content"
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:singleSelection="true"
-                            app:selectionRequired="true" />
-                    </HorizontalScrollView>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                            android:scrollbars="none"
+                            android:fadingEdge="horizontal"
+                            android:fadingEdgeLength="32dp">
 
-            <!-- Tip Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/tipCard"
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/categoryChips"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:singleSelection="true"
+                                app:selectionRequired="true"
+                                app:chipSpacingHorizontal="8dp"
+                                app:chipSpacingVertical="4dp" />
+                        </HorizontalScrollView>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Featured Tip Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨ Featured Tip"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/tipCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="28dp"
+                        android:gravity="center">
+
+                        <!-- Category Badge -->
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/tipCategory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Networking"
+                            app:chipBackgroundColor="@color/light_green"
+                            android:textColor="@color/must_green"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:chipCornerRadius="20dp"
+                            app:chipStrokeWidth="1dp"
+                            app:chipStrokeColor="@color/must_green"
+                            android:layout_marginBottom="20dp" />
+
+                        <!-- Tip Content -->
+                        <TextView
+                            android:id="@+id/tipText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Attend alumni events regularly to grow your network. 🤝"
+                            android:textSize="20sp"
+                            android:textColor="@color/text_primary"
+                            android:gravity="center"
+                            android:lineSpacingExtra="6dp"
+                            android:textStyle="normal"
+                            android:layout_marginBottom="20dp" />
+
+                        <!-- Navigation Hint -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:background="@drawable/rounded_background_light"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="👈 Swipe or use buttons 👉"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_hint"
+                                android:textStyle="italic" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Navigation Controls Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🎮 Navigation"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="3dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Navigation Buttons -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_marginBottom="16dp">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPrevious"
+                                android:layout_width="0dp"
+                                android:layout_height="52dp"
+                                android:layout_weight="1"
+                                android:text="Previous"
+                                app:icon="@drawable/ic_chevron_left"
+                                app:iconGravity="start"
+                                android:textColor="@color/must_green"
+                                app:strokeColor="@color/must_green"
+                                app:strokeWidth="2dp"
+                                app:cornerRadius="16dp"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                            <View
+                                android:layout_width="16dp"
+                                android:layout_height="1dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnNext"
+                                android:layout_width="0dp"
+                                android:layout_height="52dp"
+                                android:layout_weight="1"
+                                android:text="Next"
+                                android:textColor="@color/white"
+                                android:backgroundTint="@color/must_green"
+                                app:icon="@drawable/ic_chevron_right"
+                                app:iconGravity="end"
+                                app:cornerRadius="16dp"
+                                style="@style/Widget.Material3.Button" />
+                        </LinearLayout>
+
+                        <!-- Action Buttons -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSave"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="💾 Save"
+                                android:textColor="@color/must_green"
+                                app:strokeColor="@color/must_green"
+                                app:strokeWidth="1dp"
+                                app:cornerRadius="14dp"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                            <View
+                                android:layout_width="12dp"
+                                android:layout_height="1dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShare"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="📤 Share"
+                                android:textColor="@color/must_green"
+                                app:strokeColor="@color/must_green"
+                                app:strokeWidth="1dp"
+                                app:cornerRadius="14dp"
+                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Quick Access Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="32dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📚 Quick Access"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSavedTips"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="📖 View Saved Tips"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/must_green"
+                    app:cornerRadius="20dp"
+                    app:iconGravity="start"
+                    android:elevation="4dp" />
+            </LinearLayout>
+
+            <!-- Empty State -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/emptyStateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
+                app:cardElevation="4dp"
                 app:cardBackgroundColor="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 android:layout_marginBottom="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:padding="40dp">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/tipCategory"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Networking"
-                        app:chipBackgroundColor="@color/light_green"
-                        android:textColor="@color/must_green"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="16dp"
+                        android:text="🤔"
+                        android:textSize="64sp"
                         android:layout_marginBottom="16dp" />
 
                     <TextView
-                        android:id="@+id/tipText"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Attend alumni events regularly to grow your network. 🤝"
-                        android:textSize="18sp"
+                        android:text="No tips available"
+                        android:textSize="20sp"
                         android:textColor="@color/text_primary"
+                        android:textStyle="bold"
                         android:gravity="center"
-                        android:lineSpacingExtra="4dp"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="8dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👈 Swipe or tap buttons to navigate 👉"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_hint"
-                        android:alpha="0.8" />
+                        android:text="Try selecting a different category to explore more tips"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"
+                        android:gravity="center"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Navigation Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="20dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnPrevious"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="Previous"
-                    app:icon="@drawable/ic_chevron_left"
-                    app:iconGravity="start"
-                    android:textColor="@color/must_green"
-                    app:strokeColor="@color/must_green"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNext"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="Next"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/must_green"
-                    app:icon="@drawable/ic_chevron_right"
-                    app:iconGravity="end"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_marginStart="12dp" />
-            </LinearLayout>
-
-            <!-- Action Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="20dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="💾 Save"
-                    android:textColor="@color/must_green"
-                    app:strokeColor="@color/must_green"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShare"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="📤 Share"
-                    android:textColor="@color/must_green"
-                    app:strokeColor="@color/must_green"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_marginStart="12dp" />
-            </LinearLayout>
-
-            <!-- Saved Tips Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSavedTips"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:text="📚 View Saved Tips"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/must_green"
-                app:cornerRadius="16dp"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Empty State -->
-            <LinearLayout
-                android:id="@+id/emptyStateLayout"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🤔"
-                    android:textSize="50sp"
-                    android:layout_marginBottom="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No tips available in this category"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_secondary"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Try selecting a different category"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_hint"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
