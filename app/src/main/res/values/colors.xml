@@ -14,6 +14,7 @@
 
     <!-- Component Colors -->
     <color name="stroke_color">#CAC4D0</color>
+    <color name="warning_background">#FFF3CD</color>
     
     <!-- Chat specific colors -->
     <color name="typing_background">#E8F5E8</color>
