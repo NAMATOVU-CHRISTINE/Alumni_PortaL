@@ -80,7 +80,11 @@ public class AddArticleActivity extends AppCompatActivity {
             return false;
         }
 
-        if (chipGroupCategory.getCheckedChipId() == -1) {
+        // Check if a category is selected
+        int checkedChipId = chipGroupCategory.getCheckedChipId();
+        android.util.Log.d("AddArticle", "Checked chip ID: " + checkedChipId);
+        
+        if (checkedChipId == -1) {
             Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
             return false;
         }
