@@ -452,20 +452,20 @@ public class SyncWorker extends Worker {
         entity.company = job.getCompany();
         entity.position = job.getTitle();
         entity.description = job.getDescription();
-        entity.requirements = String.join(", ", job.getRequirements());
+        entity.requirements = job.getRequirements() != null ? job.getRequirements() : "";
         entity.location = job.getLocation();
-        entity.jobType = job.getEmploymentType();
+        entity.jobType = job.getJobType();
         entity.experienceLevel = job.getExperienceLevel();
         entity.salaryRange = job.getSalaryRange();
-        entity.applicationDeadline = job.getDeadline();
+        entity.applicationDeadline = job.getExpiresAt();
         entity.applicationUrl = job.getApplicationUrl();
         entity.postedByUserId = job.getPostedBy();
-        entity.postedByName = ""; // Not available in new model
+        entity.postedByName = job.getPostedByName() != null ? job.getPostedByName() : "";
         entity.postedAt = job.getPostedAt();
         entity.isActive = job.isActive();
-        entity.tags = String.join(", ", job.getTags());
-        entity.createdAt = job.getCreatedAt();
-        entity.updatedAt = job.getUpdatedAt();
+        entity.tags = job.getTags() != null ? String.join(", ", job.getTags()) : "";
+        entity.createdAt = job.getPostedAt(); // Use postedAt as createdAt
+        entity.updatedAt = job.getPostedAt(); // Use postedAt as updatedAt since no separate field exists
         entity.lastSync = System.currentTimeMillis();
         return entity;
     }
@@ -475,26 +475,26 @@ public class SyncWorker extends Worker {
         entity.eventId = event.getEventId();
         entity.title = event.getTitle();
         entity.description = event.getDescription();
-        entity.category = event.getCategory();
+        entity.category = event.getEventType();
         entity.dateTime = event.getStartDateTime();
         entity.endDateTime = event.getEndDateTime();
-        entity.location = event.getLocation();
+        entity.location = event.getVenueDisplayText();
         entity.venue = event.getVenue();
-        entity.isVirtual = event.isVirtual();
-        entity.meetingLink = event.getMeetingUrl();
-        entity.maxAttendees = event.getMaxCapacity();
-        entity.currentAttendees = event.getAttendees().size();
-        entity.registrationDeadline = event.getRegistrationDeadline();
-        entity.isPaid = event.isPaid();
-        entity.price = event.getCost();
-        entity.currency = event.getCurrency();
-        entity.organizerId = event.getOrganizerId();
+        entity.isVirtual = event.isOnline();
+        entity.meetingLink = event.getOnlineLink();
+        entity.maxAttendees = event.getMaxAttendees();
+        entity.currentAttendees = event.getCurrentAttendees();
+        entity.registrationDeadline = event.getStartDateTime(); // No separate registration deadline, use event start
+        entity.isPaid = !event.isFree();
+        entity.price = event.getTicketPrice();
+        entity.currency = "USD"; // Default currency since not available in model
+        entity.organizerId = event.getOrganizer();
         entity.organizerName = event.getOrganizerName();
-        entity.contactEmail = event.getContactEmail();
-        entity.contactPhone = event.getContactPhone();
+        entity.contactEmail = event.getOrganizerContact();
+        entity.contactPhone = ""; // Not available in new model
         entity.imageUrl = event.getImageUrl();
-        entity.tags = String.join(", ", event.getTags());
-        entity.isActive = event.isActive();
+        entity.tags = event.getTags() != null ? String.join(", ", event.getTags()) : "";
+        entity.isActive = event.isPublic(); // Use isPublic as isActive
         entity.createdAt = event.getCreatedAt();
         entity.updatedAt = event.getUpdatedAt();
         entity.lastSync = System.currentTimeMillis();
