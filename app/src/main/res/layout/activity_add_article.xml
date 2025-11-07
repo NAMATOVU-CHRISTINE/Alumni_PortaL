@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-compat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:background="@color/light_background">
 
     <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
