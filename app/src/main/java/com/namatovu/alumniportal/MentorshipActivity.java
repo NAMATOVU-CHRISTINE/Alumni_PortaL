@@ -133,21 +133,25 @@ public class MentorshipActivity extends AppCompatActivity {
             }
         });
         
-        binding.mentorshipRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.mentorshipRecyclerView.setAdapter(adapter);
+        binding.recyclerViewMentors.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewMentors.setAdapter(adapter);
     }
 
     private void setupFAB() {
+        // FAB is not available in the current layout, commenting out for now
+        // TODO: Add FAB to layout if needed
+        /*
         binding.findMentorFab.setOnClickListener(v -> {
             Intent intent = new Intent(this, AlumniDirectoryActivity.class);
             intent.putExtra("mode", "mentor_search");
             startActivity(intent);
         });
+        */
     }
 
     private void loadMentorshipConnections() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.noConnectionsText.setVisibility(View.GONE);
+        // Show loading state - using visibility changes on existing views
+        binding.emptyStateLayout.setVisibility(View.GONE);
 
         // Query connections where current user is either mentor or mentee
         db.collection("mentor_connections")
