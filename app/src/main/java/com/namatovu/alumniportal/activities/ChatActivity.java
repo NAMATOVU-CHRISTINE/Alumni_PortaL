@@ -101,6 +101,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             return;
         }
         
+        // Load current user's name
+        loadCurrentUserName();
+        
         // Get intent data
         Intent intent = getIntent();
         chatId = intent.getStringExtra("chatId");
@@ -272,7 +275,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         db.collection("users").document(currentUserId)
                 .get()
                 .addOnSuccessListener(currentUserDoc -> {
-                    String currentUserName = currentUserDoc.getString("fullName");
+                    currentUserName = currentUserDoc.getString("fullName");
                     if (currentUserName == null) currentUserName = "Unknown User";
                     
                     // Create new chat
