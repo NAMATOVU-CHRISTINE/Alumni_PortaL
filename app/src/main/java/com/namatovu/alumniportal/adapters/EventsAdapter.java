@@ -20,6 +20,18 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     
     private List<AlumniEvent> events = new ArrayList<>();
     private OnEventActionListener listener;
+    private String currentUserId;
+    
+    // Default constructor
+    public EventsAdapter() {
+    }
+    
+    // Constructor with parameters
+    public EventsAdapter(List<AlumniEvent> events, String currentUserId, OnEventActionListener listener) {
+        this.events = events != null ? events : new ArrayList<>();
+        this.currentUserId = currentUserId;
+        this.listener = listener;
+    }
     
     public interface OnEventActionListener {
         void onEventClick(AlumniEvent event);
