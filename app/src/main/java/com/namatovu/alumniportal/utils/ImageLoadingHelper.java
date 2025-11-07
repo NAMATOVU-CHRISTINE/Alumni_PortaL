@@ -29,6 +29,7 @@ public class ImageLoadingHelper {
     // Default placeholder and error images
     private static final int DEFAULT_PLACEHOLDER = android.R.drawable.ic_menu_gallery;
     private static final int DEFAULT_ERROR = android.R.drawable.ic_menu_close_clear_cancel;
+    private static final int PROFILE_PLACEHOLDER = android.R.drawable.ic_menu_myplaces;
     
     /**
      * Load image with default options
@@ -64,8 +65,8 @@ public class ImageLoadingHelper {
         if (context == null || imageView == null) return;
         
         RequestOptions options = new RequestOptions()
-            .placeholder(DEFAULT_PLACEHOLDER)
-            .error(DEFAULT_ERROR)
+            .placeholder(PROFILE_PLACEHOLDER)
+            .error(PROFILE_PLACEHOLDER)
             .transform(new CircleCrop())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .timeout(10000);
