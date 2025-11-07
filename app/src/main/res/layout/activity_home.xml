@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
-                        android:hint="Search people, jobs, events..."
+                        android:hint="@string/search_hint"
                         android:textSize="14sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
@@ -58,7 +58,8 @@
                         android:singleLine="true"
                         android:drawableStart="@android:drawable/ic_menu_search"
                         android:drawablePadding="8dp"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:contentDescription="@string/search_hint" />
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -141,9 +142,10 @@
                         android:id="@+id/viewProfileButton"
                         style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="View Profile"
+                        android:layout_height="48dp"
+                        android:text="@string/view_profile"
                         android:textSize="12sp"
+                        android:minHeight="48dp"
                         app:cornerRadius="18dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -152,7 +154,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Quick Actions"
+                android:text="@string/quick_actions"
                 android:textAppearance="@style/App.TextAppearance.Title"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -191,12 +193,13 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_school"
+                                android:contentDescription="@string/find_a_mentor"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Find Mentors"
+                                android:text="@string/find_mentors"
                                 android:textSize="12sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -226,12 +229,13 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_work"
+                                android:contentDescription="@string/jobs_and_internships"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Browse Jobs"
+                                android:text="@string/browse_jobs"
                                 android:textSize="12sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -261,12 +265,13 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_event"
+                                android:contentDescription="@string/upcoming_events"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Events"
+                                android:text="@string/events"
                                 android:textSize="12sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -295,12 +300,13 @@
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_book"
+                                android:contentDescription="@string/knowledge_hub"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Knowledge"
+                                android:text="@string/knowledge"
                                 android:textSize="12sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -315,7 +321,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Recent Activity"
+                android:text="@string/recent_activity"
                 android:textAppearance="@style/App.TextAppearance.Title"
                 android:textStyle="bold"
                 android:textColor="@color/black"
