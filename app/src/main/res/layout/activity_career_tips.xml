@@ -35,18 +35,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💡 Career Tips"
+                    android:text="Career Tips"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Professional guidance for your success"
-                    android:textColor="#E8F5E8"
-                    android:textSize="12sp"
-                    android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -190,7 +182,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="👈 Swipe or use buttons 👉"
+                                android:text="👈 Swipe to navigate 👉"
                                 android:textSize="12sp"
                                 android:textColor="@color/text_hint"
                                 android:textStyle="italic" />
@@ -209,7 +201,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎮 Navigation"
+                    android:text="🎮 Actions"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
@@ -228,46 +220,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="20dp">
-
-                        <!-- Navigation Buttons -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center"
-                            android:layout_marginBottom="16dp">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnPrevious"
-                                android:layout_width="0dp"
-                                android:layout_height="52dp"
-                                android:layout_weight="1"
-                                android:text="Previous"
-                                app:icon="@drawable/ic_chevron_left"
-                                app:iconGravity="start"
-                                android:textColor="@color/must_green"
-                                app:strokeColor="@color/must_green"
-                                app:strokeWidth="2dp"
-                                app:cornerRadius="16dp"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
-
-                            <View
-                                android:layout_width="16dp"
-                                android:layout_height="1dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnNext"
-                                android:layout_width="0dp"
-                                android:layout_height="52dp"
-                                android:layout_weight="1"
-                                android:text="Next"
-                                android:textColor="@color/white"
-                                android:backgroundTint="@color/must_green"
-                                app:icon="@drawable/ic_chevron_right"
-                                app:iconGravity="end"
-                                app:cornerRadius="16dp"
-                                style="@style/Widget.Material3.Button" />
-                        </LinearLayout>
 
                         <!-- Action Buttons -->
                         <LinearLayout

@@ -135,17 +135,6 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
      * Setup all click listeners for buttons and interactions
      */
     private void setupClickListeners() {
-        // Navigation buttons
-        binding.btnPrevious.setOnClickListener(v -> {
-            pauseAutoRotation();
-            showPreviousTip();
-        });
-
-        binding.btnNext.setOnClickListener(v -> {
-            pauseAutoRotation();
-            showNextTip();
-        });
-
         // Action buttons
         binding.btnSave.setOnClickListener(v -> toggleSaveTip());
         binding.btnShare.setOnClickListener(v -> shareCurrentTip());
@@ -964,10 +953,6 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         // Update save button icon
         updateSaveButton(currentTip.isSaved());
         
-        // Update navigation buttons
-        binding.btnPrevious.setEnabled(currentTipIndex > 0);
-        binding.btnNext.setEnabled(currentTipIndex < filteredTips.size() - 1);
-        
         // Apply fade-in animation
         binding.tipCard.startAnimation(fadeIn);
         
@@ -981,8 +966,6 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
     private void showEmptyState() {
         binding.tipCard.setVisibility(View.GONE);
         binding.emptyStateLayout.setVisibility(View.VISIBLE);
-        binding.btnPrevious.setEnabled(false);
-        binding.btnNext.setEnabled(false);
         binding.btnSave.setEnabled(false);
         binding.btnShare.setEnabled(false);
     }
