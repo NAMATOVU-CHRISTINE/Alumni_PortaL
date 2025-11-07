@@ -105,25 +105,32 @@ public class MentorshipActivity extends AppCompatActivity {
         MentorshipAdapter.OnMentorshipActionListener listener = new MentorshipAdapter.OnMentorshipActionListener() {
             @Override
             public void onAccept(MentorshipConnection connection) {
-                // TODO: implement
+                updateMentorshipStatus(connection, "accepted");
+                AnalyticsHelper.logMentorConnection("accept", connection.getMenteeId());
             }
 
             @Override
             public void onReject(MentorshipConnection connection) {
-                // TODO: implement
+                updateMentorshipStatus(connection, "rejected");
+                AnalyticsHelper.logMentorConnection("reject", connection.getMenteeId());
             }
 
             @Override
             public void onViewProfile(String userId) {
-                // TODO: implement
+                Intent intent = new Intent(MentorshipActivity.this, ViewProfileActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
             }
 
             @Override
             public void onStartSession(MentorshipConnection connection) {
-                // TODO: implement
+                Toast.makeText(MentorshipActivity.this, "Session management coming soon!", Toast.LENGTH_SHORT).show();
             }
 
-            // onCompleteConnection temporarily removed
+            @Override
+            public void onCompleteConnection(MentorshipConnection connection) {
+                updateMentorshipStatus(connection, "completed");
+            }
         };
         
         adapter = new MentorshipAdapter(filteredConnections, currentUserId, listener);
