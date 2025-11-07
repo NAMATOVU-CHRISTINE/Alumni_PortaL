@@ -94,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         };
         
         // Start the rotation after 3 seconds initial delay
-        motivationHandler.postDelayed(motivationRunnable, 3000);
+        motivationHandler.postDelayed(motivationRunnable, 10000);
     }
 
     private void rotateMotivationalTip() {
