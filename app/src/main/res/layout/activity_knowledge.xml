@@ -22,6 +22,7 @@
             app:titleTextColor="@color/white"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:navigationIconTint="@color/white"
+            app:menu="@menu/menu_search"
             app:layout_scrollFlags="scroll|enterAlways" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -38,68 +39,36 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Header Section -->
-            <LinearLayout
+            <!-- Header Description -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp">
+                android:text="Discover handpicked articles, tips, and resources to grow your network and career."
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="8dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="📚 Knowledge Hub"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/must_green"
-                    android:gravity="center"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Discover handpicked articles, tips, and resources to grow your network and career."
-                    android:textSize="16sp"
-                    android:textColor="@color/text_secondary"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
-            </LinearLayout>
-
-            <!-- Search Section -->
-            <LinearLayout
+            <!-- Quick Search -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginBottom="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔍 Search Articles"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/must_green"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginStart="4dp" />
-
-                <com.google.android.material.card.MaterialCardView
+                <SearchView
+                    android:id="@+id/searchView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:layout_height="48dp"
+                    android:layout_margin="4dp"
+                    android:queryHint="Search articles and tips..."
+                    android:iconifiedByDefault="false"
+                    android:background="@color/white" />
 
-                    <SearchView
-                        android:id="@+id/searchView"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_margin="4dp"
-                        android:queryHint="Search articles and tips..."
-                        android:iconifiedByDefault="false"
-                        android:background="@color/white" />
-
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Categories Section -->
             <LinearLayout
