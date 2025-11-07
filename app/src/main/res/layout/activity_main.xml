@@ -8,32 +8,52 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Circle Logo -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/logo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="80dp"
-        android:src="@drawable/ic_menu_account" 
-        app:civ_border_color="@color/must_green"
-        app:civ_border_width="2dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/logo" />
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/titleText"
+    <!-- Logo Icon with Text -->
+    <LinearLayout
+        android:id="@+id/logoSection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/alumni_portal"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/logo"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Logo Icon -->
+        <ImageView
+            android:id="@+id/logoIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_menu_account"
+            app:tint="@color/must_green"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Alumni Portal Logo" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/alumni_portal"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/must_green"
+            android:gravity="center"/>
+
+        <!-- Slogan -->
+        <TextView
+            android:id="@+id/sloganText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_learn_grow_together"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:textColor="@color/dark_gray"
+            android:layout_marginTop="8dp"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
     <!-- Card for Inputs (MaterialCardView & Material TextInputs) -->
     <com.google.android.material.card.MaterialCardView
@@ -42,10 +62,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="12dp"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintTop_toBottomOf="@id/logoSection"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:backgroundTint="?attr/colorSurface">
