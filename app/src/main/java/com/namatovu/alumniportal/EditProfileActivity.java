@@ -372,6 +372,12 @@ public class EditProfileActivity extends AppCompatActivity {
             Toast.makeText(EditProfileActivity.this, "Image upload failed completely. Saving profile without image.", Toast.LENGTH_LONG).show();
             saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
         });
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to initialize Firebase Storage for root upload", e);
+            binding.saveButton.setEnabled(true);
+            Toast.makeText(EditProfileActivity.this, "Storage initialization failed. Saving profile without image.", Toast.LENGTH_LONG).show();
+            saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
+        }
     }
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl) {
