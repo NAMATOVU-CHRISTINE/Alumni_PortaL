@@ -2,6 +2,7 @@ package com.namatovu.alumniportal;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.utils.PermissionHelper;
@@ -59,23 +61,34 @@ public class EditProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("profile_images");
+        
+        // Test Firebase Storage connection
+        Log.d(TAG, "Firebase Storage reference created: " + storageRef.toString());
 
         setSupportActionBar(binding.toolbar);
 
         pickImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) {
                 selectedImageUri = uri;
+                Log.d(TAG, "Image selected: " + uri.toString());
                 Glide.with(EditProfileActivity.this)
                         .load(uri)
                         .placeholder(R.drawable.ic_person)
+                        .error(R.drawable.ic_person)
                         .into(binding.profileImage);
+                Toast.makeText(this, "Image selected successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.w(TAG, "No image selected");
+                Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
             }
         });
 
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
             if (granted) {
+                Log.d(TAG, "Permission granted, opening image picker");
                 openImagePicker();
             } else {
+                Log.w(TAG, "Storage permission denied");
                 Toast.makeText(this, "Storage permission required to select images", Toast.LENGTH_SHORT).show();
             }
         });
@@ -95,18 +108,66 @@ public class EditProfileActivity extends AppCompatActivity {
         SecurityHelper.initialize(this);
 
         loadCurrentProfile();
+        
+        // Test Firebase connection
+        testFirebaseConnection();
+    }
+
+    private void testFirebaseConnection() {
+        Log.d(TAG, "Testing Firebase connection...");
+        
+        // Test Firestore
+        db.collection("users").limit(1).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "Firestore connection successful");
+            } else {
+                Log.e(TAG, "Firestore connection failed", task.getException());
+            }
+        });
+        
+        // Test Storage
+        storageRef.child("test").getMetadata().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "Firebase Storage connection successful");
+            } else {
+                Log.d(TAG, "Firebase Storage connection test (expected to fail for non-existent file): " + 
+                      (task.getException() != null ? task.getException().getMessage() : "unknown"));
+            }
+        });
     }
 
     private void ensurePermissionAndPickImage() {
-        if (PermissionHelper.hasStoragePermission(this)) {
-            openImagePicker();
+        // For Android 13+ (API 33+), we need READ_MEDIA_IMAGES permission
+        // For older versions, we need READ_EXTERNAL_STORAGE
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) 
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Media images permission already granted");
+                openImagePicker();
+            } else {
+                Log.d(TAG, "Requesting media images permission");
+                requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+            }
         } else {
-            PermissionHelper.requestStoragePermission(this);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) 
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "External storage permission already granted");
+                openImagePicker();
+            } else {
+                Log.d(TAG, "Requesting external storage permission");
+                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
         }
     }
 
     private void openImagePicker() {
-        pickImageLauncher.launch("image/*");
+        Log.d(TAG, "Opening image picker...");
+        try {
+            pickImageLauncher.launch("image/*");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to open image picker", e);
+            Toast.makeText(this, "Failed to open image picker: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void addSkillFromInput() {
@@ -208,46 +269,65 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // If image selected, upload first
         if (selectedImageUri != null) {
-            StorageReference ref = storageRef.child(user.getUid() + ".jpg");
+            Log.d(TAG, "Starting image upload...");
+            String fileName = user.getUid() + "_" + System.currentTimeMillis() + ".jpg";
+            StorageReference ref = storageRef.child(fileName);
+            
             UploadTask uploadTask = ref.putFile(selectedImageUri);
-            uploadTask.addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                String imageUrl = uri.toString();
-                saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl);
+            uploadTask.addOnProgressListener(taskSnapshot -> {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Log.d(TAG, "Upload progress: " + progress + "%");
+            }).addOnSuccessListener(taskSnapshot -> {
+                Log.d(TAG, "Image upload successful, getting download URL...");
+                ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String imageUrl = uri.toString();
+                    Log.d(TAG, "Download URL obtained: " + imageUrl);
+                    saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl);
+                }).addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to get download URL", e);
+                    binding.saveButton.setEnabled(true);
+                    Toast.makeText(EditProfileActivity.this, "Failed to get image URL: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
             }).addOnFailureListener(e -> {
+                Log.e(TAG, "Image upload failed", e);
                 binding.saveButton.setEnabled(true);
-                Toast.makeText(EditProfileActivity.this, "Failed to get image URL.", Toast.LENGTH_SHORT).show();
-            })).addOnFailureListener(e -> {
-                binding.saveButton.setEnabled(true);
-                Toast.makeText(EditProfileActivity.this, "Image upload failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
             });
         } else {
+            Log.d(TAG, "No image selected, saving profile without image update");
             // No image change
             saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
         }
     }
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl) {
+        Log.d(TAG, "Saving profile document for user: " + uid);
+        
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
         updates.put("fullName", name);  // Use "fullName" to match models.User
         updates.put("bio", bio);
         updates.put("currentJob", career);  // Use "currentJob" to match models.User
         updates.put("skills", skills);
-        if (imageUrl != null) updates.put("profileImageUrl", imageUrl);
+        if (imageUrl != null) {
+            updates.put("profileImageUrl", imageUrl);
+            Log.d(TAG, "Including profile image URL in update");
+        }
 
         db.collection("users").document(uid).update(updates).addOnCompleteListener(task -> {
             binding.saveButton.setEnabled(true);
             if (task.isSuccessful()) {
+                Log.d(TAG, "Profile updated successfully");
                 // Log analytics event for profile update
                 String editType = selectedImageUri != null ? "with_photo" : "without_photo";
                 AnalyticsHelper.logProfileEdit(editType);
                 
-                Toast.makeText(EditProfileActivity.this, "Profile updated.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
-                Toast.makeText(EditProfileActivity.this, "Failed to update profile.", Toast.LENGTH_SHORT).show();
-                AnalyticsHelper.logError("profile_update_failed", 
-                    task.getException() != null ? task.getException().getMessage() : "Unknown error", 
-                    "EditProfileActivity");
+                Log.e(TAG, "Failed to update profile", task.getException());
+                String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                Toast.makeText(EditProfileActivity.this, "Failed to update profile: " + errorMessage, Toast.LENGTH_LONG).show();
+                AnalyticsHelper.logError("profile_update_failed", errorMessage, "EditProfileActivity");
             }
         });
     }
