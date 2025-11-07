@@ -44,7 +44,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
         loadArticleData();
         setupActionButtons();
         setupComments();
-        loadSampleComments();
+    }
     }
 
     private void initializeViews() {
@@ -167,21 +167,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
         
         recyclerViewComments.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewComments.setAdapter(commentAdapter);
-    }
-
-    private void loadSampleComments() {
-        // Add some sample comments
-        comments.add(new Comment("Sarah Johnson", "This is such valuable advice! I've been struggling with networking and these tips are really helpful."));
-        comments.add(new Comment("Michael Chen", "Great article! The section about maintaining relationships really resonated with me. Thanks for sharing!"));
-        comments.add(new Comment("Emma Williams", "I've implemented some of these strategies and they really work. Highly recommend this read!"));
-        
-        // Add some likes to sample comments
-        if (!comments.isEmpty()) {
-            comments.get(0).setLikeCount(5);
-            comments.get(1).setLikeCount(3);
-        }
-        
-        commentAdapter.notifyDataSetChanged();
     }
 
     private void updateLikeButton() {
