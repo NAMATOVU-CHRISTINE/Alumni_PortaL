@@ -486,7 +486,7 @@ public class SyncWorker extends Worker {
         entity.currentAttendees = event.getCurrentAttendees();
         entity.registrationDeadline = event.getStartDateTime(); // No separate registration deadline, use event start
         entity.isPaid = !event.isFree();
-        entity.price = event.getTicketPrice();
+        entity.price = parsePrice(event.getTicketPrice());
         entity.currency = "USD"; // Default currency since not available in model
         entity.organizerId = event.getOrganizer();
         entity.organizerName = event.getOrganizerName();
