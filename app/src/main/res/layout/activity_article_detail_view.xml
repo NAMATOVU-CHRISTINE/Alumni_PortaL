@@ -106,6 +106,20 @@
                         android:gravity="center">
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLike"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="🤍 0"
+                            android:textColor="@color/must_green"
+                            android:textSize="14sp"
+                            android:layout_marginEnd="4dp"
+                            app:strokeColor="@color/must_green"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="12dp"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnBookmark"
                             android:layout_width="0dp"
                             android:layout_height="44dp"
@@ -113,7 +127,8 @@
                             android:text="📖 Save"
                             android:textColor="@color/must_green"
                             android:textSize="14sp"
-                            android:layout_marginEnd="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
                             app:strokeColor="@color/must_green"
                             app:strokeWidth="1dp"
                             app:cornerRadius="12dp"
@@ -127,6 +142,7 @@
                             android:text="📤 Share"
                             android:textColor="@color/white"
                             android:textSize="14sp"
+                            android:layout_marginStart="4dp"
                             android:backgroundTint="@color/must_green"
                             app:cornerRadius="12dp"
                             style="@style/Widget.Material3.Button" />
@@ -143,7 +159,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
-                android:layout_marginBottom="80dp">
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -169,6 +185,72 @@
                         android:textColor="@color/text_primary"
                         android:lineSpacingExtra="4dp"
                         android:justificationMode="inter_word" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Comments Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="80dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="💬 Comments"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/must_green"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Add Comment Section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_vertical">
+
+                        <EditText
+                            android:id="@+id/etComment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Add a comment..."
+                            android:background="@drawable/rounded_edittext_background"
+                            android:padding="12dp"
+                            android:maxLines="3"
+                            android:textSize="14sp"
+                            android:layout_marginEnd="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSendComment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="48dp"
+                            android:text="Send"
+                            android:textColor="@color/white"
+                            android:backgroundTint="@color/must_green"
+                            app:cornerRadius="12dp"
+                            style="@style/Widget.Material3.Button" />
+
+                    </LinearLayout>
+
+                    <!-- Comments List -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewComments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
 
                 </LinearLayout>
 
