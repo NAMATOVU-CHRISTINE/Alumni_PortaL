@@ -44,7 +44,8 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
         void onReject(MentorshipConnection connection);
         void onViewProfile(String userId);
         void onStartSession(MentorshipConnection connection);
-        void onCompleteConnection(MentorshipConnection connection);
+        // TODO: Temporarily commented out problematic method
+        // void onCompleteConnection(MentorshipConnection connection);
     }
     
     public void setOnMentorClickListener(OnMentorClickListener listener) {
