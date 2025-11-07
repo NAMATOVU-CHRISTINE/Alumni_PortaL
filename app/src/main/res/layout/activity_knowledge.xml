@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-compat"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background"
+    android:fitsSystemWindows="true"
     tools:context=".KnowledgeActivity">
 
-    <!-- App Bar -->
+    <!-- App Bar Layout -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:fitsSystemWindows="true">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/must_green"
+            app:title="📚 Knowledge Hub"
             app:titleTextColor="@color/white"
-            app:title="Knowledge 📚"
-            app:navigationIcon="@drawable/ic_arrow_back" />
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/white"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -46,8 +48,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📚 Knowledge Hub"
-                    android:textSize="28sp"
+                    android:text="📚 Knowledge Center"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
                     android:gravity="center"
@@ -56,11 +58,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Handpicked tips, articles, and resources to grow your network and career."
+                    android:text="Discover handpicked articles, tips, and resources to grow your network and career."
                     android:textSize="16sp"
                     android:textColor="@color/text_secondary"
                     android:gravity="center"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="16dp" />
             </LinearLayout>
 
             <!-- Search Section -->
@@ -68,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -83,14 +85,15 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
                     app:cardBackgroundColor="@color/white">
 
                     <SearchView
                         android:id="@+id/searchView"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="48dp"
+                        android:layout_margin="4dp"
                         android:queryHint="Search articles and tips..."
                         android:iconifiedByDefault="false"
                         android:background="@color/white" />
@@ -103,90 +106,99 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📂 Categories"
+                    android:text="📂 Filter by Category"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
                     android:layout_marginBottom="12dp"
                     android:layout_marginStart="4dp" />
 
-                <HorizontalScrollView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none">
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
 
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/chipGroupCategories"
-                        android:layout_width="wrap_content"
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:singleSelection="true"
-                        app:selectionRequired="false"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp">
+                        android:scrollbars="none"
+                        android:layout_margin="8dp">
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipAll"
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupCategories"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="All"
-                            android:checked="true"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            app:singleSelection="true"
+                            app:selectionRequired="false"
+                            android:layout_margin="4dp">
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipNetworking"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🤝 Networking"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipAll"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="All"
+                                android:checked="true"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipSkills"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="💡 Skills"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipNetworking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🤝 Networking"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipMentorship"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🌟 Mentorship"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipSkills"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💡 Skills"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipCareer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🚀 Career Growth"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipMentorship"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🌟 Mentorship"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipLeadership"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🏆 Leadership"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipCareer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🚀 Career Growth"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                    </com.google.android.material.chip.ChipGroup>
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipLeadership"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🏆 Leadership"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                </HorizontalScrollView>
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </HorizontalScrollView>
+
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
             <!-- Articles Section -->
@@ -194,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="80dp">
 
                 <TextView
                     android:layout_width="wrap_content"
