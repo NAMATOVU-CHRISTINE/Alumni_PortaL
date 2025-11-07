@@ -1,90 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    style="@style/App.Material3.Card"
-    android:backgroundTint="?attr/colorSurface">
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/mentorProfileImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_menu_account"
+        <!-- Profile Image with Status Badge -->
+        <FrameLayout
+            android:id="@+id/profileImageContainer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="40dp"
+                app:strokeColor="@color/must_gold"
+                app:strokeWidth="3dp"
+                app:cardElevation="2dp">
+
+                <ImageView
+                    android:id="@+id/mentorProfileImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_person"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Mentor profile picture" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Status Badge -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/statusBadge"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="bottom|end"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp">
+
+                <View
+                    android:id="@+id/statusIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/must_green" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </FrameLayout>
+
+        <!-- Mentor Name -->
         <TextView
             android:id="@+id/textMentorName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:textStyle="bold"
-            android:textAppearance="@style/App.TextAppearance.Subtitle"
-            app:layout_constraintStart_toEndOf="@id/mentorProfileImage"
-            app:layout_constraintTop_toTopOf="@id/mentorProfileImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="John Doe" />
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/profileImageContainer"
+            app:layout_constraintTop_toTopOf="@id/profileImageContainer"
+            app:layout_constraintEnd_toStartOf="@id/menuButton"
+            tools:text="Dr. Sarah Johnson" />
 
+        <!-- Position and Company -->
         <TextView
             android:id="@+id/textPosition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textAppearance="@style/App.TextAppearance.Body"
+            android:textSize="16sp"
+            android:textColor="@color/must_green"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/textMentorName"
             app:layout_constraintTop_toBottomOf="@id/textMentorName"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Software Engineer" />
+            app:layout_constraintEnd_toStartOf="@id/menuButton"
+            tools:text="Senior Software Engineer" />
 
         <TextView
             android:id="@+id/textCompany"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
+            android:textSize="14sp"
+            android:textColor="@color/dark_gray"
             app:layout_constraintStart_toStartOf="@id/textMentorName"
             app:layout_constraintTop_toBottomOf="@id/textPosition"
+            app:layout_constraintEnd_toStartOf="@id/menuButton"
+            tools:text="Google Inc." />
+
+        <!-- Menu Button -->
+        <ImageButton
+            android:id="@+id/menuButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu_edit"
+            android:contentDescription="More options"
+            app:tint="@color/dark_gray"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Google" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Connection Status -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/statusChip"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:text="Connected"
+            android:textSize="12sp"
+            app:chipBackgroundColor="@color/light_green"
+            app:chipStrokeColor="@color/must_green"
+            app:chipStrokeWidth="1dp"
+            app:layout_constraintStart_toStartOf="@id/textMentorName"
+            app:layout_constraintTop_toBottomOf="@id/textCompany"
+            tools:text="Pending" />
+
+        <!-- Skills Section -->
+        <TextView
+            android:id="@+id/skillsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Expertise:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileImageContainer" />
 
         <TextView
             android:id="@+id/textSkills"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
-            app:layout_constraintStart_toStartOf="@id/textMentorName"
-            app:layout_constraintTop_toBottomOf="@id/textCompany"
+            android:layout_marginStart="8dp"
+            android:textSize="14sp"
+            android:textColor="@color/dark_gray"
+            app:layout_constraintStart_toEndOf="@id/skillsLabel"
+            app:layout_constraintTop_toTopOf="@id/skillsLabel"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Java, Android, Kotlin" />
+            tools:text="Android Development, Kotlin, UI/UX Design" />
 
-        <TextView
-            android:id="@+id/textRating"
+        <!-- Rating Section -->
+        <LinearLayout
+            android:id="@+id/ratingContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="★★★★★"
-            android:textSize="12sp"
-            android:textColor="#FFD700"
-            app:layout_constraintStart_toStartOf="@id/textMentorName"
-            app:layout_constraintTop_toBottomOf="@id/textSkills" />
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/skillsLabel">
 
-        <Button
-            android:id="@+id/buttonConnect"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="★★★★★"
+                android:textSize="16sp"
+                android:textColor="@color/must_gold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="4.9"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/dark_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="(24 reviews)"
+                android:textSize="12sp"
+                android:textColor="@color/light_gray" />
+
+        </LinearLayout>
+
+        <!-- Action Buttons Container -->
+        <LinearLayout
+            android:id="@+id/actionButtonsContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Connect"
-            android:textSize="12sp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="end"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textSkills" />
+            app:layout_constraintTop_toBottomOf="@id/ratingContainer">
+
+            <!-- Accept Button (for mentorship requests) -->
+            <Button
+                android:id="@+id/buttonAccept"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="Accept"
+                android:textSize="14sp"
+                android:backgroundTint="@color/must_green"
+                android:textColor="@color/white"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone" />
+
+            <!-- Reject Button -->
+            <Button
+                android:id="@+id/buttonReject"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="Decline"
+                android:textSize="14sp"
+                android:textColor="@color/dark_gray"
+                android:background="@android:color/transparent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone" />
+
+            <!-- View Profile Button -->
+            <Button
+                android:id="@+id/buttonViewProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="View Profile"
+                android:textSize="14sp"
+                android:textColor="@color/must_green"
+                android:background="@android:color/transparent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp" />
+
+            <!-- Connect/Message Button -->
+            <Button
+                android:id="@+id/buttonConnect"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Connect"
+                android:textSize="14sp"
+                android:backgroundTint="@color/must_green"
+                android:textColor="@color/white"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:minWidth="100dp" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
