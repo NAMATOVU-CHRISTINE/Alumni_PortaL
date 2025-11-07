@@ -56,7 +56,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
 
     @Override
     public int getItemCount() {
-        return filteredArticles.size();
+        int count = filteredArticles.size();
+        android.util.Log.d("ArticleAdapter", "getItemCount returning: " + count);
+        return count;
     }
 
     // Filter methods
@@ -98,10 +100,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     }
 
     public void updateArticles(List<Article> newArticles) {
+        android.util.Log.d("ArticleAdapter", "updateArticles called with " + newArticles.size() + " articles");
         this.articles.clear();
         this.articles.addAll(newArticles);
         this.filteredArticles.clear();
         this.filteredArticles.addAll(newArticles);
+        android.util.Log.d("ArticleAdapter", "After update: articles=" + articles.size() + ", filtered=" + filteredArticles.size());
         notifyDataSetChanged();
     }
 
@@ -160,6 +164,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         }
 
         public void bind(Article article) {
+            android.util.Log.d("ArticleAdapter", "Binding article: " + article.getTitle());
+            
             tvCategoryIcon.setText(article.getCategoryIcon());
             tvCategory.setText(article.getCategory());
             tvDate.setText(article.getFormattedDate());
