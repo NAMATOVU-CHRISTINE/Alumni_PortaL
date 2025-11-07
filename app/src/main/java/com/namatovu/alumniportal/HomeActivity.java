@@ -2,10 +2,14 @@ package com.namatovu.alumniportal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +31,21 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    
+    // Motivational tips rotation
+    private Handler motivationHandler;
+    private Runnable motivationRunnable;
+    private int currentTipIndex = 0;
+    private String[] motivationalTips = {
+        "Keep connecting, keep growing! 🌱",
+        "Your network is your net worth 💎",
+        "Every connection is a new opportunity 🚀",
+        "Success is a journey, not a destination ⭐",
+        "Learn from those who've walked your path 🎯",
+        "Great things never come from comfort zones 💪",
+        "The alumni network is your secret weapon 🔥",
+        "Today's networking is tomorrow's opportunity 🌟"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +58,8 @@ public class HomeActivity extends AppCompatActivity {
 
         setupToolbar();
         setupCardClickListeners();
+        setupMotivationalTipsRotation();
+        setupSettingsClickListener();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
@@ -51,6 +72,83 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupToolbar() {
         setSupportActionBar(binding.toolbar);
+    }
+
+    private void setupSettingsClickListener() {
+        binding.settingsIcon.setOnClickListener(v -> {
+            // Open App Settings (placeholder for now - opens ProfileActivity)
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    private void setupMotivationalTipsRotation() {
+        motivationHandler = new Handler(Looper.getMainLooper());
+        
+        motivationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                rotateMotivationalTip();
+                motivationHandler.postDelayed(this, 6000); // 6 seconds interval
+            }
+        };
+        
+        // Start the rotation after 3 seconds initial delay
+        motivationHandler.postDelayed(motivationRunnable, 3000);
+    }
+
+    private void rotateMotivationalTip() {
+        // Fade out animation
+        AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+        fadeOut.setDuration(300);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // Update text
+                currentTipIndex = (currentTipIndex + 1) % motivationalTips.length;
+                binding.rotatingMotivationTip.setText(motivationalTips[currentTipIndex]);
+                
+                // Fade in animation
+                AlphaAnimation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+                fadeIn.setDuration(300);
+                binding.rotatingMotivationTip.startAnimation(fadeIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        
+        binding.rotatingMotivationTip.startAnimation(fadeOut);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Resume motivational tips rotation
+        if (motivationHandler != null && motivationRunnable != null) {
+            motivationHandler.postDelayed(motivationRunnable, 6000);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Stop motivational tips rotation to save battery
+        if (motivationHandler != null) {
+            motivationHandler.removeCallbacks(motivationRunnable);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clean up handler
+        if (motivationHandler != null) {
+            motivationHandler.removeCallbacks(motivationRunnable);
+        }
     }
 
     @Override

@@ -39,9 +39,20 @@ public class ProfileActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         setSupportActionBar(binding.toolbar);
+        
+        // Setup navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        binding.editProfileFab.setOnClickListener(v -> {
+        // Setup button click listeners
+        binding.editProfileButton.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+        });
+        
+        binding.logoutButton.setOnClickListener(v -> {
+            logoutUser();
         });
     }
 
@@ -114,5 +125,21 @@ public class ProfileActivity extends AppCompatActivity {
         if (loading) {
             binding.nameText.setText("Loading...");
         }
+    }
+    
+    private void logoutUser() {
+        // Show confirmation dialog
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Log Out")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yes", (dialog, which) -> {
+                mAuth.signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 }
