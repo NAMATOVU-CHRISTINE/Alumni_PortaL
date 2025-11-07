@@ -80,14 +80,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            textTitle = itemView.findViewById(R.id.textTitle);
+            textTitle = itemView.findViewById(R.id.textEventTitle);
             textDescription = itemView.findViewById(R.id.textDescription);
             textDate = itemView.findViewById(R.id.textDate);
             textLocation = itemView.findViewById(R.id.textLocation);
             textCategory = itemView.findViewById(R.id.textCategory);
-            buttonRegister = itemView.findViewById(R.id.buttonRegister);
-            buttonShare = itemView.findViewById(R.id.buttonShare);
-            buttonAddToCalendar = itemView.findViewById(R.id.buttonAddToCalendar);
+            
+            // These buttons don't exist in the layout, set to null to avoid crashes
+            buttonRegister = null;
+            buttonShare = null;
+            buttonAddToCalendar = null;
             
             itemView.setOnClickListener(v -> {
                 if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
