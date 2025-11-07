@@ -53,14 +53,6 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         setupFab();
         // loadSampleData(); // Commented out to test new article functionality
         
-        // Add a simple test article to verify RecyclerView is working
-        Article testArticle = new Article("Test Article", "This is a test", "Test content", "Networking");
-        testArticle.setId("test_123");
-        testArticle.setAuthorName("Test Author");
-        testArticle.setDateCreated(new Date());
-        articles.add(testArticle);
-        articleAdapter.updateArticles(articles);
-        
         updateEmptyState(); // Show empty state initially
     }
 
