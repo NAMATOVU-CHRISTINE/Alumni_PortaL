@@ -34,21 +34,21 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="32dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
                     <!-- Title Input -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         app:boxStrokeColor="@color/must_green"
                         app:hintTextColor="@color/must_green"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -67,7 +67,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         app:boxStrokeColor="@color/must_green"
                         app:hintTextColor="@color/must_green"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -87,7 +87,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         app:boxStrokeColor="@color/must_green"
                         app:hintTextColor="@color/must_green"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -98,8 +98,8 @@
                             android:layout_height="wrap_content"
                             android:hint="Full Article Content"
                             android:inputType="textCapSentences|textMultiLine"
-                            android:minLines="5"
-                            android:maxLines="10"
+                            android:minLines="4"
+                            android:maxLines="8"
                             android:scrollbars="vertical" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -112,7 +112,7 @@
                         android:textSize="14sp"
                         android:textColor="@color/must_green"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="6dp" />
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chipGroupCategory"
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         app:singleSelection="true"
                         app:selectionRequired="true"
-                        android:layout_marginBottom="24dp">
+                        android:layout_marginBottom="16dp">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategoryNetworking"
@@ -174,12 +174,13 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSubmit"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="48dp"
                         android:text="📚 Add Article"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:backgroundTint="@color/must_green"
                         app:cornerRadius="12dp"
+                        android:layout_marginBottom="24dp"
                         style="@style/Widget.Material3.Button" />
 
                 </LinearLayout>
