@@ -23,7 +23,7 @@
             android:paddingBottom="8dp"
             android:backgroundTint="@color/must_green"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:navigationIcon="@drawable/ic_back"
+            app:navigationIcon="@drawable/ic_arrow_back"
             app:popupTheme="@style/ThemeOverlay.Material3.Light">
 
             <LinearLayout
