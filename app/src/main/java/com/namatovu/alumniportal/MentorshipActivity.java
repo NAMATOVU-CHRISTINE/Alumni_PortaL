@@ -258,6 +258,41 @@ public class MentorshipActivity extends AppCompatActivity {
         }
     }
 
+    private void updateEmptyState() {
+        if (filteredConnections.isEmpty()) {
+            binding.emptyStateLayout.setVisibility(View.VISIBLE);
+            // Update empty state message based on current tab
+            updateEmptyStateMessage();
+        } else {
+            binding.emptyStateLayout.setVisibility(View.GONE);
+        }
+    }
+    
+    private void updateEmptyStateMessage() {
+        String title, message;
+        switch (currentTab) {
+            case "as_mentor":
+                title = "No mentees yet";
+                message = "When students request your mentorship, they'll appear here. Share your knowledge and help the next generation grow!";
+                break;
+            case "as_mentee":
+                title = "No mentors yet";
+                message = "Connect with experienced alumni to accelerate your career growth and gain valuable insights from industry professionals.";
+                break;
+            default:
+                title = "No mentorship connections yet";
+                message = "Start connecting with alumni mentors to grow your network and accelerate your career journey!";
+                break;
+        }
+        
+        if (binding.emptyStateTitle != null) {
+            binding.emptyStateTitle.setText(title);
+        }
+        if (binding.emptyStateMessage != null) {
+            binding.emptyStateMessage.setText(message);
+        }
+    }
+
     private String getEmptyMessage() {
         switch (currentTab) {
             case "as_mentor":
