@@ -66,6 +66,8 @@
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.NotificationSettingsActivity" />
         <activity android:name=".activities.PrivacySettingsActivity" />
+        <activity android:name=".CareerTipsActivity" />
+        <activity android:name=".SavedCareerTipsActivity" />
         
         <!-- Services -->
         <service android:name=".services.AlumniNotificationService" 

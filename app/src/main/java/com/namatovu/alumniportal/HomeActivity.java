@@ -309,9 +309,9 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Career Tips card - navigate to knowledge hub
+        // Career Tips card - navigate to career tips activity
         binding.careerTipsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NewsFeedActivity.class);
+            Intent intent = new Intent(this, CareerTipsActivity.class);
             startActivity(intent);
         });
         

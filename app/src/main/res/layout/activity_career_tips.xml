@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,104 +8,38 @@
     android:background="@color/light_background"
     tools:context=".CareerTipsActivity">
 
-    <!-- App Bar Layout with Toolbar -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- App Bar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:elevation="4dp">
+        android:layout_height="?attr/actionBarSize"
+        android:backgroundTint="@color/must_green"
+        android:title="Career Tips"
+        android:titleTextColor="@color/white"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_back"
+        app:popupTheme="@style/ThemeOverlay.Material3.Light" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/must_green"
-            app:title="Career Tips"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back_white" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <!-- Main Content Scroll View -->
+    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Header Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Career Tips"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/must_green"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Quick actionable tips for professional growth 🚀"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_secondary"
-                    android:gravity="center"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Auto-rotation Controls -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginBottom="16dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPlayPause"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="⏸️"
-                        android:textSize="18sp"
-                        android:layout_marginEnd="8dp"
-                        app:strokeColor="@color/must_green"
-                        android:textColor="@color/must_green" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAutoRotate"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="Auto: ON"
-                        android:textSize="12sp"
-                        app:strokeColor="@color/must_green"
-                        android:textColor="@color/must_green" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Category Filter Chips -->
+            <!-- Category Chips Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,77 +67,41 @@
                             android:layout_height="wrap_content"
                             app:singleSelection="true"
                             app:selectionRequired="true" />
-
                     </HorizontalScrollView>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Progress Indicator -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-
-                <TextView
-                    android:id="@+id/tipPosition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 of 60"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary"
-                    android:layout_marginEnd="12dp" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="4dp"
-                    android:layout_weight="1"
-                    android:progressTint="@color/must_green"
-                    android:progressBackgroundTint="@color/light_green"
-                    android:max="100"
-                    android:progress="2" />
-
-            </LinearLayout>
-
-            <!-- Main Tip Card -->
+            <!-- Tip Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tipCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="8dp"
-                app:cardCornerRadius="16dp"
                 app:cardBackgroundColor="@color/white"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                android:foreground="?attr/selectableItemBackground"
+                android:layout_marginBottom="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="24dp"
-                    android:minHeight="200dp"
                     android:gravity="center">
 
-                    <!-- Category Badge -->
                     <com.google.android.material.chip.Chip
                         android:id="@+id/tipCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Networking"
-                        android:layout_marginBottom="16dp"
                         app:chipBackgroundColor="@color/light_green"
                         android:textColor="@color/must_green"
-                        android:textSize="12sp"
-                        app:chipCornerRadius="12dp" />
+                        android:textSize="13sp"
+                        app:chipCornerRadius="16dp"
+                        android:layout_marginBottom="16dp" />
 
-                    <!-- Tip Text -->
                     <TextView
                         android:id="@+id/tipText"
                         android:layout_width="match_parent"
@@ -212,38 +111,108 @@
                         android:textColor="@color/text_primary"
                         android:gravity="center"
                         android:lineSpacingExtra="4dp"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="12dp" />
 
-                    <!-- Swipe Hint -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="👈 Swipe or tap buttons to navigate 👉"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:textColor="@color/text_hint"
-                        android:layout_marginTop="16dp"
-                        android:alpha="0.7" />
-
+                        android:alpha="0.8" />
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Empty State Layout -->
+            <!-- Navigation Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrevious"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="Previous"
+                    app:icon="@drawable/ic_chevron_left"
+                    app:iconGravity="start"
+                    android:textColor="@color/must_green"
+                    app:strokeColor="@color/must_green"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNext"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="Next"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/must_green"
+                    app:icon="@drawable/ic_chevron_right"
+                    app:iconGravity="end"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="💾 Save"
+                    android:textColor="@color/must_green"
+                    app:strokeColor="@color/must_green"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShare"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="📤 Share"
+                    android:textColor="@color/must_green"
+                    app:strokeColor="@color/must_green"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
+            <!-- Saved Tips Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSavedTips"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="📚 View Saved Tips"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/must_green"
+                app:cornerRadius="16dp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Empty State -->
             <LinearLayout
                 android:id="@+id/emptyStateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:visibility="gone"
-                android:layout_marginBottom="20dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🤔"
-                    android:textSize="48sp"
-                    android:layout_marginBottom="16dp" />
+                    android:textSize="50sp"
+                    android:layout_marginBottom="12dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -260,102 +229,9 @@
                     android:textSize="14sp"
                     android:textColor="@color/text_hint"
                     android:layout_marginTop="8dp" />
-
             </LinearLayout>
-
-            <!-- Navigation Controls -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnPrevious"
-                    style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:text="Previous"
-                    app:icon="@drawable/ic_chevron_left"
-                    app:iconGravity="start"
-                    android:layout_marginEnd="8dp"
-                    app:strokeColor="@color/must_green"
-                    android:textColor="@color/must_green" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNext"
-                    style="@style/Widget.Material3.Button.Icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:text="Next"
-                    app:icon="@drawable/ic_chevron_right"
-                    app:iconGravity="end"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/must_green"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
-
-            <!-- Action Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:text="💾 Save"
-                    android:layout_marginEnd="4dp"
-                    app:strokeColor="@color/must_green"
-                    android:textColor="@color/must_green" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShare"
-                    style="@style/Widget.Material3.Button.OutlinedButton.Icon"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:text="📤 Share"
-                    android:layout_marginStart="4dp"
-                    app:strokeColor="@color/must_green"
-                    android:textColor="@color/must_green" />
-
-            </LinearLayout>
-
-            <!-- Saved Tips Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSavedTips"
-                style="@style/Widget.Material3.Button.UnelevatedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="📚 View Saved Tips"
-                android:textSize="16sp"
-                android:backgroundTint="@color/must_green"
-                android:textColor="@color/white"
-                app:cornerRadius="12dp"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Motivational Footer -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Keep connecting, keep growing! 🌱\nYour future self will thank you."
-                android:textSize="14sp"
-                android:textColor="@color/text_secondary"
-                android:gravity="center"
-                android:lineSpacingExtra="2dp"
-                android:layout_marginTop="16dp"
-                android:alpha="0.8" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
