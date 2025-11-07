@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.namatovu.alumniportal.databinding.ActivityProfileBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
 
 import java.util.List;
