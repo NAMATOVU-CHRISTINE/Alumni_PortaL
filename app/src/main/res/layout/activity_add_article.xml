@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:backgroundTint="@color/must_green"
-        android:paddingTop="?attr/actionBarInsetTop"
         android:elevation="4dp"
         android:title="Add Article"
         android:titleTextColor="@color/white"
@@ -123,8 +122,7 @@
                         android:layout_height="wrap_content"
                         app:singleSelection="true"
                         app:selectionRequired="true"
-                        android:layout_marginBottom="24dp"
-                        android:chipSpacing="8dp">
+                        android:layout_marginBottom="24dp">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategoryNetworking"
