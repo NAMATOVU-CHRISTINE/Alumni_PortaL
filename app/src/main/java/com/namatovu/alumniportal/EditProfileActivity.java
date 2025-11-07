@@ -61,14 +61,20 @@ public class EditProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         
-        // Initialize Firebase Storage with default bucket
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        // Use root reference first, then create profile_images folder
-        storageRef = storage.getReference().child("profile_images");
-        
-        // Test Firebase Storage connection
-        Log.d(TAG, "Firebase Storage reference created: " + storageRef.toString());
-        Log.d(TAG, "Storage bucket: " + storage.getApp().getOptions().getStorageBucket());
+        // Initialize Firebase Storage with explicit bucket URL
+        try {
+            FirebaseStorage storage = FirebaseStorage.getInstance("gs://alumniportal-198ec.firebasestorage.app");
+            // Use root reference first, then create profile_images folder
+            storageRef = storage.getReference().child("profile_images");
+            Log.d(TAG, "Firebase Storage initialized with explicit bucket: " + storageRef.toString());
+            Log.d(TAG, "Storage bucket: " + storage.getApp().getOptions().getStorageBucket());
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to initialize Firebase Storage with explicit bucket, using default", e);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            storageRef = storage.getReference().child("profile_images");
+            Log.d(TAG, "Firebase Storage reference created with default: " + storageRef.toString());
+            Log.d(TAG, "Storage bucket: " + storage.getApp().getOptions().getStorageBucket());
+        }
 
         setSupportActionBar(binding.toolbar);
 
@@ -279,14 +285,17 @@ public class EditProfileActivity extends AppCompatActivity {
             // Use simpler file naming and path
             String fileName = "profile_" + user.getUid() + ".jpg";
             
-            // Try uploading to root first, then profile_images folder
-            StorageReference rootRef = FirebaseStorage.getInstance().getReference();
-            StorageReference imageRef = rootRef.child("profile_images").child(fileName);
-            
-            Log.d(TAG, "Upload path: " + imageRef.getPath());
-            Log.d(TAG, "Selected image URI: " + selectedImageUri.toString());
-            
-            UploadTask uploadTask = imageRef.putFile(selectedImageUri);
+            // Try uploading with explicit bucket configuration
+            try {
+                FirebaseStorage storage = FirebaseStorage.getInstance("gs://alumniportal-198ec.firebasestorage.app");
+                StorageReference rootRef = storage.getReference();
+                StorageReference imageRef = rootRef.child("profile_images").child(fileName);
+                
+                Log.d(TAG, "Upload path: " + imageRef.getPath());
+                Log.d(TAG, "Selected image URI: " + selectedImageUri.toString());
+                Log.d(TAG, "Storage bucket: " + storage.getApp().getOptions().getStorageBucket());
+                
+                UploadTask uploadTask = imageRef.putFile(selectedImageUri);
             uploadTask.addOnProgressListener(taskSnapshot -> {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 Log.d(TAG, "Upload progress: " + progress + "%");
@@ -320,6 +329,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     Toast.makeText(EditProfileActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to initialize Firebase Storage for upload", e);
+                binding.saveButton.setEnabled(true);
+                uploadToRootDirectory(user, finalName, finalBio, finalCareer, skills);
+            }
         } else {
             Log.d(TAG, "No image selected, saving profile without image update");
             // No image change
