@@ -119,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cardCornerRadius="24dp"
-                        app:cardElevation="8dp"
+                        app:cardElevation="4dp"
                         app:cardBackgroundColor="@color/white"
                         android:clickable="true"
                         android:focusable="true"
@@ -175,7 +175,9 @@
                         app:backgroundTint="@color/must_green"
                         app:tint="@color/white"
                         app:fabSize="mini"
-                        android:elevation="12dp"
+                        android:elevation="16dp"
+                        app:elevation="16dp"
+                        android:translationZ="16dp"
                         android:contentDescription="Previous tip" />
 
                     <!-- Next Button (Bottom Right) -->
@@ -189,7 +191,9 @@
                         app:backgroundTint="#FF6B35"
                         app:tint="@color/white"
                         app:fabSize="mini"
-                        android:elevation="12dp"
+                        android:elevation="16dp"
+                        app:elevation="16dp"
+                        android:translationZ="16dp"
                         android:contentDescription="Next tip" />
 
                 </FrameLayout>
