@@ -20,6 +20,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.database.AppDatabase;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,6 +46,7 @@ public class SyncManager {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private ConnectivityManager connectivityManager;
+    private final Executor executor;
     
     private SyncManager(Context context) {
         this.context = context.getApplicationContext();
@@ -52,6 +55,7 @@ public class SyncManager {
         this.firestore = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
         this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        this.executor = Executors.newSingleThreadExecutor();
     }
     
     public static SyncManager getInstance(Context context) {
@@ -235,7 +239,9 @@ public class SyncManager {
      * Clear all offline data
      */
     public void clearOfflineData() {
-        database.clearAllData();
+        executor.execute(() -> {
+            database.clearAllTables();
+        });
         Log.d(TAG, "All offline data cleared");
         AnalyticsHelper.logEvent("offline_data_cleared", null, null);
     }
@@ -277,10 +283,10 @@ public class SyncManager {
      * Enum for different data types that can be synced
      */
     public enum SyncDataType {
-        ALL,
-        CHATS,
+        CHAT_MESSAGES,
         USERS,
-        JOBS,
-        EVENTS
+        JOB_POSTINGS,
+        EVENTS,
+        ALL
     }
 }

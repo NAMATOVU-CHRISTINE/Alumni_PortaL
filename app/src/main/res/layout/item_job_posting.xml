@@ -110,6 +110,14 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             tools:text="Posted 2 days ago" />
 
+        <Button
+            android:id="@+id/buttonApply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:text="Apply" />
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

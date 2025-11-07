@@ -56,13 +56,13 @@ public class SyncWorker extends Worker {
                 case ALL:
                     success = syncAll();
                     break;
-                case CHATS:
+                case CHAT_MESSAGES:
                     success = syncAllChats();
                     break;
                 case USERS:
                     success = syncUsers();
                     break;
-                case JOBS:
+                case JOB_POSTINGS:
                     success = syncJobPostings();
                     break;
                 case EVENTS:

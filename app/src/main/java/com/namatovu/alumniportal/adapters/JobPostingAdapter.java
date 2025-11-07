@@ -3,6 +3,7 @@ package com.namatovu.alumniportal.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,10 +31,6 @@ public class JobPostingAdapter extends RecyclerView.Adapter<JobPostingAdapter.Jo
     // Constructor
     public JobPostingAdapter(List<JobPosting> jobPostings, OnJobClickListener listener) {
         this.jobPostings = jobPostings != null ? jobPostings : new ArrayList<>();
-        this.listener = listener;
-    }
-    
-    public void setOnJobClickListener(OnJobClickListener listener) {
         this.listener = listener;
     }
     
@@ -69,7 +66,7 @@ public class JobPostingAdapter extends RecyclerView.Adapter<JobPostingAdapter.Jo
         private TextView textDescription;
         private TextView textJobType;
         private TextView textPostedDate;
-        private View buttonApply;
+        private Button buttonApply;
         
         public JobViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,7 +110,7 @@ public class JobPostingAdapter extends RecyclerView.Adapter<JobPostingAdapter.Jo
             }
             
             textDescription.setText(job.getDescription() != null ? job.getDescription() : "No description available");
-            textJobType.setText(job.getEmploymentType() != null ? job.getEmploymentType() : "Full Time");
+            textJobType.setText(job.getType() != null ? job.getType() : "Full Time");
             
             // Format posted date
             if (job.getPostedAt() > 0) {

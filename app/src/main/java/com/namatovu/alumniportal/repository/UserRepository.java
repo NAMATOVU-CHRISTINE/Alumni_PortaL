@@ -112,82 +112,6 @@ public class UserRepository {
     }
     
     /**
-     * Search users with offline-first approach
-     */
-    public LiveData<List<User>> searchUsers(String query) {
-        MediatorLiveData<List<User>> result = new MediatorLiveData<>();
-        
-        executor.execute(() -> {
-            try {
-                List<UserEntity> localResults = userDao.searchUsers(query);
-                List<User> users = convertToUsers(localResults);
-                result.postValue(users);
-            } catch (Exception e) {
-                Log.e(TAG, "Error searching users locally", e);
-            }
-        });
-        
-        return result;
-    }
-    
-    /**
-     * Get users by graduation year
-     */
-    public LiveData<List<User>> getUsersByGraduationYear(int year) {
-        MediatorLiveData<List<User>> result = new MediatorLiveData<>();
-        
-        executor.execute(() -> {
-            try {
-                List<UserEntity> localResults = userDao.getUsersByGraduationYear(year);
-                List<User> users = convertToUsers(localResults);
-                result.postValue(users);
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting users by graduation year", e);
-            }
-        });
-        
-        return result;
-    }
-    
-    /**
-     * Get users by major
-     */
-    public LiveData<List<User>> getUsersByMajor(String major) {
-        MediatorLiveData<List<User>> result = new MediatorLiveData<>();
-        
-        executor.execute(() -> {
-            try {
-                List<UserEntity> localResults = userDao.getUsersByMajor(major);
-                List<User> users = convertToUsers(localResults);
-                result.postValue(users);
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting users by major", e);
-            }
-        });
-        
-        return result;
-    }
-    
-    /**
-     * Get mentors
-     */
-    public LiveData<List<User>> getMentors() {
-        MediatorLiveData<List<User>> result = new MediatorLiveData<>();
-        
-        executor.execute(() -> {
-            try {
-                List<UserEntity> localResults = userDao.getMentors();
-                List<User> users = convertToUsers(localResults);
-                result.postValue(users);
-            } catch (Exception e) {
-                Log.e(TAG, "Error getting mentors", e);
-            }
-        });
-        
-        return result;
-    }
-    
-    /**
      * Save user with sync
      */
     public void saveUser(User user) {
@@ -202,62 +126,15 @@ public class UserRepository {
                             .set(user.toMap())
                             .addOnSuccessListener(aVoid -> {
                                 Log.d(TAG, "User saved to Firestore successfully");
-                                updateUserSyncStatus(user.getUserId(), "synced");
                             })
                             .addOnFailureListener(e -> {
                                 Log.e(TAG, "Error saving user to Firestore", e);
-                                updateUserSyncStatus(user.getUserId(), "failed");
                             });
                 } else {
-                    updateUserSyncStatus(user.getUserId(), "pending");
+                    // TODO: Mark for later sync
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error saving user", e);
-            }
-        });
-    }
-    
-    /**
-     * Delete user
-     */
-    public void deleteUser(String userId) {
-        executor.execute(() -> {
-            try {
-                // Delete locally
-                userDao.deleteUserById(userId);
-                
-                // Delete from remote if network is available
-                if (syncManager.isNetworkAvailable()) {
-                    firestore.collection("users").document(userId)
-                            .delete()
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "User deleted from Firestore"))
-                            .addOnFailureListener(e -> Log.e(TAG, "Error deleting user from Firestore", e));
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error deleting user", e);
-            }
-        });
-    }
-    
-    /**
-     * Update user online status
-     */
-    public void updateOnlineStatus(String userId, boolean isOnline) {
-        executor.execute(() -> {
-            try {
-                long lastSeen = System.currentTimeMillis();
-                
-                // Update locally
-                userDao.updateOnlineStatus(userId, isOnline, lastSeen);
-                
-                // Update remotely if network is available
-                if (syncManager.isNetworkAvailable()) {
-                    firestore.collection("users").document(userId)
-                            .update("isOnline", isOnline, "lastSeen", lastSeen)
-                            .addOnFailureListener(e -> Log.e(TAG, "Error updating online status", e));
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error updating online status", e);
             }
         });
     }
@@ -266,18 +143,9 @@ public class UserRepository {
     private void saveUserLocally(User user) {
         try {
             UserEntity entity = convertToEntity(user);
-            entity.syncStatus = syncManager.isNetworkAvailable() ? "synced" : "pending";
-            userDao.insertUser(entity);
+            userDao.insertUsers(new ArrayList<UserEntity>() {{ add(entity); }});
         } catch (Exception e) {
             Log.e(TAG, "Error saving user locally", e);
-        }
-    }
-    
-    private void updateUserSyncStatus(String userId, String syncStatus) {
-        try {
-            userDao.updateSyncStatus(userId, syncStatus, System.currentTimeMillis());
-        } catch (Exception e) {
-            Log.e(TAG, "Error updating user sync status", e);
         }
     }
     
@@ -290,21 +158,19 @@ public class UserRepository {
         user.setBio(entity.bio);
         user.setGraduationYear(entity.graduationYear);
         user.setMajor(entity.major);
-        user.setCurrentJobTitle(entity.currentJobTitle);
-        user.setCurrentCompany(entity.currentCompany);
+        user.setCurrentJob(entity.currentJobTitle);
+        user.setCompany(entity.currentCompany);
         user.setLocation(entity.location);
-        user.setSkills(entity.skills);
-        user.setLinkedinUrl(entity.linkedinUrl);
-        user.setGithubUrl(entity.githubUrl);
-        user.setWebsiteUrl(entity.websiteUrl);
-        user.setMentor(entity.isMentor);
-        user.setMentorExpertise(entity.mentorExpertise);
-        user.setOnline(entity.isOnline);
-        user.setLastSeen(entity.lastSeen);
-        user.setPrivacyProfileVisibility(entity.privacyProfileVisibility);
-        user.setPrivacyContactVisibility(entity.privacyContactVisibility);
+        user.setSkillsFromString(entity.skills);
+        user.setSocialLink("linkedin", entity.linkedinUrl);
+        user.setSocialLink("github", entity.githubUrl);
+        user.setSocialLink("website", entity.websiteUrl);
+        user.setPrivacySetting("allowMentorRequests", entity.isMentor);
+        // user.setMentorExpertise(entity.mentorExpertise);
+        user.setPrivacySetting("showInDirectory", entity.privacyProfileVisibility);
+        user.setPrivacySetting("showEmail", entity.privacyContactVisibility);
         user.setCreatedAt(entity.createdAt);
-        user.setUpdatedAt(entity.updatedAt);
+        user.updateLastActive();
         return user;
     }
     
@@ -317,21 +183,19 @@ public class UserRepository {
         entity.bio = user.getBio();
         entity.graduationYear = user.getGraduationYear();
         entity.major = user.getMajor();
-        entity.currentJobTitle = user.getCurrentJobTitle();
-        entity.currentCompany = user.getCurrentCompany();
+        entity.currentJobTitle = user.getCurrentJob();
+        entity.currentCompany = user.getCompany();
         entity.location = user.getLocation();
-        entity.skills = user.getSkills();
-        entity.linkedinUrl = user.getLinkedinUrl();
-        entity.githubUrl = user.getGithubUrl();
-        entity.websiteUrl = user.getWebsiteUrl();
-        entity.isMentor = user.isMentor();
-        entity.mentorExpertise = user.getMentorExpertise();
-        entity.isOnline = user.isOnline();
-        entity.lastSeen = user.getLastSeen();
-        entity.privacyProfileVisibility = user.getPrivacyProfileVisibility();
-        entity.privacyContactVisibility = user.getPrivacyContactVisibility();
+        entity.skills = user.getSkillsAsString();
+        entity.linkedinUrl = user.getSocialLink("linkedin");
+        entity.githubUrl = user.getSocialLink("github");
+        entity.websiteUrl = user.getSocialLink("website");
+        entity.isMentor = user.getPrivacySetting("allowMentorRequests");
+        // entity.mentorExpertise = user.getMentorExpertise();
+        entity.privacyProfileVisibility = user.getPrivacySetting("showInDirectory");
+        entity.privacyContactVisibility = user.getPrivacySetting("showEmail");
         entity.createdAt = user.getCreatedAt();
-        entity.updatedAt = user.getUpdatedAt();
+        entity.updatedAt = user.getLastActive();
         entity.lastSync = System.currentTimeMillis();
         return entity;
     }
