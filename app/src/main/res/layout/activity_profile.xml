@@ -15,7 +15,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/light_gray"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:background="?attr/colorPrimary"
-                app:titleTextColor="?attr/colorOnPrimary" />
+                android:background="@color/light_gray"
+                app:titleTextColor="@color/black" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
