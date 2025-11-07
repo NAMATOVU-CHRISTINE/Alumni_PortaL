@@ -38,6 +38,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.namatovu.alumniportal.R;
+import com.namatovu.alumniportal.ProfileActivity;
 import com.namatovu.alumniportal.adapters.ChatMessageAdapter;
 import com.namatovu.alumniportal.models.Chat;
 import com.namatovu.alumniportal.models.ChatMessage;
