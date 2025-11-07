@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    style="@style/App.Material3.Card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Profile Image -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardCornerRadius="28dp"
+            app:strokeColor="@color/must_green"
+            app:strokeWidth="2dp"
+            app:cardElevation="1dp">
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_person"
+                android:scaleType="centerCrop"
+                android:contentDescription="Profile Picture" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Content Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp">
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/nameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Christine Namatovu"
+                android:textAppearance="@style/App.TextAppearance.Subtitle"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Christine Namatovu" />
+
+            <!-- Career/Position -->
+            <TextView
+                android:id="@+id/positionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Software Developer"
+                android:textAppearance="@style/App.TextAppearance.Body"
+                android:textColor="@color/must_green"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Software Developer" />
+
+            <!-- Bio/Skills Preview -->
+            <TextView
+                android:id="@+id/bioText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Passionate about mobile development and AI"
+                android:textAppearance="@style/App.TextAppearance.Body"
+                android:textColor="@color/dark_gray"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Passionate about mobile development and AI" />
+
+            <!-- Skills Chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/skillsChipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="2dp">
+                
+                <!-- Skills will be added dynamically -->
+                
+            </com.google.android.material.chip.ChipGroup>
+
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/viewProfileButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="View"
+                android:textSize="12sp"
+                android:textColor="@color/must_green"
+                app:strokeColor="@color/must_green"
+                app:cornerRadius="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="6dp"
+                android:minWidth="0dp" />
+
+            <Button
+                android:id="@+id/requestMentorshipButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Request"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/must_green"
+                app:cornerRadius="18dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:minWidth="0dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

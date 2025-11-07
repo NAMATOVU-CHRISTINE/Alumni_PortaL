@@ -148,9 +148,8 @@ public class MentorshipActivity extends AppCompatActivity {
 
     private void setupFAB() {
         binding.findMentorFab.setOnClickListener(v -> {
-            // Navigate to alumni directory or mentor search
-            Intent intent = new Intent(this, ProfileActivity.class); // Placeholder until AlumniDirectoryActivity exists
-            intent.putExtra("mode", "mentor_search");
+            // Navigate to mentor search activity
+            Intent intent = new Intent(this, MentorSearchActivity.class);
             startActivity(intent);
             
             // Log analytics
@@ -160,8 +159,7 @@ public class MentorshipActivity extends AppCompatActivity {
         // Setup empty state button
         if (binding.emptyStateFindMentorButton != null) {
             binding.emptyStateFindMentorButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, ProfileActivity.class); // Placeholder
-                intent.putExtra("mode", "mentor_search");
+                Intent intent = new Intent(this, MentorSearchActivity.class);
                 startActivity(intent);
                 
                 AnalyticsHelper.logMentorConnection("find_mentor_empty_state_clicked", currentUserId);

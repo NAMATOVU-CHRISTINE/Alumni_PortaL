@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.databinding.ActivityHomeBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
 import com.namatovu.alumniportal.models.User;
@@ -23,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -37,14 +35,137 @@ public class HomeActivity extends AppCompatActivity {
     private Runnable motivationRunnable;
     private int currentTipIndex = 0;
     private String[] motivationalTips = {
-        "Keep connecting, keep growing! 🌱",
-        "Your network is your net worth 💎",
-        "Every connection is a new opportunity 🚀",
-        "Success is a journey, not a destination ⭐",
-        "Learn from those who've walked your path 🎯",
-        "Great things never come from comfort zones 💪",
-        "The alumni network is your secret weapon 🔥",
-        "Today's networking is tomorrow's opportunity 🌟"
+       "Keep connecting, keep growing! 🌱",
+"Your network is your net worth 💎",
+"Every connection is a new opportunity 🚀",
+"Success is a journey, not a destination ⭐",
+"Learn from those who've walked your path 🎯",
+"Great things never come from comfort zones 💪",
+"The alumni network is your secret weapon 🔥",
+"Today's networking is tomorrow's opportunity 🌟",
+"Small steps lead to big dreams ",
+"Stay curious, stay connected 💡",
+"One chat can change your career 💬",
+"Share knowledge, inspire growth 🌿",
+"Keep learning, always evolving 📚",
+"Dream big, connect wider 🌍",
+"Inspiration begins with connection 💖",
+"Build bridges, not walls 🌉",
+"A mentor today, a leader tomorrow 👑",
+"Stay humble, stay hungry 🙌",
+"Your journey inspires others ✨",
+"Progress, not perfection 🌻",
+"Collaboration creates innovation ⚡",
+"Be the reason someone grows 🌼",
+"Keep your network alive 🔗",
+"One step closer to greatness 🚶‍♀️",
+"Inspire. Connect. Lead. 💫",
+"The best investment is in yourself 💎",
+"Be open to new beginnings 🌸",
+"Lift others as you climb 🧗‍♀️",
+"The future is built through collaboration 🤝",
+"Connect today for tomorrow’s success 🕊️",
+"Growth starts with hello 👋",
+"Every mentor was once a learner 🪴",
+"Confidence grows through connection 🌞",
+"The more you give, the more you grow 🎁",
+"Empower others, empower yourself 💪",
+"Learn. Lead. Leave a legacy 🕯️",
+"Build your story, one connection at a time 📖",
+"Keep pushing, keep believing 🔥",
+"Success loves preparation 🎯",
+"Create impact, not noise 💥",
+"Connect, collaborate, celebrate! 🎉",
+"Your story matters — share it! 🗣️",
+"Every day is a chance to grow 🌞",
+"Lead with purpose, not position 💫",
+"Be bold enough to begin 🚀",
+"Dream. Dare. Do. 🌟",
+"Keep showing up — consistency wins 🕒",
+"Your growth inspires generations 🌿",
+"The world needs your ideas 🌍",
+"Push boundaries, break limits 💪",
+"Kindness is powerful 🤍",
+"One message can open doors ✉️",
+"Be proud of how far you’ve come 🌈",
+"The journey is just beginning 🌄",
+"Network with intention 🤝",
+"Shine where you are ✨",
+"Your passion is your power 🔥",
+"Make learning your lifestyle 📘",
+"Opportunities follow preparation 🎯",
+"Your future self will thank you 🙏",
+"You are building a legacy 🕊️",
+"Stay inspired, stay connected 💬",
+"Every success starts with a small step 👣",
+"Turn ideas into action ⚙️",
+"Be the spark that lights others 🔥",
+"Grow through what you go through 🌻",
+"Connection creates possibility 🌐",
+"Be fearless in pursuit of growth 🦋",
+"Learn something new today 🧠",
+"You belong here 💖",
+"Your knowledge can change lives 🌟",
+"Every mentor was once a student 🪴",
+"Take initiative, make impact 🚀",
+"Share your story, inspire hope 💌",
+"Stay motivated, stay connected 💫",
+"Lead by example, inspire by action 🌞",
+"Keep exploring new horizons 🌄",
+"Your voice matters — use it 🎤",
+"Create value wherever you go 💎",
+"Learning never stops 📚",
+"Mentorship builds bridges 🌉",
+"Collaboration sparks innovation ⚡",
+"Help others rise and you rise too 🧗‍♂️",
+"Believe in your potential 🌈",
+"Stay persistent, stay strong 💪",
+"Network intentionally, grow exponentially 🌐",
+"Make every connection count 🔗",
+"Your ideas can spark change 🔥",
+"Keep challenging yourself 💫",
+"Every step forward is progress 👣",
+"Knowledge shared is power multiplied 📘",
+"Be open, be kind, be bold 🌸",
+"Learn from failures, celebrate successes 🎉",
+"Small actions lead to big results 🌿",
+"Mentors shape futures 🌟",
+"Build meaningful relationships 🤝",
+"Consistency beats intensity 🕒",
+"Be adaptable, stay relevant 🌍",
+"Your effort inspires others 💡",
+"Turn challenges into opportunities ⚡",
+"Invest in growth daily 🪴",
+"Be a lighthouse for others 🌞",
+"Your journey shapes the community 🌻",
+"Celebrate every achievement ✨",
+"Lead with empathy, act with purpose 💖",
+"Stay curious, never settle 🌈",
+"Your connections are your strength 💎",
+"Be the change you seek 🌍",
+"Every connection is a seed for growth 🌱",
+"Give, mentor, and inspire 🎯",
+"Stay focused, stay passionate 🔥",
+"Your journey inspires generations 🕊️",
+"Every action creates impact 💫",
+"Learning is a lifelong adventure 📚",
+"Your story can motivate others 🗣️",
+"Keep networking, keep thriving 🚀",
+"Be a connector, not just a participant 🤝",
+"Success is better when shared 💎",
+"Lead with integrity, grow with humility 🌸",
+"Mentorship is a gift, both given and received 🎁",
+"Create opportunities, don’t wait for them ⚡",
+"Every day is a new chance 🌞",
+"Your legacy starts with connection 🕯️",
+"Stay inspired, keep inspiring 💫",
+"Share your wisdom, light the path 🌟",
+"Build bridges, not walls 🌉",
+"Opportunities multiply through connection 🔗",
+"Believe, act, achieve 🌈",
+"Keep growing, keep giving 🌿",
+"Your network is your power 💎"
+
     };
 
     @Override
@@ -94,7 +215,7 @@ public class HomeActivity extends AppCompatActivity {
         };
         
         // Start the rotation after 3 seconds initial delay
-        motivationHandler.postDelayed(motivationRunnable, 10000);
+        motivationHandler.postDelayed(motivationRunnable, 3000);
     }
 
     private void rotateMotivationalTip() {
