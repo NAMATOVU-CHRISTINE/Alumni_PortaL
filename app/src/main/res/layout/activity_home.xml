@@ -21,51 +21,7 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/black"
             app:menu="@menu/home_menu"
-            app:popupTheme="@style/ThemeOverlay.Material3.Light">
-
-            <!-- Embedded Search View -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="56dp">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="@color/stroke_color"
-                    app:strokeWidth="1dp"
-                    android:backgroundTint="@color/light_gray">
-
-                    <EditText
-                        android:id="@+id/searchBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/search_hint"
-                        android:textSize="14sp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:textColorHint="@color/dark_gray"
-                        android:textColor="@color/black"
-                        android:inputType="text"
-                        android:imeOptions="actionSearch"
-                        android:singleLine="true"
-                        android:drawableStart="@android:drawable/ic_menu_search"
-                        android:drawablePadding="8dp"
-                        android:gravity="center_vertical"
-                        android:contentDescription="@string/search_hint" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-        </com.google.android.material.appbar.MaterialToolbar>
+            app:popupTheme="@style/ThemeOverlay.Material3.Light" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -120,14 +76,33 @@
                         android:orientation="vertical"
                         android:layout_marginStart="16dp">
 
-                        <TextView
-                            android:id="@+id/welcomeText"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            tools:text="@string/welcome_message"
-                            android:textAppearance="@style/App.TextAppearance.Title"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/welcomeText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/welcome_default"
+                                android:textAppearance="@style/App.TextAppearance.Title"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"/>
+
+                            <Button
+                                android:id="@+id/viewProfileButton"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:text="@string/view_profile"
+                                android:textSize="11sp"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                app:cornerRadius="18dp" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/homeSlogan"
@@ -137,16 +112,6 @@
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textColor="@color/dark_gray"/>
                     </LinearLayout>
-
-                    <Button
-                        android:id="@+id/viewProfileButton"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="@string/view_profile"
-                        android:textSize="12sp"
-                        android:minHeight="48dp"
-                        app:cornerRadius="18dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -328,119 +293,22 @@
                 android:layout_marginBottom="12dp"/>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/recentActivityCard"
                 style="@style/App.Material3.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:visibility="gone"
                 app:cardElevation="1dp">
 
                 <LinearLayout
+                    android:id="@+id/recentActivityContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_notification"
-                            android:contentDescription="@string/notifications"
-                            app:tint="@color/must_green"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/mentorship_requests_notification"
-                            android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/black"
-                            android:layout_marginStart="12dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/time_2h_ago"
-                            android:textAppearance="@style/App.TextAppearance.Caption"
-                            android:textColor="@color/dark_gray"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_work"
-                            android:contentDescription="@string/jobs_and_internships"
-                            app:tint="@color/must_green"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/job_postings_notification"
-                            android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/black"
-                            android:layout_marginStart="12dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/time_4h_ago"
-                            android:textAppearance="@style/App.TextAppearance.Caption"
-                            android:textColor="@color/dark_gray"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_event"
-                            android:contentDescription="@string/upcoming_events"
-                            app:tint="@color/must_green"/>
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/networking_event_notification"
-                            android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/black"
-                            android:layout_marginStart="12dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/time_1d_ago"
-                            android:textAppearance="@style/App.TextAppearance.Caption"
-                            android:textColor="@color/dark_gray"/>
-                    </LinearLayout>
-
-                    <Button
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:text="@string/view_all_notifications"
-                        android:textSize="12sp"
-                        android:minHeight="48dp"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="8dp"/>
+                    <!-- Dynamic activity items will be added here -->
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

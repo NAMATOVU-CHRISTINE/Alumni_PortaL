@@ -47,6 +47,9 @@
     <string name="profile_completion_message">Add your work experience and skills to get better mentor matches</string>
     <string name="complete_profile">Complete Profile</string>
 
+    <!-- Menu and Settings -->
+    <string name="app_settings">App Settings</string>
+
     <!-- Strings for Login, Signup, and Forgot Password from build errors -->
     <string name="alumni_portal">Alumni Portal</string>
     <string name="email_hint">Email</string>
