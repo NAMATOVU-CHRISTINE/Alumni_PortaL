@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.models.User;
+import com.namatovu.alumniportal.models.MentorshipConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,19 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     
     private List<User> mentors = new ArrayList<>();
     private OnMentorClickListener listener;
+    private OnMentorshipActionListener actionListener;
+    private String currentUserId;
+    
+    // Default constructor
+    public MentorshipAdapter() {
+    }
+    
+    // Constructor for mentorship connections
+    public MentorshipAdapter(List<?> connections, String currentUserId, OnMentorshipActionListener actionListener) {
+        this.currentUserId = currentUserId;
+        this.actionListener = actionListener;
+        // Note: connections parameter is not used in this simple implementation
+    }
     
     public interface OnMentorClickListener {
         void onMentorClick(User mentor);
