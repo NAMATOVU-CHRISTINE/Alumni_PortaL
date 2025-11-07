@@ -199,11 +199,16 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         );
 
         // Set creation dates and author info
+        String[] authorNames = {"Sarah Johnson", "Michael Chen", "Dr. Emily Rodriguez", "James Wilson", "Priya Patel", "David Thompson", "Lisa Marie", "Alex Kumar"};
         for (int i = 0; i < sampleArticles.size(); i++) {
             Article article = sampleArticles.get(i);
             article.setId("article_" + i);
-            article.setAuthorName("Alumni Portal Team");
+            article.setAuthorName(authorNames[i % authorNames.length]);
             article.setDateCreated(new Date(System.currentTimeMillis() - (i * 86400000L))); // Stagger dates
+            
+            // Add some initial likes to make it more realistic
+            article.setLikeCount(5 + (i * 3)); // Varying like counts
+            article.setLiked(i % 3 == 0); // Some articles are pre-liked
         }
 
         articles.addAll(sampleArticles);
@@ -304,5 +309,26 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
             "Shared from Alumni Portal Knowledge Hub 📚");
         
         startActivity(Intent.createChooser(shareIntent, "Share Article"));
+    }
+
+    @Override
+    public void onLikeClick(Article article) {
+        // Simulate user ID (in real app, get from authentication)
+        String userId = "current_user_123";
+        
+        article.toggleLike(userId);
+        articleAdapter.notifyDataSetChanged();
+        
+        String message = article.isLiked() ? 
+            "Article liked! ❤️" : "Like removed";
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh articles when returning from Add Article activity
+        // In a real app, you would reload from database/server
+        articleAdapter.notifyDataSetChanged();
     }
 }
