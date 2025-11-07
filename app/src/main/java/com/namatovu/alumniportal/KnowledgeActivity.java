@@ -69,7 +69,7 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Knowledge 📚");
+            getSupportActionBar().setTitle("Knowledge Hub 📚");
         }
         
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -245,26 +245,31 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
             String content = data.getStringExtra("content");
             String category = data.getStringExtra("category");
 
+            android.util.Log.d("KnowledgeActivity", "Received new article: " + title + ", category: " + category);
+
             if (title != null && description != null && content != null && category != null) {
                 Article newArticle = new Article(title, description, content, category);
                 newArticle.setId("article_" + System.currentTimeMillis());
                 newArticle.setAuthorName("You");
                 newArticle.setDateCreated(new Date()); // Current time - will be newest
 
+                android.util.Log.d("KnowledgeActivity", "Articles before adding: " + articles.size());
+                
                 // Add to the beginning of the main list
                 articles.add(0, newArticle);
                 
-                // Sort the entire list to ensure proper ordering
-                articles.sort((a1, a2) -> {
-                    if (a1.getDateCreated() == null && a2.getDateCreated() == null) return 0;
-                    if (a1.getDateCreated() == null) return 1;
-                    if (a2.getDateCreated() == null) return -1;
-                    return a2.getDateCreated().compareTo(a1.getDateCreated()); // Newest first
-                });
+                android.util.Log.d("KnowledgeActivity", "Articles after adding: " + articles.size());
                 
-                // Update the adapter with the sorted list
+                // Update the adapter with the new list (don't sort to keep new article at top)
                 articleAdapter.updateArticles(articles);
                 updateEmptyState();
+                
+                // Reset category filter to "All" to show new article
+                currentCategory = "All";
+                chipGroupCategories.check(R.id.chipAll);
+                articleAdapter.filterByCategory("All");
+                
+                android.util.Log.d("KnowledgeActivity", "Updated adapter and reset filter to All");
                 
                 // Scroll to the top to show the new article
                 recyclerViewArticles.scrollToPosition(0);
