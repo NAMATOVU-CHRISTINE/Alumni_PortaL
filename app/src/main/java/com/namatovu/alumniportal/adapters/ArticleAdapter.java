@@ -131,6 +131,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
                 }
             });
 
+            btnLike.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onLikeClick(filteredArticles.get(position));
+                    }
+                }
+            });
+
             btnBookmark.setOnClickListener(v -> {
                 if (listener != null) {
                     int position = getAdapterPosition();
