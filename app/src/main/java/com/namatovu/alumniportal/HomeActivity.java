@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.databinding.ActivityHomeBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
+import com.namatovu.alumniportal.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -158,8 +159,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void updateUiWithUser(User user) {
-        if (user.getName() != null && !user.getName().isEmpty()) {
-            binding.welcomeText.setText(getString(R.string.welcome_message, user.getName()));
+        if (user.getFullName() != null && !user.getFullName().isEmpty()) {
+            binding.welcomeText.setText(getString(R.string.welcome_message, user.getFullName()));
         } else {
             binding.welcomeText.setText(getString(R.string.welcome_default));
         }
@@ -179,9 +180,9 @@ public class HomeActivity extends AppCompatActivity {
         int totalFields = 5; 
         int completedFields = 0;
 
-        if (user.getName() != null && !user.getName().isEmpty()) completedFields++;
+        if (user.getFullName() != null && !user.getFullName().isEmpty()) completedFields++;
         if (user.getBio() != null && !user.getBio().isEmpty()) completedFields++;
-        if (user.getCareer() != null && !user.getCareer().isEmpty()) completedFields++;
+        if (user.getCurrentJob() != null && !user.getCurrentJob().isEmpty()) completedFields++;
         if (user.getSkills() != null && !user.getSkills().isEmpty()) completedFields++;
         if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) completedFields++;
 
