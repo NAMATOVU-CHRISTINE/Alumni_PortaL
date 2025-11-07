@@ -261,20 +261,17 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
 
                 android.util.Log.d("KnowledgeActivity", "Articles before adding: " + articles.size());
                 
-                // Add to the beginning of the main list
+                // Use addArticle method which handles both lists
+                articleAdapter.addArticle(newArticle);
+                
+                // Also add to our local list for consistency  
                 articles.add(0, newArticle);
                 
                 android.util.Log.d("KnowledgeActivity", "Articles after adding: " + articles.size());
                 
-                // Update the adapter with the complete list
-                articleAdapter.updateArticles(articles);
                 updateEmptyState();
                 
-                // Reset category filter to "All" to show new article
-                currentCategory = "All";
-                chipGroupCategories.check(R.id.chipAll);
-                
-                android.util.Log.d("KnowledgeActivity", "Updated adapter and reset filter to All");
+                android.util.Log.d("KnowledgeActivity", "Used addArticle method on adapter");
                 
                 // Scroll to the top to show the new article
                 recyclerViewArticles.scrollToPosition(0);
