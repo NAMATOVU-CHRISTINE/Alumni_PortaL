@@ -9,27 +9,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.namatovu.alumniportal.R;
-import com.namatovu.alumniportal.models.MentorshipConnection;
+import com.namatovu.alumniportal.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.MentorViewHolder> {
     
-    private List<MentorshipConnection> mentorships = new ArrayList<>();
+    private List<User> mentors = new ArrayList<>();
     private OnMentorClickListener listener;
     
     public interface OnMentorClickListener {
-        void onMentorClick(MentorshipConnection mentorship);
-        void onConnectClick(MentorshipConnection mentorship);
+        void onMentorClick(User mentor);
+        void onConnectClick(User mentor);
     }
     
     public void setOnMentorClickListener(OnMentorClickListener listener) {
         this.listener = listener;
     }
     
-    public void setMentorships(List<MentorshipConnection> mentorships) {
-        this.mentorships = mentorships != null ? mentorships : new ArrayList<>();
+    public void setMentors(List<User> mentors) {
+        this.mentors = mentors != null ? mentors : new ArrayList<>();
         notifyDataSetChanged();
     }
     
@@ -43,13 +43,13 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     
     @Override
     public void onBindViewHolder(@NonNull MentorViewHolder holder, int position) {
-        MentorshipConnection mentorship = mentorships.get(position);
-        holder.bind(mentorship);
+        User mentor = mentors.get(position);
+        holder.bind(mentor);
     }
     
     @Override
     public int getItemCount() {
-        return mentorships.size();
+        return mentors.size();
     }
     
     class MentorViewHolder extends RecyclerView.ViewHolder {
@@ -70,7 +70,7 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
             
             itemView.setOnClickListener(v -> {
                 if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    listener.onMentorClick(mentorships.get(getAdapterPosition()));
+                    listener.onMentorClick(mentors.get(getAdapterPosition()));
                 }
             });
             
@@ -78,29 +78,29 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
             if (buttonConnect != null) {
                 buttonConnect.setOnClickListener(v -> {
                     if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        listener.onConnectClick(mentorships.get(getAdapterPosition()));
+                        listener.onConnectClick(mentors.get(getAdapterPosition()));
                     }
                 });
             }
         }
         
-        public void bind(MentorshipConnection mentorship) {
-            if (mentorship == null) return;
+        public void bind(User mentor) {
+            if (mentor == null) return;
             
             if (textMentorName != null) {
-                textMentorName.setText(mentorship.getMentorName() != null ? mentorship.getMentorName() : "Unknown Mentor");
+                textMentorName.setText(mentor.getFullName());
             }
             
             if (textPosition != null) {
-                textPosition.setText(mentorship.getMentorTitle() != null ? mentorship.getMentorTitle() : "Professional");
+                textPosition.setText(mentor.getCurrentJob());
             }
             
             if (textCompany != null) {
-                textCompany.setText(mentorship.getMentorCompany() != null ? mentorship.getMentorCompany() : "");
+                textCompany.setText(mentor.getCompany());
             }
             
             if (textSkills != null) {
-                textSkills.setText(mentorship.getSkills() != null ? mentorship.getSkills() : "Various Skills");
+                textSkills.setText(mentor.getSkillsAsString());
             }
             
             if (textRating != null) {

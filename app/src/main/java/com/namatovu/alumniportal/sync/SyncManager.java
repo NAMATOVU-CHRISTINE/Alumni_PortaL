@@ -17,7 +17,7 @@ import androidx.work.WorkManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.namatovu.alumniportal.database.AlumniDatabase;
+import com.namatovu.alumniportal.database.AppDatabase;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.concurrent.TimeUnit;
@@ -40,7 +40,7 @@ public class SyncManager {
     private static SyncManager instance;
     private Context context;
     private WorkManager workManager;
-    private AlumniDatabase database;
+    private AppDatabase database;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private ConnectivityManager connectivityManager;
@@ -48,7 +48,7 @@ public class SyncManager {
     private SyncManager(Context context) {
         this.context = context.getApplicationContext();
         this.workManager = WorkManager.getInstance(context);
-        this.database = AlumniDatabase.getInstance(context);
+        this.database = AppDatabase.getInstance(context);
         this.firestore = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
         this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -277,10 +277,10 @@ public class SyncManager {
      * Enum for different data types that can be synced
      */
     public enum SyncDataType {
-        CHAT_MESSAGES,
+        ALL,
+        CHATS,
         USERS,
-        JOB_POSTINGS,
-        EVENTS,
-        ALL
+        JOBS,
+        EVENTS
     }
 }
