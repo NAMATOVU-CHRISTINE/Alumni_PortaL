@@ -162,34 +162,42 @@ public class JobBoardActivity extends AppCompatActivity {
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.noResultsText.setVisibility(View.GONE);
 
+        // Simplified query - remove orderBy to avoid index issues
         db.collection("job_postings")
-                .whereEqualTo("isActive", true)
-                .orderBy("postedAt", Query.Direction.DESCENDING)
+                .limit(50) // Limit to prevent large data loads
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     allJobs.clear();
                     
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        JobPosting job = document.toObject(JobPosting.class);
-                        job.setJobId(document.getId());
-                        
-                        // Only show jobs that are still valid
-                        if (job.isValidForDisplay()) {
+                        try {
+                            JobPosting job = document.toObject(JobPosting.class);
+                            job.setJobId(document.getId());
+                            
+                            // Add all jobs for now, filter out invalid ones in the adapter
                             allJobs.add(job);
+                        } catch (Exception e) {
+                            Log.w(TAG, "Error parsing job document: " + document.getId(), e);
                         }
                     }
                     
                     binding.progressBar.setVisibility(View.GONE);
                     filterJobs();
                     
-                    Log.d(TAG, "Loaded " + allJobs.size() + " active job postings");
+                    Log.d(TAG, "Loaded " + allJobs.size() + " job postings");
+                    
+                    // Show message if no jobs found
+                    if (allJobs.isEmpty()) {
+                        binding.noResultsText.setVisibility(View.VISIBLE);
+                        binding.noResultsText.setText("No job postings available. Check back soon!");
+                    }
                 })
                 .addOnFailureListener(e -> {
                     binding.progressBar.setVisibility(View.GONE);
                     binding.noResultsText.setVisibility(View.VISIBLE);
                     binding.noResultsText.setText("Failed to load job postings");
                     
-                    Toast.makeText(this, "Failed to load jobs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to load jobs: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Error loading job postings", e);
                     
                     AnalyticsHelper.logError("jobs_load_failed", e.getMessage(), "JobBoardActivity");

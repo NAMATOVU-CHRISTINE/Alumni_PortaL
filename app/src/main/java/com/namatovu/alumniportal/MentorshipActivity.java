@@ -155,9 +155,9 @@ public class MentorshipActivity extends AppCompatActivity {
         // Show loading state - using visibility changes on existing views
         binding.emptyStateLayout.setVisibility(View.GONE);
 
-        // Query connections where current user is either mentor or mentee
+        // Query connections where current user is mentor
         db.collection("mentor_connections")
-                .whereIn("mentorId", java.util.Arrays.asList(currentUserId))
+                .whereEqualTo("mentorId", currentUserId)
                 .orderBy("requestedAt", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
