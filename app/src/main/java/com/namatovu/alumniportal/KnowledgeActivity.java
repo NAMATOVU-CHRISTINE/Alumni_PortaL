@@ -18,6 +18,7 @@ import com.namatovu.alumniportal.models.Article;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -206,6 +207,15 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         }
 
         articles.addAll(sampleArticles);
+        
+        // Sort articles by date (newest first)
+        articles.sort((a1, a2) -> {
+            if (a1.getDateCreated() == null && a2.getDateCreated() == null) return 0;
+            if (a1.getDateCreated() == null) return 1;
+            if (a2.getDateCreated() == null) return -1;
+            return a2.getDateCreated().compareTo(a1.getDateCreated()); // Newest first
+        });
+        
         articleAdapter.updateArticles(articles);
         updateEmptyState();
     }
@@ -234,11 +244,25 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
                 Article newArticle = new Article(title, description, content, category);
                 newArticle.setId("article_" + System.currentTimeMillis());
                 newArticle.setAuthorName("You");
-                newArticle.setDateCreated(new Date());
+                newArticle.setDateCreated(new Date()); // Current time - will be newest
 
+                // Add to the beginning of the main list
                 articles.add(0, newArticle);
-                articleAdapter.addArticle(newArticle);
+                
+                // Sort the entire list to ensure proper ordering
+                articles.sort((a1, a2) -> {
+                    if (a1.getDateCreated() == null && a2.getDateCreated() == null) return 0;
+                    if (a1.getDateCreated() == null) return 1;
+                    if (a2.getDateCreated() == null) return -1;
+                    return a2.getDateCreated().compareTo(a1.getDateCreated()); // Newest first
+                });
+                
+                // Update the adapter with the sorted list
+                articleAdapter.updateArticles(articles);
                 updateEmptyState();
+                
+                // Scroll to the top to show the new article
+                recyclerViewArticles.scrollToPosition(0);
 
                 Toast.makeText(this, "Article added successfully! 📚", Toast.LENGTH_SHORT).show();
             }
