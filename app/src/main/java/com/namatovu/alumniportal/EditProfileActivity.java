@@ -73,7 +73,11 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-            PermissionHelper.handlePermissionResult(this, granted, () -> openImagePicker());
+            if (granted) {
+                openImagePicker();
+            } else {
+                Toast.makeText(this, "Storage permission required to select images", Toast.LENGTH_SHORT).show();
+            }
         });
 
         binding.changeProfilePhotoText.setOnClickListener(v -> ensurePermissionAndPickImage());
