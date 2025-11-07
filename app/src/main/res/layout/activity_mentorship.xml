@@ -126,7 +126,7 @@
                     android:layout_gravity="center_horizontal"
                     app:cardCornerRadius="48dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#E3F2FD"
+                    app:cardBackgroundColor="@color/light_green"
                     android:layout_marginBottom="24dp">
 
                     <ImageView
@@ -134,7 +134,7 @@
                         android:layout_height="48dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_people"
-                        app:tint="#1565C0" />
+                        app:tint="@color/must_green" />
 
                 </com.google.android.material.card.MaterialCardView>
 
