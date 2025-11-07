@@ -36,7 +36,7 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
     private static final String TAG = "CareerTipsActivity";
     private static final String PREFS_NAME = "CareerTipsPrefs";
     private static final String SAVED_TIPS_KEY = "saved_tips";
-    private static final int AUTO_ROTATE_DELAY = 20000; // 20 seconds
+    private static final int AUTO_ROTATE_DELAY = 15000; // 15 seconds
     private static final int MIN_SWIPE_DISTANCE = 30;
     private static final int MIN_SWIPE_VELOCITY = 50;
 
