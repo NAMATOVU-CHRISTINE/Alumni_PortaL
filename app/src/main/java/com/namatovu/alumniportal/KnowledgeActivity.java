@@ -51,7 +51,8 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         setupSearchView();
         setupCategoryFilters();
         setupFab();
-        loadSampleData();
+        // loadSampleData(); // Commented out to test new article functionality
+        updateEmptyState(); // Show empty state initially
     }
 
     private void initializeViews() {
@@ -226,10 +227,15 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
     }
 
     private void updateEmptyState() {
-        if (articleAdapter.getItemCount() == 0) {
+        int itemCount = articleAdapter.getItemCount();
+        android.util.Log.d("KnowledgeActivity", "updateEmptyState - Item count: " + itemCount);
+        
+        if (itemCount == 0) {
+            android.util.Log.d("KnowledgeActivity", "Showing empty state");
             emptyStateLayout.setVisibility(View.VISIBLE);
             recyclerViewArticles.setVisibility(View.GONE);
         } else {
+            android.util.Log.d("KnowledgeActivity", "Showing RecyclerView with " + itemCount + " items");
             emptyStateLayout.setVisibility(View.GONE);
             recyclerViewArticles.setVisibility(View.VISIBLE);
         }
