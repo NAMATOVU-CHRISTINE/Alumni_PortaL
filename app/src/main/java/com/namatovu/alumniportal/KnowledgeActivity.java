@@ -71,6 +71,10 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         fabAddArticle = findViewById(R.id.fabAddArticle);
         emptyStateLayout = findViewById(R.id.emptyStateLayout);
         
+        // Debug logging
+        android.util.Log.d("KnowledgeActivity", "RecyclerView found: " + (recyclerViewArticles != null));
+        android.util.Log.d("KnowledgeActivity", "Empty state layout found: " + (emptyStateLayout != null));
+        
         articles = new ArrayList<>();
     }
 
