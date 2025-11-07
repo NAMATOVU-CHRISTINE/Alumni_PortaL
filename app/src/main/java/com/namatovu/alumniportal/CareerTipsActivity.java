@@ -1087,7 +1087,6 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
     private void startAutoRotation() {
         if (isAutoRotateEnabled) {
             autoRotateHandler.postDelayed(autoRotateRunnable, AUTO_ROTATE_DELAY);
-            binding.btnPlayPause.setText("⏸️");
         }
     }
 
