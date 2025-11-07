@@ -39,6 +39,7 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     }
     
     public interface OnMentorshipActionListener {
+        // Interface for mentorship actions
         void onAccept(MentorshipConnection connection);
         void onReject(MentorshipConnection connection);
         void onViewProfile(String userId);
