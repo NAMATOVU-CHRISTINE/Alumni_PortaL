@@ -345,9 +345,15 @@ public class EditProfileActivity extends AppCompatActivity {
         Log.d(TAG, "Attempting upload to root directory...");
         
         String fileName = "profile_" + user.getUid() + ".jpg";
-        StorageReference rootRef = FirebaseStorage.getInstance().getReference().child(fileName);
         
-        UploadTask uploadTask = rootRef.putFile(selectedImageUri);
+        try {
+            FirebaseStorage storage = FirebaseStorage.getInstance("gs://alumniportal-198ec.firebasestorage.app");
+            StorageReference rootRef = storage.getReference().child(fileName);
+            
+            Log.d(TAG, "Root upload path: " + rootRef.getPath());
+            Log.d(TAG, "Root storage bucket: " + storage.getApp().getOptions().getStorageBucket());
+            
+            UploadTask uploadTask = rootRef.putFile(selectedImageUri);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Log.d(TAG, "Root directory upload successful");
             rootRef.getDownloadUrl().addOnSuccessListener(uri -> {
