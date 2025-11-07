@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/white"
     tools:context=".MentorshipActivity">
 
     <!-- App Bar Layout -->
@@ -13,68 +14,59 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:elevation="2dp">
 
-        <!-- Material Toolbar -->
+        <!-- Clean Material Toolbar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/must_green"
-            app:title="Mentorships"
-            app:titleTextColor="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@color/white"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:layout_height="56dp"
+            android:background="#1565C0"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-        <!-- Header Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:background="@color/must_green">
-
-            <TextView
-                android:id="@+id/headerTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Alumni Mentorship Network"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:gravity="center"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingEnd="16dp">
 
-            <TextView
-                android:id="@+id/headerSubtext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Connect, Learn, and Grow with our Alumni Mentors"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:layout_marginTop="8dp"
-                android:alpha="0.9"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alumni Mentorship Network"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="2dp"/>
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connect. Learn. Grow."
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:alpha="0.9"/>
 
-        <!-- Tab Layout -->
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <!-- Clean TabLayout - Only 2 tabs -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
             android:background="@color/white"
             app:tabTextColor="@color/dark_gray"
-            app:tabSelectedTextColor="@color/must_green"
-            app:tabIndicatorColor="@color/must_green"
+            app:tabSelectedTextColor="#1565C0"
+            app:tabIndicatorColor="#1565C0"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
-            app:tabGravity="fill">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All" />
+            app:tabGravity="fill"
+            app:tabRippleColor="#E3F2FD">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -90,91 +82,114 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main Content with Nested Scroll View -->
+    <!-- Main Content with Proper Scrolling -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <FrameLayout
             android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="400dp">
+            android:minHeight="400dp"
+            android:paddingTop="16dp">
 
             <!-- Mentorships RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewMentors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="80dp"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_mentor" />
 
-            <!-- Enhanced Empty State -->
+            <!-- Clean, Warm Empty State -->
             <LinearLayout
                 android:id="@+id/emptyStateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="vertical"
-                android:padding="40dp"
+                android:padding="32dp"
                 android:visibility="gone">
 
+                <!-- Soft Icon Container -->
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    app:cardCornerRadius="60dp"
-                    app:cardElevation="4dp"
+                    app:cardCornerRadius="48dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="#E3F2FD"
                     android:layout_marginBottom="24dp">
 
                     <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_mentorship"
-                        app:tint="@color/must_green" />
+                        android:src="@drawable/ic_people"
+                        app:tint="#1565C0" />
 
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Warm, Motivational Title -->
                 <TextView
                     android:id="@+id/emptyStateTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="No mentorship connections yet"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:layout_marginBottom="12dp"/>
 
+                <!-- Encouraging Message -->
                 <TextView
                     android:id="@+id/emptyStateMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Start connecting with alumni mentors to grow your network and advance your career!"
+                    android:text="Start connecting with alumni mentors to grow your network and accelerate your career journey!"
                     android:textSize="16sp"
                     android:textColor="@color/dark_gray"
                     android:gravity="center"
+                    android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="32dp"/>
 
-                <Button
-                    android:id="@+id/emptyStateFindMentorButton"
+                <!-- Clean Call-to-Action Button -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="wrap_content"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Find a Mentor"
-                    android:textSize="16sp"
-                    android:backgroundTint="@color/must_green"
-                    android:textColor="@color/white"
-                    android:minWidth="200dp"
-                    android:drawableLeft="@drawable/ic_search"
-                    android:drawableTint="@color/white"/>
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="#1565C0">
+
+                    <Button
+                        android:id="@+id/emptyStateFindMentorButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Find a Mentor"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:background="@android:color/transparent"
+                        android:paddingStart="32dp"
+                        android:paddingEnd="32dp"
+                        android:minWidth="200dp"
+                        android:drawableLeft="@drawable/ic_search"
+                        android:drawableTint="@color/white"
+                        android:drawablePadding="8dp"/>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
@@ -182,7 +197,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Floating Action Button -->
+    <!-- Clean FloatingActionButton -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/findMentorFab"
         android:layout_width="wrap_content"
@@ -191,7 +206,9 @@
         android:layout_margin="24dp"
         android:src="@drawable/ic_search"
         app:tint="@color/white"
-        app:backgroundTint="@color/must_green"
+        app:backgroundTint="#1565C0"
+        app:elevation="6dp"
+        app:borderWidth="0dp"
         android:contentDescription="Find Mentor"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

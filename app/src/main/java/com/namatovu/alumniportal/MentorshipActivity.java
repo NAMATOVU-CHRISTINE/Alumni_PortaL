@@ -34,7 +34,7 @@ public class MentorshipActivity extends AppCompatActivity {
     private List<MentorshipConnection> allConnections;
     private List<MentorshipConnection> filteredConnections;
     private String currentUserId;
-    private String currentTab = "all"; // "all", "as_mentor", "as_mentee"
+    private String currentTab = "as_mentee"; // Default to "as_mentee" instead of "all"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,28 +66,31 @@ public class MentorshipActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Mentorships");
+            getSupportActionBar().setTitle(""); // Clear default title since we use custom layout
         }
         
+        binding.toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        binding.toolbar.setNavigationIconTint(getColor(android.R.color.white));
         binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     private void setupTabs() {
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("All"));
+        // Only add 2 tabs: As Mentor and As Mentee
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("As Mentor"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("As Mentee"));
+        
+        // Set default to "As Mentee" tab
+        currentTab = "as_mentee";
+        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(1));
         
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        currentTab = "all";
-                        break;
-                    case 1:
                         currentTab = "as_mentor";
                         break;
-                    case 2:
+                    case 1:
                         currentTab = "as_mentee";
                         break;
                 }
@@ -239,15 +242,15 @@ public class MentorshipActivity extends AppCompatActivity {
         switch (currentTab) {
             case "as_mentor":
                 title = "No mentees yet";
-                message = "When students request your mentorship, they'll appear here. Share your knowledge and help the next generation!";
+                message = "When students request your mentorship, they'll appear here. Share your knowledge and help the next generation grow!";
                 break;
             case "as_mentee":
                 title = "No mentors yet";
-                message = "Connect with experienced alumni to accelerate your career growth and gain valuable insights.";
+                message = "Connect with experienced alumni to accelerate your career growth and gain valuable insights from industry professionals.";
                 break;
             default:
                 title = "No mentorship connections yet";
-                message = "Start connecting with alumni mentors to grow your network and advance your career!";
+                message = "Start connecting with alumni mentors to grow your network and accelerate your career journey!";
                 break;
         }
         
@@ -266,9 +269,6 @@ public class MentorshipActivity extends AppCompatActivity {
             boolean shouldInclude = false;
             
             switch (currentTab) {
-                case "all":
-                    shouldInclude = true;
-                    break;
                 case "as_mentor":
                     shouldInclude = currentUserId.equals(connection.getMentorId());
                     break;
