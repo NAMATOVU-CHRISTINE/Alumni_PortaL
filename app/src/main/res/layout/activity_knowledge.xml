@@ -173,6 +173,15 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Handpicked articles, tips, and resources"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
                     android:layout_marginBottom="12dp"
                     android:layout_marginStart="4dp" />
 
