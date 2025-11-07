@@ -18,29 +18,14 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:layout_height="?attr/actionBarSize"
             android:backgroundTint="@color/must_green"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:popupTheme="@style/ThemeOverlay.Material3.Light">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginEnd="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Career Tips"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </com.google.android.material.appbar.MaterialToolbar>
+            app:navigationIconTint="@color/white"
+            app:title="Career Tips"
+            app:titleTextColor="@color/white"
+            app:popupTheme="@style/ThemeOverlay.Material3.Light" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main Content -->
@@ -139,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="28dp"
+                        android:padding="32dp"
                         android:gravity="center">
 
                         <!-- Category Badge -->
@@ -163,99 +148,111 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Attend alumni events regularly to grow your network. 🤝"
-                            android:textSize="20sp"
+                            android:textSize="22sp"
                             android:textColor="@color/text_primary"
                             android:gravity="center"
-                            android:lineSpacingExtra="6dp"
+                            android:lineSpacingExtra="8dp"
                             android:textStyle="normal"
-                            android:layout_marginBottom="20dp" />
+                            android:layout_marginBottom="24dp" />
 
-                        <!-- Navigation Hint -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center"
-                            android:background="@drawable/rounded_background_light"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="👈 Swipe to navigate 👉"
-                                android:textSize="12sp"
-                                android:textColor="@color/text_hint"
-                                android:textStyle="italic" />
-                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <!-- Navigation Buttons -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- Previous Button (Left) -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabPrevious"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/ic_chevron_left"
+                        app:backgroundTint="@color/must_green"
+                        app:tint="@color/white"
+                        app:fabSize="normal"
+                        android:contentDescription="Previous tip" />
+
+                    <!-- Next Button (Right) -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabNext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:backgroundTint="#FF6B35"
+                        app:tint="@color/white"
+                        app:fabSize="normal"
+                        android:contentDescription="Next tip" />
+
+                </RelativeLayout>
             </LinearLayout>
 
-            <!-- Navigation Controls Section -->
+            <!-- Actions Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎮 Actions"
-                    android:textSize="18sp"
+                    android:text="⚡ Quick Actions"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="4dp" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="3dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
                     app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center">
 
-                        <!-- Action Buttons -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSave"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="💾 Save"
+                            android:textColor="@color/must_green"
+                            android:textSize="14sp"
+                            app:strokeColor="@color/must_green"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="12dp"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnSave"
-                                android:layout_width="0dp"
-                                android:layout_height="48dp"
-                                android:layout_weight="1"
-                                android:text="💾 Save"
-                                android:textColor="@color/must_green"
-                                app:strokeColor="@color/must_green"
-                                app:strokeWidth="1dp"
-                                app:cornerRadius="14dp"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
+                        <View
+                            android:layout_width="12dp"
+                            android:layout_height="1dp" />
 
-                            <View
-                                android:layout_width="12dp"
-                                android:layout_height="1dp" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnShare"
-                                android:layout_width="0dp"
-                                android:layout_height="48dp"
-                                android:layout_weight="1"
-                                android:text="📤 Share"
-                                android:textColor="@color/must_green"
-                                app:strokeColor="@color/must_green"
-                                app:strokeWidth="1dp"
-                                app:cornerRadius="14dp"
-                                style="@style/Widget.Material3.Button.OutlinedButton" />
-                        </LinearLayout>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnShare"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="📤 Share"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:backgroundTint="@color/must_green"
+                            app:cornerRadius="12dp"
+                            style="@style/Widget.Material3.Button" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
