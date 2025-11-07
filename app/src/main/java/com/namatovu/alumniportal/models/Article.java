@@ -1,6 +1,8 @@
 package com.namatovu.alumniportal.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Article model class for Knowledge section
@@ -19,9 +21,16 @@ public class Article {
     private boolean isBookmarked;
     private int views;
     private String imageUrl;
+    private int likeCount;
+    private List<String> likedByUsers;
+    private boolean isLiked;
 
     // Default constructor required for Firebase
-    public Article() {}
+    public Article() {
+        this.likedByUsers = new ArrayList<>();
+        this.likeCount = 0;
+        this.isLiked = false;
+    }
 
     public Article(String title, String description, String content, String category) {
         this.title = title;
@@ -33,6 +42,9 @@ public class Article {
         this.dateModified = new Date();
         this.isBookmarked = false;
         this.views = 0;
+        this.likedByUsers = new ArrayList<>();
+        this.likeCount = 0;
+        this.isLiked = false;
     }
 
     // Getters and Setters
