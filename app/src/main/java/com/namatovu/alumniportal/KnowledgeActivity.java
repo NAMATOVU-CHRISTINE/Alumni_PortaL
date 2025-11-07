@@ -91,11 +91,18 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
 
     private void setupRecyclerView() {
         articleAdapter = new ArticleAdapter(this, articles);
-        articleAdapter.setOnArticleClickListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         
-        recyclerViewArticles.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewArticles.setLayoutManager(layoutManager);
         recyclerViewArticles.setAdapter(articleAdapter);
-        recyclerViewArticles.setNestedScrollingEnabled(false);
+        
+        // Debug logging
+        android.util.Log.d("KnowledgeActivity", "RecyclerView setup completed");
+        android.util.Log.d("KnowledgeActivity", "Layout manager set: " + (recyclerViewArticles.getLayoutManager() != null));
+        android.util.Log.d("KnowledgeActivity", "Adapter set: " + (recyclerViewArticles.getAdapter() != null));
+        android.util.Log.d("KnowledgeActivity", "RecyclerView visibility: " + recyclerViewArticles.getVisibility());
+        
+        updateEmptyState();
     }
 
     private void setupSearchView() {
