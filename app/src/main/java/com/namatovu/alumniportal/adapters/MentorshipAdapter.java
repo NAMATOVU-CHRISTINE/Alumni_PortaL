@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.namatovu.alumniportal.R;
-import com.namatovu.alumniportal.models.User;
-import com.namatovu.alumniportal.models.MentorshipConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +75,8 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     
     class MentorViewHolder extends RecyclerView.ViewHolder {
         private TextView textMentorName;
+    class MentorViewHolder extends RecyclerView.ViewHolder {
+        private TextView textMentorName;
         private TextView textPosition;
         private TextView textCompany;
         private TextView textSkills;
@@ -132,4 +132,34 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
             }
         }
     }
-}
+
+    // Minimal placeholder model classes so this adapter compiles independently.
+    // If your project already provides com.namatovu.alumniportal.models.User and
+    // com.namatovu.alumniportal.models.MentorshipConnection, remove these placeholders.
+    public static class User {
+        private String fullName;
+        private String currentJob;
+        private String company;
+        private String skills;
+
+        public User() { }
+
+        public String getFullName() { return fullName == null ? "" : fullName; }
+        public String getCurrentJob() { return currentJob == null ? "" : currentJob; }
+        public String getCompany() { return company == null ? "" : company; }
+        public String getSkillsAsString() { return skills == null ? "" : skills; }
+
+        public void setFullName(String fullName) { this.fullName = fullName; }
+        public void setCurrentJob(String currentJob) { this.currentJob = currentJob; }
+        public void setCompany(String company) { this.company = company; }
+        public void setSkills(String skills) { this.skills = skills; }
+    }
+
+    public static class MentorshipConnection {
+        private String id;
+
+        public MentorshipConnection() { }
+
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+    }
