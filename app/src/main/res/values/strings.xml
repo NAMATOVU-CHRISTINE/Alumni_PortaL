@@ -6,6 +6,7 @@
     <string name="welcome_message">Welcome, %1$s!</string>
     <string name="welcome_default">Welcome!</string>
     <string name="connect_learn_grow_together">Connect. Learn. Grow Together.</string>
+    <string name="daily_motivation">"Success is not final, failure is not fatal: it is the courage to continue that counts."</string>
 
     <!-- Home Screen UI Strings -->
     <string name="search_hint">Search alumni, jobs, events</string>

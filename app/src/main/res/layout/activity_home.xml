@@ -76,33 +76,24 @@
                         android:orientation="vertical"
                         android:layout_marginStart="16dp">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/welcomeText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
+                            android:text="@string/welcome_default"
+                            android:textAppearance="@style/App.TextAppearance.Title"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"/>
 
-                            <TextView
-                                android:id="@+id/welcomeText"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="@string/welcome_default"
-                                android:textAppearance="@style/App.TextAppearance.Title"
-                                android:textStyle="bold"
-                                android:textColor="@color/black"/>
-
-                            <Button
-                                android:id="@+id/viewProfileButton"
-                                style="@style/Widget.Material3.Button.TextButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="36dp"
-                                android:text="@string/view_profile"
-                                android:textSize="11sp"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                app:cornerRadius="18dp" />
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/motivationalQuote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/daily_motivation"
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/must_green"
+                            android:textStyle="italic"
+                            android:layout_marginTop="4dp"/>
 
                         <TextView
                             android:id="@+id/homeSlogan"
@@ -110,7 +101,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/connect_learn_grow_together"
                             android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/dark_gray"/>
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginTop="2dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
