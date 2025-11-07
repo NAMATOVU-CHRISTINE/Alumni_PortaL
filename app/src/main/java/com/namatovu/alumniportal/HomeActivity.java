@@ -197,8 +197,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupSettingsClickListener() {
         binding.settingsIcon.setOnClickListener(v -> {
-            // Open App Settings (placeholder for now - opens ProfileActivity)
-            Intent intent = new Intent(this, ProfileActivity.class);
+            // Open SettingsActivity
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         });
     }
@@ -281,8 +281,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_settings) {
-            // For now, open ProfileActivity as settings page until SettingsActivity is created
-            Intent intent = new Intent(this, ProfileActivity.class);
+            // Open SettingsActivity
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
