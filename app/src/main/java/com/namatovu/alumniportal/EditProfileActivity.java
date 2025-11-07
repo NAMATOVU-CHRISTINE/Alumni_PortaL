@@ -202,7 +202,7 @@ public class EditProfileActivity extends AppCompatActivity {
             UploadTask uploadTask = ref.putFile(selectedImageUri);
             uploadTask.addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
                 String imageUrl = uri.toString();
-                saveProfileDocument(user.getUid(), name, bio, career, skills, imageUrl);
+                saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl);
             }).addOnFailureListener(e -> {
                 binding.saveButton.setEnabled(true);
                 Toast.makeText(EditProfileActivity.this, "Failed to get image URL.", Toast.LENGTH_SHORT).show();
@@ -212,7 +212,7 @@ public class EditProfileActivity extends AppCompatActivity {
             });
         } else {
             // No image change
-            saveProfileDocument(user.getUid(), name, bio, career, skills, null);
+            saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null);
         }
     }
 
