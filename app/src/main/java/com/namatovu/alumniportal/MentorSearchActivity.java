@@ -171,14 +171,28 @@ public class MentorSearchActivity extends AppCompatActivity {
     }
 
     private void filterMentors(String query) {
+        List<User> sourceList = allMentors;
+        
+        // If any filter is active, use the current filtered list as source
+        if (binding.skillsFilterChip.isChecked() || 
+            binding.experienceFilterChip.isChecked() || 
+            binding.industryFilterChip.isChecked()) {
+            // Don't override filter - just apply search on top
+            if (query.isEmpty()) {
+                // If search is empty, keep current filter
+                return;
+            }
+            sourceList = new ArrayList<>(filteredMentors);
+        }
+        
         if (query.isEmpty()) {
             filteredMentors.clear();
-            filteredMentors.addAll(allMentors);
+            filteredMentors.addAll(sourceList);
         } else {
             filteredMentors.clear();
             String lowerCaseQuery = query.toLowerCase();
             
-            for (User mentor : allMentors) {
+            for (User mentor : sourceList) {
                 if (matchesSearch(mentor, lowerCaseQuery)) {
                     filteredMentors.add(mentor);
                 }
@@ -221,21 +235,80 @@ public class MentorSearchActivity extends AppCompatActivity {
     }
 
     private void filterBySkills() {
-        // Implement skills-based filtering
-        Toast.makeText(this, "Skills filter - Coming soon!", Toast.LENGTH_SHORT).show();
+        // Get mentors with strong skill sets
+        filteredMentors.clear();
+        for (User mentor : allMentors) {
+            if (mentor.getSkills() != null && mentor.getSkills().size() >= 2) {
+                filteredMentors.add(mentor);
+            }
+        }
+        adapter.notifyDataSetChanged();
+        updateEmptyState();
+        
+        // Uncheck other filters
+        binding.experienceFilterChip.setChecked(false);
+        binding.industryFilterChip.setChecked(false);
     }
 
     private void filterByExperience() {
-        // Implement experience-based filtering
-        Toast.makeText(this, "Experience filter - Coming soon!", Toast.LENGTH_SHORT).show();
+        // Get mentors with job/career information (indicating experience)
+        filteredMentors.clear();
+        for (User mentor : allMentors) {
+            if (mentor.getCurrentJob() != null && !mentor.getCurrentJob().trim().isEmpty()) {
+                filteredMentors.add(mentor);
+            }
+        }
+        adapter.notifyDataSetChanged();
+        updateEmptyState();
+        
+        // Uncheck other filters
+        binding.skillsFilterChip.setChecked(false);
+        binding.industryFilterChip.setChecked(false);
     }
 
     private void filterByIndustry() {
-        // Implement industry-based filtering
-        Toast.makeText(this, "Industry filter - Coming soon!", Toast.LENGTH_SHORT).show();
+        // Get mentors with industry information (based on job titles or bio keywords)
+        filteredMentors.clear();
+        String[] industryKeywords = {"engineer", "developer", "manager", "analyst", "consultant", 
+                                   "designer", "marketing", "sales", "finance", "healthcare", 
+                                   "education", "technology", "business", "software", "data"};
+        
+        for (User mentor : allMentors) {
+            String searchText = "";
+            if (mentor.getCurrentJob() != null) {
+                searchText += mentor.getCurrentJob().toLowerCase() + " ";
+            }
+            if (mentor.getBio() != null) {
+                searchText += mentor.getBio().toLowerCase() + " ";
+            }
+            
+            boolean hasIndustryInfo = false;
+            for (String keyword : industryKeywords) {
+                if (searchText.contains(keyword)) {
+                    hasIndustryInfo = true;
+                    break;
+                }
+            }
+            
+            if (hasIndustryInfo) {
+                filteredMentors.add(mentor);
+            }
+        }
+        adapter.notifyDataSetChanged();
+        updateEmptyState();
+        
+        // Uncheck other filters
+        binding.skillsFilterChip.setChecked(false);
+        binding.experienceFilterChip.setChecked(false);
     }
 
     private void resetFilters() {
+        // Uncheck all filter chips
+        binding.skillsFilterChip.setChecked(false);
+        binding.experienceFilterChip.setChecked(false);
+        binding.industryFilterChip.setChecked(false);
+        
+        // Reset to show all mentors
         filteredMentors.clear();
         filteredMentors.addAll(allMentors);
         adapter.notifyDataSetChanged();

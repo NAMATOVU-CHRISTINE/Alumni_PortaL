@@ -155,16 +155,6 @@ public class MentorshipActivity extends AppCompatActivity {
             // Log analytics
             AnalyticsHelper.logMentorConnection("find_mentor_fab_clicked", currentUserId);
         });
-        
-        // Setup empty state button
-        if (binding.emptyStateFindMentorButton != null) {
-            binding.emptyStateFindMentorButton.setOnClickListener(v -> {
-                Intent intent = new Intent(this, MentorSearchActivity.class);
-                startActivity(intent);
-                
-                AnalyticsHelper.logMentorConnection("find_mentor_empty_state_clicked", currentUserId);
-            });
-        }
     }
 
     private void loadMentorshipConnections() {
