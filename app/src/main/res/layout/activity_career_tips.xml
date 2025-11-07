@@ -109,89 +109,90 @@
                     android:layout_marginBottom="12dp"
                     android:layout_marginStart="4dp" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/tipCard"
+                <!-- Featured Tip Section with Overlay Navigation -->
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="8dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/tipCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="32dp"
-                        android:gravity="center">
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="8dp"
+                        app:cardBackgroundColor="@color/white"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
 
-                        <!-- Category Badge -->
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/tipCategory"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Networking"
-                            app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            app:chipCornerRadius="20dp"
-                            app:chipStrokeWidth="1dp"
-                            app:chipStrokeColor="@color/must_green"
-                            android:layout_marginBottom="20dp" />
-
-                        <!-- Tip Content -->
-                        <TextView
-                            android:id="@+id/tipText"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Attend alumni events regularly to grow your network. 🤝"
-                            android:textSize="22sp"
-                            android:textColor="@color/text_primary"
-                            android:gravity="center"
-                            android:lineSpacingExtra="8dp"
-                            android:textStyle="normal"
-                            android:layout_marginBottom="24dp" />
+                            android:orientation="vertical"
+                            android:padding="32dp"
+                            android:gravity="center">
 
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                            <!-- Category Badge -->
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/tipCategory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Networking"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                app:chipCornerRadius="20dp"
+                                app:chipStrokeWidth="1dp"
+                                app:chipStrokeColor="@color/must_green"
+                                android:layout_marginBottom="20dp" />
 
-                <!-- Navigation Buttons -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp">
+                            <!-- Tip Content -->
+                            <TextView
+                                android:id="@+id/tipText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Attend alumni events regularly to grow your network. 🤝"
+                                android:textSize="22sp"
+                                android:textColor="@color/text_primary"
+                                android:gravity="center"
+                                android:lineSpacingExtra="8dp"
+                                android:textStyle="normal"
+                                android:layout_marginBottom="24dp" />
 
-                    <!-- Previous Button (Left) -->
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Navigation Buttons Overlay -->
+                    <!-- Previous Button (Top Left) -->
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fabPrevious"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_gravity="top|start"
+                        android:layout_margin="12dp"
                         android:src="@drawable/ic_chevron_left"
                         app:backgroundTint="@color/must_green"
                         app:tint="@color/white"
-                        app:fabSize="normal"
+                        app:fabSize="mini"
+                        android:elevation="12dp"
                         android:contentDescription="Previous tip" />
 
-                    <!-- Next Button (Right) -->
+                    <!-- Next Button (Bottom Right) -->
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fabNext"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="16dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_margin="12dp"
                         android:src="@drawable/ic_chevron_right"
                         app:backgroundTint="#FF6B35"
                         app:tint="@color/white"
-                        app:fabSize="normal"
+                        app:fabSize="mini"
+                        android:elevation="12dp"
                         android:contentDescription="Next tip" />
 
-                </RelativeLayout>
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Actions Section -->
