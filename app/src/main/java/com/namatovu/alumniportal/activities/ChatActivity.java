@@ -69,6 +69,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     private FirebaseAuth auth;
     private FirebaseStorage storage;
     private String currentUserId;
+    private String currentUserName;
     private String chatId;
     private String chatType;
     private String otherUserId;
@@ -411,10 +412,11 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         }
         
         ChatMessage message = new ChatMessage(
+                chatId,
                 currentUserId,
-                messageText,
-                "text",
-                chatId
+                currentUserName != null ? currentUserName : "Unknown User",
+                otherUserId,
+                messageText
         );
         
         sendMessage(message);
@@ -482,7 +484,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         // This could be optimized to only update recent unread messages
         for (ChatMessage message : messages) {
             if (!message.getSenderId().equals(currentUserId) && 
-                !"read".equals(message.getReadStatus())) {
+                !message.isRead()) {
                 
                 db.collection("chats").document(chatId)
                         .collection("messages").document(message.getMessageId())
