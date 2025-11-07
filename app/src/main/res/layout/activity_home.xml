@@ -350,7 +350,7 @@
                         <ImageView
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            android:src="@drawable/ic_notifications"
+                            android:src="@drawable/ic_notification"
                             android:contentDescription="@string/notifications"
                             app:tint="@color/must_green"/>
 
@@ -597,7 +597,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_star"
+                            android:src="@drawable/ic_check"
                             android:contentDescription="@string/profile_completion"
                             app:tint="@color/must_gold"/>
 
