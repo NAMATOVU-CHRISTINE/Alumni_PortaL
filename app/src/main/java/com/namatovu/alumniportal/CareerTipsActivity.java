@@ -150,12 +150,6 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         binding.btnSave.setOnClickListener(v -> toggleSaveTip());
         binding.btnShare.setOnClickListener(v -> shareCurrentTip());
         binding.btnSavedTips.setOnClickListener(v -> openSavedTips());
-
-        // Auto-rotate toggle
-        binding.btnAutoRotate.setOnClickListener(v -> toggleAutoRotation());
-
-        // Play/Pause for auto-rotation
-        binding.btnPlayPause.setOnClickListener(v -> toggleAutoRotation());
     }
 
     /**
@@ -1118,12 +1112,8 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         
         if (isAutoRotateEnabled) {
             startAutoRotation();
-            binding.btnPlayPause.setText("⏸️");
-            binding.btnAutoRotate.setText("Auto: ON");
         } else {
             autoRotateHandler.removeCallbacks(autoRotateRunnable);
-            binding.btnPlayPause.setText("▶️");
-            binding.btnAutoRotate.setText("Auto: OFF");
         }
     }
 
