@@ -171,9 +171,7 @@ public class MentorshipActivity extends AppCompatActivity {
                     loadMenteeConnections();
                 })
                 .addOnFailureListener(e -> {
-                    binding.progressBar.setVisibility(View.GONE);
-                    binding.noConnectionsText.setVisibility(View.VISIBLE);
-                    binding.noConnectionsText.setText("Failed to load mentorship connections");
+                    binding.emptyStateLayout.setVisibility(View.VISIBLE);
                     
                     Toast.makeText(this, "Failed to load connections", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Error loading mentorship connections", e);
@@ -206,13 +204,14 @@ public class MentorshipActivity extends AppCompatActivity {
                         }
                     }
                     
-                    binding.progressBar.setVisibility(View.GONE);
+                    // Hide loading state - connections loaded successfully
                     filterConnections();
                     
                     Log.d(TAG, "Loaded " + allConnections.size() + " mentorship connections");
                 })
                 .addOnFailureListener(e -> {
-                    binding.progressBar.setVisibility(View.GONE);
+                    // Hide loading and show empty state on error
+                    binding.emptyStateLayout.setVisibility(View.VISIBLE);
                     Log.e(TAG, "Error loading mentee connections", e);
                 });
     }
@@ -242,15 +241,15 @@ public class MentorshipActivity extends AppCompatActivity {
         
         adapter.notifyDataSetChanged();
         
-        // Show/hide no connections message
+        // Show/hide empty state
         if (filteredConnections.isEmpty()) {
-            binding.noConnectionsText.setVisibility(View.VISIBLE);
-            binding.noConnectionsText.setText(getEmptyMessage());
+            binding.emptyStateLayout.setVisibility(View.VISIBLE);
         } else {
-            binding.noConnectionsText.setVisibility(View.GONE);
+            binding.emptyStateLayout.setVisibility(View.GONE);
         }
         
-        binding.connectionCountText.setText(filteredConnections.size() + " connections");
+        // Update connection count in toolbar subtitle if needed
+        // binding.toolbar.setSubtitle(filteredConnections.size() + " connections");
     }
 
     private String getEmptyMessage() {
