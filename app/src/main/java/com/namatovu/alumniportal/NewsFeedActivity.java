@@ -261,33 +261,36 @@ public class NewsFeedActivity extends AppCompatActivity {
             likedByUserIds = new ArrayList<>();
         }
         
-        boolean isCurrentlyLiked = likedByUserIds.contains(currentUserId);
+        // Make variables effectively final for lambda
+        final List<String> finalLikedByUserIds = likedByUserIds;
+        final boolean isCurrentlyLiked = finalLikedByUserIds.contains(currentUserId);
+        final String finalCurrentUserId = currentUserId;
         
         if (isCurrentlyLiked) {
-            likedByUserIds.remove(currentUserId);
+            finalLikedByUserIds.remove(finalCurrentUserId);
             article.decrementLikeCount();
         } else {
-            likedByUserIds.add(currentUserId);
+            finalLikedByUserIds.add(finalCurrentUserId);
             article.incrementLikeCount();
         }
         
-        article.setLikedByUserIds(likedByUserIds);
+        article.setLikedByUserIds(finalLikedByUserIds);
         
         db.collection("news").document(article.getArticleId())
-                .update("likedByUserIds", likedByUserIds, "likeCount", article.getLikeCount())
+                .update("likedByUserIds", finalLikedByUserIds, "likeCount", article.getLikeCount())
                 .addOnSuccessListener(aVoid -> {
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
                     // Revert changes on failure
                     if (isCurrentlyLiked) {
-                        likedByUserIds.add(currentUserId);
+                        finalLikedByUserIds.add(finalCurrentUserId);
                         article.incrementLikeCount();
                     } else {
-                        likedByUserIds.remove(currentUserId);
+                        finalLikedByUserIds.remove(finalCurrentUserId);
                         article.decrementLikeCount();
                     }
-                    article.setLikedByUserIds(likedByUserIds);
+                    article.setLikedByUserIds(finalLikedByUserIds);
                     adapter.notifyDataSetChanged();
                     
                     Toast.makeText(this, "Failed to update like", Toast.LENGTH_SHORT).show();
