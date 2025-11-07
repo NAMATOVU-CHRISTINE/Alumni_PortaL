@@ -34,9 +34,9 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
-                    android:layout_height="36dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    app:cardCornerRadius="18dp"
+                    app:cardCornerRadius="24dp"
                     app:cardElevation="0dp"
                     app:strokeColor="@color/stroke_color"
                     app:strokeWidth="1dp"
