@@ -170,33 +170,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void updateProfileCompletion(User user) {
-        if (user == null) return;
-        int totalFields = 5; 
-        int completedFields = 0;
-
-        if (user.getFullName() != null && !user.getFullName().isEmpty()) completedFields++;
-        if (user.getBio() != null && !user.getBio().isEmpty()) completedFields++;
-        if (user.getCurrentJob() != null && !user.getCurrentJob().isEmpty()) completedFields++;
-        if (user.getSkills() != null && !user.getSkills().isEmpty()) completedFields++;
-        if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) completedFields++;
-
-        int progress = (int) (((double) completedFields / totalFields) * 100);
-        binding.profileProgressBar.setProgress(progress, true);
-
-        if (progress == 100) {
-            binding.profileCompletionCard.setVisibility(View.GONE);
-        } else {
-            binding.profileCompletionCard.setVisibility(View.VISIBLE);
-        }
+        // Profile completion card has been removed from the new design
+        // This method is kept for potential future use
     }
 
     private void setLoadingState(boolean isLoading) {
         if(isLoading) {
             binding.welcomeText.setText("Loading...");
-            binding.profileCompletionCard.setVisibility(View.INVISIBLE);
             binding.homeSlogan.setVisibility(View.INVISIBLE);
         } else {
-            binding.profileCompletionCard.setVisibility(View.VISIBLE);
             binding.homeSlogan.setVisibility(View.VISIBLE);
         }
     }
