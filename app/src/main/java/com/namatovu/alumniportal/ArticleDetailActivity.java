@@ -55,7 +55,11 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
         tvContent = findViewById(R.id.tvContent);
         btnBookmark = findViewById(R.id.btnBookmark);
         btnShare = findViewById(R.id.btnShare);
+        btnLike = findViewById(R.id.btnLike);
+        btnSendComment = findViewById(R.id.btnSendComment);
         fabShare = findViewById(R.id.fabShare);
+        recyclerViewComments = findViewById(R.id.recyclerViewComments);
+        etComment = findViewById(R.id.etComment);
     }
 
     private void setupToolbar() {
@@ -82,6 +86,10 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
         tvAuthor.setText("By " + author);
         tvDate.setText(date);
         tvContent.setText(content);
+        
+        // Initialize article like count from intent
+        articleLikeCount = intent.getIntExtra("article_like_count", 0);
+        updateLikeButton();
     }
 
     private void setupActionButtons() {
@@ -97,8 +105,32 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
             }
         });
 
+        btnLike.setOnClickListener(v -> {
+            isArticleLiked = !isArticleLiked;
+            if (isArticleLiked) {
+                articleLikeCount++;
+                Toast.makeText(this, "You liked this article! ❤️", Toast.LENGTH_SHORT).show();
+            } else {
+                articleLikeCount = Math.max(0, articleLikeCount - 1);
+                Toast.makeText(this, "Like removed", Toast.LENGTH_SHORT).show();
+            }
+            updateLikeButton();
+        });
+
         btnShare.setOnClickListener(v -> shareArticle());
         fabShare.setOnClickListener(v -> shareArticle());
+
+        btnSendComment.setOnClickListener(v -> {
+            String commentText = etComment.getText().toString().trim();
+            if (!commentText.isEmpty()) {
+                Comment newComment = new Comment("You", commentText);
+                commentAdapter.addComment(newComment);
+                etComment.setText("");
+                Toast.makeText(this, "Comment added! 💬", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Please write a comment first", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void shareArticle() {
@@ -126,5 +158,51 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
             case "Leadership": return "🏆 " + category;
             default: return "📚 " + category;
         }
+    }
+
+    private void setupComments() {
+        comments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(this, comments);
+        commentAdapter.setOnCommentInteractionListener(this);
+        
+        recyclerViewComments.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewComments.setAdapter(commentAdapter);
+    }
+
+    private void loadSampleComments() {
+        // Add some sample comments
+        comments.add(new Comment("Sarah Johnson", "This is such valuable advice! I've been struggling with networking and these tips are really helpful."));
+        comments.add(new Comment("Michael Chen", "Great article! The section about maintaining relationships really resonated with me. Thanks for sharing!"));
+        comments.add(new Comment("Emma Williams", "I've implemented some of these strategies and they really work. Highly recommend this read!"));
+        
+        // Add some likes to sample comments
+        if (!comments.isEmpty()) {
+            comments.get(0).setLikeCount(5);
+            comments.get(1).setLikeCount(3);
+        }
+        
+        commentAdapter.notifyDataSetChanged();
+    }
+
+    private void updateLikeButton() {
+        String likeText = isArticleLiked ? "❤️ " + articleLikeCount : "🤍 " + articleLikeCount;
+        btnLike.setText(likeText);
+    }
+
+    // CommentAdapter.OnCommentInteractionListener implementation
+    @Override
+    public void onLikeComment(Comment comment, int position) {
+        comment.toggleLike();
+        commentAdapter.updateComment(position, comment);
+        
+        String message = comment.isLiked() ? "Comment liked! ❤️" : "Like removed";
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReplyToComment(Comment comment, int position) {
+        etComment.setText("@" + comment.getAuthorName() + " ");
+        etComment.setSelection(etComment.getText().length());
+        etComment.requestFocus();
     }
 }
