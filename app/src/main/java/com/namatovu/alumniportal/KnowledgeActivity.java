@@ -313,6 +313,7 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         intent.putExtra("article_category", article.getCategory());
         intent.putExtra("article_author", article.getAuthorName());
         intent.putExtra("article_date", article.getFormattedDate());
+        intent.putExtra("article_like_count", article.getLikeCount());
         startActivity(intent);
     }
 
