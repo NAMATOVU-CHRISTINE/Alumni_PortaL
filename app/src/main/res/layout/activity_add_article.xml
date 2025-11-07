@@ -2,127 +2,195 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background">
+    android:fitsSystemWindows="true"
+    tools:context=".AddArticleActivity">
 
-    <!-- App Bar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <!-- App Bar Layout -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:backgroundTint="@color/must_green"
-        android:elevation="4dp"
-        android:title="Add Article"
-        android:titleTextColor="@color/white"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-    <!-- Scrollable Content -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/must_green"
+            app:title="✍️ Create Article"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/white"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:padding="16dp"
-        android:clipToPadding="false"
-        android:scrollbars="none"
-        android:fitsSystemWindows="true">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="32dp">
+            android:padding="20dp">
 
-            <!-- Form Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Header Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="5dp"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/white">
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
+                    android:text="📝 Share Your Knowledge"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                    <!-- Title Input -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Help fellow alumni by sharing valuable insights and resources."
+                    android:textSize="16sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp" />
+            </LinearLayout>
+
+            <!-- Article Title Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📖 Article Title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/titleInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_margin="8dp"
                         app:boxStrokeColor="@color/must_green"
+                        app:hintTextColor="@color/must_green"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Article Title"
+                            android:hint="Enter your article title..."
                             android:inputType="textCapSentences"
-                            android:textSize="15sp"
+                            android:maxLines="2"
                             android:maxLength="100" />
+
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Description Input -->
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Article Description Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📄 Short Description"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/descriptionInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_margin="8dp"
                         app:boxStrokeColor="@color/must_green"
+                        app:hintTextColor="@color/must_green"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Short Description (1–2 sentences)"
+                            android:hint="Brief summary (1-2 sentences)..."
                             android:inputType="textCapSentences|textMultiLine"
-                            android:textSize="15sp"
                             android:maxLines="3"
                             android:maxLength="200" />
+
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Content Input -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="@color/must_green"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etContent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Full Article Content"
-                            android:inputType="textCapSentences|textMultiLine"
-                            android:minLines="5"
-                            android:maxLines="8"
-                            android:scrollbars="vertical"
-                            android:textSize="15sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
+            <!-- Category Selection Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
 
-                    <!-- Category Label -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select Category"
-                        android:textStyle="bold"
-                        android:textSize="15sp"
-                        android:textColor="@color/must_green"
-                        android:layout_marginBottom="8dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📂 Select Category"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
 
-                    <!-- Category Chips -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chipGroupCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:singleSelection="true"
                         app:selectionRequired="true"
-                        android:layout_marginBottom="24dp">
+                        android:layout_margin="12dp">
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategoryNetworking"
@@ -131,7 +199,8 @@
                             android:text="🤝 Networking"
                             android:checked="true"
                             app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            android:textColor="@color/must_green"
+                            style="@style/Widget.Material3.Chip.Filter" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategorySkills"
@@ -139,7 +208,8 @@
                             android:layout_height="wrap_content"
                             android:text="💡 Skills"
                             app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            android:textColor="@color/must_green"
+                            style="@style/Widget.Material3.Chip.Filter" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategoryMentorship"
@@ -147,7 +217,8 @@
                             android:layout_height="wrap_content"
                             android:text="🌟 Mentorship"
                             app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            android:textColor="@color/must_green"
+                            style="@style/Widget.Material3.Chip.Filter" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategoryCareer"
@@ -155,7 +226,8 @@
                             android:layout_height="wrap_content"
                             android:text="🚀 Career Growth"
                             app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            android:textColor="@color/must_green"
+                            style="@style/Widget.Material3.Chip.Filter" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipCategoryLeadership"
@@ -163,25 +235,97 @@
                             android:layout_height="wrap_content"
                             android:text="🏆 Leadership"
                             app:chipBackgroundColor="@color/light_green"
-                            android:textColor="@color/must_green" />
+                            android:textColor="@color/must_green"
+                            style="@style/Widget.Material3.Chip.Filter" />
+
                     </com.google.android.material.chip.ChipGroup>
 
-                    <!-- Submit Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSubmit"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:text="📚 Add Article"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:backgroundTint="@color/must_green"
-                        app:cornerRadius="12dp"
-                        android:elevation="3dp" />
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <!-- Article Content Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✍️ Full Article Content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/contentInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        app:boxStrokeColor="@color/must_green"
+                        app:hintTextColor="@color/must_green"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Write your detailed article content here..."
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:minLines="6"
+                            android:maxLines="10"
+                            android:gravity="top|start"
+                            android:scrollbars="vertical" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Submit Button Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="32dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="📚 Publish Article"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="20dp"
+                    app:backgroundTint="@color/must_green"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/ic_send"
+                    app:iconTint="@color/white"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="💡 Tip: Make your article engaging and helpful for fellow alumni!"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
