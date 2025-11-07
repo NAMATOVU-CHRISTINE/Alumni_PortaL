@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.namatovu.alumniportal.adapters.MentorshipAdapter;
+import com.namatovu.alumniportal.ViewProfileActivity;
 import com.namatovu.alumniportal.databinding.ActivityMentorshipBinding;
 import com.namatovu.alumniportal.models.MentorshipConnection;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
@@ -123,7 +124,6 @@ public class MentorshipActivity extends AppCompatActivity {
 
             @Override
             public void onStartSession(MentorshipConnection connection) {
-                // TODO: Implement session management
                 Toast.makeText(MentorshipActivity.this, "Session management coming soon!", Toast.LENGTH_SHORT).show();
             }
 
