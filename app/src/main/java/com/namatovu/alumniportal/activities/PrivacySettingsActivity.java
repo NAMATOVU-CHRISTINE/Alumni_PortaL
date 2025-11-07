@@ -279,19 +279,20 @@ public class PrivacySettingsActivity extends AppCompatActivity {
             }
         });
         
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerView.setAdapter(adapter);
+        binding.recyclerViewPrivacySettings.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewPrivacySettings.setAdapter(adapter);
     }
     
     private void setupButtons() {
-        binding.resetToDefaultsButton.setOnClickListener(v -> {
-            // Reset all settings to defaults
-            privacyManager.initializeDefaultSettings();
-            adapter.notifyDataSetChanged();
-            Toast.makeText(this, "Privacy settings reset to defaults", Toast.LENGTH_SHORT).show();
-        });
+        // Reset button not available in current layout
+        // binding.resetToDefaultsButton.setOnClickListener(v -> {
+        //     // Reset all settings to defaults
+        //     privacyManager.initializeDefaultSettings();
+        //     adapter.notifyDataSetChanged();
+        //     Toast.makeText(this, "Privacy settings reset to defaults", Toast.LENGTH_SHORT).show();
+        // });
         
-        binding.saveButton.setOnClickListener(v -> {
+        binding.btnSaveSettings.setOnClickListener(v -> {
             // Save current settings
             Toast.makeText(this, "Privacy settings saved", Toast.LENGTH_SHORT).show();
             finish();

@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.namatovu.alumniportal.R;
+import com.namatovu.alumniportal.models.MentorshipConnection;
+import com.namatovu.alumniportal.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
