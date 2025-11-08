@@ -317,6 +317,11 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        } else if (item.getItemId() == R.id.action_events_news) {
+            // Open Events & News Activity
+            Intent intent = new Intent(this, EventsNewsActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -363,7 +368,7 @@ public class HomeActivity extends AppCompatActivity {
         
         // Events card - navigate to events calendar
         binding.eventsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EventsActivity.class);
+            Intent intent = new Intent(this, EventsNewsActivity.class);
             startActivity(intent);
         });
         

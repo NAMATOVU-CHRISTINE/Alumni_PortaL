@@ -104,7 +104,7 @@
             android:layout_height="80dp"
             android:scaleType="centerCrop"
             android:background="@color/light_gray"
-            app:srcCompat="@drawable/ic_image_placeholder"
+            app:srcCompat="@drawable/ic_news"
             android:contentDescription="News image"
             android:visibility="visible" />
 
