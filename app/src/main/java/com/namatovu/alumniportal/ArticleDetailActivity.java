@@ -45,7 +45,6 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
         setupActionButtons();
         setupComments();
     }
-    }
 
     private void initializeViews() {
         tvTitle = findViewById(R.id.tvTitle);
