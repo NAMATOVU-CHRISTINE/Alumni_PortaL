@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-compat"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,16 +11,18 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:fitsSystemWindows="true">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/must_green"
-            app:titleTextColor="@color/white"
             app:title="💼 Career Opportunities"
-            app:navigationIcon="@drawable/ic_arrow_back" />
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/white"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,136 +36,244 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Search Bar -->
+            <!-- Welcome Header -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="16dp">
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:background="@drawable/gradient_motivation_bg">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_search"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        app:tint="@color/text_secondary" />
-
-                    <EditText
-                        android:id="@+id/etSearch"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="Search opportunities..."
-                        android:background="@null"
-                        android:padding="12dp"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_secondary" />
+                        android:text="🌟 Discover Your Next Career Move"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/must_green"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp" />
 
-                    <Spinner
-                        android:id="@+id/spinnerSort"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp" />
+                        android:text="Explore internships, jobs, and graduate training programs from top companies"
+                        android:textSize="14sp"
+                        android:textColor="@color/dark_gray"
+                        android:gravity="center" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Filter Chips -->
-            <HorizontalScrollView
+            <!-- Search Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:scrollbars="none">
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupCategories"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleSelection="true"
-                    app:selectionRequired="true"
-                    app:chipSpacingHorizontal="8dp">
+                    android:text="🔍 Find Opportunities"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipAll"
-                        android:layout_width="wrap_content"
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="All"
-                        android:checked="true"
-                        style="@style/Widget.Material3.Chip.Filter" />
+                        android:orientation="horizontal"
+                        android:padding="8dp"
+                        android:gravity="center_vertical">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipInternships"
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_search"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="8dp"
+                            app:tint="@color/text_secondary" />
+
+                        <EditText
+                            android:id="@+id/etSearch"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_weight="1"
+                            android:hint="Search by title, company, or keywords..."
+                            android:background="@null"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_secondary"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text" />
+
+                        <Spinner
+                            android:id="@+id/spinnerSort"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Filter Categories Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📂 Filter by Category"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🎓 Internships"
-                        style="@style/Widget.Material3.Chip.Filter" />
+                        android:scrollbars="none"
+                        android:layout_margin="8dp">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipJobs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💼 Jobs"
-                        style="@style/Widget.Material3.Chip.Filter" />
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupCategories"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:selectionRequired="false"
+                            android:layout_margin="4dp">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipGraduate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🚀 Graduate Training"
-                        style="@style/Widget.Material3.Chip.Filter" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipAll"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="All"
+                                android:checked="true"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipApprenticeship"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🔧 Apprenticeships"
-                        style="@style/Widget.Material3.Chip.Filter" />
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipInternships"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🎓 Internships"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-                </com.google.android.material.chip.ChipGroup>
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipJobs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💼 Full-time Jobs"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
 
-            </HorizontalScrollView>
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipGraduate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🚀 Graduate Programs"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipApprenticeship"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🔧 Apprenticeships"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </HorizontalScrollView>
+
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <!-- Featured Opportunities Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="24dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Featured Opportunities 🌟"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="16dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🌟 Featured Opportunities"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/must_green"
+                        android:layout_marginStart="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Swipe to explore →"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginEnd="4dp" />
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFeatured"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:clipToPadding="false"
-                    android:paddingStart="8dp"
+                    android:paddingStart="4dp"
                     android:paddingEnd="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:layout_marginBottom="8dp"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
                     tools:listitem="@layout/item_opportunity_featured" />
 
             </LinearLayout>
@@ -173,23 +283,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="80dp">
+                android:layout_marginBottom="100dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Explore Opportunities"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="12dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="💼 All Opportunities"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/must_green"
+                        android:layout_marginStart="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvResultsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 results"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginEnd="4dp" />
+
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewOpportunities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:clipToPadding="false"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_opportunity_card" />
 
@@ -200,21 +328,21 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:padding="32dp"
+                    android:padding="40dp"
                     android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🚀"
-                        android:textSize="48sp"
-                        android:layout_marginBottom="16dp" />
+                        android:text="🔍"
+                        android:textSize="64sp"
+                        android:layout_marginBottom="20dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No new opportunities available."
-                        android:textSize="18sp"
+                        android:text="No opportunities found"
+                        android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary"
                         android:gravity="center"
@@ -223,10 +351,21 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Check back soon!"
+                        android:text="Try adjusting your search or filters"
                         android:textSize="14sp"
                         android:textColor="@color/text_secondary"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:layout_marginBottom="20dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnClearFilters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Clear Filters"
+                        android:textColor="@color/must_green"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        app:strokeColor="@color/must_green"
+                        app:cornerRadius="20dp" />
 
                 </LinearLayout>
 
@@ -242,12 +381,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="20dp"
         android:text="Post Opportunity"
         android:icon="@drawable/ic_add"
         app:backgroundTint="@color/must_green"
         app:iconTint="@color/white"
         android:textColor="@color/white"
+        app:cornerRadius="16dp"
+        android:elevation="8dp"
         android:contentDescription="Post New Opportunity" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

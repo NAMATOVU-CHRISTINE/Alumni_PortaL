@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
+    app:cardElevation="3dp"
+    app:cardBackgroundColor="@color/white"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -15,27 +19,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <!-- Header Row -->
+        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp">
 
-            <!-- Category Icon and Company -->
-            <TextView
-                android:id="@+id/tvCategoryIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:text="💼"
-                android:textSize="18sp"
+            <!-- Company Logo/Icon -->
+            <LinearLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:gravity="center"
                 android:background="@drawable/circle_background"
-                android:backgroundTint="@color/light_gray"
-                android:layout_marginEnd="12dp" />
+                android:backgroundTint="@color/light_green"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:id="@+id/tvCategoryIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💼"
+                    android:textSize="28sp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -47,11 +57,11 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Frontend Developer"
-                    android:textSize="16sp"
+                    android:text="Senior Frontend Developer"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:ellipsize="end" />
 
                 <TextView
@@ -59,7 +69,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Google Inc."
-                    android:textSize="14sp"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/tvLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📍 Mountain View, CA"
+                    android:textSize="13sp"
                     android:textColor="@color/text_secondary"
                     android:layout_marginTop="2dp" />
 
@@ -68,33 +87,35 @@
             <!-- Save Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:text="🔖"
-                android:textSize="12sp"
-                android:textColor="@color/must_green"
-                style="@style/Widget.Material3.Button.TextButton"
+                android:textSize="18sp"
+                android:backgroundTint="@color/light_green"
+                style="@style/Widget.Material3.Button"
+                app:cornerRadius="24dp"
                 android:minWidth="0dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
+                android:padding="0dp" />
 
         </LinearLayout>
 
-        <!-- Category and Deadline Row -->
+        <!-- Tags Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💼 Job"
-                android:textSize="10sp"
-                app:chipMinHeight="28dp"
+                android:text="💼 Full-time"
+                android:textSize="12sp"
+                android:textColor="@color/must_green"
+                app:chipBackgroundColor="@color/light_green"
+                app:chipMinHeight="32dp"
                 style="@style/Widget.Material3.Chip.Assist" />
 
             <View
@@ -107,9 +128,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Apply by Dec 15"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
-                android:textColor="@color/must_green" />
+                android:textColor="@color/must_green"
+                android:drawableStart="@drawable/ic_alarm"
+                android:drawablePadding="4dp"
+                app:drawableTint="@color/must_green" />
 
         </LinearLayout>
 
@@ -118,38 +142,50 @@
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="We're looking for a talented frontend developer to join our innovative team..."
+            android:text="We're looking for a talented frontend developer to join our innovative team and help build the next generation of web applications. You'll work with cutting-edge technologies and collaborate with world-class engineers."
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="12dp"
-            android:maxLines="2"
+            android:layout_marginBottom="16dp"
+            android:maxLines="3"
             android:ellipsize="end"
-            android:lineSpacingExtra="2dp" />
+            android:lineSpacingExtra="3dp" />
 
-        <!-- Location and Application Count -->
+        <!-- Stats Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="20dp">
 
             <TextView
-                android:id="@+id/tvLocation"
+                android:id="@+id/tvDatePosted"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📍 Remote"
+                android:text="Posted 3 days ago"
                 android:textSize="12sp"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_secondary"
+                android:drawableStart="@drawable/ic_schedule"
+                android:drawablePadding="6dp"
+                app:drawableTint="@color/text_secondary" />
 
             <TextView
                 android:id="@+id/tvApplications"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="👥 24 applications"
+                android:text="👥 24 applicants"
                 android:textSize="12sp"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/text_secondary"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💰 $80k-120k"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/must_green" />
 
         </LinearLayout>
 
@@ -161,29 +197,34 @@
             android:gravity="center">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnApply"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:text="Apply Now"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/must_green"
-                android:layout_marginEnd="8dp"
-                app:cornerRadius="12dp"
-                style="@style/Widget.Material3.Button" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDetails"
                 android:layout_width="0dp"
-                android:layout_height="44dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="Details"
+                android:text="View Details"
+                android:textSize="14sp"
                 android:textColor="@color/must_green"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 app:strokeColor="@color/must_green"
-                app:strokeWidth="1dp"
                 app:cornerRadius="12dp"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                app:icon="@drawable/ic_info"
+                app:iconTint="@color/must_green" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnApply"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Apply Now"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/must_green"
+                android:layout_marginStart="8dp"
+                app:cornerRadius="12dp"
+                style="@style/Widget.Material3.Button"
+                app:icon="@drawable/ic_send"
+                app:iconTint="@color/white" />
 
         </LinearLayout>
 

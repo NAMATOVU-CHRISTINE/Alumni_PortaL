@@ -9,7 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
+import com.google.android.material.button.MaterialButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +48,8 @@ public class JobsActivity extends AppCompatActivity implements
     private ChipGroup chipGroupCategories;
     private ExtendedFloatingActionButton fabAddOpportunity;
     private View emptyStateLayout;
+    private TextView tvResultsCount;
+    private MaterialButton btnClearFilters;
     
     private List<Opportunity> allOpportunities;
     private List<Opportunity> featuredOpportunities;
@@ -76,6 +79,8 @@ public class JobsActivity extends AppCompatActivity implements
         chipGroupCategories = findViewById(R.id.chipGroupCategories);
         fabAddOpportunity = findViewById(R.id.fabAddOpportunity);
         emptyStateLayout = findViewById(R.id.emptyStateLayout);
+        tvResultsCount = findViewById(R.id.tvResultsCount);
+        btnClearFilters = findViewById(R.id.btnClearFilters);
         
         allOpportunities = new ArrayList<>();
         featuredOpportunities = new ArrayList<>();
@@ -173,6 +178,29 @@ public class JobsActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, AddOpportunityActivity.class);
             startActivityForResult(intent, 100);
         });
+        
+        // Setup clear filters button
+        if (btnClearFilters != null) {
+            btnClearFilters.setOnClickListener(v -> clearFilters());
+        }
+    }
+    
+    private void clearFilters() {
+        etSearch.setText("");
+        currentCategory = "All";
+        currentSortOption = "Date";
+        
+        // Reset chip selection
+        chipGroupCategories.clearCheck();
+        Chip chipAll = findViewById(R.id.chipAll);
+        if (chipAll != null) {
+            chipAll.setChecked(true);
+        }
+        
+        // Reset spinner
+        spinnerSort.setSelection(0);
+        
+        filterOpportunities();
     }
 
     private void filterOpportunities() {
@@ -195,7 +223,22 @@ public class JobsActivity extends AppCompatActivity implements
         sortOpportunities(filtered);
         
         opportunityAdapter.updateOpportunities(filtered);
+        updateResultsCount(filtered.size());
         updateEmptyState();
+    }
+    
+    private void updateResultsCount(int count) {
+        if (tvResultsCount != null) {
+            String resultsText;
+            if (count == 0) {
+                resultsText = "No results";
+            } else if (count == 1) {
+                resultsText = "1 result";
+            } else {
+                resultsText = count + " results";
+            }
+            tvResultsCount.setText(resultsText);
+        }
     }
 
     private void sortAndFilterOpportunities() {
