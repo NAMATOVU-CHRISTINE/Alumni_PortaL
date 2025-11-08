@@ -16,8 +16,8 @@ import com.namatovu.alumniportal.databinding.ActivityEventsNewsBinding;
 import com.namatovu.alumniportal.models.Event;
 import com.namatovu.alumniportal.models.News;
 import com.namatovu.alumniportal.models.EventsAnalytics;
-import com.namatovu.alumniportal.adapters.EventsAdapter;
-import com.namatovu.alumniportal.adapters.NewsAdapter;
+import com.namatovu.alumniportal.adapters.EventNewsAdapter;
+import com.namatovu.alumniportal.adapters.NewsListAdapter;
 import com.namatovu.alumniportal.utils.EventsDataProvider;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class EventsNewsActivity extends AppCompatActivity {
     private ActivityEventsNewsBinding binding;
     
     // Adapters
-    private EventsAdapter eventsAdapter;
-    private NewsAdapter newsAdapter;
+    private EventNewsAdapter eventsAdapter;
+    private NewsListAdapter newsAdapter;
     
     // Data
     private List<Event> allEvents;
@@ -73,14 +73,14 @@ public class EventsNewsActivity extends AppCompatActivity {
         // Setup Events RecyclerView
         allEvents = new ArrayList<>();
         filteredEvents = new ArrayList<>();
-        eventsAdapter = new EventsAdapter(this, filteredEvents);
+        eventsAdapter = new EventNewsAdapter(this, filteredEvents);
         binding.eventsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.eventsRecyclerView.setAdapter(eventsAdapter);
         
         // Setup News RecyclerView
         allNews = new ArrayList<>();
         filteredNews = new ArrayList<>();
-        newsAdapter = new NewsAdapter(this, filteredNews);
+        newsAdapter = new NewsListAdapter(this, filteredNews);
         binding.newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.newsRecyclerView.setAdapter(newsAdapter);
     }
