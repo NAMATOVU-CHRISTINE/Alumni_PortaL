@@ -103,7 +103,7 @@
                         android:id="@+id/tvActivityCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6 items"
+                        android:text="0 items"
                         android:textSize="11sp"
                         android:textColor="@color/text_secondary"
                         android:layout_marginEnd="4dp" />
