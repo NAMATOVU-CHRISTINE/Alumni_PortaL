@@ -315,9 +315,9 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Jobs card - navigate to job board
+        // Jobs card - navigate to comprehensive jobs & opportunities system
         binding.jobsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, JobBoardActivity.class);
+            Intent intent = new Intent(this, JobsActivity.class);
             startActivity(intent);
         });
         
@@ -333,9 +333,9 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
-        // Recommendations card - navigate to job board
+        // Recommendations card - navigate to comprehensive jobs & opportunities system
         binding.recommendationsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, JobBoardActivity.class);
+            Intent intent = new Intent(this, JobsActivity.class);
             startActivity(intent);
         });
     }
