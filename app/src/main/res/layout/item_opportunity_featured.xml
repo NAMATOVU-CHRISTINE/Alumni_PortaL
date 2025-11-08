@@ -2,14 +2,14 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
+    android:layout_width="280dp"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="4dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp"
     app:cardBackgroundColor="@color/white"
     android:clickable="true"
     android:focusable="true"
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
         <!-- Header Section -->
         <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp">
 
             <!-- Company Logo/Icon -->
             <LinearLayout
@@ -96,10 +96,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Software Engineering Internship Program"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             android:maxLines="2"
             android:ellipsize="end" />
 
@@ -109,19 +109,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Join our dynamic engineering team and work on cutting-edge technology that impacts millions of users worldwide."
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:maxLines="3"
             android:ellipsize="end"
-            android:lineSpacingExtra="2dp" />
+            android:lineSpacingExtra="1dp" />
 
         <!-- Details Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/tvDatePosted"
@@ -159,29 +159,29 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="42dp"
                 android:layout_weight="1"
                 android:text="Save"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="@color/must_green"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="6dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 app:strokeColor="@color/must_green"
-                app:cornerRadius="12dp"
+                app:cornerRadius="10dp"
                 app:icon="@drawable/ic_add"
                 app:iconTint="@color/must_green" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewDetails"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="42dp"
                 android:layout_weight="1"
                 android:text="View Details"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/must_green"
-                android:layout_marginStart="8dp"
-                app:cornerRadius="12dp"
+                android:layout_marginStart="6dp"
+                app:cornerRadius="10dp"
                 style="@style/Widget.Material3.Button"
                 app:icon="@drawable/ic_arrow_forward"
                 app:iconTint="@color/white" />
