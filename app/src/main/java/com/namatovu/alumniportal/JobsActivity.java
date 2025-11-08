@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.namatovu.alumniportal.adapters.OpportunityAdapter;
 import com.namatovu.alumniportal.adapters.FeaturedOpportunityAdapter;
 import com.namatovu.alumniportal.models.Opportunity;
@@ -56,18 +59,23 @@ public class JobsActivity extends AppCompatActivity implements
     private List<Opportunity> featuredOpportunities;
     private String currentCategory = "All";
     private String currentSortOption = "Date";
+    
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jobs);
 
+        // Initialize Firebase
+        db = FirebaseFirestore.getInstance();
+        
         initializeViews();
         setupToolbar();
         setupRecyclerViews();
         setupSearchAndFilters();
         setupFab();
-        loadSampleOpportunities(); // TODO: Replace with real data loading
+        loadOpportunitiesFromFirestore();
         
         updateEmptyState();
     }
@@ -180,6 +188,13 @@ public class JobsActivity extends AppCompatActivity implements
             startActivityForResult(intent, 100);
         });
         
+        // Long press to force reload (for debugging)
+        fabAddOpportunity.setOnLongClickListener(v -> {
+            Toast.makeText(this, "Reloading opportunities...", Toast.LENGTH_SHORT).show();
+            loadOpportunitiesFromFirestore();
+            return true;
+        });
+        
         // Setup clear filters button
         if (btnClearFilters != null) {
             btnClearFilters.setOnClickListener(v -> clearFilters());
@@ -205,7 +220,10 @@ public class JobsActivity extends AppCompatActivity implements
     }
 
     private void filterOpportunities() {
-        String query = etSearch.getText().toString().toLowerCase().trim();
+        String query = etSearch != null ? etSearch.getText().toString().toLowerCase().trim() : "";
+        
+        Log.d(TAG, "Filtering opportunities. Query: '" + query + "', Category: '" + currentCategory + "'");
+        Log.d(TAG, "Total opportunities before filter: " + allOpportunities.size());
         
         List<Opportunity> filtered = new ArrayList<>();
         for (Opportunity opportunity : allOpportunities) {
@@ -215,10 +233,17 @@ public class JobsActivity extends AppCompatActivity implements
                 opportunity.getCompany().toLowerCase().contains(query) ||
                 opportunity.getDescription().toLowerCase().contains(query);
             
+            Log.d(TAG, "Opportunity: " + opportunity.getTitle() + 
+                  ", Category match: " + matchesCategory + 
+                  " (opp=" + opportunity.getCategory() + ", filter=" + currentCategory + ")" +
+                  ", Search match: " + matchesSearch);
+            
             if (matchesCategory && matchesSearch) {
                 filtered.add(opportunity);
             }
         }
+        
+        Log.d(TAG, "Filtered opportunities count: " + filtered.size());
         
         // Apply sorting
         sortOpportunities(filtered);
@@ -293,139 +318,110 @@ public class JobsActivity extends AppCompatActivity implements
         }
     }
 
-    // Sample data - TODO: Replace with real data loading
-    private void loadSampleOpportunities() {
-        // Create sample opportunities
-        allOpportunities.clear();
-        featuredOpportunities.clear();
+    private void loadOpportunitiesFromFirestore() {
+        Log.d(TAG, "Loading opportunities from Firestore");
         
-        // Sample opportunity 1
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 15);
-        
-        Opportunity opp1 = new Opportunity(
-            "Software Engineering Internship",
-            "Microsoft",
-            "Internship",
-            "Join our dynamic team and gain hands-on experience in software development. Work on real projects that impact millions of users worldwide. This internship offers mentorship, learning opportunities, and potential for full-time conversion.",
-            cal.getTime()
-        );
-        opp1.setLocation("Seattle, WA");
-        opp1.setSalaryRange("$6,000/month");
-        opp1.setFeatured(true);
-        opp1.setApplicationsCount(45);
-        
-        // Sample opportunity 2
-        cal.add(Calendar.DAY_OF_MONTH, 20);
-        Opportunity opp2 = new Opportunity(
-            "Frontend Developer",
-            "Google",
-            "Job",
-            "We're looking for a talented frontend developer to join our innovative team. You'll work on cutting-edge web technologies and create amazing user experiences.",
-            cal.getTime()
-        );
-        opp2.setLocation("Remote");
-        opp2.setSalaryRange("$80,000 - $120,000");
-        opp2.setApplicationsCount(67);
-        
-        // Sample opportunity 3
-        cal.add(Calendar.DAY_OF_MONTH, 10);
-        Opportunity opp3 = new Opportunity(
-            "Graduate Management Trainee",
-            "Unilever",
-            "Graduate Training",
-            "Fast-track your career with our comprehensive graduate program. Rotate through different departments and gain exposure to senior leadership.",
-            cal.getTime()
-        );
-        opp3.setLocation("London, UK");
-        opp3.setSalaryRange("£35,000");
-        opp3.setFeatured(true);
-        opp3.setApplicationsCount(123);
-        
-        // Add more sample opportunities
-        allOpportunities.add(opp1);
-        allOpportunities.add(opp2);
-        allOpportunities.add(opp3);
-        
-        // Add featured opportunities
-        for (Opportunity opp : allOpportunities) {
-            if (opp.isFeatured()) {
-                featuredOpportunities.add(opp);
-            }
-        }
-        
-        // Update adapters
-        featuredAdapter.updateOpportunities(featuredOpportunities);
-        opportunityAdapter.updateOpportunities(allOpportunities);
-        
-        updateEmptyState();
+        db.collection("job_opportunities")
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                allOpportunities.clear();
+                featuredOpportunities.clear();
+                
+                Log.d(TAG, "Firestore query returned " + queryDocumentSnapshots.size() + " documents");
+                
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    try {
+                        Log.d(TAG, "Processing document: " + document.getId());
+                        Log.d(TAG, "Document data: " + document.getData().toString());
+                        
+                        String title = document.getString("title");
+                        String company = document.getString("company");
+                        String category = document.getString("category");
+                        String description = document.getString("description");
+                        Date deadline = document.getDate("applicationDeadline");
+                        
+                        Log.d(TAG, "Parsed fields - Title: " + title + ", Company: " + company + 
+                              ", Category: " + category + ", Deadline: " + deadline);
+                        
+                        if (title != null && company != null && category != null && description != null && deadline != null) {
+                            Opportunity opp = new Opportunity(title, company, category, description, deadline);
+                            opp.setId(document.getId());
+                            
+                            // Set optional fields
+                            String location = document.getString("location");
+                            if (location != null && !location.isEmpty()) opp.setLocation(location);
+                            
+                            String salaryRange = document.getString("salaryRange");
+                            if (salaryRange != null && !salaryRange.isEmpty()) opp.setSalaryRange(salaryRange);
+                            
+                            String requirements = document.getString("requirements");
+                            if (requirements != null && !requirements.isEmpty()) opp.setRequirements(requirements);
+                            
+                            String applicationLink = document.getString("applicationInstructions");
+                            if (applicationLink != null && !applicationLink.isEmpty()) opp.setApplicationLink(applicationLink);
+                            
+                            String postedBy = document.getString("postedBy");
+                            if (postedBy != null) opp.setPostedBy(postedBy);
+                            
+                            Date datePosted = document.getDate("datePosted");
+                            if (datePosted != null) opp.setDatePosted(datePosted);
+                            
+                            Boolean isFeatured = document.getBoolean("isFeatured");
+                            if (isFeatured != null) opp.setFeatured(isFeatured);
+                            
+                            Long applicationsCount = document.getLong("applicationsCount");
+                            if (applicationsCount != null) opp.setApplicationsCount(applicationsCount.intValue());
+                            
+                            allOpportunities.add(opp);
+                            Log.d(TAG, "Added opportunity: " + title);
+                            
+                            if (opp.isFeatured()) {
+                                featuredOpportunities.add(opp);
+                                Log.d(TAG, "Added to featured: " + title);
+                            }
+                        } else {
+                            Log.w(TAG, "Skipping document with missing required fields: " + document.getId());
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing opportunity document: " + document.getId(), e);
+                    }
+                }
+                
+                Log.d(TAG, "Loaded " + allOpportunities.size() + " opportunities from Firestore");
+                Log.d(TAG, "Featured opportunities: " + featuredOpportunities.size());
+                
+                // Update adapters directly without filtering
+                // (filtering will be applied when user interacts with search/filter UI)
+                Log.d(TAG, "Updating featured adapter with " + featuredOpportunities.size() + " items");
+                featuredAdapter.updateOpportunities(new ArrayList<>(featuredOpportunities));
+                
+                Log.d(TAG, "Updating opportunity adapter with " + allOpportunities.size() + " items");
+                opportunityAdapter.updateOpportunities(new ArrayList<>(allOpportunities));
+                
+                updateEmptyState();
+                
+                Log.d(TAG, "RecyclerView visibility: " + recyclerViewOpportunities.getVisibility());
+                Log.d(TAG, "Empty state visibility: " + emptyStateLayout.getVisibility());
+                Log.d(TAG, "Adapter item count: " + opportunityAdapter.getItemCount());
+                
+                if (allOpportunities.isEmpty()) {
+                    Toast.makeText(this, "No opportunities found. Post one to get started!", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to load opportunities from Firestore", e);
+                Toast.makeText(this, "Failed to load opportunities: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                updateEmptyState();
+            });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            // Handle new opportunity added from AddOpportunityActivity
-            String title = data.getStringExtra("title");
-            String company = data.getStringExtra("company");
-            String category = data.getStringExtra("category");
-            String description = data.getStringExtra("description");
-            String location = data.getStringExtra("location");
-            String salaryRange = data.getStringExtra("salary_range");
-            String requirements = data.getStringExtra("requirements");
-            String applicationInstructions = data.getStringExtra("application_instructions");
-            boolean isFeatured = data.getBooleanExtra("is_featured", false);
-            long deadlineMillis = data.getLongExtra("deadline", 0);
-            
-            if (title != null && company != null && category != null && description != null) {
-                // Create deadline date
-                Date deadline;
-                if (deadlineMillis > 0) {
-                    deadline = new Date(deadlineMillis);
-                } else {
-                    // Fallback: 30 days from now
-                    Calendar cal = Calendar.getInstance();
-                    cal.add(Calendar.DAY_OF_MONTH, 30);
-                    deadline = cal.getTime();
-                }
-                
-                // Create new opportunity with all data
-                Opportunity newOpportunity = new Opportunity(title, company, category, description, deadline);
-                newOpportunity.setPostedBy("current_user");
-                newOpportunity.setFeatured(isFeatured);
-                
-                // Set optional fields
-                if (location != null && !location.trim().isEmpty()) {
-                    newOpportunity.setLocation(location.trim());
-                }
-                if (salaryRange != null && !salaryRange.trim().isEmpty()) {
-                    newOpportunity.setSalaryRange(salaryRange.trim());
-                }
-                if (requirements != null && !requirements.trim().isEmpty()) {
-                    newOpportunity.setRequirements(requirements.trim());
-                }
-                if (applicationInstructions != null && !applicationInstructions.trim().isEmpty()) {
-                    newOpportunity.setApplicationLink(applicationInstructions.trim());
-                }
-                
-                // Add to lists
-                allOpportunities.add(0, newOpportunity); // Add to beginning
-                
-                // If featured, also add to featured list
-                if (isFeatured) {
-                    featuredOpportunities.add(0, newOpportunity);
-                    featuredAdapter.updateOpportunities(featuredOpportunities);
-                }
-                
-                // Refresh the filtered list
-                filterOpportunities();
-                
-                Toast.makeText(this, "Opportunity posted successfully! 🎉", Toast.LENGTH_SHORT).show();
-                
-                // Scroll to top to show the new opportunity
-                recyclerViewOpportunities.scrollToPosition(0);
-            }
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            // Reload opportunities from Firestore after adding new one
+            loadOpportunitiesFromFirestore();
         } else if (requestCode == 200 && resultCode == RESULT_OK && data != null) {
             // Handle result from OpportunityDetailActivity
             String opportunityId = data.getStringExtra("opportunity_id");
@@ -503,5 +499,12 @@ public class JobsActivity extends AppCompatActivity implements
     @Override
     public void onFeaturedOpportunityClick(Opportunity opportunity) {
         onOpportunityClick(opportunity); // Same as regular opportunity click
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reload opportunities when returning to this activity
+        loadOpportunitiesFromFirestore();
     }
 }

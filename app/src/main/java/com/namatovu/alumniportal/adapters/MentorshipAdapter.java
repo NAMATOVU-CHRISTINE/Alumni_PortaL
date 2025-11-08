@@ -1,5 +1,6 @@
 package com.namatovu.alumniportal.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import java.util.List;
 public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.MentorViewHolder> {
     
     private List<MentorshipConnection> connections = new ArrayList<>();
-    private OnMentorClickListener listener;
     private OnMentorshipActionListener actionListener;
     private String currentUserId;
     
@@ -32,12 +32,7 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
         this.currentUserId = currentUserId;
         this.actionListener = actionListener;
     }
-    
-    public interface OnMentorClickListener {
-        void onMentorClick(MentorshipConnection connection);
-        void onConnectClick(MentorshipConnection connection);
-    }
-    
+
     public interface OnMentorshipActionListener {
         void onAccept(MentorshipConnection connection);
         void onReject(MentorshipConnection connection);
@@ -45,10 +40,6 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
         void onStartSession(MentorshipConnection connection);
         void onCompleteConnection(MentorshipConnection connection);
         void onRequestMentorship(MentorshipConnection connection);
-    }
-    
-    public void setOnMentorClickListener(OnMentorClickListener listener) {
-        this.listener = listener;
     }
     
     public void setMentors(List<User> mentors) {
@@ -109,17 +100,43 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 textRating = itemView.findViewById(R.id.textRating);
                 
                 itemView.setOnClickListener(v -> {
-                    if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        listener.onMentorClick(connections.get(getAdapterPosition()));
+                    if (actionListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        // For now, just log the click - we can add profile viewing later
+                        Log.d("MentorshipAdapter", "Item clicked for connection: " + connections.get(getAdapterPosition()).getMentorName());
                     }
                 });
                 
                 View buttonConnect = itemView.findViewById(R.id.buttonConnect);
                 if (buttonConnect != null) {
                     buttonConnect.setOnClickListener(v -> {
-                        if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                            listener.onConnectClick(connections.get(getAdapterPosition()));
+                        if (actionListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                            MentorshipConnection connection = connections.get(getAdapterPosition());
+                            TextView button = (TextView) buttonConnect;
+                            String buttonText = button.getText().toString();
+                            
+                            if ("Request Mentorship".equals(buttonText)) {
+                                actionListener.onRequestMentorship(connection);
+                            } else if ("Accept Request".equals(buttonText)) {
+                                actionListener.onAccept(connection);
+                            } else if ("Chat".equals(buttonText)) {
+                                actionListener.onStartSession(connection);
+                            }
                         }
+                    });
+                    
+                    // Add long press listener for reject action on pending requests
+                    buttonConnect.setOnLongClickListener(v -> {
+                        if (actionListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                            MentorshipConnection connection = connections.get(getAdapterPosition());
+                            TextView button = (TextView) buttonConnect;
+                            String buttonText = button.getText().toString();
+                            
+                            if ("Accept Request".equals(buttonText)) {
+                                actionListener.onReject(connection);
+                                return true;
+                            }
+                        }
+                        return false;
                     });
                 }
             }
@@ -147,18 +164,45 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                     textRating.setVisibility(View.GONE); // Hide rating for now
                 }
                 
-                // Update button text based on connection status
+                // Update button text and behavior based on connection status and user role
                 View buttonConnect = itemView.findViewById(R.id.buttonConnect);
                 if (buttonConnect instanceof TextView) {
                     TextView button = (TextView) buttonConnect;
-                    if ("available".equals(connection.getStatus())) {
-                        button.setText("Request Mentorship");
+                    
+                    // Check if current user is the mentor or mentee in this connection
+                    boolean isCurrentUserMentor = currentUserId != null && currentUserId.equals(connection.getMentorId());
+                    boolean isCurrentUserMentee = currentUserId != null && currentUserId.equals(connection.getMenteeId());
+                    
+                    if (isCurrentUserMentor && "pending".equals(connection.getStatus())) {
+                        // Mentor viewing pending request - show accept/reject options
+                        button.setText("Accept Request");
                         button.setVisibility(View.VISIBLE);
                         button.setEnabled(true);
-                    } else if ("pending".equals(connection.getStatus())) {
+                        
+                        // Show mentee name instead of mentor name for mentor's view
+                        if (textMentorName != null) {
+                            textMentorName.setText(connection.getMenteeName() != null ? connection.getMenteeName() : "Unknown User");
+                        }
+                        if (textPosition != null) {
+                            textPosition.setText("Requesting Mentorship");
+                        }
+                        if (textCompany != null) {
+                            textCompany.setText(connection.getMessage() != null ? connection.getMessage() : "No message provided");
+                        }
+                    } else if (isCurrentUserMentee && "pending".equals(connection.getStatus())) {
+                        // Mentee viewing their own pending request
                         button.setText("Request Pending");
                         button.setVisibility(View.VISIBLE);
                         button.setEnabled(false);
+                    } else if ("available".equals(connection.getStatus())) {
+                        // Available mentor for mentee to request
+                        button.setText("Request Mentorship");
+                        button.setVisibility(View.VISIBLE);
+                        button.setEnabled(true);
+                    } else if ("accepted".equals(connection.getStatus()) || "active".equals(connection.getStatus())) {
+                        button.setText("Chat");
+                        button.setVisibility(View.VISIBLE);
+                        button.setEnabled(true);
                     } else {
                         button.setText("Connected");
                         button.setVisibility(View.VISIBLE);

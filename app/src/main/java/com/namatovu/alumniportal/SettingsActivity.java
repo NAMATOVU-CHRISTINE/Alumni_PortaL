@@ -49,6 +49,12 @@ public class SettingsActivity extends AppCompatActivity {
             showChangePasswordDialog();
         });
 
+        // Gmail setup option
+        binding.gmailSetupOption.setOnClickListener(v -> {
+            Intent intent = new Intent(this, com.namatovu.alumniportal.activities.GmailSetupActivity.class);
+            startActivity(intent);
+        });
+
         // App Preferences Section
         binding.themeOption.setOnClickListener(v -> {
             showThemeSelectionDialog();

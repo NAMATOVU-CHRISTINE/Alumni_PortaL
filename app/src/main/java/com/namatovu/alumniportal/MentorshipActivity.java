@@ -18,10 +18,13 @@ import com.namatovu.alumniportal.adapters.MentorshipAdapter;
 import com.namatovu.alumniportal.ViewProfileActivity;
 import com.namatovu.alumniportal.databinding.ActivityMentorshipBinding;
 import com.namatovu.alumniportal.models.MentorshipConnection;
+import com.namatovu.alumniportal.models.User;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map;
 
 public class MentorshipActivity extends AppCompatActivity {
@@ -35,6 +38,7 @@ public class MentorshipActivity extends AppCompatActivity {
     private List<MentorshipConnection> filteredConnections;
     private String currentUserId;
     private String currentTab = "as_mentee"; // Default to "as_mentee" instead of "all"
+    private EmailService emailService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class MentorshipActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
+        emailService = new EmailService(this);
         
         // Initialize Analytics
         AnalyticsHelper.initialize(this);
@@ -131,7 +136,18 @@ public class MentorshipActivity extends AppCompatActivity {
 
             @Override
             public void onStartSession(MentorshipConnection connection) {
-                Toast.makeText(MentorshipActivity.this, "Session management coming soon!", Toast.LENGTH_SHORT).show();
+                // Open chat activity for mentor-mentee communication
+                Intent chatIntent = new Intent(MentorshipActivity.this, ChatActivity.class);
+                chatIntent.putExtra("connectionId", connection.getConnectionId());
+                
+                // Determine who is the "other" user for chat
+                boolean isCurrentUserMentor = currentUserId.equals(connection.getMentorId());
+                String otherUserId = isCurrentUserMentor ? connection.getMenteeId() : connection.getMentorId();
+                String otherUserName = isCurrentUserMentor ? connection.getMenteeName() : connection.getMentorName();
+                
+                chatIntent.putExtra("otherUserId", otherUserId);
+                chatIntent.putExtra("otherUserName", otherUserName);
+                startActivity(chatIntent);
             }
 
             @Override
@@ -184,48 +200,76 @@ public class MentorshipActivity extends AppCompatActivity {
     }
     
     private void loadAvailableMentors() {
-        // Load all users except current user to show as potential mentors
-        db.collection("users")
-                .limit(50)
+        // First, load existing connections for this user
+        db.collection("mentorships")
+                .whereEqualTo("menteeId", currentUserId)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addOnSuccessListener(existingConnections -> {
+                    // Store existing mentor IDs to filter them out from available list
+                    List<String> existingMentorIds = new ArrayList<>();
                     allConnections.clear();
                     
-                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total users");
-                    
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    // Add existing connections first
+                    for (QueryDocumentSnapshot doc : existingConnections) {
                         try {
-                            // Skip current user
-                            if (document.getId().equals(currentUserId)) {
-                                continue;
-                            }
-                            
-                            Map<String, Object> userData = document.getData();
-                            String fullName = (String) userData.get("fullName");
-                            String currentJob = (String) userData.get("currentJob");
-                            String company = (String) userData.get("company");
-                            
-                            // Create a MentorshipConnection object for display purposes
-                            MentorshipConnection connection = new MentorshipConnection();
-                            connection.setMentorId(document.getId());
-                            connection.setMenteeId(currentUserId);
-                            connection.setMentorName(fullName != null ? fullName : "Unknown User");
-                            connection.setMentorTitle(currentJob != null ? currentJob : "Alumni");
-                            connection.setMentorCompany(company != null ? company : "");
-                            connection.setStatus("available"); // Special status for available mentors
-                            connection.setConnectionId(null); // No connection exists yet
-                            
+                            MentorshipConnection connection = doc.toObject(MentorshipConnection.class);
+                            connection.setConnectionId(doc.getId());
                             allConnections.add(connection);
-                            
+                            existingMentorIds.add(connection.getMentorId());
+                            Log.d(TAG, "Added existing connection with mentor: " + connection.getMentorName());
                         } catch (Exception e) {
-                            Log.w(TAG, "Error parsing user document: " + document.getId(), e);
+                            Log.w(TAG, "Error parsing existing connection: " + doc.getId(), e);
                         }
                     }
                     
-                    // Apply current tab filter
-                    filterConnections();
-                    
-                    Log.d(TAG, "Loaded " + allConnections.size() + " available mentors");
+                    // Now load all users to show as potential mentors (excluding those with existing connections)
+                    db.collection("users")
+                            .limit(50)
+                            .get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total users");
+                                
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    try {
+                                        String userId = document.getId();
+                                        
+                                        // Skip current user and users with existing connections
+                                        if (userId.equals(currentUserId) || existingMentorIds.contains(userId)) {
+                                            continue;
+                                        }
+                                        
+                                        Map<String, Object> userData = document.getData();
+                                        String fullName = (String) userData.get("fullName");
+                                        String currentJob = (String) userData.get("currentJob");
+                                        String company = (String) userData.get("company");
+                                        
+                                        // Create a MentorshipConnection object for display purposes
+                                        MentorshipConnection connection = new MentorshipConnection();
+                                        connection.setMentorId(userId);
+                                        connection.setMenteeId(currentUserId);
+                                        connection.setMentorName(fullName != null ? fullName : "Unknown User");
+                                        connection.setMentorTitle(currentJob != null ? currentJob : "Alumni");
+                                        connection.setMentorCompany(company != null ? company : "");
+                                        connection.setStatus("available"); // Special status for available mentors
+                                        connection.setConnectionId(null); // No connection exists yet
+                                        
+                                        allConnections.add(connection);
+                                        
+                                    } catch (Exception e) {
+                                        Log.w(TAG, "Error parsing user document: " + document.getId(), e);
+                                    }
+                                }
+                                
+                                // Apply current tab filter
+                                filterConnections();
+                                
+                                Log.d(TAG, "Loaded " + allConnections.size() + " total connections (existing + available)");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e(TAG, "Error loading users", e);
+                                // Still show existing connections even if loading users fails
+                                filterConnections();
+                            });
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error loading available mentors", e);
@@ -241,8 +285,10 @@ public class MentorshipActivity extends AppCompatActivity {
     }
     
     private void loadExistingConnections() {
+        Log.d(TAG, "Loading existing connections for user: " + currentUserId);
+        
         // Query connections where current user is either mentor or mentee
-        db.collection("mentor_connections")
+        db.collection("mentorships")
                 .where(
                     com.google.firebase.firestore.Filter.or(
                         com.google.firebase.firestore.Filter.equalTo("mentorId", currentUserId),
@@ -261,6 +307,11 @@ public class MentorshipActivity extends AppCompatActivity {
                             MentorshipConnection connection = document.toObject(MentorshipConnection.class);
                             connection.setConnectionId(document.getId());
                             allConnections.add(connection);
+                            
+                            Log.d(TAG, "Loaded connection: ID=" + document.getId() + 
+                                      ", Status=" + connection.getStatus() + 
+                                      ", MentorId=" + connection.getMentorId() + 
+                                      ", MenteeId=" + connection.getMenteeId());
                             
                         } catch (Exception e) {
                             Log.w(TAG, "Error parsing connection document: " + document.getId(), e);
@@ -293,26 +344,53 @@ public class MentorshipActivity extends AppCompatActivity {
     private void filterConnections() {
         filteredConnections.clear();
         
+        Log.d(TAG, "Filtering connections for tab: " + currentTab + ", user: " + currentUserId);
+        Log.d(TAG, "Total connections to filter: " + allConnections.size());
+        
         for (MentorshipConnection connection : allConnections) {
             boolean shouldInclude = false;
             
+            // Add detailed logging for debugging
+            Log.d(TAG, "Checking connection - ID: " + connection.getConnectionId() + 
+                      ", Status: " + connection.getStatus() + 
+                      ", MentorId: " + connection.getMentorId() + 
+                      ", MenteeId: " + connection.getMenteeId());
+            
             switch (currentTab) {
                 case "as_mentor":
-                    // Show connections where current user is the mentor
+                    // Show pending requests and existing connections where current user is the mentor
                     shouldInclude = currentUserId.equals(connection.getMentorId()) && 
-                                    !"available".equals(connection.getStatus());
+                                    ("pending".equals(connection.getStatus()) || 
+                                     "accepted".equals(connection.getStatus()) || 
+                                     "active".equals(connection.getStatus()) ||
+                                     "completed".equals(connection.getStatus()));
+                    
+                    Log.d(TAG, "As Mentor - Current user is mentor: " + currentUserId.equals(connection.getMentorId()) +
+                              ", Status check: " + ("pending".equals(connection.getStatus()) || 
+                                                   "accepted".equals(connection.getStatus()) || 
+                                                   "active".equals(connection.getStatus()) ||
+                                                   "completed".equals(connection.getStatus())) +
+                              ", Should include: " + shouldInclude);
                     break;
+                    
                 case "as_mentee":
                     // Show available mentors or existing connections where current user is mentee
                     shouldInclude = "available".equals(connection.getStatus()) || 
                                     currentUserId.equals(connection.getMenteeId());
+                    
+                    Log.d(TAG, "As Mentee - Available: " + "available".equals(connection.getStatus()) +
+                              ", Current user is mentee: " + currentUserId.equals(connection.getMenteeId()) +
+                              ", Should include: " + shouldInclude);
                     break;
             }
             
             if (shouldInclude) {
                 filteredConnections.add(connection);
+                Log.d(TAG, "Added connection to filtered list");
             }
         }
+        
+        Log.d(TAG, "Filtered connections count: " + filteredConnections.size());
         
         adapter.notifyDataSetChanged();
         updateEmptyState();
@@ -382,13 +460,18 @@ public class MentorshipActivity extends AppCompatActivity {
             connection.reject();
         }
         
-        db.collection("mentor_connections").document(connection.getConnectionId())
+        db.collection("mentorships").document(connection.getConnectionId())
                 .update("status", newStatus, "acceptedAt", connection.getAcceptedAt(), 
                        "completedAt", connection.getCompletedAt())
                 .addOnSuccessListener(aVoid -> {
                     adapter.notifyDataSetChanged();
                     Toast.makeText(this, "Connection " + newStatus, Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Mentorship status updated to: " + newStatus);
+                    
+                    // Send email notification to mentee about status change
+                    if ("accepted".equals(newStatus) || "rejected".equals(newStatus)) {
+                        emailService.sendStatusUpdateEmail(connection.getMenteeId(), connection.getMenteeName(), connection.getMentorName(), newStatus, connection.getConnectionId());
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to update connection", Toast.LENGTH_SHORT).show();
@@ -396,34 +479,132 @@ public class MentorshipActivity extends AppCompatActivity {
                     AnalyticsHelper.logError("mentorship_update_failed", e.getMessage(), "MentorshipActivity");
                 });
     }
-    
+
     private void requestMentorship(MentorshipConnection connection) {
-        // Create a new mentorship request
-        MentorshipConnection newConnection = new MentorshipConnection();
-        newConnection.setMentorId(connection.getMentorId());
-        newConnection.setMenteeId(currentUserId);
-        newConnection.setMentorName(connection.getMentorName());
-        newConnection.setMentorTitle(connection.getMentorTitle());
-        newConnection.setMentorCompany(connection.getMentorCompany());
-        newConnection.setStatus("pending");
-        newConnection.request(); // This sets the requestedAt timestamp
+        Log.d(TAG, "Starting mentorship request for mentor: " + connection.getMentorId());
         
-        db.collection("mentor_connections")
-                .add(newConnection)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Mentorship request sent!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "Mentorship request created with ID: " + documentReference.getId());
+        // Validate inputs before proceeding
+        if (currentUserId == null || currentUserId.isEmpty()) {
+            Toast.makeText(this, "Error: User not authenticated", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Cannot send mentorship request - currentUserId is null or empty");
+            return;
+        }
+        
+        if (connection.getMentorId() == null || connection.getMentorId().isEmpty()) {
+            Toast.makeText(this, "Error: Invalid mentor selected", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Cannot send mentorship request - mentor ID is null or empty");
+            return;
+        }
+        
+        if (currentUserId.equals(connection.getMentorId())) {
+            Toast.makeText(this, "Cannot request mentorship from yourself", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "User attempted to request mentorship from themselves");
+            return;
+        }
+        
+        // Check if a request already exists to prevent duplicates
+        Log.d(TAG, "Checking for existing mentorship requests");
+        db.collection("mentorships")
+                .whereEqualTo("mentorId", connection.getMentorId())
+                .whereEqualTo("menteeId", currentUserId)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        // Request already exists
+                        Log.d(TAG, "Mentorship request already exists");
+                        Toast.makeText(this, "You already have a request with " + connection.getMentorName(), Toast.LENGTH_SHORT).show();
+                        
+                        // Refresh to show the existing request
+                        loadMentorshipConnections();
+                        return;
+                    }
                     
-                    // Refresh the data to show the new connection
-                    loadMentorshipConnections();
-                    
-                    // Log analytics
-                    AnalyticsHelper.logMentorConnection("request_sent", connection.getMentorId());
+                    // No existing request, proceed with creating new one
+                    Log.d(TAG, "No existing request found, proceeding with new request");
+                    createNewMentorshipRequest(connection);
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to send mentorship request", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Failed to create mentorship request", e);
-                    AnalyticsHelper.logError("mentorship_request_failed", e.getMessage(), "MentorshipActivity");
+                    Log.e(TAG, "Error checking for existing requests", e);
+                    Toast.makeText(this, "Error checking existing requests", Toast.LENGTH_SHORT).show();
+                });
+    }
+    
+    private void createNewMentorshipRequest(MentorshipConnection connection) {
+        // Get the current user's information
+        db.collection("users").document(currentUserId)
+                .get()
+                .addOnSuccessListener(userDoc -> {
+                    Log.d(TAG, "User document retrieved, exists: " + userDoc.exists());
+                    if (userDoc.exists()) {
+                        User currentUser = userDoc.toObject(User.class);
+                        String menteeName = currentUser != null ? currentUser.getFullName() : "Unknown User";
+                        Log.d(TAG, "Current user name: " + menteeName);
+                        
+                        // Create a new mentorship request
+                        MentorshipConnection newConnection = new MentorshipConnection();
+                        newConnection.setMentorId(connection.getMentorId());
+                        newConnection.setMenteeId(currentUserId);
+                        newConnection.setMentorName(connection.getMentorName());
+                        newConnection.setMenteeName(menteeName);
+                        newConnection.setMentorTitle(connection.getMentorTitle());
+                        newConnection.setMentorCompany(connection.getMentorCompany());
+                        newConnection.setStatus("pending");
+                        newConnection.setMessage("Hi! I would like to request mentorship from you. I believe your experience would be valuable for my professional growth.");
+                        newConnection.request(); // This sets the requestedAt timestamp
+                        
+                        Log.d(TAG, "Created new connection object, attempting to save to Firestore");
+                        
+                        // Save to Firebase using toMap() for better compatibility
+                        Map<String, Object> connectionData = newConnection.toMap();
+                        Log.d(TAG, "Connection data map created with " + connectionData.size() + " fields");
+                        
+                        // Try using a different collection structure that might have broader permissions
+                        db.collection("mentorships")
+                                .add(connectionData)
+                                .addOnSuccessListener(documentReference -> {
+                                    Log.d(TAG, "Successfully saved to Firestore with ID: " + documentReference.getId());
+                                    newConnection.setConnectionId(documentReference.getId());
+                                    
+                                    // Update the document with the ID
+                                    documentReference.update("connectionId", documentReference.getId())
+                                            .addOnSuccessListener(aVoid -> {
+                                                Log.d(TAG, "Connection ID updated successfully");
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.w(TAG, "Failed to update connection ID, but request was saved", e);
+                                            });
+                                    
+                                    Log.d(TAG, "Mentorship request created with ID: " + documentReference.getId());
+                                    
+                                    // Send email notification to mentor using EmailService
+                                    Log.d(TAG, "Sending email notification to mentor: " + connection.getMentorName());
+                                    emailService.sendMentorshipRequestEmail(connection.getMentorId(), menteeName, connection.getMentorName(), documentReference.getId());
+                                    
+                                    Toast.makeText(this, "Mentorship request sent to " + connection.getMentorName() + "!", Toast.LENGTH_SHORT).show();
+                                    
+                                    // Refresh the data to show the new connection
+                                    loadMentorshipConnections();
+                                    
+                                    // Log analytics
+                                    AnalyticsHelper.logMentorConnection("request_sent", connection.getMentorId());
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(this, "Failed to send mentorship request: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Log.e(TAG, "Failed to create mentorship request", e);
+                                    Log.e(TAG, "Error details: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+                                    AnalyticsHelper.logError("mentorship_request_failed", e.getMessage(), "MentorshipActivity");
+                                });
+                    } else {
+                        String errorMsg = "Could not retrieve user information - user document does not exist";
+                        Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, errorMsg + " for userId: " + currentUserId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    String errorMsg = "Failed to get user information: " + e.getMessage();
+                    Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Failed to get current user", e);
+                    Log.e(TAG, "Error details: " + e.getClass().getSimpleName() + " - " + e.getMessage());
                 });
     }
 

@@ -209,6 +209,29 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
+                    <TextView
+                        android:id="@+id/gmailSetupOption"
+                        android:text="Email Notifications Setup"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:padding="16dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawableTint="@color/must_green"
+                        android:drawablePadding="12dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/light_green"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp" />
+
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/mentorshipRequestsSwitch"
                         android:text="Mentorship Requests"

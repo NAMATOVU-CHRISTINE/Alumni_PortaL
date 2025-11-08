@@ -1,0 +1,39 @@
+# TEMPORARY TEST RULES - Use these to test if rules are the problem
+
+## Copy these rules to Firebase Console to test:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // TEMPORARY: Allow all reads and writes for testing
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+```
+
+## Steps:
+1. Go to Firebase Console → Firestore → Rules
+2. Replace with the rules above
+3. Click "Publish"
+4. Try posting a job
+5. If it works, the issue is with the rules
+6. If it still doesn't work, the issue is in the code
+
+## After Testing:
+Replace with proper rules from `firestore.rules` file
+
+## What to Check in Logcat:
+```
+Filter: PostJobActivity
+Look for:
+- "Attempting to post job"
+- "Job posted successfully with ID"
+- "Job verified in Firestore"
+- "Failed to post job"
+```
+
+If you see "Job posted successfully" but not "Job verified in Firestore", 
+then the document is being created but immediately deleted or not persisting.

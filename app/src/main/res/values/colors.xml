@@ -29,6 +29,7 @@
     <color name="text_hint">#BDBDBD</color>
     
     <!-- Background Colors -->
+    <color name="background_color">#FAFAFA</color>
     <color name="light_background">#FAFAFA</color>
     
     <!-- Category Colors -->
