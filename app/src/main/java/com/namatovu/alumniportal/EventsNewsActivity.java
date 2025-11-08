@@ -127,13 +127,10 @@ public class EventsNewsActivity extends AppCompatActivity {
     private void loadData() {
         showLoading(true);
         
-        // Load data from provider (simulating async data loading)
+        // Load from EventsDataProvider (mock data) and Firestore (real data)
         new Thread(() -> {
             try {
-                // Simulate network delay
-                Thread.sleep(1000);
-                
-                // Load events and news
+                // Load mock data first
                 allEvents = EventsDataProvider.getEvents();
                 allNews = EventsDataProvider.getNews();
                 analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
@@ -142,15 +139,101 @@ public class EventsNewsActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     updateUI();
                     showLoading(false);
+                    
+                    // Also load real events from Firestore in the background
+                    loadFirestoreEvents();
                 });
                 
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 runOnUiThread(() -> {
                     showLoading(false);
                     Toast.makeText(EventsNewsActivity.this, "Error loading data", Toast.LENGTH_SHORT).show();
                 });
             }
         }).start();
+    }
+    
+    private void loadFirestoreEvents() {
+        // This will load real events from Firestore and add them to the list
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection("events")
+                .whereEqualTo("isPublic", true)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (com.google.firebase.firestore.QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            // Convert Firestore event to Event model
+                            String title = document.getString("title");
+                            String description = document.getString("description");
+                            String venue = document.getString("venue");
+                            Long startTime = document.getLong("startDateTime");
+                            String eventType = document.getString("eventType");
+                            String imageUrl = document.getString("imageUrl");
+                            String eventUrl = document.getString("eventUrl");
+                            String organizerName = document.getString("organizerName");
+                            
+                            if (title != null && startTime != null) {
+                                // Create summary from description (first 100 chars)
+                                String summary = description != null && description.length() > 100 
+                                    ? description.substring(0, 100) + "..." 
+                                    : description;
+                                
+                                // Map event type to category
+                                Event.Category category = mapEventTypeToCategory(eventType);
+                                
+                                Event event = new Event(
+                                    title,
+                                    description != null ? description : "",
+                                    summary != null ? summary : "",
+                                    startTime,
+                                    venue != null ? venue : "TBD",
+                                    category
+                                );
+                                
+                                event.setId(document.getId());
+                                event.setImageUrl(imageUrl);
+                                event.setRegistrationUrl(eventUrl);
+                                event.setOrganizerName(organizerName != null ? organizerName : "MUST");
+                                
+                                // Check if event already exists (avoid duplicates)
+                                boolean exists = false;
+                                for (Event e : allEvents) {
+                                    if (e.getId() != null && e.getId().equals(event.getId())) {
+                                        exists = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!exists) {
+                                    allEvents.add(event);
+                                }
+                            }
+                        } catch (Exception e) {
+                            // Skip invalid events
+                        }
+                    }
+                    
+                    // Update UI with new events
+                    runOnUiThread(() -> {
+                        updateUI();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    // Silently fail - mock data is already loaded
+                });
+    }
+    
+    private Event.Category mapEventTypeToCategory(String eventType) {
+        if (eventType == null) return Event.Category.UNIVERSITY;
+        
+        String type = eventType.toLowerCase();
+        if (type.contains("mentor")) return Event.Category.MENTORSHIP;
+        if (type.contains("leader")) return Event.Category.LEADERSHIP;
+        if (type.contains("network")) return Event.Category.NETWORKING;
+        if (type.contains("career") || type.contains("job")) return Event.Category.CAREER;
+        if (type.contains("tech") || type.contains("research")) return Event.Category.TECHNOLOGY;
+        if (type.contains("social")) return Event.Category.SOCIAL;
+        return Event.Category.UNIVERSITY;
     }
     
     private void refreshData() {
