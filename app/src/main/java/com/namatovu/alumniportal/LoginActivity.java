@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
-import com.namatovu.alumniportal.utils.SampleDataSeeder;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -119,10 +118,6 @@ public class LoginActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             AnalyticsHelper.setUserId(mAuth.getCurrentUser().getUid());
         }
-        
-        // Seed sample data for testing (only runs once)
-        SampleDataSeeder seeder = new SampleDataSeeder(this);
-        seeder.seedIfNeeded();
         
         // Schedule background data sync now that user is logged in
         if (getApplication() instanceof AlumniPortalApplication) {
