@@ -1,0 +1,42 @@
+========================================
+FIREBASE REALTIME DATABASE RULES
+⚠️ IMPORTANT: This is for REALTIME DATABASE, NOT Firestore!
+Copy everything below this line and paste into Firebase Console
+========================================
+
+{
+  "rules": {
+    "chats": {
+      "$chatRoomId": {
+        ".read": "auth != null && (data.child('info/user1Id').val() === auth.uid || data.child('info/user2Id').val() === auth.uid)",
+        ".write": "auth != null && (data.child('info/user1Id').val() === auth.uid || data.child('info/user2Id').val() === auth.uid || !data.exists())",
+        "messages": {
+          ".indexOn": ["timestamp"]
+        }
+      }
+    }
+  }
+}
+
+========================================
+HOW TO DEPLOY:
+========================================
+
+⚠️ CRITICAL: Make sure you're in "Realtime Database" NOT "Firestore Database"!
+
+1. Go to: https://console.firebase.google.com
+2. Select your project
+3. Click "Realtime Database" in left sidebar (NOT "Firestore Database")
+4. If you see "Create Database", click it and enable it first
+5. Click "Rules" tab at the top
+6. Select all existing text and DELETE it
+7. Copy the rules above (between the === lines)
+8. Paste into the rules editor
+9. Click "Publish"
+10. Wait for "Rules published successfully" message
+
+DOUBLE CHECK: You should see "Realtime Database" at the top, not "Firestore"!
+
+========================================
+DONE! Now test your chat feature.
+========================================

@@ -114,18 +114,61 @@ public class AddArticleActivity extends AppCompatActivity {
         }
 
         android.util.Log.d("AddArticle", "Submitting article with category: " + category);
-
-        // Return data to KnowledgeActivity
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("title", title);
-        resultIntent.putExtra("description", description);
-        resultIntent.putExtra("content", content);
-        resultIntent.putExtra("category", category);
         
-        android.util.Log.d("AddArticle", "Setting result and finishing activity");
+        // Disable button to prevent double submission
+        btnSubmit.setEnabled(false);
+        btnSubmit.setText("Saving...");
         
-        setResult(RESULT_OK, resultIntent);
-        finish();
+        // Get current user info
+        com.google.firebase.auth.FirebaseAuth mAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
+        
+        // Create article object
+        com.namatovu.alumniportal.models.Article article = new com.namatovu.alumniportal.models.Article(title, description, content, category);
+        article.setAuthorId(currentUserId);
+        
+        // Get author name from Firestore
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        
+        db.collection("users").document(currentUserId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    com.namatovu.alumniportal.models.User user = documentSnapshot.toObject(com.namatovu.alumniportal.models.User.class);
+                    String authorName = user != null ? user.getFullName() : "Unknown User";
+                    article.setAuthorName(authorName);
+                }
+                
+                // Save article to Firestore
+                saveArticleToFirestore(article);
+            })
+            .addOnFailureListener(e -> {
+                android.util.Log.e("AddArticle", "Failed to get user info", e);
+                article.setAuthorName("Unknown User");
+                saveArticleToFirestore(article);
+            });
+    }
+    
+    private void saveArticleToFirestore(com.namatovu.alumniportal.models.Article article) {
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        
+        db.collection("articles")
+            .add(article)
+            .addOnSuccessListener(documentReference -> {
+                android.util.Log.d("AddArticle", "Article saved with ID: " + documentReference.getId());
+                Toast.makeText(this, "Article published successfully!", Toast.LENGTH_SHORT).show();
+                
+                setResult(RESULT_OK);
+                finish();
+            })
+            .addOnFailureListener(e -> {
+                android.util.Log.e("AddArticle", "Failed to save article", e);
+                Toast.makeText(this, "Failed to publish article: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                
+                // Re-enable button
+                btnSubmit.setEnabled(true);
+                btnSubmit.setText("Submit");
+            });
     }
 
     private String getSelectedCategory(String chipText) {

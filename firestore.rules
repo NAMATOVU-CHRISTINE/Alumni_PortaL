@@ -3,14 +3,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Users collection - users can only read/write their own data
+    // Users collection - users can read all profiles, write only their own
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Allow all authenticated users to read user profiles (for displaying names, etc.)
+      allow read: if request.auth != null;
       
-      // Allow reading basic profile info for other users (for alumni directory)
-      allow read: if request.auth != null && 
-                     resource.data.keys().hasAny(['fullName', 'major', 'graduationYear', 'profileImageUrl', 'bio']) &&
-                     !resource.data.keys().hasAny(['email', 'studentId', 'personalEmail']);
+      // Only allow users to write their own data
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
     
     // Public alumni directory - read-only access to limited user data
@@ -20,14 +19,28 @@ service cloud.firestore {
                       validateAlumniData(request.resource.data);
     }
     
-    // Job postings - authenticated users can read, only verified alumni can post
+    // Job postings - authenticated users can read and post
     match /job_postings/{postId} {
       allow read: if request.auth != null;
-      allow create: if request.auth != null && 
-                       isVerifiedAlumni() &&
-                       validateJobPosting(request.resource.data);
+      allow create: if request.auth != null;
       allow update, delete: if request.auth != null && 
-                               request.auth.uid == resource.data.postedBy;
+                               resource.data.postedBy == request.auth.uid;
+    }
+    
+    // Job opportunities - authenticated users can read and post
+    match /job_opportunities/{opportunityId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+                               resource.data.postedBy == request.auth.uid;
+    }
+    
+    // Articles - authenticated users can read and post
+    match /articles/{articleId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+                               resource.data.authorId == request.auth.uid;
     }
     
     // Mentor connections - users can manage their own mentor relationships
@@ -37,6 +50,63 @@ service cloud.firestore {
                              request.auth.uid == resource.data.menteeId);
       allow create: if request.auth != null &&
                        validateMentorConnection(request.resource.data);
+    }
+    
+    // Rules for notifications collection (used for mentorship requests and other notifications)
+    match /notifications/{notificationId} {
+      // Allow authenticated users to read their own notifications
+      allow read: if request.auth != null && 
+                     (resource.data.notificationFor == request.auth.uid || 
+                      resource.data.sentBy == request.auth.uid);
+      
+      // Allow authenticated users to create notifications (mentorship requests, etc.)
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.sentBy;
+      
+      // Allow users to update notifications sent to them (for marking as read, etc.)
+      allow update: if request.auth != null && 
+                       (resource.data.notificationFor == request.auth.uid ||
+                        resource.data.sentBy == request.auth.uid);
+      
+      // Allow users to delete their own sent notifications or received notifications
+      allow delete: if request.auth != null && 
+                       (resource.data.notificationFor == request.auth.uid ||
+                        resource.data.sentBy == request.auth.uid);
+    }
+    
+    // Rules for mentorship collections (updated for better permissions)
+    match /mentorships/{mentorshipId} {
+      // Allow authenticated users to read mentorships they're involved in
+      allow read: if request.auth != null && 
+                     (resource.data.mentorId == request.auth.uid || 
+                      resource.data.menteeId == request.auth.uid);
+      
+      // Allow authenticated users to create mentorship requests as mentee
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.menteeId;
+      
+      // Allow mentors to update mentorship status, mentees to update their requests
+      allow update: if request.auth != null && 
+                       (resource.data.mentorId == request.auth.uid || 
+                        resource.data.menteeId == request.auth.uid);
+      
+      // Allow users to delete mentorships they're involved in
+      allow delete: if request.auth != null && 
+                       (resource.data.mentorId == request.auth.uid || 
+                        resource.data.menteeId == request.auth.uid);
+    }
+    
+    // Rules for chats collection (if you have chat functionality)
+    match /chats/{chatId} {
+      // Allow participants to read chats they're part of
+      allow read: if request.auth != null && 
+                     request.auth.uid in resource.data.participants;
+      
+      // Allow authenticated users to create chats
+      allow create: if request.auth != null && 
+                       request.auth.uid in request.resource.data.participants;
+      
+      // Allow participants to update chats
+      allow update: if request.auth != null && 
+                       request.auth.uid in resource.data.participants;
     }
     
     // Events - authenticated users can read, admins can write

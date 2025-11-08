@@ -84,7 +84,39 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         recyclerViewArticles.setLayoutManager(layoutManager);
         recyclerViewArticles.setAdapter(articleAdapter);
         
-        updateEmptyState();
+        loadArticlesFromFirestore();
+    }
+    
+    private void loadArticlesFromFirestore() {
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        
+        db.collection("articles")
+            .orderBy("dateCreated", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .limit(50)
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                articles.clear();
+                
+                for (com.google.firebase.firestore.QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    try {
+                        Article article = document.toObject(Article.class);
+                        article.setId(document.getId());
+                        articles.add(article);
+                    } catch (Exception e) {
+                        android.util.Log.w(TAG, "Error parsing article: " + document.getId(), e);
+                    }
+                }
+                
+                articleAdapter.notifyDataSetChanged();
+                updateEmptyState();
+                
+                android.util.Log.d(TAG, "Loaded " + articles.size() + " articles from Firestore");
+            })
+            .addOnFailureListener(e -> {
+                android.util.Log.e(TAG, "Failed to load articles", e);
+                Toast.makeText(this, "Failed to load articles", Toast.LENGTH_SHORT).show();
+                updateEmptyState();
+            });
     }
 
     private void setupSearchView() {
@@ -156,32 +188,10 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            // Get the new article from AddArticleActivity
-            String title = data.getStringExtra("title");
-            String description = data.getStringExtra("description");
-            String content = data.getStringExtra("content");
-            String category = data.getStringExtra("category");
-
-            if (title != null && description != null && content != null && category != null) {
-                Article newArticle = new Article(title, description, content, category);
-                newArticle.setId("article_" + System.currentTimeMillis());
-                newArticle.setAuthorName("You");
-                newArticle.setDateCreated(new Date()); // Current time - will be newest
-                
-                // Use addArticle method which handles both lists
-                articleAdapter.addArticle(newArticle);
-                
-                // Also add to our local list for consistency  
-                articles.add(0, newArticle);
-                
-                updateEmptyState();
-                
-                // Scroll to the top to show the new article
-                recyclerViewArticles.scrollToPosition(0);
-
-                Toast.makeText(this, "Article added successfully! 📚", Toast.LENGTH_SHORT).show();
-            }
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            // Reload articles from Firestore
+            loadArticlesFromFirestore();
+            Toast.makeText(this, "Article added successfully! 📚", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -62,10 +64,12 @@
         <activity android:name=".MentorDetailActivity" />
         <activity android:name=".JobDetailActivity" />
         <activity android:name=".CreatePostActivity" />
+        <activity android:name=".ChatActivity" />
         <activity android:name=".activities.ChatListActivity" />
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.NotificationSettingsActivity" />
         <activity android:name=".activities.PrivacySettingsActivity" />
+        <activity android:name=".activities.GmailSetupActivity" />
         <activity android:name=".CareerTipsActivity" />
         <activity android:name=".SavedCareerTipsActivity" />
         <activity android:name=".GrowSectionActivity" />

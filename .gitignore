@@ -22,3 +22,5 @@ kotlin-compiler-session*
 # Additional build artifacts
 *.tmp
 *.cache
+gmailAPI.json
+*.md

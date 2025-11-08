@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,17 +17,24 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * AddOpportunityActivity - Form for mentors/admins to post new opportunities
+ * Now connected to Firebase Firestore for data persistence
  */
 public class AddOpportunityActivity extends AppCompatActivity {
 
+    private static final String TAG = "AddOpportunityActivity";
+    
     private TextInputEditText etTitle, etCompany, etLocation, etSalaryRange;
     private TextInputEditText etDescription, etRequirements, etApplicationInstructions;
     private TextInputEditText etDeadline;
@@ -36,17 +44,28 @@ public class AddOpportunityActivity extends AppCompatActivity {
     
     private Calendar selectedDeadline;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+    
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private String currentUserId;
+    private String currentUserName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_opportunity);
 
+        // Initialize Firebase
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
+        
         initializeViews();
         setupToolbar();
         setupDatePicker();
         setupClickListeners();
         setDefaultCategory();
+        loadCurrentUser();
     }
 
     private void initializeViews() {
@@ -116,10 +135,37 @@ public class AddOpportunityActivity extends AppCompatActivity {
         chipJob.setChecked(true);
     }
 
+    private void loadCurrentUser() {
+        if (TextUtils.isEmpty(currentUserId)) {
+            Toast.makeText(this, "Please log in to post an opportunity", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        
+        db.collection("users").document(currentUserId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    currentUserName = documentSnapshot.getString("fullName");
+                    if (currentUserName == null) {
+                        currentUserName = "Unknown User";
+                    }
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to load user", e);
+                currentUserName = "Unknown User";
+            });
+    }
+    
     private void postOpportunity() {
         if (!validateForm()) {
             return;
         }
+
+        // Disable button to prevent double submission
+        btnPost.setEnabled(false);
+        btnPost.setText("Posting...");
 
         // Get form data
         String title = etTitle.getText().toString().trim();
@@ -132,23 +178,44 @@ public class AddOpportunityActivity extends AppCompatActivity {
         String category = getSelectedCategory();
         boolean isFeatured = checkboxFeatured.isChecked();
 
-        // Create result intent with opportunity data
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("title", title);
-        resultIntent.putExtra("company", company);
-        resultIntent.putExtra("location", location);
-        resultIntent.putExtra("salary_range", salaryRange);
-        resultIntent.putExtra("description", description);
-        resultIntent.putExtra("requirements", requirements);
-        resultIntent.putExtra("application_instructions", applicationInstructions);
-        resultIntent.putExtra("category", category);
-        resultIntent.putExtra("is_featured", isFeatured);
-        resultIntent.putExtra("deadline", selectedDeadline.getTimeInMillis());
+        // Create opportunity data map
+        Map<String, Object> opportunity = new HashMap<>();
+        opportunity.put("title", title);
+        opportunity.put("company", company);
+        opportunity.put("location", location);
+        opportunity.put("salaryRange", salaryRange);
+        opportunity.put("description", description);
+        opportunity.put("requirements", requirements);
+        opportunity.put("applicationInstructions", applicationInstructions);
+        opportunity.put("category", category);
+        opportunity.put("isFeatured", isFeatured);
+        opportunity.put("applicationDeadline", selectedDeadline.getTime());
+        opportunity.put("postedBy", currentUserId);
+        opportunity.put("postedByName", currentUserName != null ? currentUserName : "Unknown User");
+        opportunity.put("datePosted", new Date());
+        opportunity.put("applicationsCount", 0);
 
-        setResult(Activity.RESULT_OK, resultIntent);
-        
-        Toast.makeText(this, "Opportunity posted successfully! 🎉", Toast.LENGTH_SHORT).show();
-        finish();
+        Log.d(TAG, "Posting opportunity to Firestore: " + title);
+
+        // Save to Firestore
+        db.collection("job_opportunities")
+            .add(opportunity)
+            .addOnSuccessListener(documentReference -> {
+                Log.d(TAG, "Opportunity posted successfully with ID: " + documentReference.getId());
+                
+                Toast.makeText(this, "Opportunity posted successfully! 🎉", Toast.LENGTH_SHORT).show();
+                
+                setResult(Activity.RESULT_OK);
+                finish();
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to post opportunity", e);
+                Toast.makeText(this, "Failed to post opportunity: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                
+                // Re-enable button
+                btnPost.setEnabled(true);
+                btnPost.setText("Post Opportunity");
+            });
     }
 
     private boolean validateForm() {
