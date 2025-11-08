@@ -160,8 +160,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         }
 
         public void bind(Article article) {
-            android.util.Log.d("ArticleAdapter", "Binding article: " + article.getTitle());
-            
             tvCategoryIcon.setText(article.getCategoryIcon());
             tvCategory.setText(article.getCategory());
             tvDate.setText(article.getFormattedDate());
