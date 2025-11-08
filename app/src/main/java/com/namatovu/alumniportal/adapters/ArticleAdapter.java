@@ -98,12 +98,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
     }
 
     public void updateArticles(List<Article> newArticles) {
-        android.util.Log.d("ArticleAdapter", "updateArticles called with " + newArticles.size() + " articles");
         this.articles.clear();
         this.articles.addAll(newArticles);
         this.filteredArticles.clear();
         this.filteredArticles.addAll(newArticles);
-        android.util.Log.d("ArticleAdapter", "After update: articles=" + articles.size() + ", filtered=" + filteredArticles.size());
         notifyDataSetChanged();
     }
 
