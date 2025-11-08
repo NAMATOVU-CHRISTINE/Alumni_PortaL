@@ -3,19 +3,194 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/App.Material3.Card">
+    android:layout_marginBottom="16dp"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@android:color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <TextView
-            android:id="@+id/eventTitleText"
+        <!-- Header Section -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/App.TextAppearance.Subtitle" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <!-- Category Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/eventCategoryChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leadership"
+                android:textSize="11sp"
+                app:chipBackgroundColor="@color/light_green"
+                app:chipStrokeWidth="0dp"
+                app:chipMinHeight="28dp"
+                style="@style/Widget.Material3.Chip.Assist" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Date -->
+            <TextView
+                android:id="@+id/eventDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dec 15, 2024"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/must_green"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Event Image (Optional) -->
+        <ImageView
+            android:id="@+id/eventImage"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:background="@color/light_gray"
+            app:srcCompat="@drawable/ic_image_placeholder"
+            android:contentDescription="Event image"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/eventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Leadership Excellence Workshop"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Summary -->
+        <TextView
+            android:id="@+id/eventSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Join us for an intensive leadership development workshop designed to enhance your leadership skills and network with fellow alumni..."
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textColor="@color/dark_gray"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Event Details Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <!-- Location Info -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location"
+                    app:tint="@color/must_green"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/eventLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="MUST Main Campus"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="@color/dark_gray"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+            <!-- Time Info -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_time"
+                    app:tint="@color/must_green"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/eventTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9:00 AM"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="@color/dark_gray" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Participants Info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/participantsInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="35/50 participants"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/dark_gray" />
+
+            <TextView
+                android:id="@+id/organizerInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="by Alumni Relations"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/must_green"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <!-- Action Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/eventActionBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register Now"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/must_green"
+            app:cornerRadius="8dp"
+            style="@style/Widget.Material3.Button" />
 
     </LinearLayout>
 
