@@ -233,13 +233,13 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    private void createAuthUser(String email, String password, String name, String username, String studentID) {
+    private void createAuthUser(String email, String password, String fullName, String username, String studentID) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this, authTask -> {
                 if (authTask.isSuccessful()) {
                     FirebaseUser firebaseUser = authTask.getResult().getUser(); // Use user from task result
                     if (firebaseUser != null) {
-                        User newUser = new User(name, email, username, studentID);
+                        User newUser = new User(fullName, username, email, email, studentID);
                         sendVerificationEmail(firebaseUser, newUser);
                     }
                 } else {
