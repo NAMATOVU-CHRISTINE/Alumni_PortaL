@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.MentorViewHolder> {
     
-    private List<User> mentors = new ArrayList<>();
+    private List<MentorshipConnection> connections = new ArrayList<>();
     private OnMentorClickListener listener;
     private OnMentorshipActionListener actionListener;
     private String currentUserId;
@@ -27,15 +27,15 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     }
     
     // Constructor for mentorship connections
-    public MentorshipAdapter(List<?> connections, String currentUserId, OnMentorshipActionListener actionListener) {
+    public MentorshipAdapter(List<MentorshipConnection> connections, String currentUserId, OnMentorshipActionListener actionListener) {
+        this.connections = connections != null ? connections : new ArrayList<>();
         this.currentUserId = currentUserId;
         this.actionListener = actionListener;
-        // Note: connections parameter is not used in this simple implementation
     }
     
     public interface OnMentorClickListener {
-        void onMentorClick(User mentor);
-        void onConnectClick(User mentor);
+        void onMentorClick(MentorshipConnection connection);
+        void onConnectClick(MentorshipConnection connection);
     }
     
     public interface OnMentorshipActionListener {
@@ -44,6 +44,7 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
         void onViewProfile(String userId);
         void onStartSession(MentorshipConnection connection);
         void onCompleteConnection(MentorshipConnection connection);
+        void onRequestMentorship(MentorshipConnection connection);
     }
     
     public void setOnMentorClickListener(OnMentorClickListener listener) {
@@ -51,7 +52,24 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     }
     
     public void setMentors(List<User> mentors) {
-        this.mentors = mentors != null ? mentors : new ArrayList<>();
+        // Convert User list to MentorshipConnection list for compatibility
+        this.connections.clear();
+        if (mentors != null) {
+            for (User mentor : mentors) {
+                MentorshipConnection connection = new MentorshipConnection();
+                connection.setMentorId(mentor.getUserId());
+                connection.setMentorName(mentor.getFullName());
+                connection.setMentorTitle(mentor.getCurrentJob());
+                connection.setMentorCompany(mentor.getCompany());
+                connection.setStatus("available");
+                this.connections.add(connection);
+            }
+        }
+        notifyDataSetChanged();
+    }
+    
+    public void setConnections(List<MentorshipConnection> connections) {
+        this.connections = connections != null ? connections : new ArrayList<>();
         notifyDataSetChanged();
     }
     
@@ -65,13 +83,13 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     
     @Override
     public void onBindViewHolder(@NonNull MentorViewHolder holder, int position) {
-        User mentor = mentors.get(position);
-        holder.bind(mentor);
+        MentorshipConnection connection = connections.get(position);
+        holder.bind(connection);
     }
     
     @Override
     public int getItemCount() {
-        return mentors.size();
+        return connections.size();
     }
     
     class MentorViewHolder extends RecyclerView.ViewHolder {
@@ -92,7 +110,7 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 
                 itemView.setOnClickListener(v -> {
                     if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        listener.onMentorClick(mentors.get(getAdapterPosition()));
+                        listener.onMentorClick(connections.get(getAdapterPosition()));
                     }
                 });
                 
@@ -100,34 +118,52 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 if (buttonConnect != null) {
                     buttonConnect.setOnClickListener(v -> {
                         if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                            listener.onConnectClick(mentors.get(getAdapterPosition()));
+                            listener.onConnectClick(connections.get(getAdapterPosition()));
                         }
                     });
                 }
             }
             
-            public void bind(User mentor) {
-                if (mentor == null) return;
+            public void bind(MentorshipConnection connection) {
+                if (connection == null) return;
                 
                 if (textMentorName != null) {
-                    textMentorName.setText(mentor.getFullName());
+                    textMentorName.setText(connection.getMentorName() != null ? connection.getMentorName() : "Unknown");
                 }
                 
                 if (textPosition != null) {
-                    textPosition.setText(mentor.getCurrentJob());
+                    textPosition.setText(connection.getMentorTitle() != null ? connection.getMentorTitle() : "Alumni");
                 }
                 
                 if (textCompany != null) {
-                    textCompany.setText(mentor.getCompany());
+                    textCompany.setText(connection.getMentorCompany() != null ? connection.getMentorCompany() : "");
                 }
                 
                 if (textSkills != null) {
-                    textSkills.setText(mentor.getSkillsAsString());
+                    textSkills.setVisibility(View.GONE); // Hide skills for now
                 }
                 
                 if (textRating != null) {
-                    // Default rating display
-                    textRating.setText("⭐ 4.5");
+                    textRating.setVisibility(View.GONE); // Hide rating for now
+                }
+                
+                // Update button text based on connection status
+                View buttonConnect = itemView.findViewById(R.id.buttonConnect);
+                if (buttonConnect instanceof TextView) {
+                    TextView button = (TextView) buttonConnect;
+                    if ("available".equals(connection.getStatus())) {
+                        button.setText("Request Mentorship");
+                        button.setVisibility(View.VISIBLE);
+                        button.setEnabled(true);
+                    } else if ("pending".equals(connection.getStatus())) {
+                        button.setText("Request Pending");
+                        button.setVisibility(View.VISIBLE);
+                        button.setEnabled(false);
+                    } else {
+                        button.setText("Connected");
+                        button.setVisibility(View.VISIBLE);
+                        button.setEnabled(false);
+                    }
                 }
             }
         }

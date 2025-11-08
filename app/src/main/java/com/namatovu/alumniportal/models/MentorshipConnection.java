@@ -13,6 +13,8 @@ public class MentorshipConnection {
     private String menteeId;
     private String mentorName;
     private String menteeName;
+    private String mentorTitle;
+    private String mentorCompany;
     private String mentorProfileImage;
     private String menteeProfileImage;
     private String status; // "pending", "accepted", "rejected", "active", "completed", "cancelled"
@@ -64,6 +66,12 @@ public class MentorshipConnection {
     public String getMenteeName() { return menteeName; }
     public void setMenteeName(String menteeName) { this.menteeName = menteeName; }
     
+    public String getMentorTitle() { return mentorTitle; }
+    public void setMentorTitle(String mentorTitle) { this.mentorTitle = mentorTitle; }
+    
+    public String getMentorCompany() { return mentorCompany; }
+    public void setMentorCompany(String mentorCompany) { this.mentorCompany = mentorCompany; }
+    
     public String getMentorProfileImage() { return mentorProfileImage; }
     public void setMentorProfileImage(String mentorProfileImage) { this.mentorProfileImage = mentorProfileImage; }
     
@@ -105,6 +113,12 @@ public class MentorshipConnection {
     
     public boolean isFeatured() { return isFeatured; }
     public void setFeatured(boolean featured) { isFeatured = featured; }
+    
+    // Request method for sending mentorship request
+    public void request() {
+        this.status = "pending";
+        this.requestedAt = System.currentTimeMillis();
+    }
     
     // Helper methods
     public boolean isPending() { return "pending".equals(status); }
@@ -190,6 +204,8 @@ public class MentorshipConnection {
         connectionMap.put("menteeId", menteeId);
         connectionMap.put("mentorName", mentorName);
         connectionMap.put("menteeName", menteeName);
+        connectionMap.put("mentorTitle", mentorTitle);
+        connectionMap.put("mentorCompany", mentorCompany);
         connectionMap.put("mentorProfileImage", mentorProfileImage);
         connectionMap.put("menteeProfileImage", menteeProfileImage);
         connectionMap.put("status", status);

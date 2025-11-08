@@ -138,6 +138,11 @@ public class MentorshipActivity extends AppCompatActivity {
             public void onCompleteConnection(MentorshipConnection connection) {
                 updateMentorshipStatus(connection, "completed");
             }
+            
+            @Override
+            public void onRequestMentorship(MentorshipConnection connection) {
+                requestMentorship(connection);
+            }
         };
         
         adapter = new MentorshipAdapter(filteredConnections, currentUserId, listener);
@@ -169,6 +174,73 @@ public class MentorshipActivity extends AppCompatActivity {
             return;
         }
 
+        if (currentTab.equals("as_mentee")) {
+            // Load all available users to request mentorship from
+            loadAvailableMentors();
+        } else {
+            // Load existing mentorship connections
+            loadExistingConnections();
+        }
+    }
+    
+    private void loadAvailableMentors() {
+        // Load all users except current user to show as potential mentors
+        db.collection("users")
+                .limit(50)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    allConnections.clear();
+                    
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total users");
+                    
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        try {
+                            // Skip current user
+                            if (document.getId().equals(currentUserId)) {
+                                continue;
+                            }
+                            
+                            Map<String, Object> userData = document.getData();
+                            String fullName = (String) userData.get("fullName");
+                            String currentJob = (String) userData.get("currentJob");
+                            String company = (String) userData.get("company");
+                            
+                            // Create a MentorshipConnection object for display purposes
+                            MentorshipConnection connection = new MentorshipConnection();
+                            connection.setMentorId(document.getId());
+                            connection.setMenteeId(currentUserId);
+                            connection.setMentorName(fullName != null ? fullName : "Unknown User");
+                            connection.setMentorTitle(currentJob != null ? currentJob : "Alumni");
+                            connection.setMentorCompany(company != null ? company : "");
+                            connection.setStatus("available"); // Special status for available mentors
+                            connection.setConnectionId(null); // No connection exists yet
+                            
+                            allConnections.add(connection);
+                            
+                        } catch (Exception e) {
+                            Log.w(TAG, "Error parsing user document: " + document.getId(), e);
+                        }
+                    }
+                    
+                    // Apply current tab filter
+                    filterConnections();
+                    
+                    Log.d(TAG, "Loaded " + allConnections.size() + " available mentors");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading available mentors", e);
+                    
+                    allConnections.clear();
+                    filteredConnections.clear();
+                    adapter.notifyDataSetChanged();
+                    updateEmptyState();
+                    
+                    Toast.makeText(this, "Unable to load available mentors", Toast.LENGTH_SHORT).show();
+                    AnalyticsHelper.logError("mentors_load_failed", e.getMessage(), "MentorshipActivity");
+                });
+    }
+    
+    private void loadExistingConnections() {
         // Query connections where current user is either mentor or mentee
         db.collection("mentor_connections")
                 .where(
@@ -226,10 +298,14 @@ public class MentorshipActivity extends AppCompatActivity {
             
             switch (currentTab) {
                 case "as_mentor":
-                    shouldInclude = currentUserId.equals(connection.getMentorId());
+                    // Show connections where current user is the mentor
+                    shouldInclude = currentUserId.equals(connection.getMentorId()) && 
+                                    !"available".equals(connection.getStatus());
                     break;
                 case "as_mentee":
-                    shouldInclude = currentUserId.equals(connection.getMenteeId());
+                    // Show available mentors or existing connections where current user is mentee
+                    shouldInclude = "available".equals(connection.getStatus()) || 
+                                    currentUserId.equals(connection.getMenteeId());
                     break;
             }
             
@@ -318,6 +394,36 @@ public class MentorshipActivity extends AppCompatActivity {
                     Toast.makeText(this, "Failed to update connection", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Failed to update mentorship status", e);
                     AnalyticsHelper.logError("mentorship_update_failed", e.getMessage(), "MentorshipActivity");
+                });
+    }
+    
+    private void requestMentorship(MentorshipConnection connection) {
+        // Create a new mentorship request
+        MentorshipConnection newConnection = new MentorshipConnection();
+        newConnection.setMentorId(connection.getMentorId());
+        newConnection.setMenteeId(currentUserId);
+        newConnection.setMentorName(connection.getMentorName());
+        newConnection.setMentorTitle(connection.getMentorTitle());
+        newConnection.setMentorCompany(connection.getMentorCompany());
+        newConnection.setStatus("pending");
+        newConnection.request(); // This sets the requestedAt timestamp
+        
+        db.collection("mentor_connections")
+                .add(newConnection)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Mentorship request sent!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Mentorship request created with ID: " + documentReference.getId());
+                    
+                    // Refresh the data to show the new connection
+                    loadMentorshipConnections();
+                    
+                    // Log analytics
+                    AnalyticsHelper.logMentorConnection("request_sent", connection.getMentorId());
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to send mentorship request", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Failed to create mentorship request", e);
+                    AnalyticsHelper.logError("mentorship_request_failed", e.getMessage(), "MentorshipActivity");
                 });
     }
 
