@@ -143,14 +143,11 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
 
     private void updateEmptyState() {
         int itemCount = articleAdapter.getItemCount();
-        android.util.Log.d("KnowledgeActivity", "updateEmptyState - Item count: " + itemCount);
         
         if (itemCount == 0) {
-            android.util.Log.d("KnowledgeActivity", "Showing empty state");
             emptyStateLayout.setVisibility(View.VISIBLE);
             recyclerViewArticles.setVisibility(View.GONE);
         } else {
-            android.util.Log.d("KnowledgeActivity", "Showing RecyclerView with " + itemCount + " items");
             emptyStateLayout.setVisibility(View.GONE);
             recyclerViewArticles.setVisibility(View.VISIBLE);
         }
@@ -166,15 +163,11 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
             String content = data.getStringExtra("content");
             String category = data.getStringExtra("category");
 
-            android.util.Log.d("KnowledgeActivity", "Received new article: " + title + ", category: " + category);
-
             if (title != null && description != null && content != null && category != null) {
                 Article newArticle = new Article(title, description, content, category);
                 newArticle.setId("article_" + System.currentTimeMillis());
                 newArticle.setAuthorName("You");
                 newArticle.setDateCreated(new Date()); // Current time - will be newest
-
-                android.util.Log.d("KnowledgeActivity", "Articles before adding: " + articles.size());
                 
                 // Use addArticle method which handles both lists
                 articleAdapter.addArticle(newArticle);
@@ -182,11 +175,7 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
                 // Also add to our local list for consistency  
                 articles.add(0, newArticle);
                 
-                android.util.Log.d("KnowledgeActivity", "Articles after adding: " + articles.size());
-                
                 updateEmptyState();
-                
-                android.util.Log.d("KnowledgeActivity", "Used addArticle method on adapter");
                 
                 // Scroll to the top to show the new article
                 recyclerViewArticles.scrollToPosition(0);
