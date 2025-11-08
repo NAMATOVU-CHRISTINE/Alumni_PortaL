@@ -68,6 +68,7 @@
         <activity android:name=".activities.PrivacySettingsActivity" />
         <activity android:name=".CareerTipsActivity" />
         <activity android:name=".SavedCareerTipsActivity" />
+        <activity android:name=".GrowSectionActivity" />
         <activity android:name=".KnowledgeActivity" />
         <activity android:name=".AddArticleActivity" />
         <activity android:name=".ArticleDetailActivity" />

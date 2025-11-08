@@ -172,6 +172,7 @@
                     android:textSize="20sp"/>
 
                 <Button
+                    android:id="@+id/btnSeeAllGrow"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -192,6 +193,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <!-- 1. Mentors Card (First) -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/mentorCard"
                         android:layout_width="160dp"
@@ -239,8 +241,9 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!-- 2. Jobs & Opportunities Card (Second) -->
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/careerTipsCard"
+                        android:id="@+id/jobsOpportunitiesCard"
                         android:layout_width="160dp"
                         android:layout_height="120dp"
                         android:layout_marginEnd="16dp"
@@ -256,19 +259,19 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:padding="16dp"
-                            android:background="@color/light_green">
+                            android:background="@color/light_purple">
 
                             <ImageView
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:src="@drawable/ic_school"
-                                android:contentDescription="Career Tips"
+                                android:src="@drawable/ic_work"
+                                android:contentDescription="Jobs &amp; Opportunities"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Career Tips"
+                                android:text="💼 Jobs &amp; Opportunities"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -278,7 +281,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Advance your career"
+                                android:text="Find your next opportunity"
                                 android:textSize="11sp"
                                 android:textColor="@color/dark_gray"
                                 android:textAlignment="center"
@@ -286,10 +289,12 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!-- 3. Knowledge Hub Card (Third) -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/knowledgeHubCard"
                         android:layout_width="160dp"
                         android:layout_height="120dp"
+                        android:layout_marginEnd="16dp"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="3dp"
                         android:clickable="true"
@@ -332,11 +337,11 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!-- 4. Career Tips Card (Fourth) -->
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/jobsOpportunitiesCard"
+                        android:id="@+id/careerTipsCard"
                         android:layout_width="160dp"
                         android:layout_height="120dp"
-                        android:layout_marginEnd="16dp"
                         app:cardCornerRadius="16dp"
                         app:cardElevation="3dp"
                         android:clickable="true"
@@ -349,19 +354,19 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:padding="16dp"
-                            android:background="@color/light_purple">
+                            android:background="@color/light_green">
 
                             <ImageView
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:src="@drawable/ic_work"
-                                android:contentDescription="Jobs &amp; Opportunities"
+                                android:src="@drawable/ic_school"
+                                android:contentDescription="Career Tips"
                                 app:tint="@color/must_green" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="💼 Jobs &amp; Opportunities"
+                                android:text="Career Tips"
                                 android:textSize="14sp"
                                 android:textColor="@color/black"
                                 android:textAlignment="center"
@@ -371,7 +376,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Find career opportunities"
+                                android:text="Advance your career"
                                 android:textSize="11sp"
                                 android:textColor="@color/dark_gray"
                                 android:textAlignment="center"
@@ -383,31 +388,15 @@
             </HorizontalScrollView>
 
             <!-- Connect Section -->
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🤝 Connect"
-                    android:textAppearance="@style/App.TextAppearance.Title"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
-
-                <Button
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="@string/see_all"
-                    android:textSize="12sp"
-                    android:textColor="@color/must_green"
-                    app:cornerRadius="20dp"/>
-            </LinearLayout>
+                android:text="🤝 Connect"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginBottom="12dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
