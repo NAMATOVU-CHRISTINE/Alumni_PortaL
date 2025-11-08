@@ -355,7 +355,7 @@
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:src="@drawable/ic_work"
-                                android:contentDescription="Jobs & Opportunities"
+                                android:contentDescription="Jobs &amp; Opportunities"
                                 app:tint="@color/must_green" />
 
                             <TextView
