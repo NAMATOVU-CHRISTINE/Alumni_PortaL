@@ -353,6 +353,35 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(this, JobsActivity.class);
             startActivity(intent);
         });
+        
+        // Setup new enhanced functionality
+        setupEnhancedClickListeners();
+    }
+    
+    private void setupEnhancedClickListeners() {
+        // Customize button - open profile customization
+        if (binding.btnCustomize != null) {
+            binding.btnCustomize.setOnClickListener(v -> {
+                Intent intent = new Intent(this, CustomizePreferencesActivity.class);
+                startActivity(intent);
+            });
+        }
+        
+        // Recent Activities bell button - navigate to recent activities
+        if (binding.btnViewAllActivities != null) {
+            binding.btnViewAllActivities.setOnClickListener(v -> {
+                Intent intent = new Intent(this, RecentActivitiesActivity.class);
+                startActivity(intent);
+            });
+        }
+        
+        // View more activities button in the card
+        if (binding.btnViewMoreActivities != null) {
+            binding.btnViewMoreActivities.setOnClickListener(v -> {
+                Intent intent = new Intent(this, RecentActivitiesActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     private void loadUserProfile(String userId) {
