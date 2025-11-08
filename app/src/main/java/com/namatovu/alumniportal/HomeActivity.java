@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.namatovu.alumniportal.databinding.ActivityHomeBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
-import com.namatovu.alumniportal.utils.DataProvider;
 import com.namatovu.alumniportal.models.User;
 import com.namatovu.alumniportal.models.Recommendation;
 import com.namatovu.alumniportal.models.RecentActivity;
@@ -490,27 +489,25 @@ public class HomeActivity extends AppCompatActivity {
     
     private void loadDynamicRecommendations(User user) {
         try {
-            List<Recommendation> recommendations = DataProvider.getPersonalizedRecommendations(user);
+            // Show empty state initially - will be populated when user starts using the app
+            List<Recommendation> recommendations = new ArrayList<>();
             updateRecommendationsUI(recommendations);
         } catch (Exception e) {
             Log.e(TAG, "Error loading recommendations", e);
-            // Hide recommendations section if error
-            if (binding.recommendationsCard != null) {
-                binding.recommendationsCard.setVisibility(View.GONE);
-            }
+            // Show empty state
+            showEmptyRecommendations();
         }
     }
     
     private void loadDynamicRecentActivities() {
         try {
-            List<RecentActivity> activities = DataProvider.getRecentActivities();
+            // Show empty state initially - will be populated with real user activities
+            List<RecentActivity> activities = new ArrayList<>();
             updateRecentActivitiesUI(activities);
         } catch (Exception e) {
             Log.e(TAG, "Error loading recent activities", e);
-            // Hide recent activities section if error
-            if (binding.recentActivityCard != null) {
-                binding.recentActivityCard.setVisibility(View.GONE);
-            }
+            // Show empty state
+            showEmptyRecentActivities();
         }
     }
     
@@ -560,5 +557,28 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
         Log.d(TAG, "Updated UI with " + (activities != null ? activities.size() : 0) + " activities");
+    }
+    
+    private void showEmptyRecommendations() {
+        if (binding.recommendationsCard != null) {
+            binding.recommendationsCard.setVisibility(View.VISIBLE);
+            // Show empty state
+            if (binding.recommendationsEmptyState != null) {
+                binding.recommendationsEmptyState.setVisibility(View.VISIBLE);
+            }
+            if (binding.recommendationsContent != null) {
+                binding.recommendationsContent.setVisibility(View.GONE);
+            }
+        }
+    }
+    
+    private void showEmptyRecentActivities() {
+        if (binding.recentActivityCard != null) {
+            binding.recentActivityCard.setVisibility(View.VISIBLE);
+            // Show message that activities will appear when users start interacting
+            if (binding.recentActivitiesRecyclerView != null) {
+                binding.recentActivitiesRecyclerView.setVisibility(View.GONE);
+            }
+        }
     }
 }

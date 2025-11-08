@@ -519,7 +519,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="✨ For You (Dynamic)"
+                    android:text="✨ For You (Live)"
                     android:textAppearance="@style/App.TextAppearance.Title"
                     android:textStyle="bold"
                     android:textColor="@color/black"
