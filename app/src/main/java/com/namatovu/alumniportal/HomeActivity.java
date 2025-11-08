@@ -26,6 +26,7 @@ import com.namatovu.alumniportal.adapters.HomeRecentActivitiesAdapter;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -509,14 +510,30 @@ public class HomeActivity extends AppCompatActivity {
     }
     
     private void updateRecommendationsUI(List<Recommendation> recommendations) {
-        // This will be implemented to dynamically populate recommendations
-        // For now, we'll keep the existing UI but make it more dynamic
-        Log.d(TAG, "Loaded " + recommendations.size() + " recommendations");
+        if (recommendationsAdapter != null && recommendations != null) {
+            recommendationsAdapter.updateRecommendations(recommendations);
+            
+            // Show/hide empty state
+            if (binding.recommendationsEmptyState != null) {
+                binding.recommendationsEmptyState.setVisibility(
+                    recommendations.isEmpty() ? View.VISIBLE : View.GONE
+                );
+            }
+        }
+        Log.d(TAG, "Updated UI with " + (recommendations != null ? recommendations.size() : 0) + " recommendations");
     }
     
     private void updateRecentActivitiesUI(List<RecentActivity> activities) {
-        // This will be implemented to dynamically populate recent activities
-        // For now, we'll keep the existing UI but make it more dynamic
-        Log.d(TAG, "Loaded " + activities.size() + " recent activities");
+        if (recentActivitiesAdapter != null && activities != null) {
+            recentActivitiesAdapter.updateActivities(activities);
+            
+            // Hide the card if no activities
+            if (binding.recentActivityCard != null) {
+                binding.recentActivityCard.setVisibility(
+                    activities.isEmpty() ? View.GONE : View.VISIBLE
+                );
+            }
+        }
+        Log.d(TAG, "Updated UI with " + (activities != null ? activities.size() : 0) + " activities");
     }
 }
