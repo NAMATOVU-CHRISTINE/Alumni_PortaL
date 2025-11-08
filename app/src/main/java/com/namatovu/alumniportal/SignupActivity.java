@@ -192,7 +192,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void createUser() {
-        String name = binding.fullName.getText().toString().trim();
+        String fullName = binding.fullName.getText().toString().trim();
         String username = binding.username.getText().toString().trim();
         String studentID = binding.studentID.getText().toString().trim();
         String email = binding.personalEmail.getText().toString().trim();
@@ -203,7 +203,7 @@ public class SignupActivity extends AppCompatActivity {
         ValidationHelper.ValidationResult formResult = FormValidationHelper.validateForm(
             new FormValidationHelper.EmailField(email),
             new FormValidationHelper.PasswordField(password),
-            new FormValidationHelper.FullNameField(name),
+            new FormValidationHelper.FullNameField(fullName),
             new FormValidationHelper.StudentIdField(studentID),
             () -> validateUsername(username)
         );
@@ -224,7 +224,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (!task.getResult().isEmpty()) {
                     binding.usernameLayout.setError("Username already taken");
                 } else {
-                    createAuthUser(email, password, name, username, studentID);
+                    createAuthUser(email, password, fullName, username, studentID);
                 }
             } else {
                 Log.e(TAG, "Error checking if username exists", task.getException());
