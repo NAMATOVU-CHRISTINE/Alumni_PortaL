@@ -2,6 +2,9 @@ package com.namatovu.alumniportal;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +22,8 @@ public class RecentActivitiesActivity extends AppCompatActivity {
     private RecyclerView recyclerViewActivities;
     private RecentActivityAdapter activityAdapter;
     private List<RecentActivity> activities;
+    private LinearLayout emptyStateLayout;
+    private TextView tvActivityCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,8 @@ public class RecentActivitiesActivity extends AppCompatActivity {
 
     private void initializeViews() {
         recyclerViewActivities = findViewById(R.id.recyclerViewActivities);
+        emptyStateLayout = findViewById(R.id.emptyStateLayout);
+        tvActivityCount = findViewById(R.id.tvActivityCount);
         activities = new ArrayList<>();
     }
 
@@ -65,6 +72,21 @@ public class RecentActivitiesActivity extends AppCompatActivity {
         // - Achievement unlocks
         
         activityAdapter.notifyDataSetChanged();
+        updateUI();
+    }
+    
+    private void updateUI() {
+        if (activities.isEmpty()) {
+            // Show empty state
+            recyclerViewActivities.setVisibility(View.GONE);
+            emptyStateLayout.setVisibility(View.VISIBLE);
+            tvActivityCount.setText("0 items");
+        } else {
+            // Show activities
+            recyclerViewActivities.setVisibility(View.VISIBLE);
+            emptyStateLayout.setVisibility(View.GONE);
+            tvActivityCount.setText(activities.size() + " items");
+        }
     }
 
     @Override
