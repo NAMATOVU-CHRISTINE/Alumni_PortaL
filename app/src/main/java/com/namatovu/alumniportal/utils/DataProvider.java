@@ -98,8 +98,8 @@ public class DataProvider {
     }
     
     private static String getUserField(User user) {
-        if (user != null && user.getJobTitle() != null) {
-            String jobTitle = user.getJobTitle().toLowerCase();
+        if (user != null && user.getCurrentJob() != null) {
+            String jobTitle = user.getCurrentJob().toLowerCase();
             if (jobTitle.contains("engineer") || jobTitle.contains("developer") || jobTitle.contains("tech")) {
                 return "Technology";
             } else if (jobTitle.contains("marketing") || jobTitle.contains("sales")) {
@@ -198,13 +198,13 @@ public class DataProvider {
         };
         
         for (int i = 0; i < 2; i++) {
+            long timestamp = System.currentTimeMillis() - (random.nextInt(24) * 60 * 60 * 1000);
             activities.add(new RecentActivity(
-                "job_" + System.currentTimeMillis() + "_" + i,
+                "🎯",
                 "New job opportunity available",
                 jobTitles[random.nextInt(jobTitles.length)],
-                RecentActivity.ActivityType.OPPORTUNITY,
-                System.currentTimeMillis() - (random.nextInt(24) * 60 * 60 * 1000), // Random time in last 24 hours
-                false
+                getTimeAgoString(timestamp),
+                RecentActivity.Type.OPPORTUNITY
             ));
         }
         
@@ -221,13 +221,13 @@ public class DataProvider {
             "peer Emma Watson"
         };
         
+        long timestamp = System.currentTimeMillis() - (random.nextInt(12) * 60 * 60 * 1000);
         activities.add(new RecentActivity(
-            "msg_" + System.currentTimeMillis(),
+            "💬",
             "New message from " + senders[random.nextInt(senders.length)],
             "You have a new message in your inbox",
-            RecentActivity.ActivityType.MESSAGE,
-            System.currentTimeMillis() - (random.nextInt(12) * 60 * 60 * 1000), // Random time in last 12 hours
-            false
+            getTimeAgoString(timestamp),
+            RecentActivity.Type.MESSAGE
         ));
         
         return activities;
@@ -236,13 +236,13 @@ public class DataProvider {
     private static List<RecentActivity> generateConnectionActivities() {
         List<RecentActivity> activities = new ArrayList<>();
         
+        long timestamp = System.currentTimeMillis() - (random.nextInt(6) * 60 * 60 * 1000);
         activities.add(new RecentActivity(
-            "conn_" + System.currentTimeMillis(),
+            "🤝",
             "New connection request",
             "3 alumni want to connect with you",
-            RecentActivity.ActivityType.CONNECTION,
-            System.currentTimeMillis() - (random.nextInt(6) * 60 * 60 * 1000), // Random time in last 6 hours
-            false
+            getTimeAgoString(timestamp),
+            RecentActivity.Type.CONNECTION
         ));
         
         return activities;
@@ -258,15 +258,33 @@ public class DataProvider {
             "Skill assessment completed"
         };
         
+        long timestamp = System.currentTimeMillis() - (random.nextInt(3) * 60 * 60 * 1000);
         activities.add(new RecentActivity(
-            "ach_" + System.currentTimeMillis(),
+            "🏆",
             achievements[random.nextInt(achievements.length)],
             "Congratulations on your progress!",
-            RecentActivity.ActivityType.ACHIEVEMENT,
-            System.currentTimeMillis() - (random.nextInt(3) * 60 * 60 * 1000), // Random time in last 3 hours
-            false
+            getTimeAgoString(timestamp),
+            RecentActivity.Type.ACHIEVEMENT
         ));
         
         return activities;
+    }
+    
+    private static String getTimeAgoString(long timestamp) {
+        long now = System.currentTimeMillis();
+        long diff = now - timestamp;
+        
+        if (diff < 60000) { // Less than 1 minute
+            return "Just now";
+        } else if (diff < 3600000) { // Less than 1 hour
+            int minutes = (int) (diff / 60000);
+            return minutes + " min ago";
+        } else if (diff < 86400000) { // Less than 1 day
+            int hours = (int) (diff / 3600000);
+            return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
+        } else {
+            int days = (int) (diff / 86400000);
+            return days + " day" + (days > 1 ? "s" : "") + " ago";
+        }
     }
 }

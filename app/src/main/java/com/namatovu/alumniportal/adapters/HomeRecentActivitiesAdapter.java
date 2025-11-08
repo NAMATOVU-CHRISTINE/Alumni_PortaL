@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.models.RecentActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class HomeRecentActivitiesAdapter extends RecyclerView.Adapter<HomeRecentActivitiesAdapter.ActivityViewHolder> {
     
@@ -67,7 +64,7 @@ public class HomeRecentActivitiesAdapter extends RecyclerView.Adapter<HomeRecent
         
         public void bind(RecentActivity activity) {
             titleView.setText(activity.getTitle());
-            timeView.setText(getTimeAgo(activity.getTimestamp()));
+            timeView.setText(activity.getTimeStamp()); // Use the timestamp string directly
             
             // Set icon based on activity type
             String icon;
@@ -98,24 +95,6 @@ public class HomeRecentActivitiesAdapter extends RecyclerView.Adapter<HomeRecent
             
             // Show/hide unread indicator
             unreadIndicator.setVisibility(activity.isRead() ? View.GONE : View.VISIBLE);
-        }
-        
-        private String getTimeAgo(long timestamp) {
-            long now = System.currentTimeMillis();
-            long diff = now - timestamp;
-            
-            if (diff < 60000) { // Less than 1 minute
-                return "Just now";
-            } else if (diff < 3600000) { // Less than 1 hour
-                int minutes = (int) (diff / 60000);
-                return minutes + " min ago";
-            } else if (diff < 86400000) { // Less than 1 day
-                int hours = (int) (diff / 3600000);
-                return hours + " hour" + (hours > 1 ? "s" : "") + " ago";
-            } else {
-                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd", Locale.getDefault());
-                return sdf.format(new Date(timestamp));
-            }
         }
     }
 }
