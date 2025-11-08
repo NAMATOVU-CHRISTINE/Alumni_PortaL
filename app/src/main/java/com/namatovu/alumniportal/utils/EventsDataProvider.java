@@ -43,8 +43,8 @@ public class EventsDataProvider {
             analytics.setTotalArticles(news.size());
         }
         
-        // Will show actual data when content is added
-        analytics.setOverallTopCategory("No data yet");
+        // Update analytics - will calculate top category based on actual data
+        analytics.updateAnalytics();
         
         return analytics;
     }
