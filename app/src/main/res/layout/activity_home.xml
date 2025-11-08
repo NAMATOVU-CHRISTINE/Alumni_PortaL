@@ -508,7 +508,7 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- For You Section -->
+            <!-- For You Section - UPDATED NOV 8, 2025 - NO MORE STATIC DATA -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -519,7 +519,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="✨ For You"
+                    android:text="✨ For You (Dynamic)"
                     android:textAppearance="@style/App.TextAppearance.Title"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -671,19 +671,19 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Recent Activity Enhanced Section -->
+            <!-- Recent Activity Enhanced Section - UPDATED NOV 8, 2025 - DYNAMIC CONTENT -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="12dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="📈 Recent Activity"
+                    android:text="📈 Recent Activity (Live)"
                     android:textAppearance="@style/App.TextAppearance.Title"
                     android:textStyle="bold"
                     android:textColor="@color/black"
