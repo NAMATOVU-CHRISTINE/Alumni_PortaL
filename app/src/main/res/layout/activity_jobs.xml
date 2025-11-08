@@ -82,52 +82,59 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Filter Chips -->
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupCategories"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                app:singleSelection="true"
-                app:selectionRequired="true"
-                app:chipSpacingHorizontal="8dp">
+                android:scrollbars="none">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAll"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupCategories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All"
-                    android:checked="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:chipSpacingHorizontal="8dp">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipInternships"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🎓 Internships"
-                    style="@style/Widget.Material3.Chip.Filter" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="All"
+                        android:checked="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipJobs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="💼 Jobs"
-                    style="@style/Widget.Material3.Chip.Filter" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipInternships"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎓 Internships"
+                        style="@style/Widget.Material3.Chip.Filter" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipGraduate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🚀 Graduate Training"
-                    style="@style/Widget.Material3.Chip.Filter" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipJobs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💼 Jobs"
+                        style="@style/Widget.Material3.Chip.Filter" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipApprenticeship"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔧 Apprenticeships"
-                    style="@style/Widget.Material3.Chip.Filter" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipGraduate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🚀 Graduate Training"
+                        style="@style/Widget.Material3.Chip.Filter" />
 
-            </com.google.android.material.chip.ChipGroup>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipApprenticeship"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔧 Apprenticeships"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
 
             <!-- Featured Opportunities Section -->
             <LinearLayout

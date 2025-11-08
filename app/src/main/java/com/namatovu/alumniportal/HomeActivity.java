@@ -179,6 +179,7 @@ public class HomeActivity extends AppCompatActivity {
 
         setupToolbar();
         setupCardClickListeners();
+        setupSeeAllClickListeners();
         setupMotivationalTipsRotation();
         setupSettingsClickListener();
 
@@ -294,6 +295,14 @@ public class HomeActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void setupSeeAllClickListeners() {
+        // See All for Grow section - shows all growth opportunities
+        binding.btnSeeAllGrow.setOnClickListener(v -> {
+            Intent intent = new Intent(this, GrowSectionActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupCardClickListeners() {
