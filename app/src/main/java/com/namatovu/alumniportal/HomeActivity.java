@@ -513,6 +513,26 @@ public class HomeActivity extends AppCompatActivity {
         if (recommendationsAdapter != null && recommendations != null) {
             recommendationsAdapter.updateRecommendations(recommendations);
             
+            // Update badge dynamically
+            if (binding.recommendationsBadge != null) {
+                if (recommendations.size() > 0) {
+                    binding.recommendationsBadge.setText(recommendations.size() + " new");
+                    binding.recommendationsBadge.setVisibility(View.VISIBLE);
+                } else {
+                    binding.recommendationsBadge.setVisibility(View.GONE);
+                }
+            }
+            
+            // Update description dynamically
+            if (binding.recommendationsDescription != null) {
+                if (recommendations.size() > 0) {
+                    binding.recommendationsDescription.setText("Based on your profile and interests, we found " + recommendations.size() + " exciting opportunities that match your skills.");
+                    binding.recommendationsDescription.setVisibility(View.VISIBLE);
+                } else {
+                    binding.recommendationsDescription.setVisibility(View.GONE);
+                }
+            }
+            
             // Show/hide empty state
             if (binding.recommendationsEmptyState != null) {
                 binding.recommendationsEmptyState.setVisibility(
