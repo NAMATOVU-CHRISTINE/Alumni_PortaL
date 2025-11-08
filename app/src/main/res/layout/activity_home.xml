@@ -526,6 +526,7 @@
                     android:textSize="20sp"/>
 
                 <Button
+                    android:id="@+id/btnCustomize"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -581,21 +582,189 @@
                             android:id="@+id/recommendationsBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 new"
+                            android:text="3 new"
                             android:textAppearance="@style/App.TextAppearance.Body"
                             android:textStyle="bold"
                             android:textColor="@color/must_green"
                             android:textSize="12sp"
-                            android:visibility="gone"/>
+                            android:visibility="visible"/>
                     </LinearLayout>
 
-                    <!-- Content Area - Shows either recommendations or empty state -->
+                    <!-- Content Area - Shows recommendations -->
                     <LinearLayout
                         android:id="@+id/recommendationsContent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
+
+                        <!-- Sample Recommendation 1 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:text="💼"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="@color/light_green" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Complete your profile"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Add skills &amp; experience to get better job matches"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="→"
+                                android:textSize="16sp"
+                                android:textColor="@color/must_green" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/light_gray"
+                            android:layout_marginVertical="4dp" />
+
+                        <!-- Sample Recommendation 2 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:text="🎯"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="@color/light_green" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="3 new job opportunities"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Software Developer positions matching your skills"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="→"
+                                android:textSize="16sp"
+                                android:textColor="@color/must_green" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/light_gray"
+                            android:layout_marginVertical="4dp" />
+
+                        <!-- Sample Recommendation 3 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:text="📚"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:background="@drawable/circle_background"
+                                android:backgroundTint="@color/light_green" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="12dp">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Recommended learning"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/text_primary" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Machine Learning course based on your interests"
+                                    android:textSize="12sp"
+                                    android:textColor="@color/text_secondary"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="→"
+                                android:textSize="16sp"
+                                android:textColor="@color/must_green" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/recommendationsDescription"
@@ -661,15 +830,35 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Recent Activity Enhanced Section -->
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="📈 @string/recent_activity"
-                android:textAppearance="@style/App.TextAppearance.Title"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginBottom="12dp"
-                android:textSize="20sp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📈 @string/recent_activity"
+                    android:textAppearance="@style/App.TextAppearance.Title"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnViewAllActivities"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="🔔 View All"
+                    android:textSize="12sp"
+                    android:textColor="@color/must_green"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    app:cornerRadius="20dp"
+                    android:minWidth="0dp" />
+
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/recentActivityCard"
@@ -687,44 +876,119 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
+                    <!-- Recent Activity Items -->
                     <LinearLayout
-                        android:id="@+id/noActivityLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:visibility="visible"
-                        android:padding="32dp">
-
-                        <ImageView
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:src="@drawable/ic_event"
-                            android:contentDescription="No activities"
-                            app:tint="@color/light_gray"
-                            android:layout_marginBottom="16dp"/>
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="No new activities yet"
-                            android:textAppearance="@style/App.TextAppearance.Subtitle"
-                            android:textColor="@color/dark_gray"
-                            android:textAlignment="center"
-                            android:textSize="16sp"/>
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:text="🎯"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/light_green" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Check back soon for updates from your network!"
-                            android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/light_gray"
-                            android:textAlignment="center"
-                            android:layout_marginTop="8dp"
-                            android:textSize="14sp"/>
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="New job opportunity available"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="2 hours ago"
+                                android:textSize="11sp"
+                                android:textColor="@color/text_secondary"
+                                android:layout_marginTop="2dp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/must_green" />
+
                     </LinearLayout>
 
-                    <!-- Dynamic activity items will be added here when available -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/light_gray"
+                        android:layout_marginVertical="4dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:text="💬"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/light_green" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="New message from mentor"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="5 hours ago"
+                                android:textSize="11sp"
+                                android:textColor="@color/text_secondary"
+                                android:layout_marginTop="2dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- View More Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewMoreActivities"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="View All Activities"
+                        android:textColor="@color/must_green"
+                        android:layout_marginTop="16dp"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        app:strokeColor="@color/must_green"
+                        app:cornerRadius="12dp" />
+
+                </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

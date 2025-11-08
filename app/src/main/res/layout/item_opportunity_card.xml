@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
         <!-- Header Section -->
         <LinearLayout
@@ -27,23 +27,23 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp">
 
             <!-- Company Logo/Icon -->
             <LinearLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:gravity="center"
                 android:background="@drawable/circle_background"
                 android:backgroundTint="@color/light_green"
-                android:layout_marginEnd="16dp">
+                android:layout_marginEnd="12dp">
 
                 <TextView
                     android:id="@+id/tvCategoryIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="💼"
-                    android:textSize="28sp" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Senior Frontend Developer"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
                     android:maxLines="2"
@@ -69,31 +69,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Google Inc."
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textColor="@color/text_secondary"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="2dp" />
 
                 <TextView
                     android:id="@+id/tvLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="📍 Mountain View, CA"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textColor="@color/text_secondary"
-                    android:layout_marginTop="2dp" />
+                    android:layout_marginTop="1dp" />
 
             </LinearLayout>
 
             <!-- Save Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:text="🔖"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:backgroundTint="@color/light_green"
                 style="@style/Widget.Material3.Button"
-                app:cornerRadius="24dp"
+                app:cornerRadius="20dp"
                 android:minWidth="0dp"
                 android:padding="0dp" />
 
@@ -143,12 +143,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="We're looking for a talented frontend developer to join our innovative team and help build the next generation of web applications. You'll work with cutting-edge technologies and collaborate with world-class engineers."
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:maxLines="3"
             android:ellipsize="end"
-            android:lineSpacingExtra="3dp" />
+            android:lineSpacingExtra="2dp" />
 
         <!-- Stats Section -->
         <LinearLayout
@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/tvDatePosted"
@@ -199,29 +199,29 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDetails"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="44dp"
                 android:layout_weight="1"
                 android:text="View Details"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="@color/must_green"
                 android:layout_marginEnd="8dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 app:strokeColor="@color/must_green"
-                app:cornerRadius="12dp"
+                app:cornerRadius="10dp"
                 app:icon="@drawable/ic_info"
                 app:iconTint="@color/must_green" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnApply"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="44dp"
                 android:layout_weight="1"
                 android:text="Apply Now"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/must_green"
                 android:layout_marginStart="8dp"
-                app:cornerRadius="12dp"
+                app:cornerRadius="10dp"
                 style="@style/Widget.Material3.Button"
                 app:icon="@drawable/ic_send"
                 app:iconTint="@color/white" />
