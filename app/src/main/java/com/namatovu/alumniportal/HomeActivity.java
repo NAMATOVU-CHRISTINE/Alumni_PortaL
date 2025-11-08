@@ -17,7 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.namatovu.alumniportal.databinding.ActivityHomeBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
+import com.namatovu.alumniportal.utils.DataProvider;
 import com.namatovu.alumniportal.models.User;
+import com.namatovu.alumniportal.models.Recommendation;
+import com.namatovu.alumniportal.models.RecentActivity;
+
+import java.util.List;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -429,6 +434,12 @@ public class HomeActivity extends AppCompatActivity {
             binding.homeProfileImage
         );
 
+        // Load dynamic recommendations
+        loadDynamicRecommendations(user);
+        
+        // Load dynamic recent activities
+        loadDynamicRecentActivities();
+
         updateProfileCompletion(user);
     }
 
@@ -444,5 +455,43 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             binding.homeSlogan.setVisibility(View.VISIBLE);
         }
+    }
+    
+    private void loadDynamicRecommendations(User user) {
+        try {
+            List<Recommendation> recommendations = DataProvider.getPersonalizedRecommendations(user);
+            updateRecommendationsUI(recommendations);
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading recommendations", e);
+            // Hide recommendations section if error
+            if (binding.recommendationsCard != null) {
+                binding.recommendationsCard.setVisibility(View.GONE);
+            }
+        }
+    }
+    
+    private void loadDynamicRecentActivities() {
+        try {
+            List<RecentActivity> activities = DataProvider.getRecentActivities();
+            updateRecentActivitiesUI(activities);
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading recent activities", e);
+            // Hide recent activities section if error
+            if (binding.recentActivityCard != null) {
+                binding.recentActivityCard.setVisibility(View.GONE);
+            }
+        }
+    }
+    
+    private void updateRecommendationsUI(List<Recommendation> recommendations) {
+        // This will be implemented to dynamically populate recommendations
+        // For now, we'll keep the existing UI but make it more dynamic
+        Log.d(TAG, "Loaded " + recommendations.size() + " recommendations");
+    }
+    
+    private void updateRecentActivitiesUI(List<RecentActivity> activities) {
+        // This will be implemented to dynamically populate recent activities
+        // For now, we'll keep the existing UI but make it more dynamic
+        Log.d(TAG, "Loaded " + activities.size() + " recent activities");
     }
 }
