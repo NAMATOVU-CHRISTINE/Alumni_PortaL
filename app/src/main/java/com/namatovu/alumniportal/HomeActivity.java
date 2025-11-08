@@ -191,6 +191,7 @@ public class HomeActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         setupToolbar();
+        setupRecyclerViews();
         setupCardClickListeners();
         setupSeeAllClickListeners();
         setupMotivationalTipsRotation();
@@ -207,6 +208,22 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupToolbar() {
         setSupportActionBar(binding.toolbar);
+    }
+    
+    private void setupRecyclerViews() {
+        // Setup recommendations RecyclerView
+        if (binding.recommendationsRecyclerView != null) {
+            binding.recommendationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recommendationsAdapter = new RecommendationsAdapter(this, new ArrayList<>());
+            binding.recommendationsRecyclerView.setAdapter(recommendationsAdapter);
+        }
+        
+        // Setup recent activities RecyclerView
+        if (binding.recentActivitiesRecyclerView != null) {
+            binding.recentActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recentActivitiesAdapter = new HomeRecentActivitiesAdapter(this, new ArrayList<>());
+            binding.recentActivitiesRecyclerView.setAdapter(recentActivitiesAdapter);
+        }
     }
 
     private void setupSettingsClickListener() {
