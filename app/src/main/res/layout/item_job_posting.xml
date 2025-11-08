@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/textCompany"
@@ -28,6 +29,8 @@
                 android:layout_weight="1"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 android:textColor="?attr/colorOnSurface"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="Tech Corp" />
 
             <TextView
@@ -40,6 +43,8 @@
                 android:paddingEnd="8dp"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textColor="?attr/colorPrimary"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="Full Time" />
 
         </LinearLayout>
@@ -48,18 +53,20 @@
             android:id="@+id/textPosition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
+            android:layout_marginBottom="8dp"
+            android:maxLines="2"
+            android:ellipsize="end"
             tools:text="Senior Software Engineer" />
 
         <!-- Location and Salary -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="16dp"
@@ -75,6 +82,8 @@
                 android:layout_marginStart="4dp"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="San Francisco, CA" />
 
             <TextView
@@ -84,6 +93,8 @@
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorPrimary"
                 android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="$120k - $150k" />
 
         </LinearLayout>
@@ -93,30 +104,39 @@
             android:id="@+id/textDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:maxLines="3"
+            android:layout_marginBottom="8dp"
+            android:maxLines="2"
             android:ellipsize="end"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
             tools:text="We are looking for a talented software engineer to join our team..." />
 
-        <!-- Posted Date -->
-        <TextView
-            android:id="@+id/textPostedDate"
+        <!-- Bottom Row: Posted Date and Apply Button -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            tools:text="Posted 2 days ago" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <Button
-            android:id="@+id/buttonApply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp"
-            android:text="Apply" />
+            <TextView
+                android:id="@+id/textPostedDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Posted 2 days ago" />
+
+            <Button
+                android:id="@+id/buttonApply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apply"
+                style="@style/Widget.Material3.Button" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
