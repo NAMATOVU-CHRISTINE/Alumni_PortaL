@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="14dp">
 
         <!-- Header with Company and Category -->
         <LinearLayout
@@ -26,19 +26,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="10dp">
 
             <!-- Company Logo Placeholder -->
             <TextView
                 android:id="@+id/tvCompanyLogo"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:text="🏢"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:gravity="center"
                 android:background="@drawable/circle_background"
                 android:backgroundTint="@color/light_gray"
-                android:layout_marginEnd="12dp" />
+                android:layout_marginEnd="10dp" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -51,17 +51,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Microsoft"
-                    android:textSize="15sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:layout_marginBottom="2dp" />
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
                 <TextView
                     android:id="@+id/tvDatePosted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Posted 2 days ago"
-                    android:textSize="11sp"
+                    android:textSize="10sp"
                     android:textColor="@color/text_secondary" />
 
             </LinearLayout>
@@ -72,8 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🎓 Internship"
-                android:textSize="10sp"
-                app:chipMinHeight="28dp"
+                android:textSize="9sp"
+                app:chipMinHeight="24dp"
                 style="@style/Widget.Material3.Chip.Assist" />
 
         </LinearLayout>
@@ -84,10 +85,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Software Engineering Internship"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="6dp"
             android:maxLines="2"
             android:ellipsize="end" />
 
@@ -96,20 +97,19 @@
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Join our dynamic team and gain hands-on experience in software development..."
-            android:textSize="13sp"
+            android:text="Join our dynamic team and gain hands-on experience..."
+            android:textSize="12sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:maxLines="2"
-            android:ellipsize="end"
-            android:lineSpacingExtra="2dp" />
+            android:ellipsize="end" />
 
         <!-- Location and Deadline -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:id="@+id/tvLocation"
@@ -117,16 +117,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="📍 Seattle, WA"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textColor="@color/text_secondary"
-                android:drawablePadding="4dp" />
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/tvDeadline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Apply by Nov 25"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/must_green" />
 
@@ -136,11 +137,12 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewDetails"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="40dp"
             android:text="View Details"
+            android:textSize="12sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/must_green"
-            app:cornerRadius="12dp"
+            app:cornerRadius="10dp"
             style="@style/Widget.Material3.Button" />
 
     </LinearLayout>
