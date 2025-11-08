@@ -52,57 +52,18 @@ public class RecentActivitiesActivity extends AppCompatActivity {
     }
 
     private void loadRecentActivities() {
-        // Sample recent activities - replace with real data
+        // Start with empty list - will be populated when users perform actual actions
         activities.clear();
         
-        activities.add(new RecentActivity(
-            "🎯", 
-            "New Job Opportunity", 
-            "Software Developer position at TechCorp matches your skills",
-            "2 hours ago",
-            RecentActivity.Type.OPPORTUNITY
-        ));
+        // TODO: Load real user activities from database/API when available
+        // This will show notifications for:
+        // - New job opportunities matching user profile
+        // - Messages from mentors/connections
+        // - Knowledge hub updates
+        // - New connections/network updates
+        // - Profile completion milestones
+        // - Achievement unlocks
         
-        activities.add(new RecentActivity(
-            "💬", 
-            "New Message", 
-            "Dr. Mukasa replied to your mentorship request",
-            "5 hours ago",
-            RecentActivity.Type.MESSAGE
-        ));
-        
-        activities.add(new RecentActivity(
-            "📚", 
-            "Knowledge Update", 
-            "New article: 'Machine Learning Fundamentals' added",
-            "1 day ago",
-            RecentActivity.Type.KNOWLEDGE
-        ));
-        
-        activities.add(new RecentActivity(
-            "👥", 
-            "New Connection", 
-            "Jane Nakato accepted your connection request",
-            "2 days ago",
-            RecentActivity.Type.CONNECTION
-        ));
-        
-        activities.add(new RecentActivity(
-            "🎓", 
-            "Profile Update", 
-            "Your profile completeness increased to 85%",
-            "3 days ago",
-            RecentActivity.Type.PROFILE
-        ));
-        
-        activities.add(new RecentActivity(
-            "🌟", 
-            "Achievement", 
-            "You've completed 5 mentorship sessions!",
-            "1 week ago",
-            RecentActivity.Type.ACHIEVEMENT
-        ));
-
         activityAdapter.notifyDataSetChanged();
     }
 
