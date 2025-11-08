@@ -66,7 +66,16 @@ public class DataProvider {
         activities.addAll(generateAchievementActivities());
         
         // Sort by timestamp and return recent ones
-        Collections.sort(activities, (a, b) -> Long.compare(b.getTimestamp(), a.getTimestamp()));
+        Collections.sort(activities, (a, b) -> {
+            try {
+                // Parse timestamp strings and compare
+                long timeA = Long.parseLong(a.getTimeStamp().replaceAll("[^0-9]", ""));
+                long timeB = Long.parseLong(b.getTimeStamp().replaceAll("[^0-9]", ""));
+                return Long.compare(timeB, timeA);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        });
         return activities.subList(0, Math.min(5, activities.size()));
     }
     
@@ -78,8 +87,8 @@ public class DataProvider {
         
         if (user.getFullName() != null && !user.getFullName().isEmpty()) completedFields++;
         if (user.getEmail() != null && !user.getEmail().isEmpty()) completedFields++;
-        if (user.getPhone() != null && !user.getPhone().isEmpty()) completedFields++;
-        if (user.getJobTitle() != null && !user.getJobTitle().isEmpty()) completedFields++;
+        if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) completedFields++;
+        if (user.getCurrentJob() != null && !user.getCurrentJob().isEmpty()) completedFields++;
         if (user.getCompany() != null && !user.getCompany().isEmpty()) completedFields++;
         if (user.getLocation() != null && !user.getLocation().isEmpty()) completedFields++;
         if (user.getBio() != null && !user.getBio().isEmpty()) completedFields++;
