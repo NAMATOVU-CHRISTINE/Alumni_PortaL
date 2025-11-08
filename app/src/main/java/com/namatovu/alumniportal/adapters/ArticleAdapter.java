@@ -56,9 +56,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
 
     @Override
     public int getItemCount() {
-        int count = filteredArticles.size();
-        android.util.Log.d("ArticleAdapter", "getItemCount returning: " + count);
-        return count;
+        return filteredArticles.size();
     }
 
     // Filter methods
