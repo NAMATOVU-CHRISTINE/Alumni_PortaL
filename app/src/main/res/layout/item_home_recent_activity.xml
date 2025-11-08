@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/activityIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:text="🎯"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="@color/light_green" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/activityTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New job opportunity available"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/activityTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2 hours ago"
+            android:textSize="11sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginTop="2dp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/unreadIndicator"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="@color/must_green" />
+
+</LinearLayout>

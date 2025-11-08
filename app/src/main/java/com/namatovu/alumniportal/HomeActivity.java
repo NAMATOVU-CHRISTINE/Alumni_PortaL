@@ -21,6 +21,10 @@ import com.namatovu.alumniportal.utils.DataProvider;
 import com.namatovu.alumniportal.models.User;
 import com.namatovu.alumniportal.models.Recommendation;
 import com.namatovu.alumniportal.models.RecentActivity;
+import com.namatovu.alumniportal.adapters.RecommendationsAdapter;
+import com.namatovu.alumniportal.adapters.HomeRecentActivitiesAdapter;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +38,10 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    
+    // Adapters for dynamic content
+    private RecommendationsAdapter recommendationsAdapter;
+    private HomeRecentActivitiesAdapter recentActivitiesAdapter;
     
     // Motivational tips rotation
     private Handler motivationHandler;
