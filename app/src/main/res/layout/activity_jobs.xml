@@ -155,11 +155,13 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFeatured"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:clipToPadding="false"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_opportunity_featured" />
 
