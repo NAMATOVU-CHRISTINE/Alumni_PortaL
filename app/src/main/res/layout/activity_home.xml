@@ -598,36 +598,36 @@
                         android:orientation="vertical"
                         android:visibility="visible">
 
-                        <!-- Sample Recommendation 1 -->
-                    <!-- Dynamic Recommendations Content -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recommendationsRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:id="@+id/recommendationsDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Based on your profile and interests, we found exciting opportunities that match your skills."
-                        android:textAppearance="@style/App.TextAppearance.Body"
-                        android:textColor="@color/dark_gray"
-                        android:layout_marginBottom="12dp"
-                        android:textSize="14sp"/>
-
-                    <Button
-                        android:id="@+id/jobsCard"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/browse_jobs"
-                        android:textSize="12sp"
-                        android:layout_gravity="end"
-                        android:textColor="@color/must_green"
-                        app:cornerRadius="20dp"/>                        <View
+                        <!-- Dynamic Recommendations Content -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recommendationsRecyclerView"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            android:layout_marginBottom="12dp" />
+
+                        <TextView
+                            android:id="@+id/recommendationsDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Based on your profile and interests, we found exciting opportunities that match your skills."
+                            android:textAppearance="@style/App.TextAppearance.Body"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginBottom="12dp"
+                            android:textSize="14sp"/>
+
+                        <Button
+                            android:id="@+id/jobsCard"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="@string/browse_jobs"
+                            android:textSize="12sp"
+                            android:layout_gravity="end"
+                            android:textColor="@color/must_green"
+                            app:cornerRadius="20dp"/>
+
+                    </LinearLayout>
                             android:layout_height="1dp"
                             android:background="@color/light_gray"
                             android:layout_marginVertical="4dp" />
@@ -684,86 +684,6 @@
 
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/light_gray"
-                            android:layout_marginVertical="4dp" />
-
-                        <!-- Sample Recommendation 3 -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="12dp"
-                            android:background="?attr/selectableItemBackground"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:text="📚"
-                                android:textSize="18sp"
-                                android:gravity="center"
-                                android:background="@drawable/circle_background"
-                                android:backgroundTint="@color/light_green" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:layout_marginStart="12dp">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Recommended learning"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/text_primary" />
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Machine Learning course based on your interests"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary"
-                                    android:layout_marginTop="2dp" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="→"
-                                android:textSize="16sp"
-                                android:textColor="@color/must_green" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/recommendationsDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Based on your profile and interests, we found exciting opportunities that match your skills."
-                            android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/dark_gray"
-                            android:layout_marginBottom="12dp"
-                            android:textSize="14sp"/>
-
-                        <Button
-                            android:id="@+id/jobsCard"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:text="@string/browse_jobs"
-                            android:textSize="12sp"
-                            android:layout_gravity="end"
-                            android:textColor="@color/must_green"
-                            app:cornerRadius="20dp"/>
-                    </LinearLayout>
-
                     <!-- Empty State -->
                     <LinearLayout
                         android:id="@+id/recommendationsEmptyState"
@@ -772,7 +692,7 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="16dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="48dp"
