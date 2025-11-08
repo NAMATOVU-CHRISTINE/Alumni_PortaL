@@ -333,6 +333,12 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
         
+        // Jobs & Opportunities card - navigate to comprehensive jobs & opportunities system
+        binding.jobsOpportunitiesCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, JobsActivity.class);
+            startActivity(intent);
+        });
+        
         // Recommendations card - navigate to comprehensive jobs & opportunities system
         binding.recommendationsCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, JobsActivity.class);
