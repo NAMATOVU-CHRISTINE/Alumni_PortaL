@@ -71,6 +71,9 @@
         <activity android:name=".KnowledgeActivity" />
         <activity android:name=".AddArticleActivity" />
         <activity android:name=".ArticleDetailActivity" />
+        <activity android:name=".JobsActivity" />
+        <activity android:name=".AddOpportunityActivity" />
+        <activity android:name=".OpportunityDetailActivity" />
         
         <!-- Services -->
         <service android:name=".services.AlumniNotificationService" 
