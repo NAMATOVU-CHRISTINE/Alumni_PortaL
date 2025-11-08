@@ -84,12 +84,6 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         recyclerViewArticles.setLayoutManager(layoutManager);
         recyclerViewArticles.setAdapter(articleAdapter);
         
-        // Debug logging
-        android.util.Log.d("KnowledgeActivity", "RecyclerView setup completed");
-        android.util.Log.d("KnowledgeActivity", "Layout manager set: " + (recyclerViewArticles.getLayoutManager() != null));
-        android.util.Log.d("KnowledgeActivity", "Adapter set: " + (recyclerViewArticles.getAdapter() != null));
-        android.util.Log.d("KnowledgeActivity", "RecyclerView visibility: " + recyclerViewArticles.getVisibility());
-        
         updateEmptyState();
     }
 
