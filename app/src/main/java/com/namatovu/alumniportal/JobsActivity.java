@@ -320,6 +320,7 @@ public class JobsActivity extends AppCompatActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             // Handle new opportunity added from AddOpportunityActivity
             String title = data.getStringExtra("title");
@@ -381,7 +382,41 @@ public class JobsActivity extends AppCompatActivity implements
                 // Scroll to top to show the new opportunity
                 recyclerViewOpportunities.scrollToPosition(0);
             }
+        } else if (requestCode == 200 && resultCode == RESULT_OK && data != null) {
+            // Handle result from OpportunityDetailActivity
+            String opportunityId = data.getStringExtra("opportunity_id");
+            int updatedApplications = data.getIntExtra("updated_applications", 0);
+            boolean isSaved = data.getBooleanExtra("is_saved", false);
+            
+            if (opportunityId != null) {
+                // Find and update the opportunity in our lists
+                updateOpportunityInLists(opportunityId, updatedApplications, isSaved);
+            }
         }
+    }
+
+    private void updateOpportunityInLists(String opportunityId, int updatedApplications, boolean isSaved) {
+        // Update in all opportunities list
+        for (Opportunity opp : allOpportunities) {
+            if (opp.getId().equals(opportunityId)) {
+                opp.setApplicationsCount(updatedApplications);
+                opp.setSaved(isSaved);
+                break;
+            }
+        }
+        
+        // Update in featured opportunities list
+        for (Opportunity opp : featuredOpportunities) {
+            if (opp.getId().equals(opportunityId)) {
+                opp.setApplicationsCount(updatedApplications);
+                opp.setSaved(isSaved);
+                break;
+            }
+        }
+        
+        // Refresh adapters
+        opportunityAdapter.notifyDataSetChanged();
+        featuredAdapter.notifyDataSetChanged();
     }
 
     // OpportunityAdapter.OnOpportunityClickListener implementation
@@ -396,7 +431,7 @@ public class JobsActivity extends AppCompatActivity implements
         intent.putExtra("opportunity_location", opportunity.getLocation());
         intent.putExtra("opportunity_deadline", opportunity.getFormattedDeadline());
         intent.putExtra("opportunity_applications", opportunity.getApplicationsCount());
-        startActivity(intent);
+        startActivityForResult(intent, 200); // Use request code 200 for detail activity
     }
 
     @Override
