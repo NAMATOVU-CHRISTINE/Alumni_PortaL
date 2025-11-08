@@ -148,8 +148,11 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFeatured"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="200dp"
                     android:orientation="horizontal"
+                    android:clipToPadding="false"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_opportunity_featured" />
 
@@ -159,7 +162,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="80dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -175,6 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
+                    android:clipToPadding="false"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_opportunity_card" />
 
