@@ -76,6 +76,7 @@
         <activity android:name=".AddOpportunityActivity" />
         <activity android:name=".OpportunityDetailActivity" />
         <activity android:name=".RecentActivitiesActivity" />
+        <activity android:name=".CustomizePreferencesActivity" />
         
         <!-- Services -->
         <service android:name=".services.AlumniNotificationService" 
