@@ -131,7 +131,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/must_green"
-                android:drawableStart="@drawable/ic_alarm"
+                android:drawableStart="@drawable/ic_event"
                 android:drawablePadding="4dp"
                 app:drawableTint="@color/must_green" />
 
@@ -166,7 +166,7 @@
                 android:text="Posted 3 days ago"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
-                android:drawableStart="@drawable/ic_schedule"
+                android:drawableStart="@drawable/ic_access_time"
                 android:drawablePadding="6dp"
                 app:drawableTint="@color/text_secondary" />
 
