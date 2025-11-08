@@ -29,7 +29,7 @@
             android:id="@+id/recommendationTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Complete your profile"
+            android:text=""
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary" />
@@ -38,7 +38,7 @@
             android:id="@+id/recommendationDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add skills &amp; experience to get better job matches"
+            android:text=""
             android:textSize="12sp"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="2dp" />
