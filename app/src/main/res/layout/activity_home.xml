@@ -332,6 +332,53 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/jobsOpportunitiesCard"
+                        android:layout_width="160dp"
+                        android:layout_height="120dp"
+                        android:layout_marginEnd="16dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="3dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="16dp"
+                            android:background="@color/light_purple">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_work"
+                                android:contentDescription="Jobs & Opportunities"
+                                app:tint="@color/must_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💼 Jobs &amp; Opportunities"
+                                android:textSize="14sp"
+                                android:textColor="@color/black"
+                                android:textAlignment="center"
+                                android:textStyle="bold"
+                                android:layout_marginTop="8dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Find career opportunities"
+                                android:textSize="11sp"
+                                android:textColor="@color/dark_gray"
+                                android:textAlignment="center"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
                 </LinearLayout>
             </HorizontalScrollView>
 
