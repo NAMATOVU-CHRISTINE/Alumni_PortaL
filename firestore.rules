@@ -1,190 +1,68 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Users collection - users can read all profiles, write only their own
     match /users/{userId} {
-      // Allow all authenticated users to read user profiles (for displaying names, etc.)
-      allow read: if request.auth != null;
-      
-      // Only allow users to write their own data
-      allow write: if request.auth != null && request.auth.uid == userId;
+      allow read: if true;
+      allow write: if request.auth.uid == userId;
     }
     
-    // Public alumni directory - read-only access to limited user data
-    match /alumni_directory/{userId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.uid == userId &&
-                      validateAlumniData(request.resource.data);
-    }
-    
-    // Job postings - authenticated users can read and post
-    match /job_postings/{postId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null && 
+                     (resource.data.notificationFor == request.auth.uid || 
+                      resource.data.sentBy == request.auth.uid);
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.sentBy;
       allow update, delete: if request.auth != null && 
-                               resource.data.postedBy == request.auth.uid;
+                               (resource.data.notificationFor == request.auth.uid ||
+                                resource.data.sentBy == request.auth.uid);
     }
     
-    // Job opportunities - authenticated users can read and post
-    match /job_opportunities/{opportunityId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && 
-                               resource.data.postedBy == request.auth.uid;
-    }
-    
-    // Articles - authenticated users can read and post
     match /articles/{articleId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null;
       allow update, delete: if request.auth != null && 
-                               resource.data.authorId == request.auth.uid;
+                               request.auth.uid == resource.data.authorId;
     }
     
-    // Mentor connections - users can manage their own mentor relationships
-    match /mentor_connections/{connectionId} {
-      allow read, write: if request.auth != null && 
-                            (request.auth.uid == resource.data.mentorId || 
-                             request.auth.uid == resource.data.menteeId);
-      allow create: if request.auth != null &&
-                       validateMentorConnection(request.resource.data);
+    match /job_postings/{postId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+                               request.auth.uid == resource.data.postedBy;
     }
     
-    // Rules for notifications collection (used for mentorship requests and other notifications)
-    match /notifications/{notificationId} {
-      // Allow authenticated users to read their own notifications
-      allow read: if request.auth != null && 
-                     (resource.data.notificationFor == request.auth.uid || 
-                      resource.data.sentBy == request.auth.uid);
-      
-      // Allow authenticated users to create notifications (mentorship requests, etc.)
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.sentBy;
-      
-      // Allow users to update notifications sent to them (for marking as read, etc.)
-      allow update: if request.auth != null && 
-                       (resource.data.notificationFor == request.auth.uid ||
-                        resource.data.sentBy == request.auth.uid);
-      
-      // Allow users to delete their own sent notifications or received notifications
-      allow delete: if request.auth != null && 
-                       (resource.data.notificationFor == request.auth.uid ||
-                        resource.data.sentBy == request.auth.uid);
+    match /job_opportunities/{opportunityId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+                               request.auth.uid == resource.data.postedBy;
     }
     
-    // Rules for mentorship collections (updated for better permissions)
     match /mentorships/{mentorshipId} {
-      // Allow authenticated users to read mentorships they're involved in
       allow read: if request.auth != null && 
                      (resource.data.mentorId == request.auth.uid || 
                       resource.data.menteeId == request.auth.uid);
-      
-      // Allow authenticated users to create mentorship requests as mentee
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.menteeId;
-      
-      // Allow mentors to update mentorship status, mentees to update their requests
-      allow update: if request.auth != null && 
-                       (resource.data.mentorId == request.auth.uid || 
-                        resource.data.menteeId == request.auth.uid);
-      
-      // Allow users to delete mentorships they're involved in
-      allow delete: if request.auth != null && 
-                       (resource.data.mentorId == request.auth.uid || 
-                        resource.data.menteeId == request.auth.uid);
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+                               (resource.data.mentorId == request.auth.uid || 
+                                resource.data.menteeId == request.auth.uid);
     }
     
-    // Rules for chats collection (if you have chat functionality)
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+                               resource.data.createdBy == request.auth.uid;
+    }
+    
     match /chats/{chatId} {
-      // Allow participants to read chats they're part of
       allow read: if request.auth != null && 
                      request.auth.uid in resource.data.participants;
-      
-      // Allow authenticated users to create chats
       allow create: if request.auth != null && 
                        request.auth.uid in request.resource.data.participants;
-      
-      // Allow participants to update chats
       allow update: if request.auth != null && 
                        request.auth.uid in resource.data.participants;
-    }
-    
-    // Events - authenticated users can read, admins can write
-    match /events/{eventId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && isAdmin();
-    }
-    
-    // News/Announcements - authenticated users can read, admins can write
-    match /news/{newsId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && isAdmin();
-    }
-    
-    // User feedback/reports - users can create, admins can read
-    match /feedback/{feedbackId} {
-      allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.userId &&
-                       validateFeedback(request.resource.data);
-      allow read: if request.auth != null && isAdmin();
-    }
-    
-    // Private user data that should never be accessible to other users
-    match /private_user_data/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Functions to validate data and check permissions
-    function validateAlumniData(data) {
-      return data.keys().hasAll(['fullName', 'major', 'graduationYear']) &&
-             data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 50 &&
-             data.major is string && data.major.size() > 0 && data.major.size() <= 100 &&
-             data.graduationYear is number && data.graduationYear >= 1950 && data.graduationYear <= 2030 &&
-             (!data.keys().hasAny(['bio']) || (data.bio is string && data.bio.size() <= 500)) &&
-             (!data.keys().hasAny(['skills']) || (data.skills is string && data.skills.size() <= 200));
-    }
-    
-    function validateJobPosting(data) {
-      return data.keys().hasAll(['title', 'company', 'description', 'postedBy', 'postedAt']) &&
-             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
-             data.company is string && data.company.size() > 0 && data.company.size() <= 100 &&
-             data.description is string && data.description.size() > 0 && data.description.size() <= 2000 &&
-             data.postedBy == request.auth.uid &&
-             data.postedAt == request.time &&
-             (!data.keys().hasAny(['salary']) || data.salary is string) &&
-             (!data.keys().hasAny(['location']) || data.location is string) &&
-             (!data.keys().hasAny(['requirements']) || (data.requirements is string && data.requirements.size() <= 1000));
-    }
-    
-    function validateMentorConnection(data) {
-      return data.keys().hasAll(['mentorId', 'menteeId', 'status', 'requestedAt']) &&
-             (data.mentorId == request.auth.uid || data.menteeId == request.auth.uid) &&
-             data.mentorId != data.menteeId &&
-             data.status in ['pending', 'accepted', 'rejected', 'ended'] &&
-             data.requestedAt == request.time &&
-             (!data.keys().hasAny(['message']) || (data.message is string && data.message.size() <= 500));
-    }
-    
-    function validateFeedback(data) {
-      return data.keys().hasAll(['userId', 'type', 'message', 'createdAt']) &&
-             data.userId == request.auth.uid &&
-             data.type in ['bug_report', 'feature_request', 'general_feedback', 'inappropriate_content'] &&
-             data.message is string && data.message.size() > 0 && data.message.size() <= 1000 &&
-             data.createdAt == request.time;
-    }
-    
-    function isVerifiedAlumni() {
-      // Check if user is verified alumni - implement based on your verification system
-      return request.auth != null && 
-             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isVerified == true;
-    }
-    
-    function isAdmin() {
-      // Check if user has admin privileges
-      return request.auth != null &&
-             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
   }
 }
