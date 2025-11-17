@@ -23,13 +23,10 @@ public class EmailService {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private Context context;
-    private GmailService gmailService;
-
     public EmailService(Context context) {
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
-        this.gmailService = new GmailService(context);
     }
 
     /**
@@ -144,17 +141,13 @@ public class EmailService {
                             // Create notification data
                             Map<String, Object> notificationData = createNotificationData(recipient, userName, otherUserName, connectionId, notificationType);
                             
-                            // Store notification in mentorship document first (like Firebase Auth stores email verification status)
+                            // Store notification in mentorship document
                             storeNotificationInMentorship(connectionId, notificationData)
                                     .addOnSuccessListener(aVoid -> {
-                                        // Now actually send the email using Gmail API
-                                        if (gmailService.isAuthenticated()) {
-                                            sendActualEmail(recipient.getEmail(), notificationData, taskCompletionSource);
-                                        } else {
-                                            Log.w(TAG, "Gmail service not authenticated, email will be queued for later");
-                                            // Complete successfully even without email - notification is stored
-                                            taskCompletionSource.setResult(null);
-                                        }
+                                        // Check if user has email notifications enabled
+                                        checkAndQueueEmail(recipientId, recipient.getEmail(), notificationData);
+                                        // Complete successfully - notification is stored
+                                        taskCompletionSource.setResult(null);
                                     })
                                     .addOnFailureListener(taskCompletionSource::setException);
                         } else {
@@ -271,23 +264,40 @@ public class EmailService {
     }
 
     /**
-     * Send actual email using Gmail API
+     * Check if user has email notifications enabled and queue email for backend
      */
-    private void sendActualEmail(String recipientEmail, Map<String, Object> notificationData, TaskCompletionSource<Void> taskCompletionSource) {
-        String subject = (String) notificationData.get("subject");
-        String message = (String) notificationData.get("message");
-        
-        gmailService.sendEmail(recipientEmail, subject, message)
-                .addOnSuccessListener(success -> {
-                    Log.d(TAG, "Email sent successfully via Gmail API to: " + recipientEmail);
-                    taskCompletionSource.setResult(null);
+    private void checkAndQueueEmail(String recipientId, String recipientEmail, Map<String, Object> notificationData) {
+        db.collection("users").document(recipientId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    Boolean emailEnabled = doc.getBoolean("emailNotificationsEnabled");
+                    if (emailEnabled != null && emailEnabled) {
+                        // Queue email for backend to send
+                        queueEmailForBackend(recipientEmail, notificationData);
+                    } else {
+                        Log.d(TAG, "Email notifications disabled for user: " + recipientId);
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Failed to send email via Gmail API", e);
-                    // Still consider the task successful since notification is stored
-                    // The email can be retried later
-                    taskCompletionSource.setResult(null);
-                });
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to check email preferences", e));
+    }
+    
+    /**
+     * Queue email in Firestore for backend to process
+     * Your backend service will pick these up and send via SendGrid/AWS SES/etc
+     */
+    private void queueEmailForBackend(String recipientEmail, Map<String, Object> notificationData) {
+        Map<String, Object> emailQueue = new HashMap<>();
+        emailQueue.put("to", recipientEmail);
+        emailQueue.put("subject", notificationData.get("subject"));
+        emailQueue.put("body", notificationData.get("message"));
+        emailQueue.put("timestamp", System.currentTimeMillis());
+        emailQueue.put("status", "pending");
+        emailQueue.put("type", notificationData.get("type"));
+        
+        db.collection("emailQueue")
+                .add(emailQueue)
+                .addOnSuccessListener(doc -> Log.d(TAG, "Email queued for backend: " + doc.getId()))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to queue email", e));
     }
 
     /**
@@ -307,31 +317,5 @@ public class EmailService {
                 });
     }
 
-    /**
-     * Check if Gmail service is authenticated
-     */
-    public boolean isGmailAuthenticated() {
-        return gmailService.isAuthenticated();
-    }
 
-    /**
-     * Get Gmail authentication URL for setup
-     */
-    public Task<String> getGmailAuthUrl() {
-        return gmailService.performInitialAuthentication();
-    }
-
-    /**
-     * Complete Gmail authentication with authorization code
-     */
-    public Task<Boolean> completeGmailAuth(String authCode) {
-        return gmailService.completeAuthentication(authCode);
-    }
-
-    /**
-     * Clear Gmail authentication
-     */
-    public void clearGmailAuth() {
-        gmailService.clearAuthentication();
-    }
 }
