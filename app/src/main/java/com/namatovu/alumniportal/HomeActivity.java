@@ -112,10 +112,9 @@ public class HomeActivity extends AppCompatActivity {
 "Stay inspired, stay connected 💬",
 "Every success starts with a small step 👣",
 "Turn ideas into action ⚙️",
-"Be the spark that lights others 🔥",+
-
+"Be the spark that lights others 🔥",
 "Grow through what you go through 🌻",
-"Connection creates possibility 🌐",
+"Connection creates possibility �",
 "Be fearless in pursuit of growth 🦋",
 "Learn something new today 🧠",
 "You belong here 💖",
