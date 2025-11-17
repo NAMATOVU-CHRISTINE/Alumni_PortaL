@@ -62,6 +62,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        
+        // Initialize Cloudinary
+        CloudinaryHelper.initialize(this);
 
         setSupportActionBar(binding.toolbar);
 
