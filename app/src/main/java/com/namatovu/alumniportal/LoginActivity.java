@@ -217,6 +217,9 @@ public class LoginActivity extends AppCompatActivity {
             AnalyticsHelper.setUserId(mAuth.getCurrentUser().getUid());
         }
         
+        // Request notification permission for Android 13+
+        com.namatovu.alumniportal.utils.NotificationPermissionHelper.requestNotificationPermission(this);
+        
         // Schedule background data sync now that user is logged in
         if (getApplication() instanceof AlumniPortalApplication) {
             // ((AlumniPortalApplication) getApplication()).scheduleDataSync();

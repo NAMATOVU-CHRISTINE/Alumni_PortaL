@@ -94,6 +94,11 @@ public class SettingsActivity extends AppCompatActivity {
         // Notification switches
         setupNotificationSwitches();
 
+        // Test notification button
+        binding.testNotificationOption.setOnClickListener(v -> {
+            sendTestNotification();
+        });
+
         // Account Actions Section
         binding.logoutOption.setOnClickListener(v -> {
             logoutUser();
@@ -353,5 +358,45 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
         }
+    }
+    
+    private void sendTestNotification() {
+        // Check if notification permission is granted
+        if (!com.namatovu.alumniportal.utils.NotificationPermissionHelper.hasNotificationPermission(this)) {
+            // Request permission
+            com.namatovu.alumniportal.utils.NotificationPermissionHelper.requestNotificationPermission(this);
+            Toast.makeText(this, "Please grant notification permission first", Toast.LENGTH_LONG).show();
+            return;
+        }
+        
+        // Create and show test notification
+        android.app.NotificationManager notificationManager = 
+            (android.app.NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        
+        String channelId = "alumni_portal_notifications";
+        
+        // Create notification channel for Android O and above
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            android.app.NotificationChannel channel = new android.app.NotificationChannel(
+                channelId,
+                "Alumni Portal",
+                android.app.NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notifications for Alumni Portal app");
+            channel.enableVibration(true);
+            notificationManager.createNotificationChannel(channel);
+        }
+        
+        // Create notification
+        androidx.core.app.NotificationCompat.Builder builder = 
+            new androidx.core.app.NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("Test Notification")
+                .setContentText("Notifications are working! 🎉")
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+        
+        notificationManager.notify(1, builder.build());
+        Toast.makeText(this, "Test notification sent!", Toast.LENGTH_SHORT).show();
     }
 }
