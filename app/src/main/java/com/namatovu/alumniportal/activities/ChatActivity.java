@@ -192,36 +192,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                
-                if (isAtBottom()) {
-                    fabScrollToBottom.hide();
-                } else {
-                    fabScrollToBottom.show();
-                }
-            }
-        });
-        
-        // Scroll to bottom when keyboard appears
-        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            if (bottom < oldBottom) {
-                // Keyboard appeared
-                recyclerView.postDelayed(() -> scrollToBottom(true), 100);
-            }
-        });
-        
-        // Show/hide scroll to bottom button based on scroll position
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                
-                if (isAtBottom()) {
-                    fabScrollToBottom.hide();
-                } else {
-                    fabScrollToBottom.show();
-                }
-            }
-        });
     }
     
     private void setupListeners() {
@@ -1060,9 +1030,49 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         }
     }
     
+    private void scrollToBottom(boolean smooth) {
+        if (messages.isEmpty()) return;
+        
+        int lastPosition = messages.size() - 1;
+        if (smooth) {
+            recyclerView.smoothScrollToPosition(lastPosition);
+        } else {
+            recyclerView.scrollToPosition(lastPosition);
+        }
+    }
+    
+    private boolean isAtBottom() {
+        if (messages.isEmpty()) return true;
+        
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (layoutManager == null) return true;
+        
+        int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
+        int lastPosition = messages.size() - 1;
+        
+        // Consider "at bottom" if within 2 messages of the end
+        return lastVisiblePosition >= lastPosition - 2;
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (messagesListener != null) {
+            messagesListener.remove();
+        }
+        if (chatListener != null) {
+            chatListener.remove();
+        }
+        if (mediaRecorder != null) {
+            mediaRecorder.release();
+            mediaRecorder = null;
+        }
+    }
+    
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
+}
 }
