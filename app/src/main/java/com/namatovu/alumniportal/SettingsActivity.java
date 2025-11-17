@@ -53,10 +53,35 @@ public class SettingsActivity extends AppCompatActivity {
             showChangePasswordDialog();
         });
 
-        // Gmail setup option
-        binding.gmailSetupOption.setOnClickListener(v -> {
-            Intent intent = new Intent(this, com.namatovu.alumniportal.activities.GmailSetupActivity.class);
-            startActivity(intent);
+        // Email notifications switch
+        binding.emailNotificationsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("email_notifications", isChecked).apply();
+            
+            if (isChecked) {
+                // Save user's email preference to Firestore
+                if (mAuth.getCurrentUser() != null) {
+                    String userId = mAuth.getCurrentUser().getUid();
+                    com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(userId)
+                        .update("emailNotificationsEnabled", true)
+                        .addOnSuccessListener(aVoid -> 
+                            Toast.makeText(this, "Email notifications enabled", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> 
+                            Toast.makeText(this, "Failed to update preference", Toast.LENGTH_SHORT).show());
+                }
+            } else {
+                // Disable email notifications
+                if (mAuth.getCurrentUser() != null) {
+                    String userId = mAuth.getCurrentUser().getUid();
+                    com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(userId)
+                        .update("emailNotificationsEnabled", false)
+                        .addOnSuccessListener(aVoid -> 
+                            Toast.makeText(this, "Email notifications disabled", Toast.LENGTH_SHORT).show());
+                }
+            }
         });
 
         // App Preferences Section
@@ -82,6 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
         android.content.SharedPreferences prefs = getSharedPreferences("NotificationPrefs", MODE_PRIVATE);
         
         binding.allNotificationsSwitch.setChecked(prefs.getBoolean("all_notifications", true));
+        binding.emailNotificationsSwitch.setChecked(prefs.getBoolean("email_notifications", false));
         binding.mentorshipRequestsSwitch.setChecked(prefs.getBoolean("mentorship_notifications", true));
         binding.eventUpdatesSwitch.setChecked(prefs.getBoolean("event_notifications", true));
         binding.announcementsSwitch.setChecked(prefs.getBoolean("announcement_notifications", true));
@@ -91,6 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
             prefs.edit().putBoolean("all_notifications", isChecked).apply();
             
             // Enable/disable other switches
+            binding.emailNotificationsSwitch.setEnabled(isChecked);
             binding.mentorshipRequestsSwitch.setEnabled(isChecked);
             binding.eventUpdatesSwitch.setEnabled(isChecked);
             binding.announcementsSwitch.setEnabled(isChecked);
@@ -120,6 +147,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set initial state of dependent switches
         boolean allEnabled = binding.allNotificationsSwitch.isChecked();
+        binding.emailNotificationsSwitch.setEnabled(allEnabled);
         binding.mentorshipRequestsSwitch.setEnabled(allEnabled);
         binding.eventUpdatesSwitch.setEnabled(allEnabled);
         binding.announcementsSwitch.setEnabled(allEnabled);
