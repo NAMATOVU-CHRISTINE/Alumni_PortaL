@@ -76,6 +76,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void signUpWithGoogle() {
+        showLoadingIndicator();
         // Sign out first to force account chooser
         googleSignInClient.signOut().addOnCompleteListener(this, task -> {
             Intent signInIntent = googleSignInClient.getSignInIntent();
@@ -88,6 +89,7 @@ public class SignupActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             firebaseAuthWithGoogle(account.getIdToken());
         } catch (ApiException e) {
+            hideLoadingIndicator();
             Toast.makeText(this, "Google sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -113,8 +115,13 @@ public class SignupActivity extends AppCompatActivity {
                                         startActivity(new Intent(SignupActivity.this, HomeActivity.class));
                                         finish();
                                     }
+                                })
+                                .addOnFailureListener(e -> {
+                                    hideLoadingIndicator();
+                                    Toast.makeText(SignupActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
+                        hideLoadingIndicator();
                         Toast.makeText(SignupActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -170,12 +177,16 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+        // Show loading indicator
+        showLoadingIndicator();
+
         // Check if username already exists
         db.collection("users")
                 .whereEqualTo("username", username)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        hideLoadingIndicator();
                         usernameEditText.setError("Username already exists");
                         usernameEditText.requestFocus();
                     } else {
@@ -200,22 +211,46 @@ public class SignupActivity extends AppCompatActivity {
                                                         db.collection("users").document(userId)
                                                                 .set(user)
                                                                 .addOnSuccessListener(aVoid -> {
+                                                                    hideLoadingIndicator();
                                                                     Toast.makeText(SignupActivity.this, "Registration successful! Please check your email to verify your account.", Toast.LENGTH_LONG).show();
                                                                     mAuth.signOut(); // Sign out to force verification
                                                                     finish(); // Go back to login
                                                                 })
                                                                 .addOnFailureListener(e -> {
+                                                                    hideLoadingIndicator();
                                                                     Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                                 });
                                                     } else {
+                                                        hideLoadingIndicator();
                                                         Toast.makeText(SignupActivity.this, "Failed to send verification email. Please try again.", Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
                                     } else {
+                                        hideLoadingIndicator();
                                         Toast.makeText(SignupActivity.this, "Registration failed: " + authTask.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 });
                     }
                 });
+    }
+    
+    private void showLoadingIndicator() {
+        ProgressBar progressBar = findViewById(R.id.signupProgressBar);
+        Button signupButton = findViewById(R.id.signupButton);
+        Button googleButton = findViewById(R.id.googleSignInButton);
+        
+        if (progressBar != null) progressBar.setVisibility(android.view.View.VISIBLE);
+        if (signupButton != null) signupButton.setEnabled(false);
+        if (googleButton != null) googleButton.setEnabled(false);
+    }
+    
+    private void hideLoadingIndicator() {
+        ProgressBar progressBar = findViewById(R.id.signupProgressBar);
+        Button signupButton = findViewById(R.id.signupButton);
+        Button googleButton = findViewById(R.id.googleSignInButton);
+        
+        if (progressBar != null) progressBar.setVisibility(android.view.View.GONE);
+        if (signupButton != null) signupButton.setEnabled(true);
+        if (googleButton != null) googleButton.setEnabled(true);
     }
 }

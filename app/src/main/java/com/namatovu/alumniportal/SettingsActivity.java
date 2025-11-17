@@ -64,6 +64,9 @@ public class SettingsActivity extends AppCompatActivity {
             showThemeSelectionDialog();
         });
 
+        // Notification switches
+        setupNotificationSwitches();
+
         // Account Actions Section
         binding.logoutOption.setOnClickListener(v -> {
             logoutUser();
@@ -72,6 +75,54 @@ public class SettingsActivity extends AppCompatActivity {
         binding.deleteAccountOption.setOnClickListener(v -> {
             showDeleteAccountDialog();
         });
+    }
+
+    private void setupNotificationSwitches() {
+        // Load saved preferences
+        android.content.SharedPreferences prefs = getSharedPreferences("NotificationPrefs", MODE_PRIVATE);
+        
+        binding.allNotificationsSwitch.setChecked(prefs.getBoolean("all_notifications", true));
+        binding.mentorshipRequestsSwitch.setChecked(prefs.getBoolean("mentorship_notifications", true));
+        binding.eventUpdatesSwitch.setChecked(prefs.getBoolean("event_notifications", true));
+        binding.announcementsSwitch.setChecked(prefs.getBoolean("announcement_notifications", true));
+
+        // All notifications master switch
+        binding.allNotificationsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("all_notifications", isChecked).apply();
+            
+            // Enable/disable other switches
+            binding.mentorshipRequestsSwitch.setEnabled(isChecked);
+            binding.eventUpdatesSwitch.setEnabled(isChecked);
+            binding.announcementsSwitch.setEnabled(isChecked);
+            
+            if (isChecked) {
+                Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "All notifications disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Individual notification switches
+        binding.mentorshipRequestsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("mentorship_notifications", isChecked).apply();
+            Toast.makeText(this, "Mentorship notifications " + (isChecked ? "enabled" : "disabled"), Toast.LENGTH_SHORT).show();
+        });
+
+        binding.eventUpdatesSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("event_notifications", isChecked).apply();
+            Toast.makeText(this, "Event notifications " + (isChecked ? "enabled" : "disabled"), Toast.LENGTH_SHORT).show();
+        });
+
+        binding.announcementsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("announcement_notifications", isChecked).apply();
+            Toast.makeText(this, "Announcement notifications " + (isChecked ? "enabled" : "disabled"), Toast.LENGTH_SHORT).show();
+        });
+
+        // Set initial state of dependent switches
+        boolean allEnabled = binding.allNotificationsSwitch.isChecked();
+        binding.mentorshipRequestsSwitch.setEnabled(allEnabled);
+        binding.eventUpdatesSwitch.setEnabled(allEnabled);
+        binding.announcementsSwitch.setEnabled(allEnabled);
     }
 
     private void logoutUser() {
