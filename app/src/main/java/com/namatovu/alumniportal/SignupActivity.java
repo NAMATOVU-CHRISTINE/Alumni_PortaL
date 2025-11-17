@@ -185,23 +185,31 @@ public class SignupActivity extends AppCompatActivity {
                                     if (authTask.isSuccessful()) {
                                         String userId = mAuth.getCurrentUser().getUid();
 
-                                        // Save user data to Firestore
-                                        Map<String, Object> user = new HashMap<>();
-                                        user.put("fullName", fullName);
-                                        user.put("username", username);
-                                        user.put("studentID", studentID);
-                                        user.put("email", personalEmail);
-                                        user.put("userId", userId);
+                                        // Send email verification
+                                        mAuth.getCurrentUser().sendEmailVerification()
+                                                .addOnCompleteListener(emailTask -> {
+                                                    if (emailTask.isSuccessful()) {
+                                                        // Save user data to Firestore
+                                                        Map<String, Object> user = new HashMap<>();
+                                                        user.put("fullName", fullName);
+                                                        user.put("username", username);
+                                                        user.put("studentID", studentID);
+                                                        user.put("email", personalEmail);
+                                                        user.put("userId", userId);
 
-                                        db.collection("users").document(userId)
-                                                .set(user)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Toast.makeText(SignupActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(SignupActivity.this, HomeActivity.class));
-                                                    finish();
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        db.collection("users").document(userId)
+                                                                .set(user)
+                                                                .addOnSuccessListener(aVoid -> {
+                                                                    Toast.makeText(SignupActivity.this, "Registration successful! Please check your email to verify your account.", Toast.LENGTH_LONG).show();
+                                                                    mAuth.signOut(); // Sign out to force verification
+                                                                    finish(); // Go back to login
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                });
+                                                    } else {
+                                                        Toast.makeText(SignupActivity.this, "Failed to send verification email. Please try again.", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 });
                                     } else {
                                         Toast.makeText(SignupActivity.this, "Registration failed: " + authTask.getException().getMessage(), Toast.LENGTH_LONG).show();
