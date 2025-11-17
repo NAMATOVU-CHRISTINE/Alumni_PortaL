@@ -93,7 +93,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         }
         
         // Get current user info
-        String currentUserId = auth.getCurrentUser().getUid();
+        final String currentUserId = auth.getCurrentUser().getUid();
+        final String finalGroupType = groupType;
         
         db.collection("users").document(currentUserId)
                 .get()
@@ -101,7 +102,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     String currentUserName = doc.getString("fullName");
                     
                     // Create group
-                    AlumniGroup group = new AlumniGroup(groupName, groupType, currentUserId, currentUserName);
+                    AlumniGroup group = new AlumniGroup(groupName, finalGroupType, currentUserId, currentUserName);
                     group.setDescription(description);
                     
                     if (!graduationYear.isEmpty()) {
