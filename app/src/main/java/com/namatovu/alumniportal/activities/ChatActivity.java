@@ -89,6 +89,13 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Fix keyboard covering input - adjust resize mode
+        getWindow().setSoftInputMode(
+            android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+            android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+        );
+        
         setContentView(R.layout.activity_chat);
         
         // Initialize Firebase
@@ -302,7 +309,17 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     }
     
     private void updateChatUI() {
-        if (currentChat == null) return;
+        if (currentChat == null) {
+            // Use intent data if chat not loaded yet
+            if (otherUserName != null) {
+                textViewChatName.setText(otherUserName);
+            }
+            if (otherUserId != null) {
+                updateOnlineStatus();
+                loadOtherUserProfile();
+            }
+            return;
+        }
         
         String displayName = currentChat.getDisplayName(currentUserId);
         String displayImage = currentChat.getDisplayImage(currentUserId);
@@ -327,25 +344,50 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         }
     }
     
-    private void updateOnlineStatus() {
-        // Check user's online status
+    private void loadOtherUserProfile() {
+        if (otherUserId == null) return;
+        
         db.collection("users").document(otherUserId)
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Boolean isOnline = documentSnapshot.getBoolean("isOnline");
-                        Long lastSeen = documentSnapshot.getLong("lastSeen");
-                        
-                        if (isOnline != null && isOnline) {
-                            textViewOnlineStatus.setText("Online");
-                            textViewOnlineStatus.setTextColor(getColor(android.R.color.holo_green_dark));
-                        } else if (lastSeen != null) {
-                            String lastSeenText = getLastSeenText(lastSeen);
-                            textViewOnlineStatus.setText(lastSeenText);
-                            textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
-                        } else {
-                            textViewOnlineStatus.setText("");
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        String profileImageUrl = doc.getString("profileImageUrl");
+                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                            Glide.with(this)
+                                    .load(profileImageUrl)
+                                    .circleCrop()
+                                    .placeholder(R.drawable.ic_person)
+                                    .into(imageViewProfile);
                         }
+                    }
+                });
+    }
+    
+    private void updateOnlineStatus() {
+        if (otherUserId == null) return;
+        
+        // Check user's online status with real-time listener
+        db.collection("users").document(otherUserId)
+                .addSnapshotListener((documentSnapshot, error) -> {
+                    if (error != null || documentSnapshot == null || !documentSnapshot.exists()) {
+                        textViewOnlineStatus.setText("Offline");
+                        textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
+                        return;
+                    }
+                    
+                    Boolean isOnline = documentSnapshot.getBoolean("isOnline");
+                    Long lastSeen = documentSnapshot.getLong("lastSeen");
+                    
+                    if (isOnline != null && isOnline) {
+                        textViewOnlineStatus.setText("Online now");
+                        textViewOnlineStatus.setTextColor(getColor(android.R.color.holo_green_light));
+                    } else if (lastSeen != null) {
+                        String lastSeenText = getLastSeenText(lastSeen);
+                        textViewOnlineStatus.setText(lastSeenText);
+                        textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
+                    } else {
+                        textViewOnlineStatus.setText("Offline");
+                        textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
                     }
                 });
     }
