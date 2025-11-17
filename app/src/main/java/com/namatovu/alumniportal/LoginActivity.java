@@ -73,6 +73,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+        binding.loginProgressBar.setVisibility(android.view.View.VISIBLE);
+        binding.loginButton.setEnabled(false);
+        binding.googleSignInButton.setEnabled(false);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         googleSignInLauncher.launch(signInIntent);
     }
@@ -82,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             firebaseAuthWithGoogle(account.getIdToken());
         } catch (ApiException e) {
+            hideLoadingIndicator();
             Toast.makeText(this, "Google sign in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -106,8 +110,13 @@ public class LoginActivity extends AppCompatActivity {
                                         db.collection("users").document(userId).set(user);
                                     }
                                     navigateToHome();
+                                })
+                                .addOnFailureListener(e -> {
+                                    hideLoadingIndicator();
+                                    Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
+                        hideLoadingIndicator();
                         Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -137,6 +146,11 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Show loading indicator
+        binding.loginProgressBar.setVisibility(android.view.View.VISIBLE);
+        binding.loginButton.setEnabled(false);
+        binding.googleSignInButton.setEnabled(false);
+
         // Look up the user's email from their username in Firestore
         db.collection("users")
                 .whereEqualTo("username", username)
@@ -149,13 +163,16 @@ public class LoginActivity extends AppCompatActivity {
                             // Username found, proceed to sign in with email and password
                             signInWithEmail(email, password);
                         } else {
+                            hideLoadingIndicator();
                             Toast.makeText(this, "Could not find an email for this user.", Toast.LENGTH_SHORT).show();
                         }
                     } else if (task.isSuccessful()) {
                         // Task was successful, but no user was found
+                        hideLoadingIndicator();
                         Toast.makeText(this, "Username not found.", Toast.LENGTH_SHORT).show();
                     } else {
                         // An error occurred while fetching the user
+                        hideLoadingIndicator();
                         Log.e(TAG, "Error looking up username", task.getException());
                         Toast.makeText(this, "Error finding user. Please try again.", Toast.LENGTH_SHORT).show();
                     }
@@ -173,15 +190,23 @@ public class LoginActivity extends AppCompatActivity {
                             navigateToHome();
                         } else {
                             // Login successful, but email is not verified
+                            hideLoadingIndicator();
                             Log.w(TAG, "Login successful, but email not verified.");
                             Toast.makeText(LoginActivity.this, "Please verify your email address first.", Toast.LENGTH_LONG).show();
                             mAuth.signOut(); // Sign out to force user to log in again after verification
                         }                    } else {
                         // Authentication failed (e.g., incorrect password)
+                        hideLoadingIndicator();
                         Log.w(TAG, "Authentication failed.", task.getException());
                         Toast.makeText(LoginActivity.this, "Authentication failed. Please check your credentials.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    
+    private void hideLoadingIndicator() {
+        binding.loginProgressBar.setVisibility(android.view.View.GONE);
+        binding.loginButton.setEnabled(true);
+        binding.googleSignInButton.setEnabled(true);
     }
     
     private void navigateToHome() {

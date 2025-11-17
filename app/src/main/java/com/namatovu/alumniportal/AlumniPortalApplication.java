@@ -23,6 +23,9 @@ public class AlumniPortalApplication extends Application {
         // Initialize analytics
         AnalyticsHelper.initialize(this);
         
+        // Initialize notification helper
+        com.namatovu.alumniportal.utils.NotificationHelper.initialize(this);
+        
         // Check for unsaved data from previous crashes
         ErrorHandler errorHandler = ErrorHandler.getInstance(this);
         if (errorHandler.hasUnsavedData()) {

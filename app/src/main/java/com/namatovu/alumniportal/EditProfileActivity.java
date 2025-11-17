@@ -92,7 +92,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         binding.changeProfilePhotoText.setOnClickListener(v -> ensurePermissionAndPickImage());
 
-        binding.skillTextInputLayout.setEndIconOnClickListener(v -> addSkillFromInput());
+        setupDropdowns();
 
         binding.saveButton.setOnClickListener(v -> saveProfile());
         
@@ -130,8 +130,50 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void addSkillFromInput() {
-        String skill = binding.skillEditText.getText() != null ? binding.skillEditText.getText().toString().trim() : "";
+    private void setupDropdowns() {
+        // Skills dropdown
+        String[] skills = {
+            "Java", "Python", "JavaScript", "C++", "C#", "PHP", "Ruby", "Swift", "Kotlin",
+            "React", "Angular", "Vue.js", "Node.js", "Django", "Flask", "Spring Boot",
+            "Machine Learning", "Data Science", "AI", "Cloud Computing", "AWS", "Azure", "GCP",
+            "DevOps", "Docker", "Kubernetes", "CI/CD", "Git", "Agile", "Scrum",
+            "Project Management", "Leadership", "Communication", "Problem Solving",
+            "UI/UX Design", "Graphic Design", "Digital Marketing", "SEO", "Content Writing",
+            "Sales", "Business Analysis", "Financial Analysis", "Accounting", "HR Management"
+        };
+        android.widget.ArrayAdapter<String> skillsAdapter = new android.widget.ArrayAdapter<>(
+            this, android.R.layout.simple_dropdown_item_1line, skills);
+        binding.skillEditText.setAdapter(skillsAdapter);
+        binding.skillEditText.setOnItemClickListener((parent, view, position, id) -> {
+            String skill = (String) parent.getItemAtPosition(position);
+            addSkillChip(skill);
+            binding.skillEditText.setText("");
+        });
+
+        // Industry dropdown
+        String[] industries = {
+            "Technology", "Finance", "Healthcare", "Education", "Manufacturing",
+            "Retail", "Hospitality", "Real Estate", "Construction", "Transportation",
+            "Media & Entertainment", "Telecommunications", "Energy", "Agriculture",
+            "Government", "Non-Profit", "Consulting", "Legal", "Marketing & Advertising"
+        };
+        android.widget.ArrayAdapter<String> industryAdapter = new android.widget.ArrayAdapter<>(
+            this, android.R.layout.simple_dropdown_item_1line, industries);
+        binding.industryDropdown.setAdapter(industryAdapter);
+
+        // Currency dropdown
+        String[] currencies = {
+            "USD - US Dollar", "EUR - Euro", "GBP - British Pound", "JPY - Japanese Yen",
+            "AUD - Australian Dollar", "CAD - Canadian Dollar", "CHF - Swiss Franc",
+            "CNY - Chinese Yuan", "INR - Indian Rupee", "UGX - Ugandan Shilling",
+            "KES - Kenyan Shilling", "TZS - Tanzanian Shilling", "ZAR - South African Rand"
+        };
+        android.widget.ArrayAdapter<String> currencyAdapter = new android.widget.ArrayAdapter<>(
+            this, android.R.layout.simple_dropdown_item_1line, currencies);
+        binding.currencyDropdown.setAdapter(currencyAdapter);
+    }
+
+    private void addSkillChip(String skill) {
         if (!TextUtils.isEmpty(skill)) {
             Chip chip = new Chip(this);
             chip.setText(skill);
@@ -142,7 +184,6 @@ public class EditProfileActivity extends AppCompatActivity {
             chip.setChipStrokeColorResource(R.color.must_green);
             chip.setChipStrokeWidth(2.0f);
             binding.skillsChipGroup.addView(chip);
-            binding.skillEditText.setText("");
         }
     }
 
@@ -176,15 +217,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         binding.skillsChipGroup.removeAllViews();
         for (String s : u.getSkills()) {
-            Chip chip = new Chip(this);
-            chip.setText(s);
-            chip.setCloseIconVisible(true);
-            chip.setOnCloseIconClickListener(v -> binding.skillsChipGroup.removeView(chip));
-            chip.setChipBackgroundColorResource(R.color.light_gray);
-            chip.setTextColor(getColor(R.color.black));
-            chip.setChipStrokeColorResource(R.color.must_green);
-            chip.setChipStrokeWidth(2.0f);
-            binding.skillsChipGroup.addView(chip);
+            addSkillChip(s);
         }
 
         String url = u.getProfileImageUrl();
@@ -200,10 +233,14 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = binding.nameEditText.getText() != null ? binding.nameEditText.getText().toString().trim() : "";
         String bio = binding.bioEditText.getText() != null ? binding.bioEditText.getText().toString().trim() : "";
         String career = binding.careerEditText.getText() != null ? binding.careerEditText.getText().toString().trim() : "";
+        String industry = binding.industryDropdown.getText() != null ? binding.industryDropdown.getText().toString().trim() : "";
+        String currency = binding.currencyDropdown.getText() != null ? binding.currencyDropdown.getText().toString().trim() : "";
 
         final String finalName = SecurityHelper.sanitizeInput(name);
         final String finalBio = SecurityHelper.sanitizeInput(bio);
         final String finalCareer = SecurityHelper.sanitizeInput(career);
+        final String finalIndustry = SecurityHelper.sanitizeInput(industry);
+        final String finalCurrency = SecurityHelper.sanitizeInput(currency);
 
         if (!SecurityHelper.isValidProfileData(finalName, finalBio, null)) {
             Toast.makeText(this, "Please check your input. Some fields contain invalid data.", Toast.LENGTH_LONG).show();
@@ -268,10 +305,15 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl, String publicId) {
+        String industry = binding.industryDropdown.getText() != null ? binding.industryDropdown.getText().toString().trim() : "";
+        String currency = binding.currencyDropdown.getText() != null ? binding.currencyDropdown.getText().toString().trim() : "";
+        
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
         updates.put("fullName", name);
         updates.put("bio", bio);
         updates.put("currentJob", career);
+        updates.put("industry", industry);
+        updates.put("currency", currency);
         updates.put("skills", skills);
         updates.put("updatedAt", System.currentTimeMillis());
         
