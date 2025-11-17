@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.namatovu.alumniportal.database.AppDatabase;
+import com.namatovu.alumniportal.database.AlumniDatabase;
 import com.namatovu.alumniportal.database.dao.UserDao;
 import com.namatovu.alumniportal.database.entities.UserEntity;
 import com.namatovu.alumniportal.models.User;
@@ -31,7 +31,7 @@ public class UserRepository {
     private Executor executor;
     
     private UserRepository(Context context) {
-        AppDatabase database = AppDatabase.getInstance(context);
+        AlumniDatabase database = AlumniDatabase.getInstance(context);
         userDao = database.userDao();
         firestore = FirebaseFirestore.getInstance();
         syncManager = SyncManager.getInstance(context);

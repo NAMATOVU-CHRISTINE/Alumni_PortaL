@@ -42,7 +42,7 @@ public class DataSyncWorker extends Worker {
                     entities.add(e);
                 }
                 if (!entities.isEmpty()) {
-                    com.namatovu.alumniportal.db.AppDatabase dbLocal = com.namatovu.alumniportal.db.AppDatabase.getInstance(getApplicationContext());
+                    com.namatovu.alumniportal.db.AlumniDatabase dbLocal = com.namatovu.alumniportal.db.AlumniDatabase.getInstance(getApplicationContext());
                     dbLocal.jobDao().insertAll(entities);
                 }
             }
@@ -63,7 +63,7 @@ public class DataSyncWorker extends Worker {
                     entities.add(e);
                 }
                 if (!entities.isEmpty()) {
-                    com.namatovu.alumniportal.db.AppDatabase dbLocal = com.namatovu.alumniportal.db.AppDatabase.getInstance(getApplicationContext());
+                    com.namatovu.alumniportal.db.AlumniDatabase dbLocal = com.namatovu.alumniportal.db.AlumniDatabase.getInstance(getApplicationContext());
                     dbLocal.eventDao().insertAll(entities);
                 }
             }
