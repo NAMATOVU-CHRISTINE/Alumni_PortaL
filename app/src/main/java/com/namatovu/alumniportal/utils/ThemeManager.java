@@ -32,7 +32,7 @@ public class ThemeManager {
     }
     
     public int getTheme() {
-        return prefs.getInt(KEY_THEME, THEME_SYSTEM);
+        return prefs.getInt(KEY_THEME, THEME_LIGHT);
     }
     
     public String getThemeName() {
@@ -43,9 +43,9 @@ public class ThemeManager {
             case THEME_DARK:
                 return "Dark";
             case THEME_SYSTEM:
-                return "System Default";
+                return "Light"; // Fallback to Light
             default:
-                return "System Default";
+                return "Light";
         }
     }
     
