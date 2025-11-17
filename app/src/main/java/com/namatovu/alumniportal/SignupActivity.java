@@ -241,7 +241,10 @@ public class SignupActivity extends AppCompatActivity {
         Button googleButton = findViewById(R.id.googleSignInButton);
         
         if (progressBar != null) progressBar.setVisibility(android.view.View.VISIBLE);
-        if (signupButton != null) signupButton.setEnabled(false);
+        if (signupButton != null) {
+            signupButton.setText("");  // Hide text like Google does
+            signupButton.setEnabled(false);
+        }
         if (googleButton != null) googleButton.setEnabled(false);
     }
     
@@ -251,7 +254,10 @@ public class SignupActivity extends AppCompatActivity {
         Button googleButton = findViewById(R.id.googleSignInButton);
         
         if (progressBar != null) progressBar.setVisibility(android.view.View.GONE);
-        if (signupButton != null) signupButton.setEnabled(true);
+        if (signupButton != null) {
+            signupButton.setText(R.string.signup_button_text);  // Restore text
+            signupButton.setEnabled(true);
+        }
         if (googleButton != null) googleButton.setEnabled(true);
     }
 }
