@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         // FIX: Check if the user is already signed in.
         // This check is done before setContentView to prevent the login screen from flashing.
         if (mAuth.getCurrentUser() != null) {
+            // Start data sync service when user is logged in
+            com.namatovu.alumniportal.utils.SyncHelper.startSync(this);
+            
             // If user is already signed in, skip the login screen and go to HomeActivity
             startActivity(new Intent(MainActivity.this, HomeActivity.class));
             finish(); // This is important to prevent the user from coming back to the login screen by pressing the back button.
