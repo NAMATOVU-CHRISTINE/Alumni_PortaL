@@ -139,11 +139,12 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     }
     
     private void initViews() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        com.google.android.material.appbar.MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setTitle("");
         }
         
         recyclerView = findViewById(R.id.recyclerView);
@@ -157,6 +158,10 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         
         // Initially disable send button
         buttonSend.setEnabled(false);
+        
+        // Set default text for name and status
+        textViewChatName.setText("");
+        textViewOnlineStatus.setText("");
     }
     
     private void setupRecyclerView() {
@@ -165,8 +170,17 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
+        layoutManager.setSmoothScrollbarEnabled(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        
+        // Scroll to bottom when keyboard appears
+        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                // Keyboard appeared
+                recyclerView.postDelayed(() -> scrollToBottom(true), 100);
+            }
+        });
     }
     
     private void setupListeners() {
@@ -183,7 +197,11 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             public void afterTextChanged(Editable s) {}
         });
         
-        buttonSend.setOnClickListener(v -> sendTextMessage());
+        buttonSend.setOnClickListener(v -> {
+            sendTextMessage();
+            scrollToBottom(true);
+        });
+        
         buttonAttach.setOnClickListener(v -> showAttachmentOptions());
         
         imageViewProfile.setOnClickListener(v -> {
@@ -191,6 +209,13 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                 Intent intent = new Intent(this, ProfileActivity.class);
                 intent.putExtra("userId", otherUserId);
                 startActivity(intent);
+            }
+        });
+        
+        // Focus listener to scroll when typing
+        editTextMessage.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && !messages.isEmpty()) {
+                recyclerView.postDelayed(() -> scrollToBottom(true), 200);
             }
         });
     }
@@ -423,6 +448,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                     if (querySnapshot != null) {
                         messages.clear();
                         
+                        int oldSize = messages.size();
+                        boolean wasAtBottom = isAtBottom();
+                        
                         for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                             try {
                                 ChatMessage message = document.toObject(ChatMessage.class);
@@ -440,8 +468,12 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                         }
                         
                         adapter.notifyDataSetChanged();
+                        
+                        // Auto scroll to bottom for new messages or if already at bottom
                         if (!messages.isEmpty()) {
-                            recyclerView.scrollToPosition(messages.size() - 1);
+                            if (oldSize == 0 || wasAtBottom || messages.size() > oldSize) {
+                                scrollToBottom(messages.size() > oldSize);
+                            }
                         }
                         
                         // Mark messages as read
@@ -580,6 +612,10 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         bottomSheet.show();
     }
     
+    private android.media.MediaRecorder mediaRecorder;
+    private String audioFilePath;
+    private boolean isRecording = false;
+    
     private void startVoiceRecording() {
         // Check audio permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) 
@@ -589,8 +625,186 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             return;
         }
         
-        Toast.makeText(this, "Voice recording coming soon!", Toast.LENGTH_SHORT).show();
-        // TODO: Implement voice recording
+        showVoiceRecordingDialog();
+    }
+    
+    private void showVoiceRecordingDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_voice_recording, null);
+        builder.setView(dialogView);
+        
+        android.app.AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        
+        ImageButton buttonRecord = dialogView.findViewById(R.id.buttonRecord);
+        ImageButton buttonStop = dialogView.findViewById(R.id.buttonStop);
+        ImageButton buttonCancel = dialogView.findViewById(R.id.buttonCancel);
+        ImageButton buttonSendVoice = dialogView.findViewById(R.id.buttonSendVoice);
+        TextView textViewTimer = dialogView.findViewById(R.id.textViewTimer);
+        TextView textViewStatus = dialogView.findViewById(R.id.textViewStatus);
+        
+        buttonStop.setEnabled(false);
+        buttonSendVoice.setEnabled(false);
+        
+        final long[] startTime = {0};
+        final android.os.Handler handler = new android.os.Handler();
+        final Runnable timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                long millis = System.currentTimeMillis() - startTime[0];
+                int seconds = (int) (millis / 1000);
+                int minutes = seconds / 60;
+                seconds = seconds % 60;
+                textViewTimer.setText(String.format("%02d:%02d", minutes, seconds));
+                handler.postDelayed(this, 500);
+            }
+        };
+        
+        buttonRecord.setOnClickListener(v -> {
+            try {
+                startRecording();
+                isRecording = true;
+                startTime[0] = System.currentTimeMillis();
+                handler.postDelayed(timerRunnable, 0);
+                
+                buttonRecord.setEnabled(false);
+                buttonStop.setEnabled(true);
+                textViewStatus.setText("Recording...");
+                Toast.makeText(this, "Recording started", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.e(TAG, "Error starting recording", e);
+                Toast.makeText(this, "Failed to start recording", Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        buttonStop.setOnClickListener(v -> {
+            try {
+                stopRecording();
+                isRecording = false;
+                handler.removeCallbacks(timerRunnable);
+                
+                buttonStop.setEnabled(false);
+                buttonSendVoice.setEnabled(true);
+                textViewStatus.setText("Recording stopped. Send or cancel?");
+            } catch (Exception e) {
+                Log.e(TAG, "Error stopping recording", e);
+            }
+        });
+        
+        buttonCancel.setOnClickListener(v -> {
+            if (isRecording) {
+                stopRecording();
+                handler.removeCallbacks(timerRunnable);
+            }
+            if (audioFilePath != null) {
+                new java.io.File(audioFilePath).delete();
+            }
+            dialog.dismiss();
+        });
+        
+        buttonSendVoice.setOnClickListener(v -> {
+            if (audioFilePath != null) {
+                uploadAndSendVoice(android.net.Uri.fromFile(new java.io.File(audioFilePath)));
+                dialog.dismiss();
+            }
+        });
+        
+        dialog.setOnDismissListener(d -> {
+            if (isRecording) {
+                stopRecording();
+                handler.removeCallbacks(timerRunnable);
+            }
+        });
+        
+        dialog.show();
+    }
+    
+    private void startRecording() throws Exception {
+        // Create audio file
+        String timeStamp = new java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault()).format(new java.util.Date());
+        String audioFileName = "VOICE_" + timeStamp + ".m4a";
+        java.io.File storageDir = getExternalFilesDir(android.os.Environment.DIRECTORY_MUSIC);
+        java.io.File audioFile = new java.io.File(storageDir, audioFileName);
+        audioFilePath = audioFile.getAbsolutePath();
+        
+        // Initialize MediaRecorder
+        mediaRecorder = new android.media.MediaRecorder();
+        mediaRecorder.setAudioSource(android.media.MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(android.media.MediaRecorder.OutputFormat.MPEG_4);
+        mediaRecorder.setAudioEncoder(android.media.MediaRecorder.AudioEncoder.AAC);
+        mediaRecorder.setAudioEncodingBitRate(128000);
+        mediaRecorder.setAudioSamplingRate(44100);
+        mediaRecorder.setOutputFile(audioFilePath);
+        
+        mediaRecorder.prepare();
+        mediaRecorder.start();
+    }
+    
+    private void stopRecording() {
+        if (mediaRecorder != null) {
+            try {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+            } catch (Exception e) {
+                Log.e(TAG, "Error stopping recording", e);
+            }
+        }
+    }
+    
+    private void uploadAndSendVoice(Uri voiceUri) {
+        if (chatId == null) return;
+        
+        Toast.makeText(this, "Uploading voice message...", Toast.LENGTH_SHORT).show();
+        
+        String fileName = "chat_voice/" + chatId + "/" + UUID.randomUUID().toString() + ".m4a";
+        StorageReference voiceRef = storage.getReference().child(fileName);
+        
+        voiceRef.putFile(voiceUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    voiceRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Get audio duration
+                        int duration = getAudioDuration(voiceUri);
+                        
+                        ChatMessage message = new ChatMessage(
+                                chatId,
+                                currentUserId,
+                                currentUserName != null ? currentUserName : "Unknown User",
+                                otherUserId,
+                                ""
+                        );
+                        message.setMessageType("voice");
+                        message.setVoiceUrl(uri.toString());
+                        message.setVoiceDuration(duration);
+                        
+                        sendMessage(message);
+                        
+                        // Delete local file
+                        if (audioFilePath != null) {
+                            new java.io.File(audioFilePath).delete();
+                        }
+                        
+                        Toast.makeText(this, "Voice message sent", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error uploading voice", e);
+                    Toast.makeText(this, "Failed to send voice message", Toast.LENGTH_SHORT).show();
+                });
+    }
+    
+    private int getAudioDuration(Uri audioUri) {
+        try {
+            android.media.MediaPlayer mp = android.media.MediaPlayer.create(this, audioUri);
+            if (mp != null) {
+                int duration = mp.getDuration() / 1000; // Convert to seconds
+                mp.release();
+                return duration;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting audio duration", e);
+        }
+        return 0;
     }
     
     private void openCamera() {
@@ -759,6 +973,25 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         }
         if (chatListener != null) {
             chatListener.remove();
+        }
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        
+        if (requestCode == 102) { // RECORD_AUDIO permission
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showVoiceRecordingDialog();
+            } else {
+                Toast.makeText(this, "Microphone permission is required to record voice messages", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
