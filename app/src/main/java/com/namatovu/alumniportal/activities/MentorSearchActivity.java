@@ -105,6 +105,8 @@ public class MentorSearchActivity extends AppCompatActivity {
     }
     
     private void setupSearch() {
+        if (editTextSearch == null) return;
+        
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -120,6 +122,8 @@ public class MentorSearchActivity extends AppCompatActivity {
     }
     
     private void setupFilters() {
+        if (spinnerCategory == null || spinnerGraduationYear == null || chipGroupFilters == null) return;
+        
         // Setup category spinner
         List<String> categories = Arrays.asList(
             "All", "Technology", "Business", "Healthcare", "Education", 
