@@ -143,25 +143,29 @@
                 android:clickable="true"
                 android:focusable="true" />
 
-            <!-- Login Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_button"
-                style="@style/Widget.Material3.Button"
+            <!-- Login Button with Loading Indicator -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/login"
-                android:textAllCaps="false" />
+                android:layout_marginTop="16dp">
 
-            <!-- Loading Progress Bar -->
-            <ProgressBar
-                android:id="@+id/loginProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                android:indeterminateTint="@color/must_green" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login_button"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login"
+                    android:textAllCaps="false" />
+
+                <ProgressBar
+                    android:id="@+id/loginProgressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:indeterminateTint="@android:color/white" />
+
+            </FrameLayout>
 
             <!-- OR Divider -->
             <LinearLayout
