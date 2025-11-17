@@ -3,7 +3,10 @@ package com.namatovu.alumniportal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ActivityProfileBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ActivityResultLauncher<Intent> editProfileLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,18 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // Setup edit profile launcher to refresh on return
+        editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Profile was updated, refresh immediately
+                    Toast.makeText(this, "Refreshing profile...", Toast.LENGTH_SHORT).show();
+                    loadProfile();
+                }
+            }
+        );
 
         setSupportActionBar(binding.toolbar);
         
@@ -48,7 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Setup button click listeners
         binding.editProfileButton.setOnClickListener(v -> {
-            startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+            editProfileLauncher.launch(intent);
         });
         
         binding.logoutButton.setOnClickListener(v -> {
@@ -71,9 +88,13 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        setLoadingState(true);
+        // Show loading state
+        showLoading(true);
+        
         db.collection("users").document(user.getUid()).get().addOnCompleteListener(task -> {
-            setLoadingState(false);
+            // Hide loading state
+            showLoading(false);
+            
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
                 if (doc != null && doc.exists()) {
@@ -82,12 +103,28 @@ public class ProfileActivity extends AppCompatActivity {
                         if (u != null) updateUIWithUserData(u);
                     } catch (RuntimeException e) {
                         Log.e(TAG, "Failed to deserialize user", e);
+                        Toast.makeText(this, "Error loading profile data", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(this, "Profile not found", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Log.e(TAG, "Failed to load user profile", task.getException());
+                Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    
+    private void showLoading(boolean show) {
+        if (show) {
+            // Disable buttons during loading
+            binding.editProfileButton.setEnabled(false);
+            binding.editProfileButton.setText("Loading...");
+        } else {
+            // Re-enable buttons
+            binding.editProfileButton.setEnabled(true);
+            binding.editProfileButton.setText("Edit Profile");
+        }
     }
 
     private void updateUIWithUserData(User user) {
