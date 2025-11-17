@@ -212,6 +212,111 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupToolbar() {
         setSupportActionBar(binding.toolbar);
+        
+        // Setup navigation drawer
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, binding.drawerLayout, binding.toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        
+        // Setup navigation view
+        binding.navigationView.setNavigationItemSelectedListener(item -> {
+            handleNavigationItemSelected(item.getItemId());
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+        
+        // Update nav header with user info
+        updateNavHeader();
+    }
+    
+    private void handleNavigationItemSelected(int itemId) {
+        Intent intent = null;
+        
+        if (itemId == R.id.nav_home) {
+            // Already on home
+            return;
+        } else if (itemId == R.id.nav_profile) {
+            intent = new Intent(this, ProfileActivity.class);
+        } else if (itemId == R.id.nav_directory) {
+            intent = new Intent(this, AlumniDirectoryActivity.class);
+        } else if (itemId == R.id.nav_mentorship) {
+            intent = new Intent(this, MentorshipActivity.class);
+        } else if (itemId == R.id.nav_chat) {
+            intent = new Intent(this, com.namatovu.alumniportal.activities.ChatListActivity.class);
+        } else if (itemId == R.id.nav_groups) {
+            intent = new Intent(this, com.namatovu.alumniportal.activities.AlumniGroupsActivity.class);
+        } else if (itemId == R.id.nav_jobs) {
+            intent = new Intent(this, JobBoardActivity.class);
+        } else if (itemId == R.id.nav_events) {
+            intent = new Intent(this, EventsActivity.class);
+        } else if (itemId == R.id.nav_career_tips) {
+            intent = new Intent(this, CareerTipsActivity.class);
+        } else if (itemId == R.id.nav_knowledge) {
+            intent = new Intent(this, KnowledgeActivity.class);
+        } else if (itemId == R.id.nav_settings) {
+            intent = new Intent(this, SettingsActivity.class);
+        } else if (itemId == R.id.nav_logout) {
+            handleLogout();
+            return;
+        }
+        
+        if (intent != null) {
+            startActivity(intent);
+        }
+    }
+    
+    private void updateNavHeader() {
+        View headerView = binding.navigationView.getHeaderView(0);
+        if (headerView != null && mAuth.getCurrentUser() != null) {
+            android.widget.TextView navHeaderName = headerView.findViewById(R.id.navHeaderName);
+            android.widget.TextView navHeaderEmail = headerView.findViewById(R.id.navHeaderEmail);
+            android.widget.ImageView navHeaderProfileImage = headerView.findViewById(R.id.navHeaderProfileImage);
+            
+            if (navHeaderEmail != null) {
+                navHeaderEmail.setText(mAuth.getCurrentUser().getEmail());
+            }
+            
+            // Load user data
+            db.collection("users").document(mAuth.getCurrentUser().getUid())
+                    .get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists() && navHeaderName != null) {
+                            String fullName = doc.getString("fullName");
+                            navHeaderName.setText(fullName != null ? fullName : "Alumni User");
+                            
+                            String profileImageUrl = doc.getString("profileImageUrl");
+                            if (profileImageUrl != null && navHeaderProfileImage != null) {
+                                ImageLoadingHelper.loadProfileImage(this, profileImageUrl, navHeaderProfileImage);
+                            }
+                        }
+                    });
+        }
+    }
+    
+    private void handleLogout() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    mAuth.signOut();
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+    
+    @Override
+    public void onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
     
     private void setupRecyclerViews() {
