@@ -3,37 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:background="?attr/colorPrimary"
+    android:background="@color/must_green"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.Material3.Dark">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageViewProfile"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginBottom="8dp"
-        android:scaleType="centerCrop"
+    <ImageView
+        android:id="@+id/navHeaderProfileImage"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="Profile Image"
         android:src="@drawable/ic_person"
-        app:shapeAppearanceOverlay="@style/CircleImageView" />
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background" />
 
     <TextView
-        android:id="@+id/textViewName"
+        android:id="@+id/navHeaderName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Alumni Name"
+        android:layout_marginTop="8dp"
+        android:text="Alumni User"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textViewEmail"
+        android:id="@+id/navHeaderEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="email@example.com"
+        android:layout_marginTop="4dp"
+        android:text="user@example.com"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:alpha="0.8" />
+        android:textSize="14sp" />
 
 </LinearLayout>

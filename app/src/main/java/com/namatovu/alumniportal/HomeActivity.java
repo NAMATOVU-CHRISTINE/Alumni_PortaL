@@ -13,8 +13,12 @@ import android.view.animation.Animation;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.navigation.NavigationView;
 import com.namatovu.alumniportal.databinding.ActivityHomeBinding;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
 import com.namatovu.alumniportal.models.User;
