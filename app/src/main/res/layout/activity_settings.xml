@@ -209,19 +209,15 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
-                    <TextView
-                        android:id="@+id/gmailSetupOption"
-                        android:text="Email Notifications Setup"
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/emailNotificationsSwitch"
+                        android:text="Email Notifications"
                         android:textSize="14sp"
                         android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground"
-                        android:drawableStart="@drawable/ic_email"
-                        android:drawableTint="?attr/colorPrimary"
-                        android:drawablePadding="12dp"
-                        android:gravity="center_vertical"
+                        android:checked="false"
+                        app:thumbTint="?attr/colorPrimary"
+                        app:trackTint="?attr/colorSurfaceVariant"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
