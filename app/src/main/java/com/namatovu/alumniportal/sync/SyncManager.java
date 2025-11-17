@@ -17,7 +17,7 @@ import androidx.work.WorkManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.namatovu.alumniportal.database.AppDatabase;
+import com.namatovu.alumniportal.database.AlumniDatabase;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.concurrent.Executor;
