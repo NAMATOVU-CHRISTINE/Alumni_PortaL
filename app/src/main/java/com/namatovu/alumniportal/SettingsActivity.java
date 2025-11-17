@@ -166,13 +166,18 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showThemeSelectionDialog() {
-        String[] themes = {"Light", "Dark", "System Default"};
+        String[] themes = {"Light", "Dark"};
         int currentTheme = themeManager.getTheme();
+        
+        // If current theme is System Default (2), default to Light (0)
+        if (currentTheme == 2) {
+            currentTheme = 0;
+        }
         
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle("Select Theme");
         builder.setSingleChoiceItems(themes, currentTheme, (dialog, which) -> {
-            // Apply the selected theme
+            // Apply the selected theme (0 = Light, 1 = Dark)
             themeManager.setTheme(which);
             
             // Update the summary text
