@@ -23,6 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -228,7 +229,7 @@ public class SignupActivity extends AppCompatActivity {
                                                 });
                                     } else {
                                         hideLoadingIndicator();
-                                        Toast.makeText(SignupActivity.this, "Registration failed: " + authTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(SignupActivity.this, "Registration failed: " + Objects.requireNonNull(authTask.getException()).getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 });
                     }

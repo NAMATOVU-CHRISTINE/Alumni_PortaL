@@ -93,11 +93,11 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
             public MentorViewHolder(@NonNull View itemView) {
                 super(itemView);
                 // Use generic text views since the exact layout might vary
-                textMentorName = itemView.findViewById(R.id.textMentorName);
-                textPosition = itemView.findViewById(R.id.textPosition);
-                textCompany = itemView.findViewById(R.id.textCompany);
-                textSkills = itemView.findViewById(R.id.textSkills);
-                textRating = itemView.findViewById(R.id.textRating);
+                textMentorName = itemView.findViewById(R.id.textViewName);
+                textPosition = itemView.findViewById(R.id.textViewJob);
+                textCompany = itemView.findViewById(R.id.textViewJob); // Assuming company and job are the same text view
+                textSkills = itemView.findViewById(R.id.textViewExpertise);
+                textRating = itemView.findViewById(R.id.textViewRating);
                 
                 itemView.setOnClickListener(v -> {
                     if (actionListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
