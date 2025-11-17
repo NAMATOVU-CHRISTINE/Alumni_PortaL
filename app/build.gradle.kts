@@ -75,6 +75,9 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-messaging")
+    
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 
     // MVVM & Lifecycle Components - Using explicit versions
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.0")
@@ -102,6 +105,9 @@ dependencies {
 
     // Image Loading
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    
+    // Cloudinary for image storage
+    implementation("com.cloudinary:cloudinary-android:2.5.0")
 
     // Web Scraping
     implementation("org.jsoup:jsoup:1.17.2")

@@ -101,9 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/password_hint"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleDrawable="@drawable/ic_visibility"
-                app:passwordToggleTint="?attr/colorOnSurface">
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/must_green">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
@@ -116,26 +115,75 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Forgot Password -->
+            <TextView
+                android:id="@+id/forgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:text="@string/forgot_password_prompt"
+                android:textColor="@color/must_green"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
+
             <!-- Login Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/loginButton"
                 style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/login"
                 android:textAllCaps="false" />
 
-            <!-- Forgot Password -->
-            <TextView
-                android:id="@+id/forgotPassword"
-                android:layout_width="wrap_content"
+            <!-- OR Divider -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:text="@string/forgot_password_prompt"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold" />
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/dark_gray"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OR"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="14sp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/dark_gray"/>
+
+            </LinearLayout>
+
+            <!-- Google Sign-In Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/googleSignInButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign in with Google"
+                android:textColor="@color/text_primary"
+                android:textAllCaps="false"
+                app:icon="@drawable/ic_google"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:strokeColor="@color/dark_gray"/>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
