@@ -36,19 +36,26 @@
         <!-- FIX: LoginActivity is now the starting point of the app -->
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity 
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".EventsActivity" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".EditProfileActivity" />
+        <activity 
+            android:name=".ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EditProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".AlumniDirectoryActivity" />
         <activity android:name=".JobBoardActivity" />
         <activity android:name=".MentorshipActivity" />
@@ -57,28 +64,44 @@
         <activity android:name=".NewsFeedActivity" />
         <activity android:name=".ViewProfileActivity" />
         <activity android:name=".JobDetailsActivity" />
-        <activity android:name=".PostJobActivity" />
+        <activity 
+            android:name=".PostJobActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".EventDetailsActivity" />
-        <activity android:name=".CreateEventActivity" />
+        <activity 
+            android:name=".CreateEventActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ArticleDetailsActivity" />
-        <activity android:name=".CreateArticleActivity" />
+        <activity 
+            android:name=".CreateArticleActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MentorDetailActivity" />
         <activity android:name=".JobDetailActivity" />
-        <activity android:name=".CreatePostActivity" />
+        <activity 
+            android:name=".CreatePostActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".activities.ChatListActivity" />
-        <activity android:name=".activities.ChatActivity" />
+        <activity 
+            android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activities.NotificationSettingsActivity" />
         <activity android:name=".activities.PrivacySettingsActivity" />
-        <activity android:name=".activities.GmailSetupActivity" />
+        <activity 
+            android:name=".activities.GmailSetupActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".CareerTipsActivity" />
         <activity android:name=".SavedCareerTipsActivity" />
         <activity android:name=".GrowSectionActivity" />
         <activity android:name=".KnowledgeActivity" />
-        <activity android:name=".AddArticleActivity" />
+        <activity 
+            android:name=".AddArticleActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ArticleDetailActivity" />
         <activity android:name=".JobsActivity" />
-        <activity android:name=".AddOpportunityActivity" />
+        <activity 
+            android:name=".AddOpportunityActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".OpportunityDetailActivity" />
         <activity android:name=".RecentActivitiesActivity" />
         <activity android:name=".CustomizePreferencesActivity" />
