@@ -202,6 +202,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private LinearLayout messageContainer;
         private TextView textViewMessage;
         private ImageView imageViewMessage;
+        private ImageView imageViewProfile;
         private TextView textViewFileName;
         private TextView textViewFileSize;
         private TextView textViewTime;
@@ -213,6 +214,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             messageContainer = itemView.findViewById(R.id.messageContainer);
             textViewMessage = itemView.findViewById(R.id.textViewMessage);
             imageViewMessage = itemView.findViewById(R.id.imageViewMessage);
+            imageViewProfile = itemView.findViewById(R.id.imageViewProfile);
             textViewFileName = itemView.findViewById(R.id.textViewFileName);
             textViewFileSize = itemView.findViewById(R.id.textViewFileSize);
             textViewTime = itemView.findViewById(R.id.textViewTime);
@@ -284,11 +286,22 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             textViewTime.setText(message.getFormattedTime());
             
             // Set sender name (for group chats)
-            if (message.getSenderName() != null) {
+            if (message.getSenderName() != null && !message.getSenderName().isEmpty()) {
                 textViewSenderName.setVisibility(View.VISIBLE);
                 textViewSenderName.setText(message.getSenderName());
             } else {
                 textViewSenderName.setVisibility(View.GONE);
+            }
+            
+            // Load sender profile image
+            if (message.getSenderProfileImage() != null && !message.getSenderProfileImage().isEmpty()) {
+                Glide.with(context)
+                        .load(message.getSenderProfileImage())
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_person)
+                        .into(imageViewProfile);
+            } else {
+                imageViewProfile.setImageResource(R.drawable.ic_person);
             }
         }
     }

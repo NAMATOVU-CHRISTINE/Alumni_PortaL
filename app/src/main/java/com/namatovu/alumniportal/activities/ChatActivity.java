@@ -514,9 +514,28 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                 otherUserId,
                 messageText
         );
+        
+        // Load and set sender profile image
+        loadCurrentUserProfileImage(message);
 
         sendMessage(message);
+        
+        // Clear the input field immediately
         editTextMessage.setText("");
+        editTextMessage.clearFocus();
+    }
+    
+    private void loadCurrentUserProfileImage(ChatMessage message) {
+        db.collection("users").document(currentUserId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        String profileImageUrl = doc.getString("profileImageUrl");
+                        if (profileImageUrl != null) {
+                            message.setSenderProfileImage(profileImageUrl);
+                        }
+                    }
+                });
     }
 
     private void sendMessage(ChatMessage message) {
