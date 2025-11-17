@@ -124,7 +124,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             buttonGroupChat.setVisibility(View.VISIBLE);
         } else {
             buttonJoinLeave.setText("Join Group");
-            buttonJoinLeave.setBackgroundColor(getColor(R.color.colorPrimary));
+            buttonJoinLeave.setBackgroundColor(getColor(R.color.must_green));
             buttonGroupChat.setVisibility(View.GONE);
         }
     }
