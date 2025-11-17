@@ -32,7 +32,7 @@
         <activity
             android:name=".SignupActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <!-- FIX: LoginActivity is now the starting point of the app -->
         <activity
             android:name=".LoginActivity"
@@ -52,7 +52,7 @@
         <activity android:name=".EventsActivity" />
         <activity 
             android:name=".ForgotPasswordActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity 
             android:name=".EditProfileActivity"
             android:windowSoftInputMode="adjustResize" />
