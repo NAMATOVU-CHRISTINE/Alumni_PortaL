@@ -97,6 +97,12 @@ public class DataSyncService extends Service {
             Log.d(TAG, "Starting event sync...");
             syncEvents();
         });
+        
+        // Sync mentors in background thread
+        executorService.execute(() -> {
+            Log.d(TAG, "Starting mentor sync...");
+            syncMentors();
+        });
     }
     
     private void syncUsers() {
@@ -229,7 +235,57 @@ public class DataSyncService extends Service {
     }
     
     private int syncCompletedCount = 0;
-    private final int TOTAL_SYNC_TASKS = 3;
+    private final int TOTAL_SYNC_TASKS = 4;
+    
+    private void syncMentors() {
+        db.collection("mentors")
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                List<com.namatovu.alumniportal.database.entities.MentorEntity> mentors = new ArrayList<>();
+                
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    com.namatovu.alumniportal.database.entities.MentorEntity mentor = 
+                        new com.namatovu.alumniportal.database.entities.MentorEntity();
+                    mentor.setMentorId(document.getId());
+                    mentor.setFullName(document.getString("fullName"));
+                    mentor.setEmail(document.getString("email"));
+                    mentor.setProfileImageUrl(document.getString("profileImageUrl"));
+                    mentor.setCurrentJob(document.getString("currentJob"));
+                    mentor.setCompany(document.getString("company"));
+                    mentor.setExpertise(document.getString("expertise"));
+                    mentor.setCategory(document.getString("category"));
+                    mentor.setBio(document.getString("bio"));
+                    mentor.setGraduationYear(document.getString("graduationYear"));
+                    mentor.setCourse(document.getString("course"));
+                    
+                    Long yearsExp = document.getLong("yearsOfExperience");
+                    mentor.setYearsOfExperience(yearsExp != null ? yearsExp.intValue() : 0);
+                    
+                    Long menteeCount = document.getLong("menteeCount");
+                    mentor.setMenteeCount(menteeCount != null ? menteeCount.intValue() : 0);
+                    
+                    Double rating = document.getDouble("rating");
+                    mentor.setRating(rating != null ? rating : 0.0);
+                    
+                    Boolean available = document.getBoolean("isAvailable");
+                    mentor.setAvailable(available != null && available);
+                    
+                    mentor.setLastSyncTime(System.currentTimeMillis());
+                    mentors.add(mentor);
+                }
+                
+                // Insert into Room database in background thread
+                executorService.execute(() -> {
+                    localDb.mentorDao().insertMentors(mentors);
+                    Log.d(TAG, "Synced " + mentors.size() + " mentors to local database");
+                    checkSyncComplete();
+                });
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error syncing mentors", e);
+                checkSyncComplete();
+            });
+    }
     
     private synchronized void checkSyncComplete() {
         syncCompletedCount++;

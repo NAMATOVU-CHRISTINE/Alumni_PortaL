@@ -126,6 +126,11 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activities.GroupDetailActivity" />
         
+        <!-- Mentor Search Activity -->
+        <activity 
+            android:name=".activities.MentorSearchActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
         <!-- Services -->
         <service android:name=".services.AlumniNotificationService" 
             android:exported="false" />
