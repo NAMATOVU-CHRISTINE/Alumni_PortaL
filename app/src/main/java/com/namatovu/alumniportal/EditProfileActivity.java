@@ -270,6 +270,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 AnalyticsHelper.logProfileEdit(editType);
                 
                 Toast.makeText(EditProfileActivity.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                
+                // Send result back to trigger refresh
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("profile_updated", true);
+                setResult(RESULT_OK, resultIntent);
+                
                 finish();
             } else {
                 String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
