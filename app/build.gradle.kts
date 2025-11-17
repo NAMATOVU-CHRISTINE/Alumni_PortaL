@@ -126,29 +126,12 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:$work_version")
 
     // Image Loading - Updated to latest version with 16KB support
-    implementation("com.github.bumptech.glide:glide:4.16.0") {
-        // Exclude Fresco if it's a transitive dependency
-        exclude(group = "com.facebook.fresco", module = "fresco")
-        exclude(group = "com.facebook.fresco", module = "imagepipeline")
-    }
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
     
-    // Cloudinary for image storage
+    // Cloudinary for image storage - Exclude Fresco completely
     implementation("com.cloudinary:cloudinary-android:2.5.0") {
-        // Exclude Fresco dependencies that aren't 16KB aligned
-        exclude(group = "com.facebook.fresco", module = "fresco")
-        exclude(group = "com.facebook.fresco", module = "imagepipeline")
-        exclude(group = "com.facebook.fresco", module = "imagepipeline-native")
-        exclude(group = "com.facebook.fresco", module = "native-filters")
-        exclude(group = "com.facebook.fresco", module = "native-imagetranscoder")
-    }
-    
-    // Force compatible versions of native libraries
-    configurations.all {
-        resolutionStrategy {
-            force("com.facebook.fresco:fresco:3.1.3")
-            force("com.facebook.fresco:imagepipeline:3.1.3")
-        }
+        exclude(group = "com.facebook.fresco")
     }
 
     // Web Scraping
