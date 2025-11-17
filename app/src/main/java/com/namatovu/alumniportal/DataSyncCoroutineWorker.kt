@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import com.google.android.gms.tasks.Tasks
-import com.namatovu.alumniportal.db.AppDatabase
+import com.namatovu.alumniportal.database.AlumniDatabase
 import java.util.concurrent.TimeUnit
 
 /**
@@ -32,35 +32,36 @@ class DataSyncCoroutineWorker(context: Context, params: WorkerParameters) : Coro
                 val jobsTask = firestore.collection("jobs").get()
                 val jobsSnapshot = Tasks.await(jobsTask, 20, TimeUnit.SECONDS)
                 val jobEntities = jobsSnapshot.documents.map { doc ->
-                    com.namatovu.alumniportal.db.JobEntity().apply {
-                        id = doc.id
+                    com.namatovu.alumniportal.database.entities.JobEntity().apply {
+                        jobId = doc.id
                         title = doc.getString("title")
                         company = doc.getString("company")
                         location = doc.getString("location")
                         description = doc.getString("description")
-                        applyUrl = doc.getString("applyUrl")
+                        applicationUrl = doc.getString("applyUrl")
                     }
                 }
                 if (jobEntities.isNotEmpty()) {
-                    val dbLocal = AppDatabase.getInstance(applicationContext)
-                    dbLocal.jobDao().insertAll(jobEntities)
+                    val dbLocal = AlumniDatabase.getInstance(applicationContext)
+                    // Note: insertAll not available, using insert in loop
+                    jobEntities.forEach { dbLocal.jobDao().insertJob(it) }
                 }
 
                 // Sync events
                 val eventsTask = firestore.collection("events").get()
                 val eventsSnapshot = Tasks.await(eventsTask, 20, TimeUnit.SECONDS)
                 val eventEntities = eventsSnapshot.documents.map { doc ->
-                    com.namatovu.alumniportal.db.EventEntity().apply {
-                        id = doc.id
+                    com.namatovu.alumniportal.database.entities.EventEntity().apply {
+                        eventId = doc.id
                         title = doc.getString("title")
-                        link = doc.getString("link")
-                        pubDate = doc.getString("pubDate")
                         description = doc.getString("description")
+                        location = doc.getString("location")
                     }
                 }
                 if (eventEntities.isNotEmpty()) {
-                    val dbLocal = AppDatabase.getInstance(applicationContext)
-                    dbLocal.eventDao().insertAll(eventEntities)
+                    val dbLocal = AlumniDatabase.getInstance(applicationContext)
+                    // Note: insertAll not available, using insert in loop
+                    eventEntities.forEach { dbLocal.eventDao().insertEvent(it) }
                 }
             }
             Result.success()
