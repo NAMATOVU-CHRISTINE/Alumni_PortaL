@@ -42,7 +42,7 @@ public class SyncManager {
     private static SyncManager instance;
     private Context context;
     private WorkManager workManager;
-    private AppDatabase database;
+    private AlumniDatabase database;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private ConnectivityManager connectivityManager;
@@ -51,7 +51,7 @@ public class SyncManager {
     private SyncManager(Context context) {
         this.context = context.getApplicationContext();
         this.workManager = WorkManager.getInstance(context);
-        this.database = AppDatabase.getInstance(context);
+        this.database = AlumniDatabase.getInstance(context);
         this.firestore = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
         this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
