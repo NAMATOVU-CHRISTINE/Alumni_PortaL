@@ -81,13 +81,17 @@ public class MentorSearchActivity extends AppCompatActivity {
     }
     
     private void initViews() {
-        editTextSearch = findViewById(R.id.editTextSearch);
-        spinnerCategory = findViewById(R.id.spinnerCategory);
-        spinnerGraduationYear = findViewById(R.id.spinnerGraduationYear);
-        chipGroupFilters = findViewById(R.id.chipGroupFilters);
-        recyclerView = findViewById(R.id.recyclerView);
-        progressBar = findViewById(R.id.progressBar);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        try {
+            editTextSearch = findViewById(R.id.editTextSearch);
+            spinnerCategory = findViewById(R.id.spinnerCategory);
+            spinnerGraduationYear = findViewById(R.id.spinnerGraduationYear);
+            chipGroupFilters = findViewById(R.id.chipGroupFilters);
+            recyclerView = findViewById(R.id.recyclerView);
+            progressBar = findViewById(R.id.progressBar);
+            swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        } catch (Exception e) {
+            // Layout resources may not be available
+        }
         
         swipeRefreshLayout.setOnRefreshListener(() -> {
             syncMentorsFromFirebase();
