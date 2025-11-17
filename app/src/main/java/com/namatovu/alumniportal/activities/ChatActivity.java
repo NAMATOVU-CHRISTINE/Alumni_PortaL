@@ -65,6 +65,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     private ImageView imageViewProfile;
     private TextView textViewChatName;
     private TextView textViewOnlineStatus;
+    private com.google.android.material.floatingactionbutton.FloatingActionButton fabScrollToBottom;
     
     private FirebaseFirestore db;
     private FirebaseAuth auth;
@@ -155,6 +156,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         imageViewProfile = findViewById(R.id.imageViewProfile);
         textViewChatName = findViewById(R.id.textViewChatName);
         textViewOnlineStatus = findViewById(R.id.textViewOnlineStatus);
+        fabScrollToBottom = findViewById(R.id.fabScrollToBottom);
         
         // Initially disable send button
         buttonSend.setEnabled(false);
@@ -162,6 +164,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         // Set default text for name and status
         textViewChatName.setText("");
         textViewOnlineStatus.setText("");
+        
+        // Scroll to bottom FAB click
+        fabScrollToBottom.setOnClickListener(v -> scrollToBottom(true));
     }
     
     private void setupRecyclerView() {
@@ -179,6 +184,20 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             if (bottom < oldBottom) {
                 // Keyboard appeared
                 recyclerView.postDelayed(() -> scrollToBottom(true), 100);
+            }
+        });
+        
+        // Show/hide scroll to bottom button based on scroll position
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                
+                if (isAtBottom()) {
+                    fabScrollToBottom.hide();
+                } else {
+                    fabScrollToBottom.show();
+                }
             }
         });
     }
