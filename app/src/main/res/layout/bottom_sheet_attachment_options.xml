@@ -139,6 +139,55 @@
 
         </LinearLayout>
 
+        <!-- Voice Note Option -->
+        <LinearLayout
+            android:id="@+id/optionVoice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:cardCornerRadius="28dp"
+                app:cardBackgroundColor="#E91E63"
+                app:cardElevation="4dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@android:drawable/ic_btn_speak_now"
+                    app:tint="@android:color/white" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Voice"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                android:textColor="?android:attr/textColorPrimary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    
+    <!-- Second Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
         <!-- Location Option -->
         <LinearLayout
             android:id="@+id/optionLocation"
@@ -177,6 +226,12 @@
                 android:textColor="?android:attr/textColorPrimary" />
 
         </LinearLayout>
+        
+        <!-- Empty spaces for alignment -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="3" />
 
     </LinearLayout>
 

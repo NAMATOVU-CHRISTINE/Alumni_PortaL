@@ -523,7 +523,29 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             shareLocation();
         });
         
+        // Add voice note option if it exists in layout
+        View voiceOption = view.findViewById(R.id.optionVoice);
+        if (voiceOption != null) {
+            voiceOption.setOnClickListener(v -> {
+                bottomSheet.dismiss();
+                startVoiceRecording();
+            });
+        }
+        
         bottomSheet.show();
+    }
+    
+    private void startVoiceRecording() {
+        // Check audio permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) 
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, 
+                    new String[]{Manifest.permission.RECORD_AUDIO}, 102);
+            return;
+        }
+        
+        Toast.makeText(this, "Voice recording coming soon!", Toast.LENGTH_SHORT).show();
+        // TODO: Implement voice recording
     }
     
     private void openCamera() {
