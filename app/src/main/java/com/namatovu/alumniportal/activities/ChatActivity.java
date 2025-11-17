@@ -1075,4 +1075,3 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         return true;
     }
 }
-}
