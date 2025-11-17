@@ -93,40 +93,28 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Password Input Container -->
-            <FrameLayout
+            <!-- Password Input with built-in toggle -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordLayout"
+                style="@style/App.Material3.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:hint="@string/password_hint"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/ic_visibility"
+                app:passwordToggleTint="?attr/colorOnSurface">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/App.Material3.TextInputLayout"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:inputType="textPassword"
+                    android:importantForAutofill="yes"
+                    android:autofillHints="password"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="48dp"
-                        android:inputType="textPassword"
-                        android:importantForAutofill="yes"
-                        android:autofillHints="password"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/togglePassword"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="end|center_vertical"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_visibility"
-                    app:tint="?attr/colorOnSurface"
-                    android:contentDescription="@string/toggle_password_visibility"
-                    android:clickable="true"
-                    android:focusable="true"/>
-            </FrameLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Login Button -->
             <com.google.android.material.button.MaterialButton
