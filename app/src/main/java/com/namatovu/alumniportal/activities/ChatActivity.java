@@ -998,19 +998,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         }
     }
     
-    private boolean isAtBottom() {
-        if (messages.isEmpty()) return true;
-        
-        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (layoutManager == null) return true;
-        
-        int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
-        int lastPosition = messages.size() - 1;
-        
-        // Consider "at bottom" if within 2 messages of the end
-        return lastVisiblePosition >= lastPosition - 2;
-    }
-    
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
