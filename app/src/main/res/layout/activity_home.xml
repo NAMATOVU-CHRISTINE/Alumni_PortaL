@@ -194,7 +194,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:padding="16dp"
-                            android:background="@color/light_blue">
+                            android:background="?attr/colorSurfaceVariant">
 
                             <ImageView
                                 android:layout_width="32dp"
@@ -242,7 +242,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:padding="16dp"
-                            android:background="@color/light_purple">
+                            android:background="?attr/colorSurfaceVariant">
 
                             <ImageView
                                 android:layout_width="32dp"
@@ -293,7 +293,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:padding="16dp"
-                            android:background="@color/light_yellow">
+                            android:background="?attr/colorSurfaceVariant">
 
                             <ImageView
                                 android:layout_width="32dp"
@@ -340,7 +340,7 @@
                             android:orientation="vertical"
                             android:gravity="center"
                             android:padding="16dp"
-                            android:background="@color/light_green">
+                            android:background="?attr/colorSurfaceVariant">
 
                             <ImageView
                                 android:layout_width="32dp"
@@ -408,7 +408,7 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="16dp"
-                        android:background="@color/light_purple">
+                        android:background="?attr/colorSurfaceVariant">
 
                         <ImageView
                             android:layout_width="36dp"
@@ -458,7 +458,7 @@
                         android:orientation="vertical"
                         android:gravity="center"
                         android:padding="16dp"
-                        android:background="@color/light_orange">
+                        android:background="?attr/colorSurfaceVariant">
 
                         <ImageView
                             android:layout_width="36dp"
