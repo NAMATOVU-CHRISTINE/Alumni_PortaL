@@ -11,7 +11,7 @@
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorSurface"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -52,7 +52,7 @@
             android:layout_marginEnd="8dp"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintStart_toEndOf="@id/profileImageContainer"
             app:layout_constraintTop_toTopOf="@id/profileImageContainer"
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:textSize="13sp"
-            android:textColor="@color/dark_gray"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintStart_toStartOf="@id/textMentorName"
             app:layout_constraintTop_toBottomOf="@id/textPosition"
             app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
                 android:text="4.9"
                 android:textSize="11sp"
                 android:textStyle="bold"
-                android:textColor="@color/dark_gray" />
+                android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
 
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textSize="13sp"
-            android:textColor="@color/dark_gray"
+            android:textColor="?android:attr/textColorSecondary"
             android:lineSpacingExtra="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/statusChip"
@@ -191,7 +191,7 @@
                 android:layout_marginEnd="8dp"
                 android:text="Decline"
                 android:textSize="12sp"
-                android:textColor="@color/dark_gray"
+                android:textColor="?android:attr/textColorSecondary"
                 android:background="@android:color/transparent"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"

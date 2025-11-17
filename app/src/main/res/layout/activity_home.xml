@@ -92,7 +92,7 @@
                             android:text="@string/welcome_default"
                             android:textAppearance="@style/App.TextAppearance.Title"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:textSize="18sp"/>
 
                         <TextView
@@ -101,7 +101,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/connect_learn_grow_together"
                             android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:layout_marginTop="2dp"
                             android:textSize="12sp"/>
                     </LinearLayout>
@@ -161,7 +161,7 @@
                 android:text="🌱 Grow"
                 android:textAppearance="@style/App.TextAppearance.Title"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="20sp"
                 android:layout_marginBottom="12dp"/>
 
@@ -208,7 +208,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/find_mentors"
                                 android:textSize="14sp"
-                                android:textColor="@color/black"
+                                android:textColor="?android:attr/textColorPrimary"
                                 android:textAlignment="center"
                                 android:textStyle="bold"
                                 android:layout_marginTop="8dp" />
@@ -218,7 +218,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Connect with experts"
                                 android:textSize="11sp"
-                                android:textColor="@color/dark_gray"
+                                android:textColor="?android:attr/textColorSecondary"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
@@ -256,7 +256,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="💼 Jobs &amp; Opportunities"
                                 android:textSize="14sp"
-                                android:textColor="@color/black"
+                                android:textColor="?android:attr/textColorPrimary"
                                 android:textAlignment="center"
                                 android:textStyle="bold"
                                 android:layout_marginTop="8dp"
@@ -267,7 +267,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="11sp"
-                                android:textColor="@color/dark_gray"
+                                android:textColor="?android:attr/textColorSecondary"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp"
                                 android:maxLines="1"
@@ -307,7 +307,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/knowledge"
                                 android:textSize="14sp"
-                                android:textColor="@color/black"
+                                android:textColor="?android:attr/textColorPrimary"
                                 android:textAlignment="center"
                                 android:textStyle="bold"
                                 android:layout_marginTop="8dp" />
@@ -317,7 +317,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Learning resources"
                                 android:textSize="11sp"
-                                android:textColor="@color/dark_gray"
+                                android:textColor="?android:attr/textColorSecondary"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
@@ -354,7 +354,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Career Tips"
                                 android:textSize="14sp"
-                                android:textColor="@color/black"
+                                android:textColor="?android:attr/textColorPrimary"
                                 android:textAlignment="center"
                                 android:textStyle="bold"
                                 android:layout_marginTop="8dp" />
@@ -364,7 +364,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Advance your career"
                                 android:textSize="11sp"
-                                android:textColor="@color/dark_gray"
+                                android:textColor="?android:attr/textColorSecondary"
                                 android:textAlignment="center"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
@@ -380,7 +380,7 @@
                 android:text="🤝 Connect"
                 android:textAppearance="@style/App.TextAppearance.Title"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="20sp"
                 android:layout_marginBottom="12dp"/>
 
@@ -423,7 +423,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/my_profile"
                             android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:textAlignment="center"
                             android:textStyle="bold"
                             android:textSize="14sp"/>
@@ -433,7 +433,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/view_and_edit"
                             android:textAppearance="@style/App.TextAppearance.Caption"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textAlignment="center"
                             android:layout_marginTop="4dp"
                             android:textSize="11sp"/>
@@ -473,7 +473,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/events"
                             android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:textAlignment="center"
                             android:textStyle="bold"
                             android:textSize="14sp"/>
@@ -483,7 +483,7 @@
                             android:layout_height="wrap_content"
                             android:text="Upcoming meetups"
                             android:textAppearance="@style/App.TextAppearance.Caption"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textAlignment="center"
                             android:layout_marginTop="4dp"
                             android:textSize="11sp"/>
@@ -498,7 +498,7 @@
                 android:text="✨ For You"
                 android:textAppearance="@style/App.TextAppearance.Title"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="20sp"
                 android:layout_marginBottom="12dp"/>
 
@@ -540,7 +540,7 @@
                             android:text="Recommended for You"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:layout_marginStart="12dp"
                             android:textSize="16sp"/>
 
@@ -578,7 +578,7 @@
                             android:layout_height="wrap_content"
                             android:text=""
                             android:textAppearance="@style/App.TextAppearance.Body"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:layout_marginBottom="12dp"
                             android:textSize="14sp"
                             android:visibility="gone"/>
@@ -619,7 +619,7 @@
                             android:layout_height="wrap_content"
                             android:text="No recommendations available"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textAlignment="center"
                             android:textSize="14sp"
                             android:layout_marginBottom="4dp"/>
@@ -644,7 +644,7 @@
                 android:text="📈 Recent Activity"
                 android:textAppearance="@style/App.TextAppearance.Title"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="20sp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="12dp"/>

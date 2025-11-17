@@ -87,7 +87,7 @@
                         android:text="Christine Namatovu"
                         android:textAppearance="@style/App.TextAppearance.Title"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="22sp"
                         android:layout_marginBottom="4dp"
                         tools:text="Christine Namatovu" />
@@ -99,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:text="2023bcs004@std.must.ac.ug"
                         android:textAppearance="@style/App.TextAppearance.Subtitle"
-                        android:textColor="@color/dark_gray"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="16dp"
                         tools:text="2023bcs004@std.must.ac.ug" />
@@ -179,7 +179,7 @@
                             android:text="About Me"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:text="Computer Science student at Mbarara University of Science and Technology, passionate about mobile development and AI."
                         android:textAppearance="@style/App.TextAppearance.Body"
-                        android:textColor="@color/dark_gray"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
                         android:lineSpacingExtra="2dp"
                         tools:text="Computer Science student at Mbarara University of Science and Technology, passionate about mobile development and AI." />
@@ -240,7 +240,7 @@
                             android:text="Career Goals"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -257,7 +257,7 @@
                         android:layout_height="wrap_content"
                         android:text="Aspiring Mobile App Developer"
                         android:textAppearance="@style/App.TextAppearance.Body"
-                        android:textColor="@color/dark_gray"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
                         tools:text="Aspiring Mobile App Developer" />
 
@@ -300,7 +300,7 @@
                             android:text="Skills &amp; Expertise"
                             android:textAppearance="@style/App.TextAppearance.Subtitle"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:textSize="16sp" />
 
                     </LinearLayout>

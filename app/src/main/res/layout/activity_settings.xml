@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?android:attr/colorBackground">
 
     <!-- App Bar Layout -->
     <com.google.android.material.appbar.AppBarLayout
@@ -26,7 +26,7 @@
     <ScrollView 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?android:attr/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 android:text="Profile &amp; Account"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/must_green"
+                android:textColor="?attr/colorPrimary"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
@@ -50,8 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeColor="@color/light_green"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorSurfaceVariant"
                 app:strokeWidth="1dp"
                 android:layout_marginBottom="16dp">
 
@@ -64,13 +64,13 @@
                         android:id="@+id/editProfileOption"
                         android:text="Edit Profile"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         android:drawableStart="@drawable/ic_menu_edit"
-                        android:drawableTint="@color/must_green"
+                        android:drawableTint="?attr/colorPrimary"
                         android:drawablePadding="12dp"
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_green"
+                        android:background="?attr/colorSurfaceVariant"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
@@ -87,13 +87,13 @@
                         android:id="@+id/changePasswordOption"
                         android:text="Change Password"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         android:drawableStart="@drawable/ic_settings"
-                        android:drawableTint="@color/must_green"
+                        android:drawableTint="?attr/colorPrimary"
                         android:drawablePadding="12dp"
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                 android:text="App Preferences"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/must_green"
+                android:textColor="?attr/colorPrimary"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
@@ -117,8 +117,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeColor="@color/light_green"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorSurfaceVariant"
                 app:strokeWidth="1dp"
                 android:layout_marginBottom="16dp">
 
@@ -142,13 +142,13 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_settings"
-                            app:tint="@color/must_green"
+                            app:tint="?attr/colorPrimary"
                             android:layout_marginEnd="12dp" />
 
                         <TextView
                             android:text="Theme"
                             android:textSize="14sp"
-                            android:textColor="@color/black"
+                            android:textColor="?android:attr/textColorPrimary"
                             android:layout_weight="1"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" />
@@ -157,7 +157,7 @@
                             android:id="@+id/themeSummary"
                             android:text="Light"
                             android:textSize="14sp"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -170,7 +170,7 @@
                 android:text="App Notifications"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/must_green"
+                android:textColor="?attr/colorPrimary"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
@@ -180,8 +180,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeColor="@color/light_green"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorSurfaceVariant"
                 app:strokeWidth="1dp"
                 android:layout_marginBottom="16dp">
 
@@ -194,18 +194,18 @@
                         android:id="@+id/allNotificationsSwitch"
                         android:text="All Notifications"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:checked="true"
-                        app:thumbTint="@color/must_green"
-                        app:trackTint="@color/light_green"
+                        app:thumbTint="?attr/colorPrimary"
+                        app:trackTint="?attr/colorSurfaceVariant"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_green"
+                        android:background="?attr/colorSurfaceVariant"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
@@ -213,13 +213,13 @@
                         android:id="@+id/gmailSetupOption"
                         android:text="Email Notifications Setup"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         android:drawableStart="@drawable/ic_email"
-                        android:drawableTint="@color/must_green"
+                        android:drawableTint="?attr/colorPrimary"
                         android:drawablePadding="12dp"
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
@@ -228,7 +228,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_green"
+                        android:background="?attr/colorSurfaceVariant"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
@@ -236,18 +236,18 @@
                         android:id="@+id/mentorshipRequestsSwitch"
                         android:text="Mentorship Requests"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:checked="true"
-                        app:thumbTint="@color/must_green"
-                        app:trackTint="@color/light_green"
+                        app:thumbTint="?attr/colorPrimary"
+                        app:trackTint="?attr/colorSurfaceVariant"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_green"
+                        android:background="?attr/colorSurfaceVariant"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
@@ -255,18 +255,18 @@
                         android:id="@+id/eventUpdatesSwitch"
                         android:text="Event Updates"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:checked="true"
-                        app:thumbTint="@color/must_green"
-                        app:trackTint="@color/light_green"
+                        app:thumbTint="?attr/colorPrimary"
+                        app:trackTint="?attr/colorSurfaceVariant"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_green"
+                        android:background="?attr/colorSurfaceVariant"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
@@ -274,11 +274,11 @@
                         android:id="@+id/announcementsSwitch"
                         android:text="Important Announcements"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:checked="true"
-                        app:thumbTint="@color/must_green"
-                        app:trackTint="@color/light_green"
+                        app:thumbTint="?attr/colorPrimary"
+                        app:trackTint="?attr/colorSurfaceVariant"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -290,7 +290,7 @@
                 android:text="Account Actions"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/must_green"
+                android:textColor="?attr/colorPrimary"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
@@ -300,8 +300,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:strokeColor="@color/light_green"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorSurfaceVariant"
                 app:strokeWidth="1dp"
                 android:layout_marginBottom="32dp">
 
@@ -314,13 +314,13 @@
                         android:id="@+id/logoutOption"
                         android:text="Logout"
                         android:textSize="14sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:padding="16dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         android:drawableStart="@drawable/ic_logout"
-                        android:drawableTint="@color/must_green"
+                        android:drawableTint="?attr/colorPrimary"
                         android:drawablePadding="12dp"
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
@@ -329,7 +329,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_green"
+                        android:background="?attr/colorSurfaceVariant"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 

@@ -7,7 +7,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    android:background="@color/white">
+    android:background="?android:attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                     android:text="John Doe"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <TextView
                     android:id="@+id/tvTimestamp"
@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:text="2h ago"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
             </LinearLayout>
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:text="This is a really insightful article! Thanks for sharing these valuable tips."
             android:textSize="14sp"
-            android:textColor="@color/text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="12dp"
             android:lineSpacingExtra="2dp" />
 

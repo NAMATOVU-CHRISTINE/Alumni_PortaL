@@ -11,7 +11,7 @@
     android:layout_marginBottom="4dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorSurface"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -62,7 +62,7 @@
                     android:text="New Job Opportunity"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:text="2 hours ago"
                     android:textSize="11sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginStart="8dp" />
 
             </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:text="Software Developer position at TechCorp matches your skills"
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginTop="4dp"
                 android:maxLines="2"
                 android:ellipsize="end"

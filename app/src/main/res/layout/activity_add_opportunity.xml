@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background">
+    android:background="?android:attr/colorBackground">
 
     <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:text="Category *"
                         android:textSize="14sp"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="8dp" />
 
                     <com.google.android.material.chip.ChipGroup
@@ -299,14 +299,14 @@
                                 android:text="⭐ Featured Opportunity"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/text_primary" />
+                                android:textColor="?android:attr/textColorPrimary" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Featured opportunities appear at the top and get more visibility"
                                 android:textSize="12sp"
-                                android:textColor="@color/text_secondary" />
+                                android:textColor="?android:attr/textColorSecondary" />
 
                         </LinearLayout>
 
@@ -331,7 +331,7 @@
                     android:layout_height="56dp"
                     android:layout_weight="1"
                     android:text="Cancel"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginEnd="8dp"
                     app:strokeColor="@color/stroke_color"
                     app:strokeWidth="1dp"

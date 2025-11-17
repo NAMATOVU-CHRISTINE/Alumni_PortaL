@@ -31,7 +31,7 @@
             android:text="New job opportunity available"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/activityTime"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="2 hours ago"
             android:textSize="11sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginTop="2dp" />
 
     </LinearLayout>
