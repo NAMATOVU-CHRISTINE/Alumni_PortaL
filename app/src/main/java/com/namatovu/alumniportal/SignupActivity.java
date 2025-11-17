@@ -65,6 +65,9 @@ public class SignupActivity extends AppCompatActivity {
         binding.personalEmail.addTextChangedListener(textWatcher);
         binding.password.addTextChangedListener(textWatcher);
         binding.confirmPassword.addTextChangedListener(textWatcher);
+        
+        // Setup smooth scrolling for input fields
+        setupSmoothScrolling();
 
         binding.signupButton.setOnClickListener(v -> createUser());
 
@@ -74,6 +77,28 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    private void setupSmoothScrolling() {
+        // Add focus listeners to scroll to field when typing
+        android.view.View.OnFocusChangeListener scrollListener = (v, hasFocus) -> {
+            if (hasFocus) {
+                // Scroll to the focused view after a short delay
+                v.postDelayed(() -> {
+                    android.widget.ScrollView scrollView = findViewById(android.R.id.content).findViewById(android.R.id.content);
+                    if (scrollView != null) {
+                        scrollView.smoothScrollTo(0, v.getTop());
+                    }
+                }, 200);
+            }
+        };
+        
+        binding.fullName.setOnFocusChangeListener(scrollListener);
+        binding.username.setOnFocusChangeListener(scrollListener);
+        binding.studentID.setOnFocusChangeListener(scrollListener);
+        binding.personalEmail.setOnFocusChangeListener(scrollListener);
+        binding.password.setOnFocusChangeListener(scrollListener);
+        binding.confirmPassword.setOnFocusChangeListener(scrollListener);
+    }
+    
     private void setupFormValidation() {
         // Setup real-time validation for each field
         FormValidationHelper.setupFullNameValidation(binding.fullNameLayout, binding.fullName);
