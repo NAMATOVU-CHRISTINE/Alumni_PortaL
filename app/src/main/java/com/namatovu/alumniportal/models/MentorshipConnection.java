@@ -75,6 +75,10 @@ public class MentorshipConnection {
     public String getMentorProfileImage() { return mentorProfileImage; }
     public void setMentorProfileImage(String mentorProfileImage) { this.mentorProfileImage = mentorProfileImage; }
     
+    // Alias methods for compatibility
+    public String getMentorImageUrl() { return mentorProfileImage; }
+    public void setMentorImageUrl(String mentorImageUrl) { this.mentorProfileImage = mentorImageUrl; }
+    
     public String getMenteeProfileImage() { return menteeProfileImage; }
     public void setMenteeProfileImage(String menteeProfileImage) { this.menteeProfileImage = menteeProfileImage; }
     
