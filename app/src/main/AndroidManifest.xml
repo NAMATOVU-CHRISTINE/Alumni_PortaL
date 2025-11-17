@@ -119,6 +119,13 @@
             android:name=".ProfileEditActivity"
             android:windowSoftInputMode="adjustResize" />
         
+        <!-- Alumni Groups Activities -->
+        <activity android:name=".activities.AlumniGroupsActivity" />
+        <activity 
+            android:name=".activities.CreateGroupActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activities.GroupDetailActivity" />
+        
         <!-- Services -->
         <service android:name=".services.AlumniNotificationService" 
             android:exported="false" />
