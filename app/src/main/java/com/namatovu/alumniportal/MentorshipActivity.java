@@ -168,7 +168,7 @@ public class MentorshipActivity extends AppCompatActivity {
     }
 
     private void setupFAB() {
-        binding.findMentorFab.setOnClickListener(v -> {
+        binding.findMentorButton.setOnClickListener(v -> {
             // Navigate to mentor search activity
             Intent intent = new Intent(this, MentorSearchActivity.class);
             startActivity(intent);
