@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.namatovu.alumniportal.utils.PermissionHelper;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 import com.namatovu.alumniportal.utils.SecurityHelper;
+import com.namatovu.alumniportal.utils.CloudinaryHelper;
 import com.namatovu.alumniportal.models.User;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -219,41 +220,44 @@ public class EditProfileActivity extends AppCompatActivity {
 
         binding.saveButton.setEnabled(false);
 
-        String imageUrl = null;
+        // Upload image to Cloudinary if selected
         if (selectedImageUri != null) {
-            String fileName = "profile_" + user.getUid() + ".jpg";
-            imageUrl = saveImageLocally(selectedImageUri, fileName);
-        }
+            binding.changeProfilePhotoText.setText("Uploading...");
+            CloudinaryHelper.uploadImage(selectedImageUri, "profiles", new CloudinaryHelper.CloudinaryUploadCallback() {
+                @Override
+                public void onUploadStart() {
+                    runOnUiThread(() -> Toast.makeText(EditProfileActivity.this, "Uploading image...", Toast.LENGTH_SHORT).show());
+                }
 
-        saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl);
+                @Override
+                public void onUploadProgress(int progress) {
+                    runOnUiThread(() -> binding.changeProfilePhotoText.setText("Uploading " + progress + "%"));
+                }
+
+                @Override
+                public void onUploadSuccess(String imageUrl, String publicId) {
+                    runOnUiThread(() -> {
+                        binding.changeProfilePhotoText.setText("Change Profile Photo");
+                        saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl, publicId);
+                    });
+                }
+
+                @Override
+                public void onUploadError(String error) {
+                    runOnUiThread(() -> {
+                        binding.changeProfilePhotoText.setText("Change Profile Photo");
+                        binding.saveButton.setEnabled(true);
+                        Toast.makeText(EditProfileActivity.this, "Image upload failed: " + error, Toast.LENGTH_LONG).show();
+                    });
+                }
+            });
+        } else {
+            // No image selected, save profile without image
+            saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null, null);
+        }
     }
 
-    private String saveImageLocally(Uri uri, String fileName) {
-        if (uri == null) return null;
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            in = getContentResolver().openInputStream(uri);
-            if (in == null) return null;
-            File outFile = new File(getFilesDir(), fileName);
-            out = new FileOutputStream(outFile);
-            byte[] buf = new byte[8192];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            out.flush();
-            return outFile.getAbsolutePath();
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to save image locally", e);
-            return null;
-        } finally {
-            try { if (in != null) in.close(); } catch (IOException ignored) {}
-            try { if (out != null) out.close(); } catch (IOException ignored) {}
-        }
-    }
-
-    private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl) {
+    private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl, String publicId) {
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
         updates.put("fullName", name);
         updates.put("bio", bio);
@@ -261,6 +265,7 @@ public class EditProfileActivity extends AppCompatActivity {
         updates.put("skills", skills);
         if (imageUrl != null) {
             updates.put("profileImageUrl", imageUrl);
+            updates.put("profileImagePublicId", publicId);
         }
 
         db.collection("users").document(uid).update(updates).addOnCompleteListener(task -> {

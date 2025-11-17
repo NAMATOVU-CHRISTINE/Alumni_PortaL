@@ -155,32 +155,15 @@
             </LinearLayout>
 
             <!-- Grow Section -->
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🌱 Grow"
-                    android:textAppearance="@style/App.TextAppearance.Title"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
-
-                <Button
-                    android:id="@+id/btnSeeAllGrow"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="@string/see_all"
-                    android:textSize="12sp"
-                    android:textColor="@color/must_green"
-                    app:cornerRadius="20dp"/>
-            </LinearLayout>
+                android:text="🌱 Grow"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginBottom="12dp"/>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -509,32 +492,15 @@
             </LinearLayout>
 
             <!-- For You Section - UPDATED NOV 8, 2025 - NO MORE STATIC DATA -->
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="✨ For You"
-                    android:textAppearance="@style/App.TextAppearance.Title"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
-
-                <Button
-                    android:id="@+id/btnCustomize"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Customize"
-                    android:textSize="12sp"
-                    android:textColor="@color/must_green"
-                    app:cornerRadius="20dp"/>
-            </LinearLayout>
+                android:text="✨ For You"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginBottom="12dp"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/recommendationsCard"
@@ -672,35 +638,16 @@
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Recent Activity Enhanced Section - UPDATED NOV 8, 2025 - DYNAMIC CONTENT -->
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:text="📈 Recent Activity"
+                android:textAppearance="@style/App.TextAppearance.Title"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="📈 Recent Activity"
-                    android:textAppearance="@style/App.TextAppearance.Title"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnViewAllActivities"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="🔔 View All"
-                    android:textSize="12sp"
-                    android:textColor="@color/must_green"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    app:cornerRadius="20dp"
-                    android:minWidth="0dp" />
-
-            </LinearLayout>
+                android:layout_marginBottom="12dp"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/recentActivityCard"

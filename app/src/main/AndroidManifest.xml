@@ -33,6 +33,10 @@
             android:name=".SignupActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".CompleteGoogleSignupActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <!-- FIX: LoginActivity is now the starting point of the app -->
         <activity
             android:name=".LoginActivity"
@@ -106,6 +110,9 @@
         <activity android:name=".RecentActivitiesActivity" />
         <activity android:name=".CustomizePreferencesActivity" />
         <activity android:name=".EventsNewsActivity" />
+        <activity 
+            android:name=".ProfileEditActivity"
+            android:windowSoftInputMode="adjustResize" />
         
         <!-- Services -->
         <service android:name=".services.AlumniNotificationService" 

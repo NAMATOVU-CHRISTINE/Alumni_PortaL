@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- MUST Official Theme Colors (slightly adjusted for dark mode) -->
-    <color name="must_green">#00A86B</color>
-    <color name="must_green_dark">#005A36</color>
-    <color name="must_gold">#FFD54F</color>
+    <!-- MUST Official Theme Colors -->
+    <color name="must_green">#00875A</color>
+    <color name="must_green_dark">#006644</color>
+    <color name="must_gold">#FFD666</color>
 
     <!-- Standard Colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="light_gray">#2C2C2C</color>
-    <color name="dark_gray">#121212</color>
+    <color name="light_gray">#1B1F23</color>
+    <color name="dark_gray">#000000</color>
     <color name="colorAccent">@color/must_gold</color>
     
     <!-- Dark Background Colors for Cards -->
-    <color name="light_blue">#1E3A5F</color>
-    <color name="light_green">#1B3A1B</color>
-    <color name="light_yellow">#4A4520</color>
-    <color name="light_purple">#3A2A3F</color>
-    <color name="light_orange">#4A3520</color>
+    <color name="light_blue">#1A2332</color>
+    <color name="light_green">#1A2E1F</color>
+    <color name="light_yellow">#2E2A1A</color>
+    <color name="light_purple">#2A1F2E</color>
+    <color name="light_orange">#2E231A</color>
 
     <!-- Component Colors -->
-    <color name="stroke_color">#4A4A4A</color>
-    <color name="warning_background">#4A4520</color>
+    <color name="stroke_color">#38434F</color>
+    <color name="warning_background">#3D3420</color>
     
-    <!-- Text Colors (inverted for dark mode) -->
-    <color name="text_primary">#E0E0E0</color>
-    <color name="text_secondary">#B0B0B0</color>
-    <color name="text_hint">#757575</color>
+    <!-- Text Colors - Dark Theme -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B8C1</color>
+    <color name="text_hint">#6E7681</color>
     
-    <!-- Background Colors -->
-    <color name="background_color">#121212</color>
-    <color name="light_background">#1E1E1E</color>
+    <!-- Background Colors - Dark Theme -->
+    <color name="background_color">#000000</color>
+    <color name="light_background">#1B1F23</color>
     
-    <!-- Category Colors (slightly brighter for dark mode) -->
-    <color name="blue">#42A5F5</color>
-    <color name="purple">#AB47BC</color>
-    <color name="orange">#FFA726</color>
-    <color name="yellow_dark">#FFCA28</color>
-    <color name="red">#EF5350</color>
-    <color name="light_red">#4A2020</color>
+    <!-- Category Colors - Adjusted for dark theme -->
+    <color name="blue">#4A9EFF</color>
+    <color name="purple">#B794F6</color>
+    <color name="orange">#FF9F5A</color>
+    <color name="yellow_dark">#FFD666</color>
+    <color name="red">#FF6B6B</color>
+    <color name="light_red">#3D1F1F</color>
     
     <!-- Chat specific colors -->
-    <color name="typing_background">#1B3A1B</color>
-    <color name="camera_option_color">#66BB6A</color>
-    <color name="gallery_option_color">#42A5F5</color>
-    <color name="file_option_color">#FFA726</color>
-    <color name="location_option_color">#AB47BC</color>
+    <color name="typing_background">#1A2E1F</color>
+    <color name="camera_option_color">#5FCF80</color>
+    <color name="gallery_option_color">#4A9EFF</color>
+    <color name="file_option_color">#FF9F5A</color>
+    <color name="location_option_color">#B794F6</color>
 </resources>

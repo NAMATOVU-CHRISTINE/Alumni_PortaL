@@ -311,12 +311,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            // Open SettingsActivity
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (item.getItemId() == R.id.action_events_news) {
+        if (item.getItemId() == R.id.action_events_news) {
             // Open Events & News Activity
             Intent intent = new Intent(this, EventsNewsActivity.class);
             startActivity(intent);
@@ -333,11 +328,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupSeeAllClickListeners() {
-        // See All for Grow section - shows all growth opportunities
-        binding.btnSeeAllGrow.setOnClickListener(v -> {
-            Intent intent = new Intent(this, GrowSectionActivity.class);
-            startActivity(intent);
-        });
+        // Removed redundant "See All" buttons - users can access features directly from cards
     }
 
     private void setupCardClickListeners() {
@@ -394,22 +385,6 @@ public class HomeActivity extends AppCompatActivity {
     }
     
     private void setupEnhancedClickListeners() {
-        // Customize button - open profile customization
-        if (binding.btnCustomize != null) {
-            binding.btnCustomize.setOnClickListener(v -> {
-                Intent intent = new Intent(this, CustomizePreferencesActivity.class);
-                startActivity(intent);
-            });
-        }
-        
-        // Recent Activities bell button - navigate to recent activities
-        if (binding.btnViewAllActivities != null) {
-            binding.btnViewAllActivities.setOnClickListener(v -> {
-                Intent intent = new Intent(this, RecentActivitiesActivity.class);
-                startActivity(intent);
-            });
-        }
-        
         // View more activities button in the card
         if (binding.btnViewMoreActivities != null) {
             binding.btnViewMoreActivities.setOnClickListener(v -> {

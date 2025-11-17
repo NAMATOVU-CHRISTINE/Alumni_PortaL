@@ -23,14 +23,27 @@
     <color name="stroke_color">#CAC4D0</color>
     <color name="warning_background">#FFF3CD</color>
     
-    <!-- Text Colors -->
+    <!-- Text Colors - Light Theme -->
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="text_hint">#BDBDBD</color>
     
-    <!-- Background Colors -->
+    <!-- Background Colors - Light Theme -->
     <color name="background_color">#FAFAFA</color>
-    <color name="light_background">#FAFAFA</color>
+    <color name="light_background">#FFFFFF</color>
+    
+    <!-- Dark Theme Colors (LinkedIn-style) -->
+    <color name="dark_background">#000000</color>
+    <color name="dark_surface">#1B1F23</color>
+    <color name="dark_card">#1B1F23</color>
+    <color name="dark_elevated">#22272B</color>
+    <color name="dark_border">#38434F</color>
+    
+    <!-- Dark Theme Text Colors -->
+    <color name="dark_text_primary">#FFFFFF</color>
+    <color name="dark_text_secondary">#B0B8C1</color>
+    <color name="dark_text_hint">#6E7681</color>
+    <color name="dark_text_disabled">#4A5562</color>
     
     <!-- Category Colors -->
     <color name="blue">#1976D2</color>
