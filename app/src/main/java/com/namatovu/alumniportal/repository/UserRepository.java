@@ -11,7 +11,6 @@ import com.namatovu.alumniportal.database.AlumniDatabase;
 import com.namatovu.alumniportal.database.dao.UserDao;
 import com.namatovu.alumniportal.database.entities.UserEntity;
 import com.namatovu.alumniportal.models.User;
-import com.namatovu.alumniportal.sync.SyncManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ public class UserRepository {
     private static UserRepository instance;
     private UserDao userDao;
     private FirebaseFirestore firestore;
-    private SyncManager syncManager;
     private Executor executor;
     
     private UserRepository(Context context) {
