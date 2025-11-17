@@ -2,9 +2,11 @@ package com.namatovu.alumniportal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class MainActivity extends AppCompatActivity {
 
     private EditText usernameEditText, passwordEditText;
+    private ImageView togglePasswordVisibility;
+    private boolean isPasswordVisible = false;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -41,9 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
+        togglePasswordVisibility = findViewById(R.id.togglePassword);
         Button loginButton = findViewById(R.id.loginButton);
         TextView signupPrompt = findViewById(R.id.signupText);
         TextView forgotPasswordText = findViewById(R.id.forgotPassword);
+
+        // Setup password visibility toggle
+        setupPasswordVisibilityToggle();
 
         loginButton.setOnClickListener(v -> loginUser());
 
@@ -53,6 +61,24 @@ public class MainActivity extends AppCompatActivity {
 
         forgotPasswordText.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, ForgotPasswordActivity.class));
+        });
+    }
+
+    private void setupPasswordVisibilityToggle() {
+        togglePasswordVisibility.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                // Hide password
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                togglePasswordVisibility.setImageResource(R.drawable.ic_visibility);
+                isPasswordVisible = false;
+            } else {
+                // Show password
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                togglePasswordVisibility.setImageResource(R.drawable.ic_visibility_off);
+                isPasswordVisible = true;
+            }
+            // Move cursor to end of text
+            passwordEditText.setSelection(passwordEditText.getText().length());
         });
     }
 
