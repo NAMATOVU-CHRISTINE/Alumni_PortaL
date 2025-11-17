@@ -89,14 +89,12 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
         
         // Fix keyboard covering input - adjust resize mode
         getWindow().setSoftInputMode(
-            android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
-            android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+            android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         );
-        
-        setContentView(R.layout.activity_chat);
         
         // Initialize Firebase
         db = FirebaseFirestore.getInstance();
@@ -364,7 +362,12 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     }
     
     private void updateOnlineStatus() {
-        if (otherUserId == null) return;
+        if (otherUserId == null) {
+            textViewOnlineStatus.setVisibility(View.GONE);
+            return;
+        }
+        
+        textViewOnlineStatus.setVisibility(View.VISIBLE);
         
         // Check user's online status with real-time listener
         db.collection("users").document(otherUserId)
@@ -379,7 +382,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                     Long lastSeen = documentSnapshot.getLong("lastSeen");
                     
                     if (isOnline != null && isOnline) {
-                        textViewOnlineStatus.setText("Online now");
+                        textViewOnlineStatus.setText("Active now");
                         textViewOnlineStatus.setTextColor(getColor(android.R.color.holo_green_light));
                     } else if (lastSeen != null) {
                         String lastSeenText = getLastSeenText(lastSeen);
@@ -398,11 +401,11 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         long hours = diff / (60 * 60 * 1000);
         long days = diff / (24 * 60 * 60 * 1000);
         
-        if (minutes < 5) return "Last seen recently";
-        if (minutes < 60) return "Last seen " + minutes + " minutes ago";
-        if (hours < 24) return "Last seen " + hours + " hours ago";
-        if (days < 7) return "Last seen " + days + " days ago";
-        return "Last seen a while ago";
+        if (minutes < 5) return "Active recently";
+        if (minutes < 60) return "Active " + minutes + "m ago";
+        if (hours < 24) return "Active " + hours + "h ago";
+        if (days < 7) return "Active " + days + "d ago";
+        return "Offline";
     }
     
     private void loadMessages() {
@@ -622,13 +625,76 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     }
     
     private void uploadAndSendImage(Uri imageUri) {
-        // TODO: Implement image upload to Firebase Storage
-        Toast.makeText(this, "Image sending coming soon", Toast.LENGTH_SHORT).show();
+        if (chatId == null) return;
+        
+        // Show progress
+        Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show();
+        
+        // Create unique filename
+        String fileName = "chat_images/" + chatId + "/" + UUID.randomUUID().toString() + ".jpg";
+        StorageReference imageRef = storage.getReference().child(fileName);
+        
+        // Upload image
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Get download URL
+                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Create and send image message
+                        ChatMessage message = new ChatMessage(
+                                chatId,
+                                currentUserId,
+                                currentUserName != null ? currentUserName : "Unknown User",
+                                otherUserId,
+                                ""
+                        );
+                        message.setMessageType("image");
+                        message.setImageUrl(uri.toString());
+                        
+                        sendMessage(message);
+                        Toast.makeText(this, "Image sent", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error uploading image", e);
+                    Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                });
     }
     
     private void uploadAndSendFile(Uri fileUri) {
-        // TODO: Implement file upload to Firebase Storage
-        Toast.makeText(this, "File sending coming soon", Toast.LENGTH_SHORT).show();
+        if (chatId == null) return;
+        
+        // Show progress
+        Toast.makeText(this, "Uploading file...", Toast.LENGTH_SHORT).show();
+        
+        // Get file name
+        String fileName = "chat_files/" + chatId + "/" + UUID.randomUUID().toString();
+        StorageReference fileRef = storage.getReference().child(fileName);
+        
+        // Upload file
+        fileRef.putFile(fileUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Get download URL
+                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Create and send file message
+                        ChatMessage message = new ChatMessage(
+                                chatId,
+                                currentUserId,
+                                currentUserName != null ? currentUserName : "Unknown User",
+                                otherUserId,
+                                ""
+                        );
+                        message.setMessageType("file");
+                        message.setFileUrl(uri.toString());
+                        message.setFileName(fileUri.getLastPathSegment());
+                        
+                        sendMessage(message);
+                        Toast.makeText(this, "File sent", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error uploading file", e);
+                    Toast.makeText(this, "Failed to upload file", Toast.LENGTH_SHORT).show();
+                });
     }
     
     @Override
