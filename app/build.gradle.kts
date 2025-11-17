@@ -21,7 +21,12 @@ android {
         // Support for 16 KB page sizes (required for Android 15+)
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            // Ensure 16KB page alignment
+            debugSymbolLevel = "FULL"
         }
+        
+        // Additional vector drawable support
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -61,10 +66,17 @@ android {
             )
         }
         
-        // Enable 16 KB page size alignment for native libraries
+        // Enable 16 KB page size alignment for native libraries (Android 15+)
         jniLibs {
             useLegacyPackaging = false
+            // Keep debug symbols for better crash reports
+            keepDebugSymbols += listOf("**/*.so")
         }
+    }
+    
+    // Additional configuration for 16 KB page size support
+    androidResources {
+        noCompress += listOf("tflite", "lite")
     }
 }
 
@@ -114,10 +126,19 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:$work_version")
 
     // Image Loading
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0") {
+        // Exclude Fresco if it's a transitive dependency
+        exclude(group = "com.facebook.fresco", module = "fresco")
+        exclude(group = "com.facebook.fresco", module = "imagepipeline")
+    }
     
     // Cloudinary for image storage
-    implementation("com.cloudinary:cloudinary-android:2.5.0")
+    implementation("com.cloudinary:cloudinary-android:2.5.0") {
+        // Exclude Fresco dependencies that aren't 16KB aligned
+        exclude(group = "com.facebook.fresco", module = "fresco")
+        exclude(group = "com.facebook.fresco", module = "imagepipeline")
+        exclude(group = "com.facebook.fresco", module = "imagepipeline-native")
+    }
 
     // Web Scraping
     implementation("org.jsoup:jsoup:1.17.2")
