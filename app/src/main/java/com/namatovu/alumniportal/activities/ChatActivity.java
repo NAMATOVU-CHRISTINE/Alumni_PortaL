@@ -200,6 +200,28 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                 }
             }
         });
+        
+        // Scroll to bottom when keyboard appears
+        recyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (bottom < oldBottom) {
+                // Keyboard appeared
+                recyclerView.postDelayed(() -> scrollToBottom(true), 100);
+            }
+        });
+        
+        // Show/hide scroll to bottom button based on scroll position
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                
+                if (isAtBottom()) {
+                    fabScrollToBottom.hide();
+                } else {
+                    fabScrollToBottom.show();
+                }
+            }
+        });
     }
     
     private void setupListeners() {
