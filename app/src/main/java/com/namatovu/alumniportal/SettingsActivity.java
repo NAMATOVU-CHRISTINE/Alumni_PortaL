@@ -17,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ActivitySettingsBinding binding;
     private FirebaseAuth mAuth;
     private ThemeManager themeManager;
+    private android.content.SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         themeManager = ThemeManager.getInstance(this);
+        prefs = getSharedPreferences("NotificationPrefs", MODE_PRIVATE);
 
         setupToolbar();
         setupClickListeners();
@@ -104,8 +106,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void setupNotificationSwitches() {
         // Load saved preferences
-        android.content.SharedPreferences prefs = getSharedPreferences("NotificationPrefs", MODE_PRIVATE);
-        
         binding.allNotificationsSwitch.setChecked(prefs.getBoolean("all_notifications", true));
         binding.emailNotificationsSwitch.setChecked(prefs.getBoolean("email_notifications", false));
         binding.mentorshipRequestsSwitch.setChecked(prefs.getBoolean("mentorship_notifications", true));
@@ -116,15 +116,33 @@ public class SettingsActivity extends AppCompatActivity {
         binding.allNotificationsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             prefs.edit().putBoolean("all_notifications", isChecked).apply();
             
-            // Enable/disable other switches
-            binding.emailNotificationsSwitch.setEnabled(isChecked);
-            binding.mentorshipRequestsSwitch.setEnabled(isChecked);
-            binding.eventUpdatesSwitch.setEnabled(isChecked);
-            binding.announcementsSwitch.setEnabled(isChecked);
-            
             if (isChecked) {
+                // Enable other switches and restore their saved states
+                binding.emailNotificationsSwitch.setEnabled(true);
+                binding.mentorshipRequestsSwitch.setEnabled(true);
+                binding.eventUpdatesSwitch.setEnabled(true);
+                binding.announcementsSwitch.setEnabled(true);
+                
+                // Restore saved states
+                binding.emailNotificationsSwitch.setChecked(prefs.getBoolean("email_notifications", false));
+                binding.mentorshipRequestsSwitch.setChecked(prefs.getBoolean("mentorship_notifications", true));
+                binding.eventUpdatesSwitch.setChecked(prefs.getBoolean("event_notifications", true));
+                binding.announcementsSwitch.setChecked(prefs.getBoolean("announcement_notifications", true));
+                
                 Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
             } else {
+                // Turn OFF all switches when master is OFF
+                binding.emailNotificationsSwitch.setChecked(false);
+                binding.mentorshipRequestsSwitch.setChecked(false);
+                binding.eventUpdatesSwitch.setChecked(false);
+                binding.announcementsSwitch.setChecked(false);
+                
+                // Disable other switches
+                binding.emailNotificationsSwitch.setEnabled(false);
+                binding.mentorshipRequestsSwitch.setEnabled(false);
+                binding.eventUpdatesSwitch.setEnabled(false);
+                binding.announcementsSwitch.setEnabled(false);
+                
                 Toast.makeText(this, "All notifications disabled", Toast.LENGTH_SHORT).show();
             }
         });

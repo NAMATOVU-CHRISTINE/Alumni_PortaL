@@ -73,9 +73,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
-        binding.loginProgressBar.setVisibility(android.view.View.VISIBLE);
-        binding.loginButton.setEnabled(false);
-        binding.googleSignInButton.setEnabled(false);
         Intent signInIntent = googleSignInClient.getSignInIntent();
         googleSignInLauncher.launch(signInIntent);
     }
@@ -146,7 +143,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Show loading indicator
+        // Show loading indicator (Google style)
+        binding.loginButton.setText("");
         binding.loginProgressBar.setVisibility(android.view.View.VISIBLE);
         binding.loginButton.setEnabled(false);
         binding.googleSignInButton.setEnabled(false);
@@ -205,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
     
     private void hideLoadingIndicator() {
         binding.loginProgressBar.setVisibility(android.view.View.GONE);
+        binding.loginButton.setText(R.string.login);
         binding.loginButton.setEnabled(true);
         binding.googleSignInButton.setEnabled(true);
     }
