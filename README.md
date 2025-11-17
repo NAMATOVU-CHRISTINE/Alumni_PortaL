@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a native Android application for the alumni of Mbarara University of Science and Technology (MUST). The app serves as a central hub for former students to connect, stay informed about university news, find job opportunities, and engage with the alumni community.
+This is a native Android application for the alumni. The app serves as a central hub for former students to connect, stay informed about university news, find job opportunities, and engage with the alumni community.
 
 ## Core Features
 
