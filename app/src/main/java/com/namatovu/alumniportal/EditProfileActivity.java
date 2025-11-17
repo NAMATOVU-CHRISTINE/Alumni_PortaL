@@ -222,20 +222,25 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Upload image to Cloudinary if selected
         if (selectedImageUri != null) {
+            Log.d(TAG, "Starting image upload to Cloudinary");
             binding.changeProfilePhotoText.setText("Uploading...");
+            
             CloudinaryHelper.uploadImage(selectedImageUri, "profiles", new CloudinaryHelper.CloudinaryUploadCallback() {
                 @Override
                 public void onUploadStart() {
+                    Log.d(TAG, "Upload started");
                     runOnUiThread(() -> Toast.makeText(EditProfileActivity.this, "Uploading image...", Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
                 public void onUploadProgress(int progress) {
+                    Log.d(TAG, "Upload progress: " + progress + "%");
                     runOnUiThread(() -> binding.changeProfilePhotoText.setText("Uploading " + progress + "%"));
                 }
 
                 @Override
                 public void onUploadSuccess(String imageUrl, String publicId) {
+                    Log.d(TAG, "Upload successful! URL: " + imageUrl);
                     runOnUiThread(() -> {
                         binding.changeProfilePhotoText.setText("Change Profile Photo");
                         saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl, publicId);
@@ -244,6 +249,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 @Override
                 public void onUploadError(String error) {
+                    Log.e(TAG, "Upload failed: " + error);
                     runOnUiThread(() -> {
                         binding.changeProfilePhotoText.setText("Change Profile Photo");
                         binding.saveButton.setEnabled(true);
@@ -252,6 +258,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             });
         } else {
+            Log.d(TAG, "No image selected, saving profile without image");
             // No image selected, save profile without image
             saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null, null);
         }
@@ -263,11 +270,15 @@ public class EditProfileActivity extends AppCompatActivity {
         updates.put("bio", bio);
         updates.put("currentJob", career);
         updates.put("skills", skills);
+        updates.put("updatedAt", System.currentTimeMillis());
+        
         if (imageUrl != null) {
+            Log.d(TAG, "Saving image URL to Firestore: " + imageUrl);
             updates.put("profileImageUrl", imageUrl);
             updates.put("profileImagePublicId", publicId);
         }
 
+        Log.d(TAG, "Updating Firestore document for user: " + uid);
         db.collection("users").document(uid).update(updates).addOnCompleteListener(task -> {
             binding.saveButton.setEnabled(true);
             if (task.isSuccessful()) {
