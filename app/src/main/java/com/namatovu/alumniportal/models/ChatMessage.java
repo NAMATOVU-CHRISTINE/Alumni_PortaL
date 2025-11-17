@@ -15,11 +15,14 @@ public class ChatMessage {
     private String senderProfileImage;
     private String receiverId;
     private String messageText;
-    private String messageType; // "text", "image", "file", "location", "system"
+    private String messageType; // "text", "image", "file", "location", "voice", "system"
     private String fileUrl;
     private String fileName;
     private String fileType;
     private long fileSizeBytes;
+    private String imageUrl;
+    private String voiceUrl;
+    private int voiceDuration; // in seconds
     private long timestamp;
     private boolean isRead;
     private boolean isDelivered;
@@ -132,10 +135,20 @@ public class ChatMessage {
     public Map<String, Object> getMetadata() { return metadata; }
     public void setMetadata(Map<String, Object> metadata) { this.metadata = metadata; }
 
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getVoiceUrl() { return voiceUrl; }
+    public void setVoiceUrl(String voiceUrl) { this.voiceUrl = voiceUrl; }
+
+    public int getVoiceDuration() { return voiceDuration; }
+    public void setVoiceDuration(int voiceDuration) { this.voiceDuration = voiceDuration; }
+
     // Helper methods
     public boolean isTextMessage() { return "text".equals(messageType); }
     public boolean isImageMessage() { return "image".equals(messageType); }
     public boolean isFileMessage() { return "file".equals(messageType); }
+    public boolean isVoiceMessage() { return "voice".equals(messageType); }
     public boolean isSystemMessage() { return "system".equals(messageType); }
 
     public String getTimeAgo() {
@@ -171,6 +184,8 @@ public class ChatMessage {
                 return "📷 Photo";
             case "file":
                 return "📎 " + (fileName != null ? fileName : "File");
+            case "voice":
+                return "🎤 Voice message";
             case "location":
                 return "📍 Location";
             case "system":
@@ -193,6 +208,13 @@ public class ChatMessage {
         }
         
         return String.format("%.1f %s", size, units[unitIndex]);
+    }
+
+    public String getVoiceDurationFormatted() {
+        if (voiceDuration <= 0) return "0:00";
+        int minutes = voiceDuration / 60;
+        int seconds = voiceDuration % 60;
+        return String.format("%d:%02d", minutes, seconds);
     }
 
     public boolean isReply() {
@@ -232,6 +254,9 @@ public class ChatMessage {
         messageMap.put("fileName", fileName);
         messageMap.put("fileType", fileType);
         messageMap.put("fileSizeBytes", fileSizeBytes);
+        messageMap.put("imageUrl", imageUrl);
+        messageMap.put("voiceUrl", voiceUrl);
+        messageMap.put("voiceDuration", voiceDuration);
         messageMap.put("timestamp", timestamp);
         messageMap.put("isRead", isRead);
         messageMap.put("isDelivered", isDelivered);
