@@ -200,6 +200,9 @@ public class MentorshipActivity extends AppCompatActivity {
     }
     
     private void loadAvailableMentors() {
+        // Show loading
+        binding.emptyStateLayout.setVisibility(View.GONE);
+        
         // First, load existing connections for this user
         db.collection("mentorships")
                 .whereEqualTo("menteeId", currentUserId)
@@ -223,8 +226,9 @@ public class MentorshipActivity extends AppCompatActivity {
                     }
                     
                     // Now load all users to show as potential mentors (excluding those with existing connections)
+                    // Optimized: Load only 20 users at a time for faster loading
                     db.collection("users")
-                            .limit(50)
+                            .limit(20)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total users");
@@ -242,6 +246,8 @@ public class MentorshipActivity extends AppCompatActivity {
                                         String fullName = (String) userData.get("fullName");
                                         String currentJob = (String) userData.get("currentJob");
                                         String company = (String) userData.get("company");
+                                        String profileImageUrl = (String) userData.get("profileImageUrl");
+                                        String bio = (String) userData.get("bio");
                                         
                                         // Create a MentorshipConnection object for display purposes
                                         MentorshipConnection connection = new MentorshipConnection();
@@ -250,6 +256,7 @@ public class MentorshipActivity extends AppCompatActivity {
                                         connection.setMentorName(fullName != null ? fullName : "Unknown User");
                                         connection.setMentorTitle(currentJob != null ? currentJob : "Alumni");
                                         connection.setMentorCompany(company != null ? company : "");
+                                        connection.setMentorImageUrl(profileImageUrl);
                                         connection.setStatus("available"); // Special status for available mentors
                                         connection.setConnectionId(null); // No connection exists yet
                                         
