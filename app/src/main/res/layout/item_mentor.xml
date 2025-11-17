@@ -1,240 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="0dp"
-    android:layout_marginEnd="0dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="16dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="?attr/colorSurface"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <!-- Clean Profile Image -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/profileImageContainer"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="1dp"
-            app:strokeColor="#E0E0E0"
-            app:strokeWidth="1dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/mentorProfileImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_person"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:scaleType="centerCrop"
-                android:contentDescription="Mentor profile picture" />
+                android:src="@drawable/ic_person"
+                app:shapeAppearanceOverlay="@style/CircleImageView" />
 
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Mentor Name -->
-        <TextView
-            android:id="@+id/textMentorName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="?android:attr/textColorPrimary"
-            app:layout_constraintStart_toEndOf="@id/profileImageContainer"
-            app:layout_constraintTop_toTopOf="@id/profileImageContainer"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Dr. Sarah Johnson" />
-
-        <!-- Position -->
-        <TextView
-            android:id="@+id/textPosition"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textSize="14sp"
-            android:textColor="@color/must_green"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/textMentorName"
-            app:layout_constraintTop_toBottomOf="@id/textMentorName"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Senior Software Engineer" />
-
-        <!-- Company -->
-        <TextView
-            android:id="@+id/textCompany"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintStart_toStartOf="@id/textMentorName"
-            app:layout_constraintTop_toBottomOf="@id/textPosition"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Google Inc." />
-
-        <!-- Connection Status Chip -->
-        <com.google.android.material.chip.Chip
-            android:id="@+id/statusChip"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_marginTop="12dp"
-            android:text="Available"
-            android:textSize="11sp"
-            android:textColor="@color/must_green"
-            app:chipBackgroundColor="@color/light_green"
-            app:chipStrokeWidth="0dp"
-            app:chipCornerRadius="14dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profileImageContainer"
-            tools:text="Connected" />
-
-        <!-- Rating Display -->
-        <LinearLayout
-            android:id="@+id/ratingContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            app:layout_constraintStart_toEndOf="@id/statusChip"
-            app:layout_constraintTop_toTopOf="@id/statusChip"
-            app:layout_constraintBottom_toBottomOf="@id/statusChip">
-
-            <TextView
-                android:id="@+id/textRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="★★★★★"
-                android:textSize="12sp"
-                android:textColor="#FFC107" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="4.9"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorSecondary" />
-
-        </LinearLayout>
-
-        <!-- Skills/Expertise -->
-        <TextView
-            android:id="@+id/textSkills"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:lineSpacingExtra="2dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statusChip"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Android Development • Kotlin • UI/UX Design • Leadership" />
-
-        <!-- Action Buttons Container -->
-        <LinearLayout
-            android:id="@+id/actionButtonsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:gravity="end"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textSkills">
-
-            <!-- Accept Button (hidden by default) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/acceptButtonCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#4CAF50"
-                android:visibility="gone">
-
-                <Button
-                    android:id="@+id/buttonAccept"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Accept"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Reject Button (hidden by default) -->
-            <Button
-                android:id="@+id/buttonReject"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
-                android:text="Decline"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:background="@android:color/transparent"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+            <!-- Available indicator -->
+            <View
+                android:id="@+id/viewAvailable"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/online_indicator"
                 android:visibility="gone" />
 
-            <!-- View Profile Button -->
-            <Button
-                android:id="@+id/buttonViewProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
-                android:text="View Profile"
-                android:textSize="12sp"
-                android:textColor="@color/must_green"
-                android:background="@android:color/transparent"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+        </FrameLayout>
 
-            <!-- Primary Connect Button -->
-            <com.google.android.material.card.MaterialCardView
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="John Doe" />
+
+                <TextView
+                    android:id="@+id/textViewRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold"
+                    tools:text="4.8 ⭐" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewJob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/must_green">
+                android:layout_marginTop="4dp"
+                android:textSize="14sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Software Engineer at Google" />
 
-                <Button
-                    android:id="@+id/buttonConnect"
+            <TextView
+                android:id="@+id/textViewExpertise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Mobile Development, Cloud Computing" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textViewCategory"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Connect"
+                    android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorPrimary"
                     android:textStyle="bold"
-                    android:background="@android:color/transparent"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:minWidth="80dp" />
+                    android:background="@drawable/category_badge"
+                    android:padding="4dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    tools:text="TECHNOLOGY" />
 
-            </com.google.android.material.card.MaterialCardView>
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="4dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/dot_indicator" />
+
+                <TextView
+                    android:id="@+id/textViewYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    tools:text="Class of 2020" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
