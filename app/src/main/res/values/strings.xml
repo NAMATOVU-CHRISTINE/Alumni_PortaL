@@ -69,5 +69,6 @@
     <string name="signup_button_text">Sign Up</string>
     <string name="fetch_users_from_api">Fetch Users from API</string>
     <string name="logo">Logo</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
 
 </resources>

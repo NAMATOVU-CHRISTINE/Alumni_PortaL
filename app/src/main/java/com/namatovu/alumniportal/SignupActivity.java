@@ -3,8 +3,10 @@ package com.namatovu.alumniportal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,9 @@ public class SignupActivity extends AppCompatActivity {
     private ActivitySignupBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ImageView togglePassword, toggleConfirmPassword;
+    private boolean isPasswordVisible = false;
+    private boolean isConfirmPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,13 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        
+        // Initialize password visibility toggles
+        togglePassword = findViewById(R.id.togglePassword);
+        toggleConfirmPassword = findViewById(R.id.toggleConfirmPassword);
+        
+        // Setup password visibility toggles
+        setupPasswordVisibilityToggles();
         
         // Initialize Analytics
         AnalyticsHelper.initialize(this);
@@ -69,6 +81,42 @@ public class SignupActivity extends AppCompatActivity {
         binding.backToLogin.setOnClickListener(v -> {
             Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
             startActivity(intent);
+        });
+    }
+
+    private void setupPasswordVisibilityToggles() {
+        // Password toggle
+        togglePassword.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                // Hide password
+                binding.password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                togglePassword.setImageResource(R.drawable.ic_visibility);
+                isPasswordVisible = false;
+            } else {
+                // Show password
+                binding.password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                togglePassword.setImageResource(R.drawable.ic_visibility_off);
+                isPasswordVisible = true;
+            }
+            // Move cursor to end of text
+            binding.password.setSelection(binding.password.getText().length());
+        });
+
+        // Confirm password toggle
+        toggleConfirmPassword.setOnClickListener(v -> {
+            if (isConfirmPasswordVisible) {
+                // Hide password
+                binding.confirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                toggleConfirmPassword.setImageResource(R.drawable.ic_visibility);
+                isConfirmPasswordVisible = false;
+            } else {
+                // Show password
+                binding.confirmPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                toggleConfirmPassword.setImageResource(R.drawable.ic_visibility_off);
+                isConfirmPasswordVisible = true;
+            }
+            // Move cursor to end of text
+            binding.confirmPassword.setSelection(binding.confirmPassword.getText().length());
         });
     }
 
