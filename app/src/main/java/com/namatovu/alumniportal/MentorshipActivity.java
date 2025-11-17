@@ -168,14 +168,16 @@ public class MentorshipActivity extends AppCompatActivity {
     }
 
     private void setupFAB() {
-        binding.findMentorButton.setOnClickListener(v -> {
-            // Navigate to mentor search activity
-            Intent intent = new Intent(this, MentorSearchActivity.class);
-            startActivity(intent);
-            
-            // Log analytics
-            AnalyticsHelper.logMentorConnection("find_mentor_fab_clicked", currentUserId);
-        });
+        if (binding.findMentorButton != null) {
+            binding.findMentorButton.setOnClickListener(v -> {
+                // Navigate to mentor search activity
+                Intent intent = new Intent(this, com.namatovu.alumniportal.activities.MentorSearchActivity.class);
+                startActivity(intent);
+                
+                // Log analytics
+                AnalyticsHelper.logMentorConnection("find_mentor_fab_clicked", currentUserId);
+            });
+        }
     }
 
     private void loadMentorshipConnections() {
