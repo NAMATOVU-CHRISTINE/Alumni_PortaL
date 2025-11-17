@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person"
+            android:title="My Profile" />
+        
+        <item
+            android:id="@+id/nav_directory"
+            android:icon="@drawable/ic_people"
+            android:title="Alumni Directory" />
+    </group>
+    
+    <group android:id="@+id/group_connect">
+        <item android:title="Connect">
+            <menu>
+                <item
+                    android:id="@+id/nav_mentorship"
+                    android:icon="@drawable/ic_mentorship"
+                    android:title="Mentorship" />
+                
+                <item
+                    android:id="@+id/nav_chat"
+                    android:icon="@drawable/ic_chat"
+                    android:title="Messages" />
+                
+                <item
+                    android:id="@+id/nav_groups"
+                    android:icon="@drawable/ic_group"
+                    android:title="Alumni Groups" />
+            </menu>
+        </item>
+    </group>
+    
+    <group android:id="@+id/group_opportunities">
+        <item android:title="Opportunities">
+            <menu>
+                <item
+                    android:id="@+id/nav_jobs"
+                    android:icon="@drawable/ic_work"
+                    android:title="Job Board" />
+                
+                <item
+                    android:id="@+id/nav_events"
+                    android:icon="@drawable/ic_event"
+                    android:title="Events" />
+            </menu>
+        </item>
+    </group>
+    
+    <group android:id="@+id/group_grow">
+        <item android:title="Grow">
+            <menu>
+                <item
+                    android:id="@+id/nav_career_tips"
+                    android:icon="@drawable/ic_tips"
+                    android:title="Career Tips" />
+                
+                <item
+                    android:id="@+id/nav_knowledge"
+                    android:icon="@drawable/ic_knowledge"
+                    android:title="Knowledge Hub" />
+            </menu>
+        </item>
+    </group>
+    
+    <group android:id="@+id/group_settings">
+        <item android:title="Settings">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_settings"
+                    android:title="Settings" />
+                
+                <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_logout"
+                    android:title="Logout" />
+            </menu>
+        </item>
+    </group>
+    
+</menu>
