@@ -3,6 +3,7 @@ package com.namatovu.alumniportal;
 import android.app.Application;
 import com.namatovu.alumniportal.utils.ErrorHandler;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
+import com.namatovu.alumniportal.utils.ThemeManager;
 
 /**
  * Application class for global initialization
@@ -12,6 +13,9 @@ public class AlumniPortalApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        
+        // Apply saved theme before any activity is created
+        ThemeManager.getInstance(this).applySavedTheme();
         
         // Initialize global error handler
         ErrorHandler.getInstance(this);

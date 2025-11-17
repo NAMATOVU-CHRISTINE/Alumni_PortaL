@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- App theme using Material 3 Light Theme Only - Force white background always -->
+    <!-- Light Theme -->
     <style name="Theme.Alumni_Portal" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Core colors (refer to colors.xml) -->
+        <!-- Core colors -->
         <item name="colorPrimary">@color/must_green</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/must_gold</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <!-- Material3 specific color roles - Force light theme -->
+        <!-- Background colors -->
         <item name="android:colorBackground">@color/white</item>
         <item name="colorSurface">@color/white</item>
-        <item name="colorOnSurface">@color/black</item>
-        <item name="colorOnBackground">@color/black</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnBackground">@color/text_primary</item>
 
         <!-- App bar and system bars -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
 
         <!-- Elevation and shapes -->
         <item name="materialCardViewStyle">@style/Widget.Material3.CardView.Elevated</item>

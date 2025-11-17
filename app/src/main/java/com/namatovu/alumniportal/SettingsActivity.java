@@ -10,11 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.namatovu.alumniportal.databinding.ActivitySettingsBinding;
+import com.namatovu.alumniportal.utils.ThemeManager;
 
 public class SettingsActivity extends AppCompatActivity {
     
     private ActivitySettingsBinding binding;
     private FirebaseAuth mAuth;
+    private ThemeManager themeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +25,11 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         mAuth = FirebaseAuth.getInstance();
+        themeManager = ThemeManager.getInstance(this);
 
         setupToolbar();
         setupClickListeners();
+        updateThemeSummary();
     }
 
     private void setupToolbar() {
@@ -162,19 +166,32 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showThemeSelectionDialog() {
-        String[] themes = {"Light", "Dark"};
-        int currentTheme = 0; // Default to Light
+        String[] themes = {"Light", "Dark", "System Default"};
+        int currentTheme = themeManager.getTheme();
         
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle("Select Theme");
         builder.setSingleChoiceItems(themes, currentTheme, (dialog, which) -> {
-            String selectedTheme = themes[which];
-            binding.themeSummary.setText(selectedTheme);
-            Toast.makeText(this, "Theme changed to " + selectedTheme, Toast.LENGTH_SHORT).show();
+            // Apply the selected theme
+            themeManager.setTheme(which);
+            
+            // Update the summary text
+            updateThemeSummary();
+            
+            Toast.makeText(this, "Theme changed to " + themes[which], Toast.LENGTH_SHORT).show();
             dialog.dismiss();
+            
+            // Recreate activity to apply theme immediately
+            recreate();
         });
         builder.setNegativeButton("Cancel", null);
         builder.show();
+    }
+    
+    private void updateThemeSummary() {
+        if (binding.themeSummary != null) {
+            binding.themeSummary.setText(themeManager.getThemeName());
+        }
     }
 
     private void showDeleteAccountDialog() {
