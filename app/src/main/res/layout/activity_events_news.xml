@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/light_background">
+    android:background="?android:attr/colorBackground">
 
     <!-- App Bar Layout -->
     <com.google.android.material.appbar.AppBarLayout
@@ -81,7 +81,7 @@
                         android:text="📈 Analytics &amp; Insights"
                         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="16dp" />
 
                     <!-- Analytics Cards Row -->
@@ -130,7 +130,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Total Events"
                                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/dark_gray"
+                                    android:textColor="?android:attr/textColorSecondary"
                                     android:textAlignment="center" />
 
                             </LinearLayout>
@@ -176,7 +176,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Articles"
                                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/dark_gray"
+                                    android:textColor="?android:attr/textColorSecondary"
                                     android:textAlignment="center" />
 
                             </LinearLayout>
@@ -225,7 +225,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Top Category"
                                     android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="@color/dark_gray"
+                                    android:textColor="?android:attr/textColorSecondary"
                                     android:textAlignment="center" />
 
                             </LinearLayout>
@@ -258,7 +258,7 @@
                             android:text="🏛️ University &amp; MUST News"
                             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                             android:textStyle="bold"
-                            android:textColor="@color/black" />
+                            android:textColor="?android:attr/textColorPrimary" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/viewAllNewsBtn"
@@ -302,7 +302,7 @@
                             android:layout_height="wrap_content"
                             android:text="No university news available"
                             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textAlignment="center" />
 
                     </LinearLayout>
@@ -330,7 +330,7 @@
                             android:text="🌟 Mentorship &amp; Leadership Events"
                             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                             android:textStyle="bold"
-                            android:textColor="@color/black" />
+                            android:textColor="?android:attr/textColorPrimary" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/viewAllEventsBtn"
@@ -374,7 +374,7 @@
                             android:layout_height="wrap_content"
                             android:text="No updates available. Check back soon!"
                             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                            android:textColor="@color/dark_gray"
+                            android:textColor="?android:attr/textColorSecondary"
                             android:textAlignment="center" />
 
                     </LinearLayout>

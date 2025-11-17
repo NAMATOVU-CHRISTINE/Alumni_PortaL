@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/white"
+    android:background="?android:attr/colorBackground"
     tools:context=".MentorshipActivity">
 
     <!-- App Bar Layout -->
@@ -59,14 +59,14 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/white"
-            app:tabTextColor="@color/dark_gray"
-            app:tabSelectedTextColor="@color/must_green"
-            app:tabIndicatorColor="@color/must_green"
+            android:background="?attr/colorSurface"
+            app:tabTextColor="?android:attr/textColorSecondary"
+            app:tabSelectedTextColor="?attr/colorPrimary"
+            app:tabIndicatorColor="?attr/colorPrimary"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabRippleColor="@color/light_green">
+            app:tabRippleColor="?attr/colorSurfaceVariant">
 
         </com.google.android.material.tabs.TabLayout>
 
@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/white"
+        android:background="?android:attr/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <FrameLayout
@@ -137,7 +137,7 @@
                     android:text="No mentorship connections yet"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:gravity="center"
                     android:layout_marginBottom="12dp"/>
 
@@ -149,7 +149,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="Start connecting with alumni mentors to grow your network and accelerate your career journey!"
                     android:textSize="16sp"
-                    android:textColor="@color/dark_gray"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:gravity="center"
                     android:lineSpacingExtra="4dp"
                     android:layout_marginBottom="32dp"/>

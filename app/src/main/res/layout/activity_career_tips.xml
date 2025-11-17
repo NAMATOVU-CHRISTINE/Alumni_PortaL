@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background"
+    android:background="?android:attr/colorBackground"
     tools:context=".CareerTipsActivity">
 
     <!-- Enhanced App Bar with Gradient -->
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="3dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="?attr/colorSurface">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                         android:layout_height="wrap_content"
                         app:cardCornerRadius="24dp"
                         app:cardElevation="4dp"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="?attr/colorSurface"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground">
@@ -154,7 +154,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Attend alumni events regularly to grow your network. 🤝"
                                 android:textSize="22sp"
-                                android:textColor="@color/text_primary"
+                                android:textColor="?android:attr/textColorPrimary"
                                 android:gravity="center"
                                 android:lineSpacingExtra="8dp"
                                 android:textStyle="normal"
@@ -221,7 +221,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="?attr/colorSurface">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -301,7 +301,7 @@
                 android:visibility="gone"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 android:layout_marginBottom="24dp">
 
                 <LinearLayout
@@ -323,7 +323,7 @@
                         android:layout_height="wrap_content"
                         android:text="No tips available"
                         android:textSize="20sp"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:layout_marginBottom="8dp" />
@@ -333,7 +333,7 @@
                         android:layout_height="wrap_content"
                         android:text="Try selecting a different category to explore more tips"
                         android:textSize="14sp"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:gravity="center"
                         android:lineSpacingExtra="2dp" />
                 </LinearLayout>

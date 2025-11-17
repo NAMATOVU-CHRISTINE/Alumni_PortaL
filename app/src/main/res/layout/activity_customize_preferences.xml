@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background"
+    android:background="?android:attr/colorBackground"
     tools:context=".CustomizePreferencesActivity">
 
     <!-- App Bar -->
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 android:layout_marginBottom="20dp">
 
                 <LinearLayout
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:text="Set your preferences to get better recommendations"
                         android:textSize="13sp"
-                        android:textColor="@color/dark_gray"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:gravity="center" />
 
                 </LinearLayout>
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="?attr/colorSurface"
                 android:layout_marginBottom="20dp">
 
                 <LinearLayout
@@ -217,7 +217,7 @@
                             android:layout_weight="1"
                             android:text="Job Alerts"
                             android:textSize="14sp"
-                            android:textColor="@color/text_primary" />
+                            android:textColor="?android:attr/textColorPrimary" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchJobAlerts"
@@ -241,7 +241,7 @@
                             android:layout_weight="1"
                             android:text="Event Notifications"
                             android:textSize="14sp"
-                            android:textColor="@color/text_primary" />
+                            android:textColor="?android:attr/textColorPrimary" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchEventNotifications"
@@ -264,7 +264,7 @@
                             android:layout_weight="1"
                             android:text="Mentorship Updates"
                             android:textSize="14sp"
-                            android:textColor="@color/text_primary" />
+                            android:textColor="?android:attr/textColorPrimary" />
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchMentorshipNotifications"

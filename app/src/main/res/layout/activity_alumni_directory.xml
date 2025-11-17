@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="?android:attr/colorBackground">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -69,7 +69,7 @@
                         android:layout_height="wrap_content"
                         android:text="Major"
                         android:textSize="12sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="4dp" />
 
                     <Spinner
@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:text="Class Year"
                         android:textSize="12sp"
-                        android:textColor="@color/black"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:layout_marginBottom="4dp" />
 
                     <Spinner
@@ -148,7 +148,7 @@
         android:layout_marginBottom="8dp"
         android:text="Loading..."
         android:textSize="14sp"
-        android:textColor="@color/black" />
+        android:textColor="?android:attr/textColorPrimary" />
 
     <!-- Content Section -->
     <FrameLayout
@@ -180,7 +180,7 @@
             android:layout_gravity="center"
             android:text="No alumni found"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:visibility="gone" />
 
     </FrameLayout>

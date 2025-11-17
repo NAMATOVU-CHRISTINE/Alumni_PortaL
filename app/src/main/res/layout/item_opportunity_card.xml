@@ -10,7 +10,7 @@
     android:layout_marginBottom="6dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorSurface"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -60,7 +60,7 @@
                     android:text="Senior Frontend Developer"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:maxLines="2"
                     android:ellipsize="end" />
 
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:text="Google Inc."
                     android:textSize="14sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="2dp" />
 
                 <TextView
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:text="📍 Mountain View, CA"
                     android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="1dp" />
 
             </LinearLayout>
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:text="We're looking for a talented frontend developer to join our innovative team and help build the next generation of web applications. You'll work with cutting-edge technologies and collaborate with world-class engineers."
             android:textSize="13sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="12dp"
             android:maxLines="3"
             android:ellipsize="end"
@@ -165,7 +165,7 @@
                 android:layout_weight="1"
                 android:text="Posted 3 days ago"
                 android:textSize="12sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:drawableStart="@drawable/ic_access_time"
                 android:drawablePadding="6dp"
                 app:drawableTint="@color/text_secondary" />
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:text="👥 24 applicants"
                 android:textSize="12sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginEnd="16dp" />
 
             <TextView

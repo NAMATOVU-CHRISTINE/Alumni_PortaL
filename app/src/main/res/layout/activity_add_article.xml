@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text="Help fellow alumni by sharing valuable insights and resources."
                     android:textSize="16sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:gravity="center"
                     android:layout_marginBottom="16dp" />
             </LinearLayout>
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="?attr/colorSurface">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/titleInputLayout"
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="?attr/colorSurface">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/descriptionInputLayout"
@@ -182,7 +182,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="?attr/colorSurface">
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chipGroupCategory"
@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    app:cardBackgroundColor="?attr/colorSurface">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/contentInputLayout"
@@ -318,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:text="💡 Tip: Make your article engaging and helpful for fellow alumni!"
                     android:textSize="14sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:gravity="center"
                     android:layout_marginTop="8dp" />
 

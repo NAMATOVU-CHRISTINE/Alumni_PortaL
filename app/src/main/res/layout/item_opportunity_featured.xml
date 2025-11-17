@@ -10,7 +10,7 @@
     android:layout_marginBottom="3dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="?attr/colorSurface"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -60,7 +60,7 @@
                     android:text="Microsoft Corporation"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:text="📍 Seattle, WA"
                     android:textSize="13sp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="2dp" />
 
             </LinearLayout>
@@ -98,7 +98,7 @@
             android:text="Software Engineering Internship Program"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:layout_marginBottom="8dp"
             android:maxLines="2"
             android:ellipsize="end" />
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:text="Join our dynamic engineering team and work on cutting-edge technology that impacts millions of users worldwide."
             android:textSize="13sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="12dp"
             android:maxLines="3"
             android:ellipsize="end"
@@ -130,7 +130,7 @@
                 android:layout_weight="1"
                 android:text="Posted 2 days ago"
                 android:textSize="12sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:drawableStart="@drawable/ic_access_time"
                 android:drawablePadding="4dp"
                 app:drawableTint="@color/text_secondary" />

@@ -48,7 +48,7 @@
                     android:text="Alumni Name"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <ImageView
                     android:id="@+id/verifiedBadge"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="Class of 2020"
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginTop="2dp" />
 
             <!-- Current Job -->
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:text="Software Engineer at Google"
                 android:textSize="13sp"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginTop="4dp"
                 android:visibility="gone" />
 
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:text="San Francisco, CA"
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginTop="2dp"
                 android:visibility="gone"
                 android:drawableStart="@drawable/ic_location"
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:text="Passionate about technology and innovation..."
                 android:textSize="12sp"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginTop="6dp"
                 android:visibility="gone"
                 android:maxLines="2"

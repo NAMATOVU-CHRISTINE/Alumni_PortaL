@@ -177,17 +177,21 @@ public class SettingsActivity extends AppCompatActivity {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle("Select Theme");
         builder.setSingleChoiceItems(themes, currentTheme, (dialog, which) -> {
-            // Apply the selected theme (0 = Light, 1 = Dark)
-            themeManager.setTheme(which);
+            int oldTheme = themeManager.getTheme();
             
-            // Update the summary text
-            updateThemeSummary();
-            
-            Toast.makeText(this, "Theme changed to " + themes[which], Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-            
-            // Recreate activity to apply theme immediately
-            recreate();
+            // Only apply if theme actually changed
+            if (oldTheme != which) {
+                // Apply the selected theme (0 = Light, 1 = Dark)
+                themeManager.setTheme(which);
+                
+                Toast.makeText(this, "Theme changed to " + themes[which], Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                
+                // Recreate all activities to apply theme
+                recreate();
+            } else {
+                dialog.dismiss();
+            }
         });
         builder.setNegativeButton("Cancel", null);
         builder.show();
