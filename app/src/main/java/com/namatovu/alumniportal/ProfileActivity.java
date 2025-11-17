@@ -135,8 +135,15 @@ public class ProfileActivity extends AppCompatActivity {
 
         // profile image
         String url = user.getProfileImageUrl();
+        Log.d(TAG, "Loading profile image URL: " + url);
         if (url != null && !url.isEmpty()) {
-            ImageLoadingHelper.loadProfileImage(this, url, binding.profileImage);
+            // Skip cache to ensure we get the latest image
+            Glide.with(this)
+                .load(url)
+                .skipMemoryCache(true)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .into(binding.profileImage);
         } else {
             binding.profileImage.setImageResource(R.drawable.ic_person);
         }
