@@ -45,6 +45,7 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center"
+        android:padding="24dp"
         android:visibility="gone">
 
         <ImageView
@@ -54,11 +55,24 @@
             android:src="@drawable/ic_search_find"/>
 
         <TextView
-            android:id="@+id/emptyStateText"
+            android:id="@+id/emptyStateTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="No mentors found." />
+            android:text="No mentors found"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/emptyStateMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Start connecting with alumni mentors"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <Button
             android:id="@+id/findMentorButton"
