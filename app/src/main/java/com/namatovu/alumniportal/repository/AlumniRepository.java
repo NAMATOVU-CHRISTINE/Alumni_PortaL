@@ -46,7 +46,7 @@ public class AlumniRepository {
         executorService.execute(() -> {
             try {
                 database.userDao().insertUser(user);
-                Log.d(TAG, "User inserted: " + user.getUserId());
+                Log.d(TAG, "User inserted: " + user.userId);
                 notifySuccess(listener);
             } catch (Exception e) {
                 Log.e(TAG, "Error inserting user", e);
@@ -79,16 +79,7 @@ public class AlumniRepository {
         });
     }
     
-    public void updateUserOnlineStatus(String userId, boolean isOnline, long lastSeen) {
-        executorService.execute(() -> {
-            try {
-                database.userDao().updateUserOnlineStatus(userId, isOnline, lastSeen);
-                Log.d(TAG, "User online status updated: " + userId);
-            } catch (Exception e) {
-                Log.e(TAG, "Error updating user status", e);
-            }
-        });
-    }
+
     
     // ==================== JOB OPERATIONS ====================
     
