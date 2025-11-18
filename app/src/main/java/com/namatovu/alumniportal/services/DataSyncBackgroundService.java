@@ -32,12 +32,23 @@ public class DataSyncBackgroundService extends Service {
         Log.d(TAG, "Starting background data sync");
         
         // Run sync in background thread
-        executorService.execute(() -> {
-            syncUserData();
-            syncEventsData();
-            // Stop service when done
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.execute(() -> {
+                syncUserData();
+                syncEventsData();
+                // Add a small delay before stopping to allow Firebase callbacks to complete
+                try {
+                    Thread.sleep(2000); // 2 second delay
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                // Stop service when done
+                stopSelf(startId);
+            });
+        } else {
+            Log.w(TAG, "ExecutorService is not available, stopping service");
             stopSelf(startId);
-        });
+        }
         
         return START_NOT_STICKY; // Don't restart if killed
     }
@@ -50,32 +61,37 @@ public class DataSyncBackgroundService extends Service {
                 .limit(50) // Limit for performance
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    executorService.execute(() -> {
-                        try {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                User user = doc.toObject(User.class);
-                                user.setUserId(doc.getId());
-                                
-                                // Convert to local entity
-                                UserEntity userEntity = new UserEntity();
-                                userEntity.userId = user.getUserId();
-                                userEntity.fullName = user.getFullName();
-                                userEntity.email = user.getEmail();
-                                userEntity.major = user.getMajor();
-                                userEntity.graduationYear = user.getGraduationYear();
-                                userEntity.currentJob = user.getCurrentJob();
-                                userEntity.company = user.getCompany();
-                                userEntity.profileImageUrl = user.getProfileImageUrl();
-                                userEntity.lastSynced = System.currentTimeMillis();
-                                
-                                // Insert or update in local database
-                                localDb.userDao().insertOrUpdate(userEntity);
+                    // Check if executor is still available before using it
+                    if (executorService != null && !executorService.isShutdown()) {
+                        executorService.execute(() -> {
+                            try {
+                                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                    User user = doc.toObject(User.class);
+                                    user.setUserId(doc.getId());
+                                    
+                                    // Convert to local entity
+                                    UserEntity userEntity = new UserEntity();
+                                    userEntity.userId = user.getUserId();
+                                    userEntity.fullName = user.getFullName();
+                                    userEntity.email = user.getEmail();
+                                    userEntity.major = user.getMajor();
+                                    userEntity.graduationYear = user.getGraduationYear();
+                                    userEntity.currentJob = user.getCurrentJob();
+                                    userEntity.company = user.getCompany();
+                                    userEntity.profileImageUrl = user.getProfileImageUrl();
+                                    userEntity.lastSynced = System.currentTimeMillis();
+                                    
+                                    // Insert or update in local database
+                                    localDb.userDao().insertOrUpdate(userEntity);
+                                }
+                                Log.d(TAG, "User data sync completed");
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error syncing user data to local DB", e);
                             }
-                            Log.d(TAG, "User data sync completed");
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error syncing user data to local DB", e);
-                        }
-                    });
+                        });
+                    } else {
+                        Log.w(TAG, "ExecutorService is shutdown, skipping user data sync");
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error fetching users from Firebase", e);
@@ -115,8 +131,17 @@ public class DataSyncBackgroundService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "DataSyncBackgroundService destroyed");
-        if (executorService != null) {
+        if (executorService != null && !executorService.isShutdown()) {
             executorService.shutdown();
+            try {
+                // Wait a bit for tasks to complete
+                if (!executorService.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
