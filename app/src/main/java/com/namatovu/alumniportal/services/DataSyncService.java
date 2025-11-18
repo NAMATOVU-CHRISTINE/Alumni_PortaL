@@ -374,6 +374,15 @@ public class DataSyncService extends Service {
         
         if (executorService != null && !executorService.isShutdown()) {
             executorService.shutdown();
+            try {
+                // Wait a bit for tasks to complete
+                if (!executorService.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
