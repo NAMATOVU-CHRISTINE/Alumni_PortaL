@@ -660,9 +660,7 @@ public class HomeActivity extends AppCompatActivity {
         binding.tvProfileViewsCount.setText("0");
     }
     
-
-}    pri
-vate void startBackgroundServices() {
+    private void startBackgroundServices() {
         // Start data sync service (demonstrates Service component)
         Intent syncIntent = new Intent(this, com.namatovu.alumniportal.services.DataSyncBackgroundService.class);
         startService(syncIntent);

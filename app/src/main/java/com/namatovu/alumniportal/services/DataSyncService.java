@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.database.AlumniDatabase;
@@ -113,25 +114,16 @@ public class DataSyncService extends Service {
                 
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     UserEntity user = new UserEntity();
-                    user.setUserId(document.getId());
-                    user.setFullName(document.getString("fullName"));
-                    user.setEmail(document.getString("email"));
-                    user.setPhoneNumber(document.getString("phoneNumber"));
-                    user.setProfileImageUrl(document.getString("profileImageUrl"));
-                    user.setGraduationYear(document.getString("graduationYear"));
-                    user.setCourse(document.getString("course"));
-                    user.setCurrentJob(document.getString("currentJob"));
-                    user.setCompany(document.getString("company"));
-                    user.setLocation(document.getString("location"));
-                    user.setBio(document.getString("bio"));
+                    user.userId = document.getId();
+                    user.fullName = document.getString("fullName");
+                    user.email = document.getString("email");
+                    user.profileImageUrl = document.getString("profileImageUrl");
+                    user.graduationYear = document.getString("graduationYear");
+                    user.major = document.getString("major");
+                    user.currentJob = document.getString("currentJob");
+                    user.company = document.getString("company");
+                    user.lastSynced = System.currentTimeMillis();
                     
-                    Boolean isOnline = document.getBoolean("isOnline");
-                    user.setOnline(isOnline != null && isOnline);
-                    
-                    Long lastSeen = document.getLong("lastSeen");
-                    user.setLastSeen(lastSeen != null ? lastSeen : 0);
-                    
-                    user.setLastSyncTime(System.currentTimeMillis());
                     users.add(user);
                 }
                 
@@ -186,7 +178,16 @@ public class DataSyncService extends Service {
                 });
             })
             .addOnFailureListener(e -> {
-                Log.e(TAG, "Error syncing jobs", e);
+                if (e instanceof FirebaseFirestoreException) {
+                    FirebaseFirestoreException firestoreException = (FirebaseFirestoreException) e;
+                    if (firestoreException.getCode() == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
+                        Log.w(TAG, "Permission denied for jobs collection - skipping sync");
+                    } else {
+                        Log.e(TAG, "Error syncing jobs", e);
+                    }
+                } else {
+                    Log.e(TAG, "Error syncing jobs", e);
+                }
                 checkSyncComplete();
             });
     }
@@ -296,7 +297,16 @@ public class DataSyncService extends Service {
                 });
             })
             .addOnFailureListener(e -> {
-                Log.e(TAG, "Error syncing mentors", e);
+                if (e instanceof FirebaseFirestoreException) {
+                    FirebaseFirestoreException firestoreException = (FirebaseFirestoreException) e;
+                    if (firestoreException.getCode() == FirebaseFirestoreException.Code.PERMISSION_DENIED) {
+                        Log.w(TAG, "Permission denied for mentors collection - skipping sync");
+                    } else {
+                        Log.e(TAG, "Error syncing mentors", e);
+                    }
+                } else {
+                    Log.e(TAG, "Error syncing mentors", e);
+                }
                 checkSyncComplete();
             });
     }

@@ -15,7 +15,7 @@ import com.namatovu.alumniportal.database.entities.UserEntity;
 
 @Database(
     entities = {UserEntity.class, JobEntity.class, EventEntity.class, com.namatovu.alumniportal.database.entities.MentorEntity.class},
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 public abstract class AlumniDatabase extends RoomDatabase {
