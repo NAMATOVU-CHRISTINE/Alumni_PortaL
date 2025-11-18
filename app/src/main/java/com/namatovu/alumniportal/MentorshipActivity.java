@@ -192,13 +192,8 @@ public class MentorshipActivity extends AppCompatActivity {
             return;
         }
 
-        if (currentTab.equals("as_mentee")) {
-            // Load all available users to request mentorship from
-            loadAvailableMentors();
-        } else {
-            // Load existing mentorship connections
-            loadExistingConnections();
-        }
+        // Load only existing mentorship connections for both tabs
+        loadExistingConnections();
     }
     
     private void loadAvailableMentors() {

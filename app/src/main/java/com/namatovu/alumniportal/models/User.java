@@ -63,6 +63,7 @@ public class User {
         privacySettings.put("showPhone", false);
         privacySettings.put("showLocation", true);
         privacySettings.put("showCurrentJob", true);
+        privacySettings.put("showProfileImage", true); // Profile images always visible
         privacySettings.put("allowMentorRequests", true);
         privacySettings.put("showInDirectory", true);
     }

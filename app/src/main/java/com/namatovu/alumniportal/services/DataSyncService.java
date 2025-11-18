@@ -208,10 +208,24 @@ public class DataSyncService extends Service {
                     event.setOrganizerName(document.getString("organizerName"));
                     event.setCategory(document.getString("category"));
                     
+                    // Handle eventDate - could be Long or Timestamp
                     Long eventDate = document.getLong("eventDate");
+                    if (eventDate == null && document.contains("eventDate")) {
+                        com.google.firebase.Timestamp timestamp = document.getTimestamp("eventDate");
+                        eventDate = timestamp != null ? timestamp.toDate().getTime() : 0L;
+                    }
                     event.setEventDate(eventDate != null ? eventDate : 0);
                     
-                    Long createdAt = document.getLong("createdAt");
+                    // Handle createdAt - could be Long or Timestamp
+                    Long createdAt = null;
+                    if (document.contains("createdAt")) {
+                        try {
+                            createdAt = document.getLong("createdAt");
+                        } catch (RuntimeException e) {
+                            com.google.firebase.Timestamp timestamp = document.getTimestamp("createdAt");
+                            createdAt = timestamp != null ? timestamp.toDate().getTime() : 0L;
+                        }
+                    }
                     event.setCreatedAt(createdAt != null ? createdAt : 0);
                     
                     Long attendeeCount = document.getLong("attendeeCount");

@@ -142,26 +142,57 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
             }
             
             public void bind(MentorshipConnection connection) {
-                if (connection == null) return;
+                if (connection == null) {
+                    Log.w("MentorshipAdapter", "Connection is null");
+                    return;
+                }
+                
+                // Check if current user is the mentor or mentee in this connection
+                boolean isCurrentUserMentor = currentUserId != null && currentUserId.equals(connection.getMentorId());
+                boolean isCurrentUserMentee = currentUserId != null && currentUserId.equals(connection.getMenteeId());
+                
+                Log.d("MentorshipAdapter", "Binding connection - isCurrentUserMentor: " + isCurrentUserMentor + 
+                      ", mentorName: " + connection.getMentorName() + ", menteeName: " + connection.getMenteeName());
+                
+                // Show the OTHER person's name (not your own)
+                String displayName = "";
+                String displayTitle = "";
+                String displayCompany = "";
+                
+                if (isCurrentUserMentor) {
+                    // If I'm the mentor, show the mentee's name
+                    displayName = connection.getMenteeName() != null && !connection.getMenteeName().isEmpty() 
+                                  ? connection.getMenteeName() : "Mentee";
+                    displayTitle = "Your Mentee";
+                    String msg = connection.getMessage();
+                    if (msg != null && !msg.isEmpty()) {
+                        displayCompany = msg.length() > 50 ? msg.substring(0, 47) + "..." : msg;
+                    }
+                } else {
+                    // If I'm the mentee (or viewing available mentors), show the mentor's name
+                    displayName = connection.getMentorName() != null && !connection.getMentorName().isEmpty() 
+                                  ? connection.getMentorName() : "Mentor";
+                    displayTitle = connection.getMentorTitle() != null && !connection.getMentorTitle().isEmpty() 
+                                   ? connection.getMentorTitle() : "Alumni";
+                    displayCompany = connection.getMentorCompany() != null ? connection.getMentorCompany() : "";
+                }
                 
                 if (textMentorName != null) {
-                    textMentorName.setText(connection.getMentorName() != null ? connection.getMentorName() : "Unknown");
+                    textMentorName.setText(displayName);
                 }
-                
                 if (textPosition != null) {
-                    textPosition.setText(connection.getMentorTitle() != null ? connection.getMentorTitle() : "Alumni");
+                    textPosition.setText(displayTitle);
                 }
-                
                 if (textCompany != null) {
-                    textCompany.setText(connection.getMentorCompany() != null ? connection.getMentorCompany() : "");
+                    textCompany.setText(displayCompany);
                 }
                 
                 if (textSkills != null) {
-                    textSkills.setVisibility(View.GONE); // Hide skills for now
+                    textSkills.setVisibility(View.GONE);
                 }
                 
                 if (textRating != null) {
-                    textRating.setVisibility(View.GONE); // Hide rating for now
+                    textRating.setVisibility(View.GONE);
                 }
                 
                 // Update button text and behavior based on connection status and user role
@@ -169,26 +200,11 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 if (buttonConnect instanceof TextView) {
                     TextView button = (TextView) buttonConnect;
                     
-                    // Check if current user is the mentor or mentee in this connection
-                    boolean isCurrentUserMentor = currentUserId != null && currentUserId.equals(connection.getMentorId());
-                    boolean isCurrentUserMentee = currentUserId != null && currentUserId.equals(connection.getMenteeId());
-                    
                     if (isCurrentUserMentor && "pending".equals(connection.getStatus())) {
-                        // Mentor viewing pending request - show accept/reject options
+                        // Mentor viewing pending request
                         button.setText("Accept Request");
                         button.setVisibility(View.VISIBLE);
                         button.setEnabled(true);
-                        
-                        // Show mentee name instead of mentor name for mentor's view
-                        if (textMentorName != null) {
-                            textMentorName.setText(connection.getMenteeName() != null ? connection.getMenteeName() : "Unknown User");
-                        }
-                        if (textPosition != null) {
-                            textPosition.setText("Requesting Mentorship");
-                        }
-                        if (textCompany != null) {
-                            textCompany.setText(connection.getMessage() != null ? connection.getMessage() : "No message provided");
-                        }
                     } else if (isCurrentUserMentee && "pending".equals(connection.getStatus())) {
                         // Mentee viewing their own pending request
                         button.setText("Request Pending");

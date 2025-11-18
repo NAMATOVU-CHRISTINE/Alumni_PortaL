@@ -243,14 +243,8 @@ public class HomeActivity extends AppCompatActivity {
             intent = new Intent(this, AlumniDirectoryActivity.class);
         } else if (itemId == R.id.nav_mentorship) {
             intent = new Intent(this, MentorshipActivity.class);
-        } else if (itemId == R.id.nav_chat) {
-            intent = new Intent(this, com.namatovu.alumniportal.activities.ChatListActivity.class);
-        } else if (itemId == R.id.nav_groups) {
-            intent = new Intent(this, com.namatovu.alumniportal.activities.AlumniGroupsActivity.class);
         } else if (itemId == R.id.nav_jobs) {
-            intent = new Intent(this, JobBoardActivity.class);
-        } else if (itemId == R.id.nav_events) {
-            intent = new Intent(this, EventsActivity.class);
+            intent = new Intent(this, JobsActivity.class);
         } else if (itemId == R.id.nav_career_tips) {
             intent = new Intent(this, CareerTipsActivity.class);
         } else if (itemId == R.id.nav_knowledge) {
@@ -441,53 +435,25 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupCardClickListeners() {
-        // Profile card - navigate to profile activity
-        binding.profileCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileActivity.class);
+        // Alumni Directory card
+        binding.alumniDirectoryCard.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AlumniDirectoryActivity.class);
             startActivity(intent);
         });
         
-        // Mentor card - navigate to mentorship system
-        binding.mentorCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MentorshipActivity.class);
-            startActivity(intent);
-        });
-        
-        // Career Tips card - navigate to career tips activity
-        binding.careerTipsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, CareerTipsActivity.class);
-            startActivity(intent);
-        });
-        
-        // Jobs card - navigate to comprehensive jobs & opportunities system
-        binding.jobsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, JobsActivity.class);
-            startActivity(intent);
-        });
-        
-        // Events card - navigate to events calendar
-        binding.eventsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EventsNewsActivity.class);
-            startActivity(intent);
-        });
-        
-        // Knowledge Hub card - navigate to knowledge section
-        binding.knowledgeHubCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, KnowledgeActivity.class);
-            startActivity(intent);
-        });
-        
-        // Jobs & Opportunities card - navigate to comprehensive jobs & opportunities system
-        binding.jobsOpportunitiesCard.setOnClickListener(v -> {
-            Intent intent = new Intent(this, JobsActivity.class);
-            startActivity(intent);
-        });
-        
-        // Recommendations card - navigate to comprehensive jobs & opportunities system
+        // Recommendations card - navigate to jobs & opportunities
         binding.recommendationsCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, JobsActivity.class);
             startActivity(intent);
         });
+        
+        // Jobs card in recommendations section
+        if (binding.jobsCard != null) {
+            binding.jobsCard.setOnClickListener(v -> {
+                Intent intent = new Intent(this, JobsActivity.class);
+                startActivity(intent);
+            });
+        }
         
         // Setup new enhanced functionality
         setupEnhancedClickListeners();
@@ -547,6 +513,12 @@ public class HomeActivity extends AppCompatActivity {
             user.getProfileImageUrl(),
             binding.homeProfileImage
         );
+
+        // Load stats
+        loadUserStats();
+        
+        // Start background services for demo (exam requirement)
+        startBackgroundServices();
 
         // Load dynamic recommendations
         loadDynamicRecommendations(user);
@@ -664,5 +636,41 @@ public class HomeActivity extends AppCompatActivity {
                 binding.recentActivitiesRecyclerView.setVisibility(View.GONE);
             }
         }
+    }
+    
+    private void loadUserStats() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) return;
+        
+        String userId = currentUser.getUid();
+        
+        // Load connections count
+        db.collection("mentorships")
+            .where(com.google.firebase.firestore.Filter.or(
+                com.google.firebase.firestore.Filter.equalTo("mentorId", userId),
+                com.google.firebase.firestore.Filter.equalTo("menteeId", userId)
+            ))
+            .whereEqualTo("status", "accepted")
+            .get()
+            .addOnSuccessListener(docs -> {
+                binding.tvConnectionsCount.setText(String.valueOf(docs.size()));
+            });
+        
+        // Profile views would come from analytics - for now show 0
+        binding.tvProfileViewsCount.setText("0");
+    }
+    
+
+}    pri
+vate void startBackgroundServices() {
+        // Start data sync service (demonstrates Service component)
+        Intent syncIntent = new Intent(this, com.namatovu.alumniportal.services.DataSyncBackgroundService.class);
+        startService(syncIntent);
+        
+        // Start web scraping service (demonstrates advanced feature)
+        Intent scrapingIntent = new Intent(this, com.namatovu.alumniportal.services.WebScrapingService.class);
+        startService(scrapingIntent);
+        
+        Log.d(TAG, "Background services started for exam demonstration");
     }
 }

@@ -349,8 +349,12 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     private void updateChatUI() {
         if (currentChat == null) {
             // Use intent data if chat not loaded yet
-            if (otherUserName != null) {
+            if (otherUserName != null && !otherUserName.isEmpty()) {
                 textViewChatName.setText(otherUserName);
+                Log.d(TAG, "Set chat name from intent: " + otherUserName);
+            } else {
+                textViewChatName.setText("Chat");
+                Log.w(TAG, "No other user name available");
             }
             if (otherUserId != null) {
                 updateOnlineStatus();
@@ -360,9 +364,13 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         }
 
         String displayName = currentChat.getDisplayName(currentUserId);
+        if (displayName == null || displayName.isEmpty()) {
+            displayName = otherUserName != null ? otherUserName : "Chat";
+        }
         String displayImage = currentChat.getDisplayImage(currentUserId);
 
         textViewChatName.setText(displayName);
+        Log.d(TAG, "Set chat name from chat object: " + displayName);
 
         if (displayImage != null && !displayImage.isEmpty()) {
             Glide.with(this)

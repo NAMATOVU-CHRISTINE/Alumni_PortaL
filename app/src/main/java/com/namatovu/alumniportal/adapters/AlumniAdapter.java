@@ -26,6 +26,7 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
     
     public interface OnUserClickListener {
         void onUserClick(User user);
+        void onEmailClick(User user);
     }
     
     public AlumniAdapter(List<User> users, OnUserClickListener listener) {
@@ -63,6 +64,14 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onUserClick(users.get(position));
+                }
+            });
+            
+            // Email button click listener
+            binding.btnEmail.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onEmailClick(users.get(position));
                 }
             });
         }
@@ -150,6 +159,13 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
                 binding.mentorAvailableText.setText("Available for mentoring");
             } else {
                 binding.mentorAvailableText.setVisibility(View.GONE);
+            }
+            
+            // Email button visibility (show if user allows email to be shown)
+            if (user.getPrivacySetting("showEmail") && user.getEmail() != null && !user.getEmail().isEmpty()) {
+                binding.btnEmail.setVisibility(View.VISIBLE);
+            } else {
+                binding.btnEmail.setVisibility(View.GONE);
             }
             
             // End performance timing

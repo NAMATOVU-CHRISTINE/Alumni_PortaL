@@ -31,12 +31,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                 Toast.makeText(context, "Internet connected - Syncing data...", Toast.LENGTH_SHORT).show();
                 
                 // Start data sync service when network becomes available
-                Intent syncIntent = new Intent(context, DataSyncService.class);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    context.startForegroundService(syncIntent);
-                } else {
-                    context.startService(syncIntent);
-                }
+                Intent syncIntent = new Intent(context, com.namatovu.alumniportal.services.DataSyncBackgroundService.class);
+                context.startService(syncIntent);
             }
             
             wasConnected = true;
