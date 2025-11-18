@@ -22,6 +22,7 @@
     
     <!-- Permissions for Service and BroadcastReceiver -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
@@ -175,6 +176,20 @@
             </intent-filter>
         </receiver>
         
+        <!-- NEW SERVICES FOR EXAM REQUIREMENTS -->
+        
+        <!-- Background Data Sync Service -->
+        <service
+            android:name=".services.DataSyncBackgroundService"
+            android:exported="false"
+            android:enabled="true" />
+            
+        <!-- Web Scraping Service -->
+        <service
+            android:name=".services.WebScrapingService"
+            android:exported="false"
+            android:enabled="true" />
+
         <!-- Default notification icon and color -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

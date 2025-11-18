@@ -55,29 +55,70 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
         allUsers = new ArrayList<>();
         filteredUsers = new ArrayList<>();
 
+        setupToolbar();
         setupRecyclerView();
         setupSearchAndFilters();
         loadAlumniData();
     }
 
+    private void setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
+    }
+
     private void setupRecyclerView() {
-        adapter = new AlumniAdapter(filteredUsers, user -> {
-            // Open profile details
-            Intent intent = new Intent(this, ViewProfileActivity.class);
-            intent.putExtra("userId", user.getUserId());
-            intent.putExtra("username", user.getUsername());
-            startActivity(intent);
+        adapter = new AlumniAdapter(filteredUsers, new AlumniAdapter.OnUserClickListener() {
+            @Override
+            public void onUserClick(User user) {
+                // Open profile details
+                Intent intent = new Intent(AlumniDirectoryActivity.this, ViewProfileActivity.class);
+                intent.putExtra("userId", user.getUserId());
+                intent.putExtra("username", user.getUsername());
+                startActivity(intent);
+                
+                // Log analytics
+                AnalyticsHelper.logNavigation("ViewProfileActivity", "AlumniDirectoryActivity");
+            }
             
-            // Log analytics
-            AnalyticsHelper.logNavigation("ViewProfileActivity", "AlumniDirectoryActivity");
+            @Override
+            public void onEmailClick(User user) {
+                // Open email app with implicit intent
+                sendEmailToUser(user);
+            }
         });
         
         binding.alumniRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.alumniRecyclerView.setAdapter(adapter);
     }
+    
+    private void sendEmailToUser(User user) {
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            Toast.makeText(this, "Email not available for this user", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        String subject = "Hello from Alumni Portal - " + user.getFullName();
+        String body = "Hi " + user.getFullName() + ",\n\n" +
+                     "I found your profile on the Alumni Portal and would like to connect.\n\n" +
+                     "Best regards";
+        
+        // Create implicit intent for email
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("message/rfc822");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{user.getEmail()});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+        
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send email via"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void setupSearchAndFilters() {
-        // Search functionality
+        // Real-time search as user types
         binding.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -90,6 +131,20 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {}
+        });
+        
+        // Handle search action on keyboard
+        binding.searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                // Hide keyboard
+                android.view.inputmethod.InputMethodManager imm = 
+                    (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                if (imm != null && getCurrentFocus() != null) {
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+                return true;
+            }
+            return false;
         });
 
         // Major filter
@@ -125,6 +180,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
             selectedYear = "All";
             searchQuery = "";
             filterUsers();
+            Toast.makeText(this, "Filters cleared", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -132,35 +188,69 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
         binding.progressBar.setVisibility(View.VISIBLE);
         binding.noResultsText.setVisibility(View.GONE);
 
+        // Load ALL users from the database
+        // We'll filter in the app to avoid complex index requirements
         db.collection("users")
-                .whereEqualTo("isAlumni", true)
-                .whereEqualTo("privacySettings.showInDirectory", true)
-                .orderBy("fullName", Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     allUsers.clear();
+                    int totalUsers = 0;
+                    int alumniCount = 0;
+                    int visibleCount = 0;
                     
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        User user = document.toObject(User.class);
-                        user.setUserId(document.getId());
-                        
-                        // Only show users who have opted to be visible in directory
-                        if (user.getPrivacySetting("showInDirectory")) {
-                            allUsers.add(user);
+                        try {
+                            totalUsers++;
+                            String userId = document.getId();
+                            
+                            // Skip current user
+                            if (mAuth.getCurrentUser() != null && userId.equals(mAuth.getCurrentUser().getUid())) {
+                                continue;
+                            }
+                            
+                            User user = document.toObject(User.class);
+                            user.setUserId(userId);
+                            
+                            // Debug logging
+                            Log.d(TAG, "User: " + user.getFullName() + 
+                                  ", isAlumni: " + user.isAlumni() + 
+                                  ", showInDirectory: " + user.getPrivacySetting("showInDirectory"));
+                            
+                            // Show all users who have opted to be visible in directory
+                            boolean isVisible = user.getPrivacySetting("showInDirectory");
+                            
+                            // If privacy settings are null/empty, default to showing them
+                            if (user.getPrivacySettings() == null || user.getPrivacySettings().isEmpty()) {
+                                isVisible = true;
+                            }
+                            
+                            if (user.isAlumni()) {
+                                alumniCount++;
+                            }
+                            
+                            if (isVisible) {
+                                visibleCount++;
+                                allUsers.add(user);
+                            }
+                        } catch (Exception e) {
+                            Log.w(TAG, "Error parsing user document: " + document.getId(), e);
                         }
                     }
                     
                     binding.progressBar.setVisibility(View.GONE);
                     filterUsers();
                     
-                    Log.d(TAG, "Loaded " + allUsers.size() + " alumni profiles");
+                    String message = "Found " + totalUsers + " total users, " + 
+                                   alumniCount + " alumni, " + 
+                                   visibleCount + " visible in directory";
+                    Log.d(TAG, message);
                 })
                 .addOnFailureListener(e -> {
                     binding.progressBar.setVisibility(View.GONE);
                     binding.noResultsText.setVisibility(View.VISIBLE);
                     binding.noResultsText.setText("Failed to load alumni directory");
                     
-                    Toast.makeText(this, "Failed to load alumni data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to load data: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Error loading alumni data", e);
                     
                     AnalyticsHelper.logError("alumni_load_failed", e.getMessage(), "AlumniDirectoryActivity");
@@ -169,23 +259,38 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
 
     private void filterUsers() {
         filteredUsers.clear();
+        String lowerSearchQuery = searchQuery.toLowerCase();
+        
+        Log.d(TAG, "Filtering with: search='" + searchQuery + "', major='" + selectedMajor + "', year='" + selectedYear + "'");
         
         for (User user : allUsers) {
+            // Enhanced search - includes name, major, job, company, skills, and bio
             boolean matchesSearch = searchQuery.isEmpty() || 
-                    (user.getFullName() != null && user.getFullName().toLowerCase().contains(searchQuery.toLowerCase())) ||
-                    (user.getMajor() != null && user.getMajor().toLowerCase().contains(searchQuery.toLowerCase())) ||
-                    (user.getCurrentJob() != null && user.getCurrentJob().toLowerCase().contains(searchQuery.toLowerCase())) ||
-                    (user.getCompany() != null && user.getCompany().toLowerCase().contains(searchQuery.toLowerCase())) ||
-                    (user.getSkillsAsString().toLowerCase().contains(searchQuery.toLowerCase()));
+                    (user.getFullName() != null && user.getFullName().toLowerCase().contains(lowerSearchQuery)) ||
+                    (user.getMajor() != null && user.getMajor().toLowerCase().contains(lowerSearchQuery)) ||
+                    (user.getCurrentJob() != null && user.getCurrentJob().toLowerCase().contains(lowerSearchQuery)) ||
+                    (user.getCompany() != null && user.getCompany().toLowerCase().contains(lowerSearchQuery)) ||
+                    (user.getBio() != null && user.getBio().toLowerCase().contains(lowerSearchQuery)) ||
+                    (user.getLocation() != null && user.getLocation().toLowerCase().contains(lowerSearchQuery)) ||
+                    (user.getSkillsAsString() != null && user.getSkillsAsString().toLowerCase().contains(lowerSearchQuery));
             
-            boolean matchesMajor = selectedMajor.equals("All") || 
-                    (user.getMajor() != null && user.getMajor().equals(selectedMajor));
+            // Enhanced major filter - very flexible matching
+            boolean matchesMajor = selectedMajor.equals("All") || selectedMajor.isEmpty() ||
+                    (user.getMajor() != null && 
+                     (user.getMajor().equalsIgnoreCase(selectedMajor) || 
+                      user.getMajor().toLowerCase().contains(selectedMajor.toLowerCase()) ||
+                      selectedMajor.toLowerCase().contains(user.getMajor().toLowerCase())));
             
-            boolean matchesYear = selectedYear.equals("All") || 
+            boolean matchesYear = selectedYear.equals("All") || selectedYear.isEmpty() ||
                     (user.getGraduationYear() != null && user.getGraduationYear().equals(selectedYear));
             
             if (matchesSearch && matchesMajor && matchesYear) {
                 filteredUsers.add(user);
+            } else {
+                // Debug logging for filtered out users
+                if (!matchesMajor && !selectedMajor.equals("All") && !selectedMajor.isEmpty()) {
+                    Log.d(TAG, "User " + user.getFullName() + " filtered out - major: " + user.getMajor() + " vs selected: " + selectedMajor);
+                }
             }
         }
         
@@ -194,10 +299,10 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
         // Show/hide no results message
         if (filteredUsers.isEmpty() && !allUsers.isEmpty()) {
             binding.noResultsText.setVisibility(View.VISIBLE);
-            binding.noResultsText.setText("No alumni match your search criteria");
+            binding.noResultsText.setText("No members match your search criteria");
         } else if (allUsers.isEmpty()) {
             binding.noResultsText.setVisibility(View.VISIBLE);
-            binding.noResultsText.setText("No alumni profiles available");
+            binding.noResultsText.setText("No profiles available yet");
         } else {
             binding.noResultsText.setVisibility(View.GONE);
         }
@@ -207,7 +312,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
             AnalyticsHelper.logAlumniSearch(searchQuery, filteredUsers.size());
         }
         
-        binding.resultCountText.setText(filteredUsers.size() + " alumni found");
+        binding.resultCountText.setText(filteredUsers.size() + " members found");
     }
 
     @Override

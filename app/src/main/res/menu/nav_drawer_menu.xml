@@ -25,16 +25,6 @@
                     android:id="@+id/nav_mentorship"
                     android:icon="@drawable/ic_mentorship"
                     android:title="Mentorship" />
-                
-                <item
-                    android:id="@+id/nav_chat"
-                    android:icon="@drawable/ic_chat"
-                    android:title="Messages" />
-                
-                <item
-                    android:id="@+id/nav_groups"
-                    android:icon="@drawable/ic_group"
-                    android:title="Alumni Groups" />
             </menu>
         </item>
     </group>
@@ -45,12 +35,7 @@
                 <item
                     android:id="@+id/nav_jobs"
                     android:icon="@drawable/ic_work"
-                    android:title="Job Board" />
-                
-                <item
-                    android:id="@+id/nav_events"
-                    android:icon="@drawable/ic_event"
-                    android:title="Events" />
+                    android:title="Jobs &amp; Opportunities" />
             </menu>
         </item>
     </group>
