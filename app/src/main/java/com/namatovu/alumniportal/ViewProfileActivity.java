@@ -182,9 +182,11 @@ public class ViewProfileActivity extends AppCompatActivity {
         // Calculate and display profile completion - ONLY for own profile
         if (isOwnProfile) {
             calculateProfileCompletion(user);
-            binding.profileCompletionCard.setVisibility(View.VISIBLE);
+            binding.tvProfileCompletion.setVisibility(View.VISIBLE);
+            binding.profileCompletionBar.setVisibility(View.VISIBLE);
         } else {
-            binding.profileCompletionCard.setVisibility(View.GONE);
+            binding.tvProfileCompletion.setVisibility(View.GONE);
+            binding.profileCompletionBar.setVisibility(View.GONE);
         }
         
         // Hide Share and Copy buttons for other users - ONLY show Request Mentorship
