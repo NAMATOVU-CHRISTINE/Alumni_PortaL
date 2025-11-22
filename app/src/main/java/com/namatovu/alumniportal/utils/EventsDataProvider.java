@@ -72,9 +72,9 @@ public class EventsDataProvider {
                         news.setId(document.getId());
                         news.setTitle(document.getString("title"));
                         news.setSummary(document.getString("summary"));
-                        news.setDescription(document.getString("content"));
+                        news.setContent(document.getString("content"));
                         news.setPublishedAt(document.getLong("publishedAt") != null ? document.getLong("publishedAt") : System.currentTimeMillis());
-                        news.setSource("MUST Website");
+                        news.setAuthor("MUST Website");
                         
                         String categoryStr = document.getString("category");
                         if (categoryStr != null) {
