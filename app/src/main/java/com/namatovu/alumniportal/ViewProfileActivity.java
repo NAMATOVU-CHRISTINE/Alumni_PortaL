@@ -139,7 +139,9 @@ public class ViewProfileActivity extends AppCompatActivity {
         binding.tvFullName.setText("Loading...");
         binding.tvFullName.setVisibility(View.VISIBLE);
         
-        db.collection("users").document(userId).get()
+        // Force fetch from server only (bypass cache) to prevent stale data
+        db.collection("users").document(userId)
+            .get(com.google.firebase.firestore.Source.SERVER)
             .addOnSuccessListener(document -> {
                 if (document.exists()) {
                     try {
