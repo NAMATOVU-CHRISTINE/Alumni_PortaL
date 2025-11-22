@@ -46,9 +46,23 @@ public class ViewProfileActivity extends AppCompatActivity {
             finish();
             return;
         }
+        
+        // Log for debugging
+        Log.d(TAG, "Loading profile for userId: " + userId);
 
         loadUserProfile();
         setupClickListeners();
+    }
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Reload profile data when activity comes to foreground
+        // This ensures fresh data is always displayed
+        if (userId != null && !userId.isEmpty()) {
+            Log.d(TAG, "onStart - reloading profile for userId: " + userId);
+            loadUserProfile();
+        }
     }
 
     private void setupToolbar() {
@@ -131,6 +145,8 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
+        Log.d(TAG, "loadUserProfile called for userId: " + userId);
+        
         // Clear previous user data and UI immediately
         viewedUser = null;
         clearProfileUI();
@@ -143,24 +159,30 @@ public class ViewProfileActivity extends AppCompatActivity {
         db.collection("users").document(userId)
             .get(com.google.firebase.firestore.Source.SERVER)
             .addOnSuccessListener(document -> {
+                Log.d(TAG, "Document fetched for userId: " + userId);
                 if (document.exists()) {
                     try {
+                        // Clear UI again right before displaying new data
+                        clearProfileUI();
+                        
                         viewedUser = document.toObject(User.class);
                         if (viewedUser != null) {
+                            Log.d(TAG, "Displaying profile for: " + viewedUser.getFullName());
                             displayUserProfile(viewedUser);
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing user data", e);
-                        Toast.makeText(this, "Error loading profile", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ViewProfileActivity.this, "Error loading profile", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+                    Log.w(TAG, "Document does not exist for userId: " + userId);
+                    Toast.makeText(ViewProfileActivity.this, "User not found", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             })
             .addOnFailureListener(e -> {
-                Log.e(TAG, "Error loading profile", e);
-                Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error loading profile for userId: " + userId, e);
+                Toast.makeText(ViewProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show();
                 finish();
             });
     }
