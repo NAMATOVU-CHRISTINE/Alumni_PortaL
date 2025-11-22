@@ -94,11 +94,6 @@ public class SettingsActivity extends AppCompatActivity {
         // Notification switches
         setupNotificationSwitches();
 
-        // Test notification button
-        binding.testNotificationOption.setOnClickListener(v -> {
-            sendTestNotification();
-        });
-
         // Account Actions Section
         binding.logoutOption.setOnClickListener(v -> {
             logoutUser();

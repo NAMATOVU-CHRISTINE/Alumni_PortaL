@@ -131,8 +131,9 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
-        // Clear previous user data
+        // Clear previous user data and UI immediately
         viewedUser = null;
+        clearProfileUI();
         
         db.collection("users").document(userId).get()
             .addOnSuccessListener(document -> {
@@ -157,6 +158,26 @@ public class ViewProfileActivity extends AppCompatActivity {
                 finish();
             });
     }
+    
+    private void clearProfileUI() {
+        // Clear all UI elements to prevent showing stale data
+        binding.tvFullName.setText("");
+        binding.tvCurrentJob.setVisibility(View.GONE);
+        binding.locationContainer.setVisibility(View.GONE);
+        binding.bioCard.setVisibility(View.GONE);
+        binding.majorContainer.setVisibility(View.GONE);
+        binding.graduationContainer.setVisibility(View.GONE);
+        binding.companyContainer.setVisibility(View.GONE);
+        binding.skillsCard.setVisibility(View.GONE);
+        binding.contactCard.setVisibility(View.GONE);
+        binding.tvProfileCompletion.setVisibility(View.GONE);
+        binding.profileCompletionBar.setVisibility(View.GONE);
+        binding.verificationBadge.setVisibility(View.GONE);
+        binding.verificationBadgeSmall.setVisibility(View.GONE);
+        binding.statusBadge.setVisibility(View.GONE);
+        binding.profileImage.setImageResource(R.drawable.ic_person);
+        binding.skillsChipGroup.removeAllViews();
+    }
 
     private void displayUserProfile(User user) {
         // Check if viewing own profile or someone else's
@@ -178,6 +199,19 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.verificationBadge.setVisibility(View.VISIBLE);
             binding.verificationBadgeSmall.setVisibility(View.VISIBLE);
         }
+        
+        // Show alumni/student status badge
+        boolean isAlumni = user.isAlumni() || "alumni".equalsIgnoreCase(user.getUserType());
+        if (isAlumni) {
+            binding.statusBadge.setText("Alumni");
+            binding.statusBadge.setChipBackgroundColorResource(R.color.must_green);
+            binding.statusBadge.setTextColor(getResources().getColor(R.color.white, null));
+        } else {
+            binding.statusBadge.setText("Student");
+            binding.statusBadge.setChipBackgroundColorResource(R.color.light_gray);
+            binding.statusBadge.setTextColor(getResources().getColor(R.color.black, null));
+        }
+        binding.statusBadge.setVisibility(View.VISIBLE);
         
         // Last active status removed - was showing incorrect data
         // displayLastActiveStatus(user);

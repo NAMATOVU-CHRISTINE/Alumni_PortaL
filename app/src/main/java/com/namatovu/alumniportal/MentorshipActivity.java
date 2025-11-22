@@ -222,7 +222,8 @@ public class MentorshipActivity extends AppCompatActivity {
                         }
                     }
                     
-                    // Now load all users to show as potential mentors (excluding those with existing connections)
+                    // Now load all ALUMNI users to show as potential mentors (excluding those with existing connections)
+                    // Only alumni can be mentors - filter by isAlumni or userType = "alumni"
                     // Optimized: Load only 20 users at a time for faster loading
                     db.collection("users")
                             .limit(20)
@@ -240,6 +241,18 @@ public class MentorshipActivity extends AppCompatActivity {
                                         }
                                         
                                         Map<String, Object> userData = document.getData();
+                                        
+                                        // Only show alumni as mentors - check isAlumni or userType
+                                        Boolean isAlumni = (Boolean) userData.get("isAlumni");
+                                        String userType = (String) userData.get("userType");
+                                        boolean isAlumniUser = (isAlumni != null && isAlumni) || "alumni".equalsIgnoreCase(userType);
+                                        
+                                        if (!isAlumniUser) {
+                                            // Skip non-alumni users (current students)
+                                            Log.d(TAG, "Skipping non-alumni user: " + userId);
+                                            continue;
+                                        }
+                                        
                                         String fullName = (String) userData.get("fullName");
                                         String currentJob = (String) userData.get("currentJob");
                                         String company = (String) userData.get("company");
