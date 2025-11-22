@@ -118,12 +118,14 @@ public class LoginActivity extends AppCompatActivity {
                         db.collection("users").document(userId).get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
-                                        // New user - save to Firestore
+                                        // New user - save to Firestore with default type as "student"
                                         Map<String, Object> user = new HashMap<>();
                                         user.put("fullName", displayName != null ? displayName : "User");
                                         user.put("email", email);
                                         user.put("userId", userId);
                                         user.put("username", email.split("@")[0]);
+                                        user.put("userType", "student"); // Default: Current students
+                                        user.put("isAlumni", false);
                                         user.put("createdAt", System.currentTimeMillis());
 
                                         db.collection("users").document(userId).set(user)

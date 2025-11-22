@@ -95,7 +95,7 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                         // Update the user's password in Firebase Auth
                         mAuth.getCurrentUser().updatePassword(password)
                                 .addOnSuccessListener(aVoid -> {
-                                    // Save user data to Firestore
+                                    // Save user data to Firestore with default type as "student"
                                     String userId = mAuth.getCurrentUser().getUid();
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("fullName", fullNameEditText.getText().toString());
@@ -103,6 +103,8 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                     user.put("username", username);
                                     user.put("studentID", studentID);
                                     user.put("userId", userId);
+                                    user.put("userType", "student"); // Default: Current students
+                                    user.put("isAlumni", false);
 
                                     db.collection("users").document(userId)
                                             .set(user)

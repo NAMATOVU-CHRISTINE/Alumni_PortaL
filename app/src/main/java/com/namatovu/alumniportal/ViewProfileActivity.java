@@ -200,12 +200,20 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.verificationBadgeSmall.setVisibility(View.VISIBLE);
         }
         
-        // Show alumni/student status badge
-        boolean isAlumni = user.isAlumni() || "alumni".equalsIgnoreCase(user.getUserType());
-        if (isAlumni) {
+        // Show user type status badge
+        // User Types:
+        // - "student" = Current students
+        // - "alumni" = Graduated students
+        // - "staff" = Faculty/staff members
+        String userType = user.getUserType();
+        if ("alumni".equalsIgnoreCase(userType)) {
             binding.statusBadge.setText("Alumni");
             binding.statusBadge.setChipBackgroundColorResource(R.color.must_green);
             binding.statusBadge.setTextColor(getResources().getColor(R.color.white, null));
+        } else if ("staff".equalsIgnoreCase(userType)) {
+            binding.statusBadge.setText("Staff");
+            binding.statusBadge.setChipBackgroundColorResource(R.color.must_gold);
+            binding.statusBadge.setTextColor(getResources().getColor(R.color.black, null));
         } else {
             binding.statusBadge.setText("Student");
             binding.statusBadge.setChipBackgroundColorResource(R.color.light_gray);

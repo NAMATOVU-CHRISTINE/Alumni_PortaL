@@ -217,12 +217,16 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                                   ", userType: " + user.getUserType() +
                                   ", showInDirectory: " + user.getPrivacySetting("showInDirectory"));
                             
-                            // Only show alumni (not current students/alma)
-                            // Alumni are users who have graduated (isAlumni = true or userType = "alumni")
-                            boolean isAlumni = user.isAlumni() || "alumni".equalsIgnoreCase(user.getUserType());
+                            // Show alumni and staff in directory (not current students)
+                            // Directory includes:
+                            // - "alumni" = Graduated students
+                            // - "staff" = Faculty/staff members
+                            // Excluded: "student" = Current students
+                            String userTypeValue = user.getUserType();
+                            boolean isAlumniOrStaff = "alumni".equalsIgnoreCase(userTypeValue) || "staff".equalsIgnoreCase(userTypeValue);
                             
-                            if (!isAlumni) {
-                                // Skip non-alumni users (current students)
+                            if (!isAlumniOrStaff) {
+                                // Skip students - only show alumni and staff in directory
                                 continue;
                             }
                             
@@ -234,7 +238,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                                 isVisible = true;
                             }
                             
-                            if (isAlumni) {
+                            if ("alumni".equalsIgnoreCase(userTypeValue)) {
                                 alumniCount++;
                             }
                             

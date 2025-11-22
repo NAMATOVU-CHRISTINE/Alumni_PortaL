@@ -28,6 +28,7 @@ import java.util.Objects;
 public class SignupActivity extends AppCompatActivity {
 
     private EditText fullNameEditText, usernameEditText, studentIDEditText, personalEmailEditText, passwordEditText, confirmPasswordEditText;
+    private android.widget.AutoCompleteTextView userTypeDropdown;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private GoogleSignInClient googleSignInClient;
@@ -44,12 +45,16 @@ public class SignupActivity extends AppCompatActivity {
         fullNameEditText = findViewById(R.id.fullName);
         usernameEditText = findViewById(R.id.username);
         studentIDEditText = findViewById(R.id.studentID);
+        userTypeDropdown = findViewById(R.id.userTypeDropdown);
         personalEmailEditText = findViewById(R.id.personalEmail);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
         Button signupButton = findViewById(R.id.signupButton);
         Button googleSignInButton = findViewById(R.id.googleSignInButton);
         TextView backToLoginText = findViewById(R.id.backToLogin);
+        
+        // Setup user type dropdown
+        setupUserTypeDropdown();
 
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -209,12 +214,17 @@ public class SignupActivity extends AppCompatActivity {
                                         String userId = mAuth.getCurrentUser().getUid();
 
                                         // Save user data to Firestore first
+                                        String selectedUserType = userTypeDropdown.getText() != null ? 
+                                            userTypeDropdown.getText().toString().trim() : "Student";
+                                        
                                         Map<String, Object> user = new HashMap<>();
                                         user.put("fullName", fullName);
                                         user.put("username", username);
                                         user.put("studentID", studentID);
                                         user.put("email", personalEmail);
                                         user.put("userId", userId);
+                                        user.put("userType", selectedUserType.toLowerCase());
+                                        user.put("isAlumni", "alumni".equalsIgnoreCase(selectedUserType));
                                         user.put("emailVerified", false);
 
                                         db.collection("users").document(userId)
@@ -271,5 +281,17 @@ public class SignupActivity extends AppCompatActivity {
             signupButton.setEnabled(true);
         }
         if (googleButton != null) googleButton.setEnabled(true);
+    }
+    
+    private void setupUserTypeDropdown() {
+        // User Type options:
+        // - "Student" = Current students
+        // - "Alumni" = Graduated students
+        // - "Staff" = Faculty/staff members
+        String[] userTypes = {"Student", "Alumni", "Staff"};
+        android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(
+            this, android.R.layout.simple_dropdown_item_1line, userTypes);
+        userTypeDropdown.setAdapter(adapter);
+        userTypeDropdown.setText("Student", false); // Default to Student
     }
 }
