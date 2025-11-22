@@ -32,6 +32,18 @@ public class ViewProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Get userId BEFORE inflating layout
+        userId = getIntent().getStringExtra("userId");
+        if (userId == null || userId.isEmpty()) {
+            Toast.makeText(this, "Invalid user profile", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        
+        Log.d(TAG, "Loading profile for userId: " + userId);
+        
+        // Now inflate layout
         binding = ActivityViewProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -40,16 +52,9 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         setupToolbar();
         
-        userId = getIntent().getStringExtra("userId");
-        if (userId == null || userId.isEmpty()) {
-            Toast.makeText(this, "Invalid user profile", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+        // Immediately clear all UI to prevent showing cached data
+        clearProfileUI();
         
-        // Log for debugging
-        Log.d(TAG, "Loading profile for userId: " + userId);
-
         loadUserProfile();
         setupClickListeners();
     }
@@ -61,6 +66,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         // This ensures fresh data is always displayed
         if (userId != null && !userId.isEmpty()) {
             Log.d(TAG, "onStart - reloading profile for userId: " + userId);
+            clearProfileUI();
             loadUserProfile();
         }
     }
