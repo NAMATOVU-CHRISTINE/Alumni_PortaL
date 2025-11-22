@@ -347,6 +347,17 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     }
 
     private void updateChatUI() {
+        // Always ensure header views are visible
+        if (textViewChatName != null) {
+            textViewChatName.setVisibility(View.VISIBLE);
+        }
+        if (textViewOnlineStatus != null) {
+            textViewOnlineStatus.setVisibility(View.VISIBLE);
+        }
+        if (imageViewProfile != null) {
+            imageViewProfile.setVisibility(View.VISIBLE);
+        }
+        
         if (currentChat == null) {
             // Use intent data if chat not loaded yet
             if (otherUserName != null && !otherUserName.isEmpty()) {
