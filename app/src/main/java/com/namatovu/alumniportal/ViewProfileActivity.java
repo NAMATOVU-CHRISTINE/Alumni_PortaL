@@ -431,8 +431,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             long diffMillis = currentTime - lastActiveTime;
             
             String statusText;
-            if (diffMillis < 60000) { // Less than 1 minute
-                statusText = "Active now";
+            if (diffMillis < 300000) { // Less than 5 minutes - show as online
+                statusText = "🟢 Active now";
             } else if (diffMillis < 3600000) { // Less than 1 hour
                 long minutes = diffMillis / 60000;
                 statusText = "Active " + minutes + "m ago";
@@ -445,7 +445,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             }
             binding.tvLastActive.setText(statusText);
         } else {
-            binding.tvLastActive.setText("Last active: Unknown");
+            binding.tvLastActive.setText("Offline");
         }
     }
 
