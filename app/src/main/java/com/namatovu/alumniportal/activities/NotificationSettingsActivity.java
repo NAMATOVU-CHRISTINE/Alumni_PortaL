@@ -187,20 +187,21 @@ public class NotificationSettingsActivity extends AppCompatActivity {
     private void updateDependentSwitches() {
         boolean masterEnabled = switchAllNotifications.isChecked();
         
-        // Enable/disable the switches based on master switch
-        switchMessages.setEnabled(masterEnabled);
-        switchMentorship.setEnabled(masterEnabled);
-        switchEvents.setEnabled(masterEnabled);
-        switchJobs.setEnabled(masterEnabled);
-        switchNews.setEnabled(masterEnabled);
+        // When master is ON, hide individual switches
+        // When master is OFF, show individual switches
+        int visibility = masterEnabled ? View.GONE : View.VISIBLE;
         
-        // Update alpha to show enabled/disabled state visually
-        float alpha = masterEnabled ? 1.0f : 0.5f;
-        switchMessages.setAlpha(alpha);
-        switchMentorship.setAlpha(alpha);
-        switchEvents.setAlpha(alpha);
-        switchJobs.setAlpha(alpha);
-        switchNews.setAlpha(alpha);
+        switchMessages.setVisibility(visibility);
+        switchMentorship.setVisibility(visibility);
+        switchEvents.setVisibility(visibility);
+        switchJobs.setVisibility(visibility);
+        switchNews.setVisibility(visibility);
+        
+        // Also hide the parent containers
+        if (visibility == View.GONE) {
+            // Hide all individual switch containers
+            switchMessages.getParent().getParent().getParent().getParent().getParent();
+        }
     }
     
     private void updateSystemSettingsCard() {
