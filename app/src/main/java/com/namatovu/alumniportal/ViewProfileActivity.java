@@ -135,6 +135,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         viewedUser = null;
         clearProfileUI();
         
+        // Show loading state
+        binding.tvFullName.setText("Loading...");
+        binding.tvFullName.setVisibility(View.VISIBLE);
+        
         db.collection("users").document(userId).get()
             .addOnSuccessListener(document -> {
                 if (document.exists()) {
@@ -161,22 +165,41 @@ public class ViewProfileActivity extends AppCompatActivity {
     
     private void clearProfileUI() {
         // Clear all UI elements to prevent showing stale data
+        // Header
         binding.tvFullName.setText("");
+        binding.profileImage.setImageResource(R.drawable.ic_person);
+        binding.verificationBadge.setVisibility(View.GONE);
+        binding.verificationBadgeSmall.setVisibility(View.GONE);
+        binding.statusBadge.setVisibility(View.GONE);
+        
+        // Profile info
         binding.tvCurrentJob.setVisibility(View.GONE);
         binding.locationContainer.setVisibility(View.GONE);
+        
+        // Cards
         binding.bioCard.setVisibility(View.GONE);
         binding.majorContainer.setVisibility(View.GONE);
         binding.graduationContainer.setVisibility(View.GONE);
         binding.companyContainer.setVisibility(View.GONE);
         binding.skillsCard.setVisibility(View.GONE);
         binding.contactCard.setVisibility(View.GONE);
+        
+        // Progress
         binding.tvProfileCompletion.setVisibility(View.GONE);
         binding.profileCompletionBar.setVisibility(View.GONE);
-        binding.verificationBadge.setVisibility(View.GONE);
-        binding.verificationBadgeSmall.setVisibility(View.GONE);
-        binding.statusBadge.setVisibility(View.GONE);
-        binding.profileImage.setImageResource(R.drawable.ic_person);
+        binding.profileCompletionBar.setProgress(0);
+        
+        // Clear collections
         binding.skillsChipGroup.removeAllViews();
+        
+        // Clear text fields
+        binding.tvBio.setText("");
+        binding.tvMajor.setText("");
+        binding.tvGraduationYear.setText("");
+        binding.tvCompany.setText("");
+        binding.tvEmail.setText("");
+        binding.tvPhone.setText("");
+        binding.tvLocation.setText("");
     }
 
     private void displayUserProfile(User user) {
