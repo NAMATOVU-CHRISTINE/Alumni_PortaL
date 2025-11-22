@@ -82,6 +82,51 @@ public class CloudinaryHelper {
     }
 
     /**
+     * Upload a file (any type) to Cloudinary
+     * @param fileUri The local URI of the file
+     * @param folder The folder in Cloudinary (e.g., "chat_files", "documents")
+     * @param callback Callback to handle success/failure
+     */
+    public static void uploadFile(Uri fileUri, String folder, CloudinaryUploadCallback callback) {
+        MediaManager.get().upload(fileUri)
+                .option("folder", "alumni_portal/" + folder)
+                .option("resource_type", "auto")
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {
+                        Log.d(TAG, "File upload started: " + requestId);
+                        callback.onUploadStart();
+                    }
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {
+                        int progress = (int) ((bytes * 100) / totalBytes);
+                        callback.onUploadProgress(progress);
+                    }
+
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        String fileUrl = (String) resultData.get("secure_url");
+                        String publicId = (String) resultData.get("public_id");
+                        Log.d(TAG, "File upload successful: " + fileUrl);
+                        callback.onUploadSuccess(fileUrl, publicId);
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+                        Log.e(TAG, "File upload failed: " + error.getDescription());
+                        callback.onUploadError(error.getDescription());
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {
+                        Log.w(TAG, "File upload rescheduled: " + error.getDescription());
+                    }
+                })
+                .dispatch();
+    }
+
+    /**
      * Get optimized image URL with transformations
      * @param publicId The public ID from Cloudinary
      * @param width Desired width
