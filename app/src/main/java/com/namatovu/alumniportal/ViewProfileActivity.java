@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.databinding.ActivityViewProfileBinding;
 import com.namatovu.alumniportal.models.User;
 import com.namatovu.alumniportal.model.MentorshipRequest;
+import com.namatovu.alumniportal.services.NotificationService;
 import com.namatovu.alumniportal.utils.ImageLoadingHelper;
 import java.util.HashMap;
 import java.util.Map;
@@ -305,8 +306,8 @@ public class ViewProfileActivity extends AppCompatActivity {
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(this, "Mentorship request sent successfully!", Toast.LENGTH_SHORT).show();
                         
-                        // Send notification to mentor
-                        sendMentorshipNotification(currentUserId, userId, topic);
+                        // Send both email and push notification to mentor
+                        sendMentorshipNotifications(currentUserId, currentUserName, userId, documentReference.getId());
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Error sending mentorship request", e);
@@ -319,19 +320,29 @@ public class ViewProfileActivity extends AppCompatActivity {
             });
     }
 
-    private void sendMentorshipNotification(String fromUserId, String toUserId, String topic) {
-        Map<String, Object> notification = new HashMap<>();
-        notification.put("type", "mentorship_request");
-        notification.put("fromUserId", fromUserId);
-        notification.put("toUserId", toUserId);
-        notification.put("topic", topic);
-        notification.put("timestamp", System.currentTimeMillis());
-        notification.put("read", false);
-
-        db.collection("notifications")
-            .add(notification)
-            .addOnSuccessListener(doc -> Log.d(TAG, "Notification sent"))
-            .addOnFailureListener(e -> Log.e(TAG, "Failed to send notification", e));
+    private void sendMentorshipNotifications(String fromUserId, String fromUserName, String toUserId, String connectionId) {
+        // Get mentor's email and name
+        db.collection("users").document(toUserId).get()
+            .addOnSuccessListener(mentorDoc -> {
+                if (mentorDoc.exists()) {
+                    String mentorEmail = mentorDoc.getString("email");
+                    String mentorName = mentorDoc.getString("fullName");
+                    
+                    if (mentorEmail != null && mentorName != null) {
+                        // Use NotificationService to send both push and email
+                        NotificationService notificationService = new NotificationService(this);
+                        notificationService.sendMentorshipRequestNotification(
+                            toUserId,
+                            mentorEmail,
+                            mentorName,
+                            fromUserId,
+                            fromUserName,
+                            connectionId
+                        );
+                    }
+                }
+            })
+            .addOnFailureListener(e -> Log.e(TAG, "Failed to get mentor info for notifications", e));
     }
 
 }

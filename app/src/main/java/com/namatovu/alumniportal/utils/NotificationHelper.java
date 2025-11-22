@@ -332,4 +332,116 @@ public class NotificationHelper {
         
         Log.d(TAG, "Would send job notification: " + jobTitle + " at " + company);
     }
+    
+    /**
+     * Send event update notification to all subscribers
+     */
+    public static void sendEventUpdateNotification(String eventTitle, String eventId, String action, Context context) {
+        if (!areEventNotificationsEnabled()) {
+            return;
+        }
+        
+        if (db == null) db = FirebaseFirestore.getInstance();
+        
+        Map<String, Object> notification = new HashMap<>();
+        notification.put("type", "event_update");
+        notification.put("eventId", eventId);
+        notification.put("eventTitle", eventTitle);
+        notification.put("action", action);
+        notification.put("title", "Event Update: " + eventTitle);
+        notification.put("message", "New update on " + eventTitle);
+        notification.put("timestamp", System.currentTimeMillis());
+        notification.put("read", false);
+        
+        db.collection("notifications")
+            .add(notification)
+            .addOnSuccessListener(doc -> {
+                Log.d(TAG, "Event update notification sent");
+                AnalyticsHelper.logEvent("event_notification_sent", "eventId", eventId);
+            })
+            .addOnFailureListener(e -> Log.e(TAG, "Failed to send event notification", e));
+        
+        // Also queue email notification
+        queueEventUpdateEmail(eventTitle, eventId, action, context);
+    }
+    
+    /**
+     * Send news/article update notification
+     */
+    public static void sendNewsNotification(String newsTitle, String newsId, String authorName, Context context) {
+        if (!areNewsNotificationsEnabled()) {
+            return;
+        }
+        
+        if (db == null) db = FirebaseFirestore.getInstance();
+        
+        Map<String, Object> notification = new HashMap<>();
+        notification.put("type", "news_update");
+        notification.put("newsId", newsId);
+        notification.put("newsTitle", newsTitle);
+        notification.put("authorName", authorName);
+        notification.put("title", "New Article: " + newsTitle);
+        notification.put("message", "New article by " + authorName);
+        notification.put("timestamp", System.currentTimeMillis());
+        notification.put("read", false);
+        
+        db.collection("notifications")
+            .add(notification)
+            .addOnSuccessListener(doc -> {
+                Log.d(TAG, "News notification sent");
+                AnalyticsHelper.logEvent("news_notification_sent", "newsId", newsId);
+            })
+            .addOnFailureListener(e -> Log.e(TAG, "Failed to send news notification", e));
+        
+        // Also queue email notification
+        queueNewsUpdateEmail(newsTitle, newsId, authorName, context);
+    }
+    
+    /**
+     * Queue event update email for backend to send
+     */
+    private static void queueEventUpdateEmail(String eventTitle, String eventId, String action, Context context) {
+        if (db == null) db = FirebaseFirestore.getInstance();
+        
+        Map<String, Object> emailData = new HashMap<>();
+        emailData.put("subject", "Event Update: " + eventTitle);
+        emailData.put("body", "There's a new update on the event: " + eventTitle + "\n\n" +
+                "Action: " + action + "\n\n" +
+                "Check the Alumni Portal app for more details.");
+        emailData.put("type", "event_update");
+        emailData.put("eventId", eventId);
+        emailData.put("timestamp", System.currentTimeMillis());
+        emailData.put("status", "pending");
+        emailData.put("sendToAll", true);
+        
+        db.collection("emailQueue")
+            .add(emailData)
+            .addOnSuccessListener(doc -> Log.d(TAG, "Event update email queued"))
+            .addOnFailureListener(e -> Log.e(TAG, "Failed to queue event email", e));
+    }
+    
+    /**
+     * Queue news/article update email for backend to send
+     */
+    private static void queueNewsUpdateEmail(String newsTitle, String newsId, String authorName, Context context) {
+        if (db == null) db = FirebaseFirestore.getInstance();
+        
+        Map<String, Object> emailData = new HashMap<>();
+        emailData.put("subject", "New Article: " + newsTitle);
+        emailData.put("body", "A new article has been published!\n\n" +
+                "Title: " + newsTitle + "\n" +
+                "Author: " + authorName + "\n\n" +
+                "Read the full article in the Alumni Portal app.");
+        emailData.put("type", "news_update");
+        emailData.put("newsId", newsId);
+        emailData.put("authorName", authorName);
+        emailData.put("timestamp", System.currentTimeMillis());
+        emailData.put("status", "pending");
+        emailData.put("sendToAll", true);
+        
+        db.collection("emailQueue")
+            .add(emailData)
+            .addOnSuccessListener(doc -> Log.d(TAG, "News update email queued"))
+            .addOnFailureListener(e -> Log.e(TAG, "Failed to queue news email", e));
+    }
 }
