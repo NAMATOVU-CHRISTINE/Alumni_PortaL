@@ -70,12 +70,16 @@ public class AlumniMessagingService extends FirebaseMessagingService {
             case "message":
                 return NotificationHelper.areMessageNotificationsEnabled();
             case "mentorship":
+            case "mentorship_request":
+            case "mentorship_status":
                 return NotificationHelper.areMentorshipNotificationsEnabled();
             case "event":
+            case "event_update":
                 return NotificationHelper.areEventNotificationsEnabled();
             case "job":
                 return NotificationHelper.areJobNotificationsEnabled();
             case "news":
+            case "news_update":
                 return NotificationHelper.areNewsNotificationsEnabled();
             default:
                 return true;

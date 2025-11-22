@@ -191,18 +191,28 @@ public class MentorSearchActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         
         executorService.execute(() -> {
-            List<MentorEntity> mentors = localDb.mentorDao().getAllMentors();
-            
-            runOnUiThread(() -> {
-                allMentors.clear();
-                allMentors.addAll(mentors);
-                applyFilters();
-                progressBar.setVisibility(View.GONE);
+            try {
+                List<MentorEntity> mentors = localDb.mentorDao().getAllMentors();
                 
-                if (mentors.isEmpty()) {
-                    Toast.makeText(this, "Loading mentors...", Toast.LENGTH_SHORT).show();
-                }
-            });
+                runOnUiThread(() -> {
+                    allMentors.clear();
+                    if (mentors != null && !mentors.isEmpty()) {
+                        allMentors.addAll(mentors);
+                        applyFilters();
+                    } else {
+                        // If no local mentors, sync from Firebase immediately
+                        syncMentorsFromFirebase();
+                    }
+                    progressBar.setVisibility(View.GONE);
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(this, "Error loading mentors", Toast.LENGTH_SHORT).show();
+                    // Try Firebase sync on error
+                    syncMentorsFromFirebase();
+                });
+            }
         });
     }
     
