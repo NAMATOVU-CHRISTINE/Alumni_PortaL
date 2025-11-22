@@ -28,6 +28,7 @@ public class EventsDataProvider {
         List<Event> eventsList = new ArrayList<>();
         
         Event event1 = new Event();
+        event1.setId("event_mentorship_2025");
         event1.setTitle("Mentorship Program Launch");
         event1.setSummary("Join our new mentorship program connecting alumni with current students for career guidance and professional development.");
         event1.setDescription("The MUST Alumni Mentorship Program is launching this month. Connect with experienced alumni mentors who can guide you through career development, industry insights, and professional networking. Registration is open for both mentors and mentees.");
@@ -41,6 +42,7 @@ public class EventsDataProvider {
         eventsList.add(event1);
         
         Event event2 = new Event();
+        event2.setId("event_leadership_2025");
         event2.setTitle("Leadership Summit 2025");
         event2.setSummary("Annual leadership summit featuring keynote speakers, workshops, and networking sessions for emerging leaders.");
         event2.setDescription("The MUST Leadership Summit brings together student leaders, alumni, and industry professionals to discuss leadership challenges and opportunities. Featuring keynote speakers from Fortune 500 companies and interactive workshops on strategic leadership.");
@@ -54,6 +56,7 @@ public class EventsDataProvider {
         eventsList.add(event2);
         
         Event event3 = new Event();
+        event3.setId("event_networking_2025");
         event3.setTitle("Alumni Networking Breakfast");
         event3.setSummary("Casual networking breakfast for alumni to reconnect, share experiences, and explore collaboration opportunities.");
         event3.setDescription("Join fellow MUST alumni for a morning networking breakfast. This is a great opportunity to reconnect with classmates, share career experiences, and explore potential business collaborations. Light refreshments will be served.");
@@ -67,6 +70,7 @@ public class EventsDataProvider {
         eventsList.add(event3);
         
         Event event4 = new Event();
+        event4.setId("event_career_2025");
         event4.setTitle("Career Development Workshop");
         event4.setSummary("Learn essential skills for career advancement including resume writing, interview techniques, and salary negotiation.");
         event4.setDescription("This comprehensive workshop covers key career development topics: crafting compelling resumes, mastering interview techniques, negotiating salaries, and building professional networks. Expert facilitators from HR and recruitment industries will lead interactive sessions.");
@@ -80,6 +84,7 @@ public class EventsDataProvider {
         eventsList.add(event4);
         
         Event event5 = new Event();
+        event5.setId("event_innovation_2025");
         event5.setTitle("Innovation Showcase");
         event5.setSummary("Showcase of student and alumni innovation projects, startups, and research initiatives with investor pitching opportunities.");
         event5.setDescription("The MUST Innovation Showcase highlights groundbreaking projects from students and alumni. Startups will pitch to investors, researchers will present findings, and attendees can explore cutting-edge innovations in technology, agriculture, and social impact.");
