@@ -79,19 +79,23 @@ public class SignupActivity extends AppCompatActivity {
 
     private void signUpWithGoogle() {
         showLoadingIndicator();
-        // Sign out first to force account chooser
-        googleSignInClient.signOut().addOnCompleteListener(this, task -> {
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-            googleSignInLauncher.launch(signInIntent);
-        });
+        // Launch Google Sign-in directly without signing out first (faster)
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        googleSignInLauncher.launch(signInIntent);
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            firebaseAuthWithGoogle(account.getIdToken());
+            if (account != null && account.getIdToken() != null) {
+                firebaseAuthWithGoogle(account.getIdToken());
+            } else {
+                hideLoadingIndicator();
+                Toast.makeText(this, "Google sign up failed: Invalid account", Toast.LENGTH_SHORT).show();
+            }
         } catch (ApiException e) {
             hideLoadingIndicator();
+            android.util.Log.e("SignupActivity", "Google sign up error: " + e.getStatusCode(), e);
             Toast.makeText(this, "Google sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -108,22 +112,28 @@ public class SignupActivity extends AppCompatActivity {
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
                                         // New user - redirect to complete profile
+                                        hideLoadingIndicator();
                                         Intent intent = new Intent(SignupActivity.this, CompleteGoogleSignupActivity.class);
                                         startActivity(intent);
                                         finish();
                                     } else {
                                         // User already exists, just login
+                                        hideLoadingIndicator();
                                         Toast.makeText(SignupActivity.this, "Account already exists. Logging you in...", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(SignupActivity.this, HomeActivity.class));
+                                        Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
                                         finish();
                                     }
                                 })
                                 .addOnFailureListener(e -> {
                                     hideLoadingIndicator();
+                                    android.util.Log.e("SignupActivity", "Error checking user", e);
                                     Toast.makeText(SignupActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
                         hideLoadingIndicator();
+                        android.util.Log.e("SignupActivity", "Firebase auth failed", task.getException());
                         Toast.makeText(SignupActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -198,34 +208,35 @@ public class SignupActivity extends AppCompatActivity {
                                     if (authTask.isSuccessful()) {
                                         String userId = mAuth.getCurrentUser().getUid();
 
-                                        // Send email verification
-                                        mAuth.getCurrentUser().sendEmailVerification()
-                                                .addOnCompleteListener(emailTask -> {
-                                                    if (emailTask.isSuccessful()) {
-                                                        // Save user data to Firestore
-                                                        Map<String, Object> user = new HashMap<>();
-                                                        user.put("fullName", fullName);
-                                                        user.put("username", username);
-                                                        user.put("studentID", studentID);
-                                                        user.put("email", personalEmail);
-                                                        user.put("userId", userId);
+                                        // Save user data to Firestore first
+                                        Map<String, Object> user = new HashMap<>();
+                                        user.put("fullName", fullName);
+                                        user.put("username", username);
+                                        user.put("studentID", studentID);
+                                        user.put("email", personalEmail);
+                                        user.put("userId", userId);
+                                        user.put("emailVerified", false);
 
-                                                        db.collection("users").document(userId)
-                                                                .set(user)
-                                                                .addOnSuccessListener(aVoid -> {
-                                                                    hideLoadingIndicator();
-                                                                    Toast.makeText(SignupActivity.this, "Registration successful! Please check your email to verify your account.", Toast.LENGTH_LONG).show();
-                                                                    mAuth.signOut(); // Sign out to force verification
-                                                                    finish(); // Go back to login
-                                                                })
-                                                                .addOnFailureListener(e -> {
-                                                                    hideLoadingIndicator();
-                                                                    Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                });
-                                                    } else {
-                                                        hideLoadingIndicator();
-                                                        Toast.makeText(SignupActivity.this, "Failed to send verification email. Please try again.", Toast.LENGTH_SHORT).show();
-                                                    }
+                                        db.collection("users").document(userId)
+                                                .set(user)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    // Send email verification after saving user
+                                                    mAuth.getCurrentUser().sendEmailVerification()
+                                                            .addOnCompleteListener(emailTask -> {
+                                                                hideLoadingIndicator();
+                                                                if (emailTask.isSuccessful()) {
+                                                                    Toast.makeText(SignupActivity.this, "Registration successful! Verification email sent.", Toast.LENGTH_LONG).show();
+                                                                } else {
+                                                                    Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send.", Toast.LENGTH_LONG).show();
+                                                                }
+                                                                // Navigate to home
+                                                                startActivity(new Intent(SignupActivity.this, HomeActivity.class));
+                                                                finish();
+                                                            });
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    hideLoadingIndicator();
+                                                    Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
                                     } else {
                                         hideLoadingIndicator();

@@ -73,6 +73,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+        // Show loading indicator
+        binding.loginButton.setText("");
+        binding.loginProgressBar.setVisibility(android.view.View.VISIBLE);
+        binding.loginButton.setEnabled(false);
+        binding.googleSignInButton.setEnabled(false);
+        
         Intent signInIntent = googleSignInClient.getSignInIntent();
         googleSignInLauncher.launch(signInIntent);
     }
@@ -80,9 +86,15 @@ public class LoginActivity extends AppCompatActivity {
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            firebaseAuthWithGoogle(account.getIdToken());
+            if (account != null && account.getIdToken() != null) {
+                firebaseAuthWithGoogle(account.getIdToken());
+            } else {
+                hideLoadingIndicator();
+                Toast.makeText(this, "Google sign in failed: Invalid account", Toast.LENGTH_SHORT).show();
+            }
         } catch (ApiException e) {
             hideLoadingIndicator();
+            Log.e(TAG, "Google sign in error: " + e.getStatusCode(), e);
             Toast.makeText(this, "Google sign in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -94,26 +106,49 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Check if user exists in Firestore
                         String userId = mAuth.getCurrentUser().getUid();
+                        String displayName = mAuth.getCurrentUser().getDisplayName();
+                        String email = mAuth.getCurrentUser().getEmail();
+                        
+                        if (email == null) {
+                            hideLoadingIndicator();
+                            Toast.makeText(LoginActivity.this, "Could not get email from Google account", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        
                         db.collection("users").document(userId).get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
                                         // New user - save to Firestore
                                         Map<String, Object> user = new HashMap<>();
-                                        user.put("fullName", mAuth.getCurrentUser().getDisplayName());
-                                        user.put("email", mAuth.getCurrentUser().getEmail());
+                                        user.put("fullName", displayName != null ? displayName : "User");
+                                        user.put("email", email);
                                         user.put("userId", userId);
-                                        user.put("username", mAuth.getCurrentUser().getEmail().split("@")[0]);
+                                        user.put("username", email.split("@")[0]);
+                                        user.put("createdAt", System.currentTimeMillis());
 
-                                        db.collection("users").document(userId).set(user);
+                                        db.collection("users").document(userId).set(user)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Log.d(TAG, "New user created via Google Sign-in");
+                                                    navigateToHome();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Log.e(TAG, "Error saving user data", e);
+                                                    hideLoadingIndicator();
+                                                    Toast.makeText(LoginActivity.this, "Error saving user data", Toast.LENGTH_SHORT).show();
+                                                });
+                                    } else {
+                                        Log.d(TAG, "Existing user logging in via Google");
+                                        navigateToHome();
                                     }
-                                    navigateToHome();
                                 })
                                 .addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error checking user existence", e);
                                     hideLoadingIndicator();
                                     Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     } else {
                         hideLoadingIndicator();
+                        Log.e(TAG, "Firebase auth failed", task.getException());
                         Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -122,9 +157,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is already signed in and verified
+        // Check if user is already signed in
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null && currentUser.isEmailVerified()) {
+        if (currentUser != null) {
             navigateToHome();
         }
     }
@@ -182,17 +217,15 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null && user.isEmailVerified()) {
-                            // Login successful and email is verified
+                        if (user != null) {
+                            // Login successful
                             Log.d(TAG, "Login successful.");
                             navigateToHome();
                         } else {
-                            // Login successful, but email is not verified
                             hideLoadingIndicator();
-                            Log.w(TAG, "Login successful, but email not verified.");
-                            Toast.makeText(LoginActivity.this, "Please verify your email address first.", Toast.LENGTH_LONG).show();
-                            mAuth.signOut(); // Sign out to force user to log in again after verification
-                        }                    } else {
+                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
                         // Authentication failed (e.g., incorrect password)
                         hideLoadingIndicator();
                         Log.w(TAG, "Authentication failed.", task.getException());
