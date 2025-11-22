@@ -123,12 +123,14 @@ public class MainActivity extends AppCompatActivity {
                         db.collection("users").document(userId).get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
-                                        // New user - save to Firestore
+                                        // New user - save to Firestore with default type as "student"
                                         Map<String, Object> user = new HashMap<>();
                                         user.put("fullName", mAuth.getCurrentUser().getDisplayName());
                                         user.put("email", mAuth.getCurrentUser().getEmail());
                                         user.put("userId", userId);
                                         user.put("username", mAuth.getCurrentUser().getEmail().split("@")[0]);
+                                        user.put("userType", "student"); // Default: Current students
+                                        user.put("isAlumni", false);
 
                                         db.collection("users").document(userId).set(user);
                                     }

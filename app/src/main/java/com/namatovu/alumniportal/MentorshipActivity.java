@@ -242,14 +242,17 @@ public class MentorshipActivity extends AppCompatActivity {
                                         
                                         Map<String, Object> userData = document.getData();
                                         
-                                        // Only show alumni as mentors - check isAlumni or userType
-                                        Boolean isAlumni = (Boolean) userData.get("isAlumni");
+                                        // Only show alumni and staff as mentors
+                                        // Mentors can be:
+                                        // - "alumni" = Graduated students
+                                        // - "staff" = Faculty/staff members
+                                        // Students cannot be mentors
                                         String userType = (String) userData.get("userType");
-                                        boolean isAlumniUser = (isAlumni != null && isAlumni) || "alumni".equalsIgnoreCase(userType);
+                                        boolean isMentor = "alumni".equalsIgnoreCase(userType) || "staff".equalsIgnoreCase(userType);
                                         
-                                        if (!isAlumniUser) {
-                                            // Skip non-alumni users (current students)
-                                            Log.d(TAG, "Skipping non-alumni user: " + userId);
+                                        if (!isMentor) {
+                                            // Skip students - only alumni and staff can be mentors
+                                            Log.d(TAG, "Skipping non-mentor user: " + userId);
                                             continue;
                                         }
                                         

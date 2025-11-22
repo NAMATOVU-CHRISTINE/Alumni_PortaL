@@ -27,7 +27,11 @@ public class User {
     private List<String> skills;
     private boolean isVerified;
     private boolean isAlumni;
-    private String userType; // "student", "alumni", "faculty"
+    // userType values:
+    // "student" - Current students
+    // "alumni" - Graduated students
+    // "staff" - Faculty/staff members
+    private String userType;
     private String role; // "user", "admin"
     private long createdAt;
     private long lastActive;
