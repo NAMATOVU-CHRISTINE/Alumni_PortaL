@@ -59,77 +59,149 @@
         <activity 
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".EventsActivity" />
+        <activity 
+            android:name=".HomeActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EventsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".ForgotPasswordActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".EditProfileActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".AlumniDirectoryActivity" />
-        <activity android:name=".JobBoardActivity" />
-        <activity android:name=".MentorshipActivity" />
-        <activity android:name=".MentorSearchActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".NewsFeedActivity" />
-        <activity android:name=".ViewProfileActivity" />
-        <activity android:name=".JobDetailsActivity" />
+        <activity 
+            android:name=".AlumniDirectoryActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobBoardActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".MentorshipActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".MentorSearchActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".SettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".NewsFeedActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ViewProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".PostJobActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".EventDetailsActivity" />
+        <activity 
+            android:name=".EventDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".CreateEventActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ArticleDetailsActivity" />
+        <activity 
+            android:name=".ArticleDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".CreateArticleActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MentorDetailActivity" />
-        <activity android:name=".JobDetailActivity" />
+        <activity 
+            android:name=".MentorDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".CreatePostActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".activities.ChatListActivity" />
+        <activity 
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.ChatListActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".activities.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.NotificationSettingsActivity" />
-        <activity android:name=".activities.PrivacySettingsActivity" />
+        <activity 
+            android:name=".activities.NotificationSettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.PrivacySettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".CareerTipsActivity" />
-        <activity android:name=".SavedCareerTipsActivity" />
-        <activity android:name=".GrowSectionActivity" />
-        <activity android:name=".KnowledgeActivity" />
+        <activity 
+            android:name=".CareerTipsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".SavedCareerTipsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".GrowSectionActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".KnowledgeActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".AddArticleActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ArticleDetailActivity" />
-        <activity android:name=".JobsActivity" />
+        <activity 
+            android:name=".ArticleDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".AddOpportunityActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".OpportunityDetailActivity" />
-        <activity android:name=".RecentActivitiesActivity" />
-        <activity android:name=".CustomizePreferencesActivity" />
-        <activity android:name=".EventsNewsActivity" />
+        <activity 
+            android:name=".OpportunityDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".RecentActivitiesActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".CustomizePreferencesActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EventsNewsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".ProfileEditActivity"
             android:windowSoftInputMode="adjustResize" />
         
         <!-- Alumni Groups Activities -->
-        <activity android:name=".activities.AlumniGroupsActivity" />
+        <activity 
+            android:name=".activities.AlumniGroupsActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".activities.CreateGroupActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.GroupDetailActivity" />
+        <activity 
+            android:name=".activities.GroupDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
         
         <!-- Mentor Search Activity -->
         <activity 
             android:name=".activities.MentorSearchActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Debug News Activity -->
+        <activity 
+            android:name=".DebugNewsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Scrape News Activity -->
+        <activity 
+            android:name=".ScrapeNewsActivity"
             android:windowSoftInputMode="adjustResize" />
         
         <!-- Services -->

@@ -50,34 +50,122 @@
                     android:padding="20dp"
                     android:gravity="center_horizontal">
 
-                    <!-- Profile Image -->
-                    <com.google.android.material.card.MaterialCardView
+                    <!-- Profile Image with Upload Button -->
+                    <FrameLayout
                         android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        app:cardCornerRadius="60dp"
-                        app:strokeColor="@color/must_gold"
-                        app:strokeWidth="3dp"
-                        app:cardElevation="2dp">
+                        android:layout_height="120dp">
 
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            app:cardCornerRadius="60dp"
+                            app:strokeColor="@color/must_gold"
+                            app:strokeWidth="3dp"
+                            app:cardElevation="2dp">
+
+                            <ImageView
+                                android:id="@+id/profileImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_person"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="Profile Image" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Verification Badge -->
                         <ImageView
-                            android:id="@+id/profileImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_person"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="Profile Image" />
+                            android:id="@+id/verificationBadge"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="bottom|end"
+                            android:src="@drawable/ic_verified"
+                            android:visibility="gone"
+                            android:contentDescription="Verified" />
 
-                    </com.google.android.material.card.MaterialCardView>
+                    </FrameLayout>
 
-                    <!-- Name -->
-                    <TextView
-                        android:id="@+id/tvFullName"
+                    <!-- Name with Verification -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
-                        android:layout_marginTop="16dp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:id="@+id/tvFullName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="?android:attr/textColorPrimary" />
+
+                        <ImageView
+                            android:id="@+id/verificationBadgeSmall"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_verified"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone"
+                            android:contentDescription="Verified" />
+
+                    </LinearLayout>
+
+                    <!-- Profile Completion Indicator -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Profile Completion"
+                                android:textSize="12sp"
+                                android:textColor="?android:attr/textColorSecondary" />
+
+                            <TextView
+                                android:id="@+id/tvProfileCompletion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0%"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/must_green" />
+
+                        </LinearLayout>
+
+                        <ProgressBar
+                            android:id="@+id/profileCompletionBar"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="6dp"
+                            android:layout_marginTop="4dp"
+                            android:progress="0"
+                            android:max="100"
+                            android:progressDrawable="@drawable/progress_bar_green" />
+
+                    </LinearLayout>
+
+                    <!-- Last Active Status -->
+                    <TextView
+                        android:id="@+id/tvLastActive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginTop="8dp" />
 
                     <!-- Current Job -->
                     <TextView
@@ -120,15 +208,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="20dp">
+                        android:layout_marginTop="20dp"
+                        android:spacing="8dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnRequestMentorship"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:text="Request Mentorship"
+                            android:layout_marginEnd="4dp"
+                            android:text="Mentorship"
                             android:textColor="@color/white"
                             android:backgroundTint="@color/must_green"
                             app:cornerRadius="12dp"
@@ -141,12 +230,27 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
                             android:text="Share"
                             android:textColor="@color/must_green"
                             app:strokeColor="@color/must_green"
                             app:cornerRadius="12dp"
                             app:icon="@drawable/ic_share"
+                            app:iconTint="@color/must_green" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCopyLink"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp"
+                            android:text="Copy"
+                            android:textColor="@color/must_green"
+                            app:strokeColor="@color/must_green"
+                            app:cornerRadius="12dp"
+                            app:icon="@drawable/ic_content_copy"
                             app:iconTint="@color/must_green" />
 
                     </LinearLayout>
@@ -184,7 +288,22 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:textColor="?android:attr/textColorSecondary"
-                        android:lineSpacingExtra="4dp" />
+                        android:lineSpacingExtra="4dp"
+                        android:maxLines="3"
+                        android:ellipsize="end" />
+
+                    <TextView
+                        android:id="@+id/tvViewMoreBio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View More"
+                        android:textSize="12sp"
+                        android:textColor="@color/must_green"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:focusable="true" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
