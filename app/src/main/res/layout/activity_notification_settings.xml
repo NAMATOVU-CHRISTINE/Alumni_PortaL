@@ -28,6 +28,7 @@
 
             <!-- Main Notification Toggle -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAllNotifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -84,6 +85,7 @@
 
             <!-- Notification Categories -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNotificationCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
