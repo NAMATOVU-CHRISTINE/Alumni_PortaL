@@ -6,6 +6,6 @@
         android:id="@+id/action_events_news"
         android:title="Events &amp; News"
         android:icon="@drawable/ic_notification"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

@@ -38,42 +38,53 @@ public class MUSTNewsScraper {
                 // Fetch the webpage
                 Document doc = Jsoup.connect(MUST_NEWS_URL)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                    .timeout(10000)
+                    .timeout(15000)
                     .get();
                 
                 List<Map<String, Object>> newsList = new ArrayList<>();
                 
-                // Parse news items - adjust selectors based on MUST website structure
-                Elements newsItems = doc.select("article, .news-item, .post, .entry");
+                // Try multiple selectors to find news items
+                Elements newsItems = doc.select("article, .news-item, .post, .entry, .news-post, .blog-post, .item-list li, .news-list li");
                 
                 Log.d(TAG, "Found " + newsItems.size() + " potential news items");
                 
+                // If no items found, try broader search
+                if (newsItems.isEmpty()) {
+                    newsItems = doc.select("div[class*='news'], div[class*='post'], div[class*='article']");
+                    Log.d(TAG, "Retrying with broader selectors, found: " + newsItems.size());
+                }
+                
                 for (Element item : newsItems) {
                     try {
-                        // Extract title
+                        // Extract title - try multiple selectors
                         String title = null;
-                        Element titleElement = item.selectFirst("h2, h3, .title, .headline");
+                        Element titleElement = item.selectFirst("h1, h2, h3, h4, .title, .headline, .post-title, .news-title");
                         if (titleElement != null) {
-                            title = titleElement.text();
+                            title = titleElement.text().trim();
                         }
                         
                         if (title == null || title.isEmpty()) continue;
                         
                         // Extract summary/content
                         String summary = null;
-                        Element summaryElement = item.selectFirst("p, .summary, .excerpt, .content");
+                        Element summaryElement = item.selectFirst("p, .summary, .excerpt, .content, .description, .post-excerpt");
                         if (summaryElement != null) {
-                            summary = summaryElement.text();
-                            if (summary.length() > 200) {
-                                summary = summary.substring(0, 200) + "...";
+                            summary = summaryElement.text().trim();
+                            if (summary.length() > 250) {
+                                summary = summary.substring(0, 250) + "...";
                             }
                         }
                         
+                        if (summary == null || summary.isEmpty()) {
+                            summary = title; // Use title as summary if no summary found
+                        }
+                        
                         // Extract date
-                        String dateStr = null;
-                        Element dateElement = item.selectFirst(".date, .published, time, .meta");
+                        long publishedAt = System.currentTimeMillis();
+                        Element dateElement = item.selectFirst(".date, .published, time, .meta, .post-date, .news-date");
                         if (dateElement != null) {
-                            dateStr = dateElement.text();
+                            String dateStr = dateElement.text();
+                            Log.d(TAG, "Found date: " + dateStr);
                         }
                         
                         // Extract image URL
@@ -81,8 +92,10 @@ public class MUSTNewsScraper {
                         Element imgElement = item.selectFirst("img");
                         if (imgElement != null) {
                             imageUrl = imgElement.attr("src");
-                            if (imageUrl != null && !imageUrl.startsWith("http")) {
-                                imageUrl = "https://www.must.ac.ug" + imageUrl;
+                            if (imageUrl != null && !imageUrl.isEmpty()) {
+                                if (!imageUrl.startsWith("http")) {
+                                    imageUrl = "https://www.must.ac.ug" + imageUrl;
+                                }
                             }
                         }
                         
@@ -91,19 +104,21 @@ public class MUSTNewsScraper {
                         Element linkElement = item.selectFirst("a");
                         if (linkElement != null) {
                             sourceUrl = linkElement.attr("href");
-                            if (sourceUrl != null && !sourceUrl.startsWith("http")) {
-                                sourceUrl = "https://www.must.ac.ug" + sourceUrl;
+                            if (sourceUrl != null && !sourceUrl.isEmpty()) {
+                                if (!sourceUrl.startsWith("http")) {
+                                    sourceUrl = "https://www.must.ac.ug" + sourceUrl;
+                                }
                             }
                         }
                         
                         // Create news object
                         Map<String, Object> newsData = new HashMap<>();
                         newsData.put("title", title);
-                        newsData.put("summary", summary != null ? summary : "");
-                        newsData.put("content", summary != null ? summary : "");
+                        newsData.put("summary", summary);
+                        newsData.put("content", summary);
                         newsData.put("category", "UNIVERSITY");
                         newsData.put("author", "MUST News");
-                        newsData.put("publishedAt", System.currentTimeMillis());
+                        newsData.put("publishedAt", publishedAt);
                         newsData.put("imageUrl", imageUrl != null ? imageUrl : "");
                         newsData.put("sourceUrl", sourceUrl != null ? sourceUrl : MUST_NEWS_URL);
                         newsData.put("isExternal", true);
@@ -119,6 +134,7 @@ public class MUSTNewsScraper {
                 
                 // Save to Firestore
                 if (!newsList.isEmpty()) {
+                    Log.d(TAG, "Total news to save: " + newsList.size());
                     saveToFirestore(newsList, callback);
                 } else {
                     callback.onError("No news items found on MUST website");
@@ -137,19 +153,61 @@ public class MUSTNewsScraper {
     private static void saveToFirestore(List<Map<String, Object>> newsList, ScraperCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         
-        int savedCount = 0;
-        for (Map<String, Object> newsData : newsList) {
-            db.collection("news")
-                .add(newsData)
-                .addOnSuccessListener(docRef -> {
-                    Log.d(TAG, "Saved news to Firestore: " + docRef.getId());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error saving to Firestore", e);
-                });
-            savedCount++;
-        }
-        
-        callback.onSuccess(savedCount);
+        // First, get existing news titles to avoid duplicates
+        db.collection("news")
+            .get()
+            .addOnSuccessListener(existingSnapshot -> {
+                java.util.Set<String> existingTitles = new java.util.HashSet<>();
+                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : existingSnapshot) {
+                    String title = doc.getString("title");
+                    if (title != null) {
+                        existingTitles.add(title);
+                    }
+                }
+                
+                Log.d(TAG, "Existing news count: " + existingTitles.size());
+                
+                // Save only new news items
+                int savedCount = 0;
+                for (Map<String, Object> newsData : newsList) {
+                    String title = (String) newsData.get("title");
+                    
+                    // Skip if already exists
+                    if (existingTitles.contains(title)) {
+                        Log.d(TAG, "Skipping duplicate: " + title);
+                        continue;
+                    }
+                    
+                    db.collection("news")
+                        .add(newsData)
+                        .addOnSuccessListener(docRef -> {
+                            Log.d(TAG, "Saved news to Firestore: " + docRef.getId());
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e(TAG, "Error saving to Firestore", e);
+                        });
+                    savedCount++;
+                }
+                
+                Log.d(TAG, "Saved " + savedCount + " new news items");
+                callback.onSuccess(savedCount);
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error checking existing news", e);
+                // Still try to save even if check fails
+                int savedCount = 0;
+                for (Map<String, Object> newsData : newsList) {
+                    db.collection("news")
+                        .add(newsData)
+                        .addOnSuccessListener(docRef -> {
+                            Log.d(TAG, "Saved news to Firestore: " + docRef.getId());
+                        })
+                        .addOnFailureListener(e2 -> {
+                            Log.e(TAG, "Error saving to Firestore", e2);
+                        });
+                    savedCount++;
+                }
+                callback.onSuccess(savedCount);
+            });
     }
 }
