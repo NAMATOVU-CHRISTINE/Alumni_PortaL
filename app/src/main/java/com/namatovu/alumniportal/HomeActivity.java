@@ -284,6 +284,9 @@ public class HomeActivity extends AppCompatActivity {
                             if (profileImageUrl != null && navHeaderProfileImage != null) {
                                 ImageLoadingHelper.loadProfileImage(this, profileImageUrl, navHeaderProfileImage);
                             }
+                            
+                            // Update last active time
+                            updateUserLastActive();
                         }
                     });
         }
@@ -397,6 +400,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Update last active time when user returns to the app
+        updateUserLastActive();
+    }
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -670,5 +680,26 @@ public class HomeActivity extends AppCompatActivity {
         startService(scrapingIntent);
         
         Log.d(TAG, "Background services started for exam demonstration");
+    }
+    
+    /**
+     * Update the current user's last active timestamp
+     */
+    private void updateUserLastActive() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) return;
+        
+        String userId = currentUser.getUid();
+        long currentTime = System.currentTimeMillis();
+        
+        // Update last active time in Firestore
+        db.collection("users").document(userId)
+            .update("lastActive", currentTime)
+            .addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "Last active time updated for user: " + userId);
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Failed to update last active time", e);
+            });
     }
 }
