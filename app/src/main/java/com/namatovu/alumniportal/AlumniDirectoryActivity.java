@@ -203,7 +203,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                             totalUsers++;
                             String userId = document.getId();
                             
-                            // Skip current user
+                            // Skip current user - don't show them in the directory
                             if (mAuth.getCurrentUser() != null && userId.equals(mAuth.getCurrentUser().getUid())) {
                                 continue;
                             }
@@ -214,9 +214,19 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                             // Debug logging
                             Log.d(TAG, "User: " + user.getFullName() + 
                                   ", isAlumni: " + user.isAlumni() + 
+                                  ", userType: " + user.getUserType() +
                                   ", showInDirectory: " + user.getPrivacySetting("showInDirectory"));
                             
-                            // Show all users who have opted to be visible in directory
+                            // Only show alumni (not current students/alma)
+                            // Alumni are users who have graduated (isAlumni = true or userType = "alumni")
+                            boolean isAlumni = user.isAlumni() || "alumni".equalsIgnoreCase(user.getUserType());
+                            
+                            if (!isAlumni) {
+                                // Skip non-alumni users (current students)
+                                continue;
+                            }
+                            
+                            // Check if user has opted to be visible in directory
                             boolean isVisible = user.getPrivacySetting("showInDirectory");
                             
                             // If privacy settings are null/empty, default to showing them
@@ -224,7 +234,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                                 isVisible = true;
                             }
                             
-                            if (user.isAlumni()) {
+                            if (isAlumni) {
                                 alumniCount++;
                             }
                             

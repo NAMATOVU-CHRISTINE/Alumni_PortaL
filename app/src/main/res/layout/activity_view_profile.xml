@@ -112,6 +112,20 @@
 
                     </LinearLayout>
 
+                    <!-- Alumni/Student Status Badge -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/statusBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Alumni"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/must_green"
+                        app:chipIcon="@drawable/ic_school"
+                        app:chipIconTint="@color/white"
+                        android:clickable="false"
+                        android:focusable="false" />
+
                     <!-- Profile Completion Indicator (Hidden for others) -->
                     <LinearLayout
                         android:layout_width="match_parent"
