@@ -389,6 +389,8 @@ public class HomeActivity extends AppCompatActivity {
         if (motivationHandler != null && motivationRunnable != null) {
             motivationHandler.postDelayed(motivationRunnable, 6000);
         }
+        // Update last active time when user returns to the app
+        updateUserLastActive();
     }
 
     @Override
@@ -398,13 +400,6 @@ public class HomeActivity extends AppCompatActivity {
         if (motivationHandler != null) {
             motivationHandler.removeCallbacks(motivationRunnable);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Update last active time when user returns to the app
-        updateUserLastActive();
     }
     
     @Override
