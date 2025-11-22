@@ -43,6 +43,7 @@ import com.namatovu.alumniportal.adapters.ChatMessageAdapter;
 import com.namatovu.alumniportal.models.Chat;
 import com.namatovu.alumniportal.models.ChatMessage;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
+import com.namatovu.alumniportal.utils.CloudinaryHelper;
 import com.namatovu.alumniportal.utils.SecurityHelper;
 
 import java.util.ArrayList;
@@ -102,6 +103,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         auth = FirebaseAuth.getInstance();
         storage = FirebaseStorage.getInstance();
         currentUserId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+        
+        // Initialize Cloudinary for file uploads
+        CloudinaryHelper.initialize(this);
         
         if (currentUserId == null) {
             finish();
@@ -897,34 +901,44 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         // Show progress
         Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show();
 
-        // Create unique filename
-        String fileName = "chat_images/" + chatId + "/" + UUID.randomUUID().toString() + ".jpg";
-        StorageReference imageRef = storage.getReference().child(fileName);
+        // Upload to Cloudinary
+        CloudinaryHelper.uploadImage(imageUri, "chat_images/" + chatId, new CloudinaryHelper.CloudinaryUploadCallback() {
+            @Override
+            public void onUploadStart() {
+                Log.d(TAG, "Image upload started");
+            }
 
-        // Upload image
-        imageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // Get download URL
-                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        // Create and send image message
-                        ChatMessage message = new ChatMessage(
-                                chatId,
-                                currentUserId,
-                                currentUserName != null ? currentUserName : "Unknown User",
-                                otherUserId,
-                                ""
-                        );
-                        message.setMessageType("image");
-                        message.setImageUrl(uri.toString());
+            @Override
+            public void onUploadProgress(int progress) {
+                Log.d(TAG, "Image upload progress: " + progress + "%");
+            }
 
-                        sendMessage(message);
-                        Toast.makeText(this, "Image sent", Toast.LENGTH_SHORT).show();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error uploading image", e);
-                    Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show();
-                });
+            @Override
+            public void onUploadSuccess(String imageUrl, String publicId) {
+                Log.d(TAG, "Image uploaded successfully: " + imageUrl);
+                
+                // Create and send image message
+                ChatMessage message = new ChatMessage(
+                        chatId,
+                        currentUserId,
+                        currentUserName != null ? currentUserName : "Unknown User",
+                        otherUserId,
+                        ""
+                );
+                message.setMessageType("image");
+                message.setImageUrl(imageUrl);
+                message.setPublicId(publicId);
+
+                sendMessage(message);
+                Toast.makeText(ChatActivity.this, "Image sent", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUploadError(String error) {
+                Log.e(TAG, "Error uploading image: " + error);
+                Toast.makeText(ChatActivity.this, "Failed to upload image: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void uploadAndSendFile(Uri fileUri) {
@@ -933,35 +947,45 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         // Show progress
         Toast.makeText(this, "Uploading file...", Toast.LENGTH_SHORT).show();
 
-        // Get file name
-        String fileName = "chat_files/" + chatId + "/" + UUID.randomUUID().toString();
-        StorageReference fileRef = storage.getReference().child(fileName);
+        // Upload to Cloudinary (supports all file types)
+        CloudinaryHelper.uploadFile(fileUri, "chat_files/" + chatId, new CloudinaryHelper.CloudinaryUploadCallback() {
+            @Override
+            public void onUploadStart() {
+                Log.d(TAG, "File upload started");
+            }
 
-        // Upload file
-        fileRef.putFile(fileUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // Get download URL
-                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        // Create and send file message
-                        ChatMessage message = new ChatMessage(
-                                chatId,
-                                currentUserId,
-                                currentUserName != null ? currentUserName : "Unknown User",
-                                otherUserId,
-                                ""
-                        );
-                        message.setMessageType("file");
-                        message.setFileUrl(uri.toString());
-                        message.setFileName(fileUri.getLastPathSegment());
+            @Override
+            public void onUploadProgress(int progress) {
+                Log.d(TAG, "File upload progress: " + progress + "%");
+            }
 
-                        sendMessage(message);
-                        Toast.makeText(this, "File sent", Toast.LENGTH_SHORT).show();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error uploading file", e);
-                    Toast.makeText(this, "Failed to upload file", Toast.LENGTH_SHORT).show();
-                });
+            @Override
+            public void onUploadSuccess(String fileUrl, String publicId) {
+                Log.d(TAG, "File uploaded successfully: " + fileUrl);
+                
+                // Create and send file message
+                ChatMessage message = new ChatMessage(
+                        chatId,
+                        currentUserId,
+                        currentUserName != null ? currentUserName : "Unknown User",
+                        otherUserId,
+                        ""
+                );
+                message.setMessageType("file");
+                message.setFileUrl(fileUrl);
+                message.setFileName(fileUri.getLastPathSegment());
+                message.setPublicId(publicId);
+
+                sendMessage(message);
+                Toast.makeText(ChatActivity.this, "File sent", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUploadError(String error) {
+                Log.e(TAG, "Error uploading file: " + error);
+                Toast.makeText(ChatActivity.this, "Failed to upload file: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
