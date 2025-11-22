@@ -3,83 +3,104 @@ package com.namatovu.alumniportal.utils;
 import com.namatovu.alumniportal.models.Event;
 import com.namatovu.alumniportal.models.News;
 import com.namatovu.alumniportal.models.EventsAnalytics;
+import com.namatovu.alumniportal.services.MUSTNewsScraper;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data provider for Events, News & Insights
- * Loads real data from Firestore
- */
 public class EventsDataProvider {
     
     private static final String TAG = "EventsDataProvider";
     
-    /**
-     * Callback interface for async news loading
-     */
     public interface NewsCallback {
         void onNewsLoaded(List<News> newsList);
         void onError(Exception e);
     }
     
-    /**
-     * Get all events from Firestore
-     */
     public static List<Event> getEvents() {
-        // Return empty list - will be populated when users create/add events
         return new ArrayList<>();
     }
     
-    /**
-     * Get all news from Firestore - Real data with callback
-     */
     public static void getNewsAsync(NewsCallback callback) {
+        MUSTNewsScraper.scrapeAndSaveNews(new MUSTNewsScraper.ScraperCallback() {
+            @Override
+            public void onSuccess(int newsCount) {
+                loadNewsFromFirestore(callback);
+            }
+            
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Scraping error: " + error);
+                loadNewsFromFirestore(callback);
+            }
+        });
+    }
+    
+    public static List<News> getNews() {
+        MUSTNewsScraper.scrapeAndSaveNews(new MUSTNewsScraper.ScraperCallback() {
+            @Override
+            public void onSuccess(int newsCount) {
+                Log.d(TAG, "Scraped " + newsCount + " news items");
+            }
+            
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "Scraping error: " + error);
+            }
+        });
+        
+        return new ArrayList<>();
+    }
+    
+    private static void loadNewsFromFirestore(NewsCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<News> newsList = new ArrayList<>();
         
-        // Load from Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("news")
             .orderBy("publishedAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .limit(50)
             .get()
             .addOnSuccessListener(queryDocumentSnapshots -> {
-                android.util.Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " news items");
+                Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " news items");
                 
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                     try {
-                        News news = document.toObject(News.class);
-                        if (news != null) {
-                            news.setId(document.getId());
-                            newsList.add(news);
-                            android.util.Log.d(TAG, "Loaded news: " + news.getTitle());
+                        News news = new News();
+                        news.setId(document.getId());
+                        news.setTitle(document.getString("title"));
+                        news.setSummary(document.getString("summary"));
+                        news.setDescription(document.getString("content"));
+                        news.setPublishedAt(document.getLong("publishedAt") != null ? document.getLong("publishedAt") : System.currentTimeMillis());
+                        news.setSource("MUST Website");
+                        
+                        String categoryStr = document.getString("category");
+                        if (categoryStr != null) {
+                            try {
+                                news.setCategory(News.Category.valueOf(categoryStr));
+                            } catch (IllegalArgumentException e) {
+                                news.setCategory(News.Category.UNIVERSITY);
+                            }
+                        } else {
+                            news.setCategory(News.Category.UNIVERSITY);
                         }
+                        
+                        newsList.add(news);
                     } catch (Exception e) {
-                        android.util.Log.e(TAG, "Error parsing news", e);
+                        Log.e(TAG, "Error parsing news", e);
                     }
                 }
                 
                 callback.onNewsLoaded(newsList);
             })
             .addOnFailureListener(e -> {
-                android.util.Log.e(TAG, "Error loading news from Firestore", e);
+                Log.e(TAG, "Error loading news from Firestore", e);
                 callback.onError(e);
             });
     }
     
-    /**
-     * Get all news from Firestore - Synchronous (returns empty, loads async)
-     */
-    public static List<News> getNews() {
-        // Return empty list - news will be loaded asynchronously
-        return new ArrayList<>();
-    }
-    
-    /**
-     * Get analytics for events and news
-     */
     public static EventsAnalytics getAnalytics(List<Event> events, List<News> news) {
         EventsAnalytics analytics = new EventsAnalytics();
         
@@ -91,7 +112,6 @@ public class EventsDataProvider {
             analytics.setTotalArticles(news.size());
         }
         
-        // Update analytics - will calculate top category based on actual data
         analytics.updateAnalytics();
         
         return analytics;

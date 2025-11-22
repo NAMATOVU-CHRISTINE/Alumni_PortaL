@@ -111,165 +111,30 @@ public class EventsNewsActivity extends AppCompatActivity {
     }
     
     private void setupClickListeners() {
-        // View All Events button
-        binding.viewAllEventsBtn.setOnClickListener(v -> {
-            // Navigate to dedicated events page or show all events
-            Toast.makeText(this, "View All Events", Toast.LENGTH_SHORT).show();
-        });
-        
-        // View All News button
-        binding.viewAllNewsBtn.setOnClickListener(v -> {
-            // Navigate to dedicated news page or show all news
-            Toast.makeText(this, "View All News", Toast.LENGTH_SHORT).show();
-        });
+        // Click listeners removed - using static data only
     }
     
     private void loadData() {
         showLoading(true);
         
-        // Load events
+        // Load static events and news data
         allEvents = EventsDataProvider.getEvents();
+        allNews = EventsDataProvider.getNews();
+        analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
         
-        // Load news asynchronously from Firestore
-        EventsDataProvider.getNewsAsync(new EventsDataProvider.NewsCallback() {
-            @Override
-            public void onNewsLoaded(List<News> newsList) {
-                allNews = newsList;
-                analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
-                
-                // Update UI on main thread
-                runOnUiThread(() -> {
-                    updateUI();
-                    showLoading(false);
-                    
-                    // Also load real events from Firestore in the background
-                    loadFirestoreEvents();
-                });
-            }
-            
-            @Override
-            public void onError(Exception e) {
-                android.util.Log.e(TAG, "Error loading news", e);
-                allNews = new ArrayList<>();
-                
-                runOnUiThread(() -> {
-                    updateUI();
-                    showLoading(false);
-                    Toast.makeText(EventsNewsActivity.this, "Error loading news", Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
-    }
-    
-    private void loadFirestoreEvents() {
-        // This will load real events from Firestore and add them to the list
-        com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                .collection("events")
-                .whereEqualTo("isPublic", true)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    for (com.google.firebase.firestore.QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        try {
-                            // Convert Firestore event to Event model
-                            String title = document.getString("title");
-                            String description = document.getString("description");
-                            String venue = document.getString("venue");
-                            Long startTime = document.getLong("startDateTime");
-                            String eventType = document.getString("eventType");
-                            String imageUrl = document.getString("imageUrl");
-                            String eventUrl = document.getString("eventUrl");
-                            String organizerName = document.getString("organizerName");
-                            
-                            if (title != null && startTime != null) {
-                                // Create summary from description (first 100 chars)
-                                String summary = description != null && description.length() > 100 
-                                    ? description.substring(0, 100) + "..." 
-                                    : description;
-                                
-                                // Map event type to category
-                                Event.Category category = mapEventTypeToCategory(eventType);
-                                
-                                Event event = new Event(
-                                    title,
-                                    description != null ? description : "",
-                                    summary != null ? summary : "",
-                                    startTime,
-                                    venue != null ? venue : "TBD",
-                                    category
-                                );
-                                
-                                event.setId(document.getId());
-                                event.setImageUrl(imageUrl);
-                                event.setRegistrationUrl(eventUrl);
-                                event.setOrganizerName(organizerName != null ? organizerName : "MUST");
-                                
-                                // Check if event already exists (avoid duplicates)
-                                boolean exists = false;
-                                for (Event e : allEvents) {
-                                    if (e.getId() != null && e.getId().equals(event.getId())) {
-                                        exists = true;
-                                        break;
-                                    }
-                                }
-                                
-                                if (!exists) {
-                                    allEvents.add(event);
-                                }
-                            }
-                        } catch (Exception e) {
-                            // Skip invalid events
-                        }
-                    }
-                    
-                    // Update UI with new events
-                    runOnUiThread(() -> {
-                        updateUI();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    // Silently fail - mock data is already loaded
-                });
-    }
-    
-    private Event.Category mapEventTypeToCategory(String eventType) {
-        if (eventType == null) return Event.Category.UNIVERSITY;
-        
-        String type = eventType.toLowerCase();
-        if (type.contains("mentor")) return Event.Category.MENTORSHIP;
-        if (type.contains("leader")) return Event.Category.LEADERSHIP;
-        if (type.contains("network")) return Event.Category.NETWORKING;
-        if (type.contains("career") || type.contains("job")) return Event.Category.CAREER;
-        if (type.contains("tech") || type.contains("research")) return Event.Category.TECHNOLOGY;
-        if (type.contains("social")) return Event.Category.SOCIAL;
-        return Event.Category.UNIVERSITY;
+        // Update UI
+        updateUI();
+        showLoading(false);
     }
     
     private void refreshData() {
-        // Refresh data from provider
-        new Thread(() -> {
-            try {
-                // Simulate network delay
-                Thread.sleep(500);
-                
-                // Reload data
-                allEvents = EventsDataProvider.getEvents();
-                allNews = EventsDataProvider.getNews();
-                analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
-                
-                // Update UI on main thread
-                runOnUiThread(() -> {
-                    updateUI();
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    Toast.makeText(EventsNewsActivity.this, "Data refreshed", Toast.LENGTH_SHORT).show();
-                });
-                
-            } catch (InterruptedException e) {
-                runOnUiThread(() -> {
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    Toast.makeText(EventsNewsActivity.this, "Error refreshing data", Toast.LENGTH_SHORT).show();
-                });
-            }
-        }).start();
+        // Reload static data
+        allEvents = EventsDataProvider.getEvents();
+        allNews = EventsDataProvider.getNews();
+        analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
+        
+        updateUI();
+        binding.swipeRefreshLayout.setRefreshing(false);
     }
     
     private void updateUI() {
@@ -290,40 +155,11 @@ public class EventsNewsActivity extends AppCompatActivity {
     }
     
     private void updateAnalytics() {
-        // Load incoming counts
-        loadIncomingCounts();
-    }
-    
-    private void loadIncomingCounts() {
-        com.google.firebase.auth.FirebaseAuth mAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() == null) return;
-        
-        String currentUserId = mAuth.getCurrentUser().getUid();
-        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-        
-        // Count mentorship requests
-        db.collection("mentorships")
-            .whereEqualTo("mentorId", currentUserId)
-            .whereEqualTo("status", "pending")
-            .get()
-            .addOnSuccessListener(querySnapshot -> {
-                binding.mentorshipRequestsText.setText(String.valueOf(querySnapshot.size()));
-            });
-        
-        // Count unread messages
-        db.collection("chats")
-            .whereEqualTo("participantIds", currentUserId)
-            .get()
-            .addOnSuccessListener(querySnapshot -> {
-                int unreadCount = 0;
-                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : querySnapshot) {
-                    Boolean isRead = doc.getBoolean("isRead");
-                    if (isRead != null && !isRead) {
-                        unreadCount++;
-                    }
-                }
-                binding.unreadMessagesText.setText(String.valueOf(unreadCount));
-            });
+        // Display static analytics data
+        if (analytics != null) {
+            binding.mentorshipRequestsText.setText(String.valueOf(analytics.getTotalEvents()));
+            binding.unreadMessagesText.setText(String.valueOf(analytics.getTotalArticles()));
+        }
     }
     
     private void filterContent(String query) {
