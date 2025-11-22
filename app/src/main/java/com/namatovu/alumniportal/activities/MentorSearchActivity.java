@@ -217,12 +217,21 @@ public class MentorSearchActivity extends AppCompatActivity {
     }
     
     private void syncMentorsFromFirebase() {
-        db.collection("mentors")
+        // Load mentors from users collection (alumni and staff only)
+        db.collection("users")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<MentorEntity> mentors = new ArrayList<>();
                     
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        // Only include alumni and staff as mentors
+                        String userType = document.getString("userType");
+                        boolean isMentor = "alumni".equalsIgnoreCase(userType) || "staff".equalsIgnoreCase(userType);
+                        
+                        if (!isMentor) {
+                            continue; // Skip students
+                        }
+                        
                         MentorEntity mentor = new MentorEntity();
                         mentor.setMentorId(document.getId());
                         mentor.setFullName(document.getString("fullName"));
@@ -230,23 +239,17 @@ public class MentorSearchActivity extends AppCompatActivity {
                         mentor.setProfileImageUrl(document.getString("profileImageUrl"));
                         mentor.setCurrentJob(document.getString("currentJob"));
                         mentor.setCompany(document.getString("company"));
-                        mentor.setExpertise(document.getString("expertise"));
-                        mentor.setCategory(document.getString("category"));
                         mentor.setBio(document.getString("bio"));
                         mentor.setGraduationYear(document.getString("graduationYear"));
-                        mentor.setCourse(document.getString("course"));
                         
-                        Long yearsExp = document.getLong("yearsOfExperience");
-                        mentor.setYearsOfExperience(yearsExp != null ? yearsExp.intValue() : 0);
-                        
-                        Long menteeCount = document.getLong("menteeCount");
-                        mentor.setMenteeCount(menteeCount != null ? menteeCount.intValue() : 0);
-                        
-                        Double rating = document.getDouble("rating");
-                        mentor.setRating(rating != null ? rating : 0.0);
-                        
-                        Boolean available = document.getBoolean("isAvailable");
-                        mentor.setAvailable(available != null && available);
+                        // Set default values for fields not in users collection
+                        mentor.setExpertise(mentor.getCurrentJob() != null ? mentor.getCurrentJob() : "");
+                        mentor.setCategory(mentor.getCompany() != null ? mentor.getCompany() : "");
+                        mentor.setCourse(mentor.getGraduationYear() != null ? mentor.getGraduationYear() : "");
+                        mentor.setYearsOfExperience(0);
+                        mentor.setMenteeCount(0);
+                        mentor.setRating(0.0);
+                        mentor.setAvailable(true);
                         
                         mentor.setLastSyncTime(System.currentTimeMillis());
                         mentors.add(mentor);

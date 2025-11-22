@@ -118,33 +118,94 @@ public class SampleDataSeeder {
      * Seed sample users
      */
     public void seedSampleUsers() {
-        // Sample user 1
+        // Sample user 1 - Alumni (can be mentor)
         Map<String, Object> user1 = new HashMap<>();
-        user1.put("name", "Dr. Sarah Nakamya");
+        user1.put("fullName", "Dr. Sarah Nakamya");
         user1.put("email", "sarah.nakamya@example.com");
         user1.put("bio", "Software Engineering Professor with 10+ years industry experience");
-        user1.put("career", "Professor of Computer Science");
+        user1.put("currentJob", "Professor of Computer Science");
         user1.put("company", "Makerere University");
         user1.put("graduationYear", "2008");
         user1.put("skills", Arrays.asList("Software Engineering", "Java", "Python", "Research"));
         user1.put("profileImageUrl", "https://via.placeholder.com/150x150.png?text=SN");
+        user1.put("userType", "alumni");
+        user1.put("isAlumni", true);
+        user1.put("showInDirectory", true);
+        user1.put("allowMentorRequests", true);
+        user1.put("createdAt", System.currentTimeMillis());
 
-        // Sample user 2
+        // Sample user 2 - Alumni (can be mentor)
         Map<String, Object> user2 = new HashMap<>();
-        user2.put("name", "John Okello");
-        user2.put("email", "john.okello@example.com");
-        user2.put("bio", "Recent graduate looking to start career in tech");
-        user2.put("career", "Junior Software Developer");
-        user2.put("company", "Tech Startup");
-        user2.put("graduationYear", "2023");
-        user2.put("skills", Arrays.asList("Java", "Android", "Firebase"));
-        user2.put("profileImageUrl", "https://via.placeholder.com/150x150.png?text=JO");
+        user2.put("fullName", "Prof. Moses Kiremire");
+        user2.put("email", "moses.kiremire@example.com");
+        user2.put("bio", "Business Administration expert with 15+ years experience");
+        user2.put("currentJob", "Senior Lecturer");
+        user2.put("company", "Makerere University");
+        user2.put("graduationYear", "2005");
+        user2.put("skills", Arrays.asList("Business Strategy", "Leadership", "Finance", "Mentoring"));
+        user2.put("profileImageUrl", "https://via.placeholder.com/150x150.png?text=MK");
+        user2.put("userType", "alumni");
+        user2.put("isAlumni", true);
+        user2.put("showInDirectory", true);
+        user2.put("allowMentorRequests", true);
+        user2.put("createdAt", System.currentTimeMillis());
+
+        // Sample user 3 - Staff (can be mentor)
+        Map<String, Object> user3 = new HashMap<>();
+        user3.put("fullName", "Dr. Emily Ochieng");
+        user3.put("email", "emily.ochieng@example.com");
+        user3.put("bio", "Career Development Officer helping students transition to industry");
+        user3.put("currentJob", "Career Development Officer");
+        user3.put("company", "MUST Career Services");
+        user3.put("graduationYear", "2010");
+        user3.put("skills", Arrays.asList("Career Counseling", "Resume Writing", "Interview Prep", "Networking"));
+        user3.put("profileImageUrl", "https://via.placeholder.com/150x150.png?text=EO");
+        user3.put("userType", "staff");
+        user3.put("isAlumni", false);
+        user3.put("showInDirectory", true);
+        user3.put("allowMentorRequests", true);
+        user3.put("createdAt", System.currentTimeMillis());
+
+        // Sample user 4 - Student (cannot be mentor)
+        Map<String, Object> user4 = new HashMap<>();
+        user4.put("fullName", "John Okello");
+        user4.put("email", "john.okello@example.com");
+        user4.put("bio", "Final year student looking to start career in tech");
+        user4.put("currentJob", "");
+        user4.put("company", "");
+        user4.put("graduationYear", "2024");
+        user4.put("skills", Arrays.asList("Java", "Android", "Firebase"));
+        user4.put("profileImageUrl", "https://via.placeholder.com/150x150.png?text=JO");
+        user4.put("userType", "student");
+        user4.put("isAlumni", false);
+        user4.put("showInDirectory", false);
+        user4.put("allowMentorRequests", false);
+        user4.put("createdAt", System.currentTimeMillis());
+
+        // Sample user 5 - Alumni
+        Map<String, Object> user5 = new HashMap<>();
+        user5.put("fullName", "Grace Ampaire");
+        user5.put("email", "grace.ampaire@example.com");
+        user5.put("bio", "Data Scientist working at leading tech company");
+        user5.put("currentJob", "Senior Data Scientist");
+        user5.put("company", "Tech Innovations Ltd");
+        user5.put("graduationYear", "2018");
+        user5.put("skills", Arrays.asList("Data Science", "Python", "Machine Learning", "SQL"));
+        user5.put("profileImageUrl", "https://via.placeholder.com/150x150.png?text=GA");
+        user5.put("userType", "alumni");
+        user5.put("isAlumni", true);
+        user5.put("showInDirectory", true);
+        user5.put("allowMentorRequests", true);
+        user5.put("createdAt", System.currentTimeMillis());
 
         // Add to Firestore (use specific IDs for testing)
-        db.collection("users").document("sample_mentor_1").set(user1);
-        db.collection("users").document("sample_mentee_1").set(user2);
+        db.collection("users").document("sample_alumni_1").set(user1);
+        db.collection("users").document("sample_alumni_2").set(user2);
+        db.collection("users").document("sample_staff_1").set(user3);
+        db.collection("users").document("sample_student_1").set(user4);
+        db.collection("users").document("sample_alumni_3").set(user5);
 
-        Log.d(TAG, "Sample users seeded");
+        Log.d(TAG, "Sample users seeded - 3 alumni, 1 staff, 1 student");
     }
 
     /**
