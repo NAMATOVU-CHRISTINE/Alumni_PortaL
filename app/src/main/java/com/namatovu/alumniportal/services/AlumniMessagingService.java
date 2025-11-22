@@ -5,12 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -25,35 +22,38 @@ import com.namatovu.alumniportal.utils.NotificationHelper;
 public class AlumniMessagingService extends FirebaseMessagingService {
     
     private static final String TAG = "AlumniMessagingService";
-    private static final String CHANNEL_ID = "alumni_portal_notifications";
-    private static final String CHANNEL_NAME = "Alumni Portal";
+    private static final String CHANNEL_ID = "alumni_notifications";
+    private static final String CHANNEL_NAME = "Alumni Portal Notifications";
     
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d(TAG, "Message received from: " + remoteMessage.getFrom());
         
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        
-        // Check if message contains a notification payload
-        if (remoteMessage.getNotification() != null) {
-            String title = remoteMessage.getNotification().getTitle();
-            String body = remoteMessage.getNotification().getBody();
-            Log.d(TAG, "Notification Title: " + title);
-            Log.d(TAG, "Notification Body: " + body);
-            
-            sendNotification(title, body, remoteMessage.getData());
+        // Check if notifications are enabled
+        if (!NotificationHelper.areNotificationsEnabled()) {
+            Log.d(TAG, "Notifications are disabled, ignoring message");
+            return;
         }
         
-        // Check if message contains a data payload
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            handleDataPayload(remoteMessage.getData());
+        // Get notification data
+        String title = remoteMessage.getNotification() != null ? 
+            remoteMessage.getNotification().getTitle() : "Alumni Portal";
+        String body = remoteMessage.getNotification() != null ? 
+            remoteMessage.getNotification().getBody() : "You have a new notification";
+        
+        // Check notification type and if it's enabled
+        String notificationType = remoteMessage.getData().get("type");
+        if (!isNotificationTypeEnabled(notificationType)) {
+            Log.d(TAG, "Notification type " + notificationType + " is disabled");
+            return;
         }
+        
+        // Send notification
+        sendNotification(title, body, notificationType, remoteMessage.getData());
     }
     
     @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
+    public void onNewToken(String token) {
         Log.d(TAG, "Refreshed token: " + token);
         
         // Update token in Firestore
@@ -61,102 +61,90 @@ public class AlumniMessagingService extends FirebaseMessagingService {
     }
     
     /**
-     * Handle data payload from FCM
+     * Check if a specific notification type is enabled
      */
-    private void handleDataPayload(java.util.Map<String, String> data) {
-        String type = data.get("type");
-        
-        if (type == null) return;
+    private boolean isNotificationTypeEnabled(String type) {
+        if (type == null) return true; // Allow if no type specified
         
         switch (type) {
             case "message":
-                if (NotificationHelper.areMessageNotificationsEnabled()) {
-                    String senderName = data.get("senderName");
-                    String messageText = data.get("messageText");
-                    sendNotification("New Message from " + senderName, messageText, data);
-                }
-                break;
-                
+                return NotificationHelper.areMessageNotificationsEnabled();
             case "mentorship":
-                if (NotificationHelper.areMentorshipNotificationsEnabled()) {
-                    String action = data.get("action");
-                    String fromUser = data.get("fromUser");
-                    sendNotification("Mentorship Request", fromUser + " " + action, data);
-                }
-                break;
-                
+                return NotificationHelper.areMentorshipNotificationsEnabled();
             case "event":
-                if (NotificationHelper.areEventNotificationsEnabled()) {
-                    String eventTitle = data.get("eventTitle");
-                    String eventAction = data.get("action");
-                    sendNotification("Event Update", eventTitle + " - " + eventAction, data);
-                }
-                break;
-                
+                return NotificationHelper.areEventNotificationsEnabled();
             case "job":
-                if (NotificationHelper.areJobNotificationsEnabled()) {
-                    String jobTitle = data.get("jobTitle");
-                    String company = data.get("company");
-                    sendNotification("New Job Posting", jobTitle + " at " + company, data);
-                }
-                break;
-                
+                return NotificationHelper.areJobNotificationsEnabled();
             case "news":
-                if (NotificationHelper.areNewsNotificationsEnabled()) {
-                    String newsTitle = data.get("newsTitle");
-                    sendNotification("News Update", newsTitle, data);
-                }
-                break;
+                return NotificationHelper.areNewsNotificationsEnabled();
+            default:
+                return true;
         }
     }
     
     /**
-     * Create and show a notification
+     * Send notification to device
      */
-    private void sendNotification(String title, String messageBody, java.util.Map<String, String> data) {
+    private void sendNotification(String title, String body, String type, java.util.Map<String, String> data) {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         
-        // Add data to intent if available
+        // Add data to intent
         if (data != null) {
-            for (java.util.Map.Entry<String, String> entry : data.entrySet()) {
-                intent.putExtra(entry.getKey(), entry.getValue());
+            for (String key : data.keySet()) {
+                intent.putExtra(key, data.get(key));
             }
         }
         
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-            this, 
-            0, 
-            intent,
-            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
-        );
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT);
         
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        // Create notification channel for Android 8+
+        createNotificationChannel();
         
+        // Build notification
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(title)
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         
-        NotificationManager notificationManager = 
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        
-        // Create notification channel for Android O and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription("Notifications for Alumni Portal app");
-            channel.enableVibration(true);
-            notificationManager.createNotificationChannel(channel);
+        // Add style for longer text
+        if (body.length() > 50) {
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(body));
         }
         
-        notificationManager.notify(0, notificationBuilder.build());
+        NotificationManager notificationManager = 
+            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        
+        if (notificationManager != null) {
+            notificationManager.notify(0, notificationBuilder.build());
+            Log.d(TAG, "Notification sent: " + title);
+        }
+    }
+    
+    /**
+     * Create notification channel for Android 8+
+     */
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notifications from Alumni Portal");
+            
+            NotificationManager notificationManager = 
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 }
