@@ -131,6 +131,9 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
+        // Clear previous user data
+        viewedUser = null;
+        
         db.collection("users").document(userId).get()
             .addOnSuccessListener(document -> {
                 if (document.exists()) {
