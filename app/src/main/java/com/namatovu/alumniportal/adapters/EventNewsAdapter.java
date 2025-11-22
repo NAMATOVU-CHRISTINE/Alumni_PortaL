@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.models.Event;
@@ -116,7 +117,7 @@ public class EventNewsAdapter extends RecyclerView.Adapter<EventNewsAdapter.Even
             organizerText.setText("by " + (event.getOrganizerName() != null ? event.getOrganizerName() : "MUST Alumni"));
             
             // Set action button based on event status
-            setupActionButton(event);
+            checkRegistrationStatus(event);
             
             // Set click listener for entire item
             itemView.setOnClickListener(v -> {
@@ -125,8 +126,38 @@ public class EventNewsAdapter extends RecyclerView.Adapter<EventNewsAdapter.Even
             });
         }
         
-        private void setupActionButton(Event event) {
-            if (event.isExpired()) {
+        private void checkRegistrationStatus(Event event) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            
+            // Get current user email from Firebase Auth
+            com.google.firebase.auth.FirebaseAuth auth = com.google.firebase.auth.FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() == null) {
+                setupActionButton(event, false);
+                return;
+            }
+            
+            String userEmail = auth.getCurrentUser().getEmail();
+            
+            // Check if user already registered
+            db.collection("event_registrations")
+                .whereEqualTo("eventId", event.getId())
+                .whereEqualTo("participantEmail", userEmail)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    boolean isRegistered = !querySnapshot.isEmpty();
+                    setupActionButton(event, isRegistered);
+                })
+                .addOnFailureListener(e -> {
+                    setupActionButton(event, false);
+                });
+        }
+        
+        private void setupActionButton(Event event, boolean isRegistered) {
+            if (isRegistered) {
+                actionButton.setText("✓ Already Registered");
+                actionButton.setEnabled(false);
+                actionButton.setAlpha(0.8f);
+            } else if (event.isExpired()) {
                 actionButton.setText("Event Completed");
                 actionButton.setEnabled(false);
                 actionButton.setAlpha(0.6f);
