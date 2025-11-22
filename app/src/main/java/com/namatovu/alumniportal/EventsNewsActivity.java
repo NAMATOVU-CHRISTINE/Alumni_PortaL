@@ -111,13 +111,56 @@ public class EventsNewsActivity extends AppCompatActivity {
     }
     
     private void setupClickListeners() {
-        // Click listeners removed - using static data only
+        // Category chip listeners
+        binding.eventCategoryChips.setOnCheckedChangeListener((group, checkedId) -> {
+            filterEventsByCategory(checkedId);
+        });
+    }
+    
+    private void filterEventsByCategory(int chipId) {
+        String selectedCategory = null;
+        
+        if (chipId == R.id.chipAll) {
+            selectedCategory = null;
+        } else if (chipId == R.id.chipMentorship) {
+            selectedCategory = "MENTORSHIP";
+        } else if (chipId == R.id.chipLeadership) {
+            selectedCategory = "LEADERSHIP";
+        } else if (chipId == R.id.chipNetworking) {
+            selectedCategory = "NETWORKING";
+        } else if (chipId == R.id.chipCareer) {
+            selectedCategory = "CAREER";
+        } else if (chipId == R.id.chipTechnology) {
+            selectedCategory = "TECHNOLOGY";
+        }
+        
+        filterEventsBySelectedCategory(selectedCategory);
+    }
+    
+    private void filterEventsBySelectedCategory(String category) {
+        filteredEvents.clear();
+        
+        if (category == null) {
+            filteredEvents.addAll(allEvents);
+        } else {
+            for (Event event : allEvents) {
+                if (event.getCategory().name().equals(category)) {
+                    filteredEvents.add(event);
+                }
+            }
+        }
+        
+        eventsAdapter.notifyDataSetChanged();
+        updateEmptyStates();
     }
     
     private void loadData() {
         showLoading(true);
         
-        // Load static events and news data
+        // Trigger scraping of MUST website news in background
+        EventsDataProvider.refreshNewsFromMUSTWebsite();
+        
+        // Load events and news data
         allEvents = EventsDataProvider.getEvents();
         allNews = EventsDataProvider.getNews();
         analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
@@ -155,11 +198,7 @@ public class EventsNewsActivity extends AppCompatActivity {
     }
     
     private void updateAnalytics() {
-        // Display static analytics data
-        if (analytics != null) {
-            binding.mentorshipRequestsText.setText(String.valueOf(analytics.getTotalEvents()));
-            binding.unreadMessagesText.setText(String.valueOf(analytics.getTotalArticles()));
-        }
+        // Analytics display removed - focus on content
     }
     
     private void filterContent(String query) {

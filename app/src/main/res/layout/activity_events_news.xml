@@ -67,134 +67,7 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Incoming Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="24dp">
 
-                    <!-- Incoming Header -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="16dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="📬 Incoming"
-                            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-
-                    </LinearLayout>
-
-                    <!-- Incoming Cards Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <!-- Mentorship Requests Card -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:cardElevation="3dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardBackgroundColor="?attr/colorSurface">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp"
-                                android:gravity="center">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="🤝"
-                                    android:textSize="24sp"
-                                    android:layout_marginBottom="8dp" />
-
-                                <TextView
-                                    android:id="@+id/mentorshipRequestsText"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0"
-                                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/must_green"
-                                    android:layout_marginBottom="4dp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Mentorship Requests"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="?android:attr/textColorSecondary"
-                                    android:textAlignment="center" />
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <!-- Messages Card -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            app:cardElevation="3dp"
-                            app:cardCornerRadius="12dp"
-                            app:cardBackgroundColor="?attr/colorSurface">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="16dp"
-                                android:gravity="center">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="💬"
-                                    android:textSize="24sp"
-                                    android:layout_marginBottom="8dp" />
-
-                                <TextView
-                                    android:id="@+id/unreadMessagesText"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0"
-                                    android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/must_green"
-                                    android:layout_marginBottom="4dp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Unread Messages"
-                                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                                    android:textColor="?android:attr/textColorSecondary"
-                                    android:textAlignment="center" />
-
-                            </LinearLayout>
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                    </LinearLayout>
-
-                </LinearLayout>
 
 
 
@@ -278,33 +151,75 @@
                     android:orientation="vertical">
 
                     <!-- Events Header -->
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
+                        android:text="🌟 Events &amp; Programs"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Category Tabs -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none"
                         android:layout_marginBottom="16dp">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="🌟 Mentorship &amp; Leadership Events"
-                            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                            android:textStyle="bold"
-                            android:textColor="?android:attr/textColorPrimary" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/viewAllEventsBtn"
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/eventCategoryChips"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View All"
-                            android:textColor="@color/must_green"
-                            android:textSize="12sp"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:minWidth="0dp" />
+                            app:singleSelection="true"
+                            app:selectionRequired="true">
 
-                    </LinearLayout>
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipAll"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="All"
+                                android:checked="true"
+                                style="@style/Widget.Material3.Chip.Filter" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipMentorship"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🤝 Mentorship"
+                                style="@style/Widget.Material3.Chip.Filter" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipLeadership"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="👑 Leadership"
+                                style="@style/Widget.Material3.Chip.Filter" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipNetworking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🌐 Networking"
+                                style="@style/Widget.Material3.Chip.Filter" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipCareer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💼 Career"
+                                style="@style/Widget.Material3.Chip.Filter" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipTechnology"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💻 Technology"
+                                style="@style/Widget.Material3.Chip.Filter" />
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </HorizontalScrollView>
 
                     <!-- Events RecyclerView -->
                     <androidx.recyclerview.widget.RecyclerView
