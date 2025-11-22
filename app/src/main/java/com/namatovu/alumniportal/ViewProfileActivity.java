@@ -367,6 +367,14 @@ public class ViewProfileActivity extends AppCompatActivity {
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(this, "Mentorship request sent successfully!", Toast.LENGTH_SHORT).show();
                         
+                        // Show in-app notification
+                        com.namatovu.alumniportal.utils.InAppNotificationHelper.showNotification(
+                            ViewProfileActivity.this,
+                            "Mentorship Request Sent",
+                            "Your request has been sent to " + (viewedUser != null ? viewedUser.getFullName() : "the mentor"),
+                            "mentorship"
+                        );
+                        
                         // Send both email and push notification to mentor
                         sendMentorshipNotifications(currentUserId, currentUserName, mentorId, documentReference.getId());
                     })

@@ -274,23 +274,25 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                     (user.getLocation() != null && user.getLocation().toLowerCase().contains(lowerSearchQuery)) ||
                     (user.getSkillsAsString() != null && user.getSkillsAsString().toLowerCase().contains(lowerSearchQuery));
             
-            // Enhanced major filter - very flexible matching
-            boolean matchesMajor = selectedMajor.equals("All") || selectedMajor.isEmpty() ||
-                    (user.getMajor() != null && 
-                     (user.getMajor().equalsIgnoreCase(selectedMajor) || 
-                      user.getMajor().toLowerCase().contains(selectedMajor.toLowerCase()) ||
-                      selectedMajor.toLowerCase().contains(user.getMajor().toLowerCase())));
+            // Major filter - if "All" is selected, show everyone. Otherwise filter by major if user has one
+            boolean matchesMajor = true;
+            if (!selectedMajor.equals("All") && !selectedMajor.isEmpty()) {
+                // Only filter if user has a major set
+                if (user.getMajor() != null && !user.getMajor().isEmpty()) {
+                    matchesMajor = user.getMajor().equalsIgnoreCase(selectedMajor) || 
+                                   user.getMajor().toLowerCase().contains(selectedMajor.toLowerCase());
+                } else {
+                    // If user doesn't have major set, don't filter them out
+                    matchesMajor = true;
+                }
+            }
             
+            // Year filter
             boolean matchesYear = selectedYear.equals("All") || selectedYear.isEmpty() ||
                     (user.getGraduationYear() != null && user.getGraduationYear().equals(selectedYear));
             
             if (matchesSearch && matchesMajor && matchesYear) {
                 filteredUsers.add(user);
-            } else {
-                // Debug logging for filtered out users
-                if (!matchesMajor && !selectedMajor.equals("All") && !selectedMajor.isEmpty()) {
-                    Log.d(TAG, "User " + user.getFullName() + " filtered out - major: " + user.getMajor() + " vs selected: " + selectedMajor);
-                }
             }
         }
         
