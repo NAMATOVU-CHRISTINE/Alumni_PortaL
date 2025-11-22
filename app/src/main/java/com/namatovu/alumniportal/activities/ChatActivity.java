@@ -927,7 +927,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                 );
                 message.setMessageType("image");
                 message.setImageUrl(imageUrl);
-                message.setPublicId(publicId);
 
                 sendMessage(message);
                 Toast.makeText(ChatActivity.this, "Image sent", Toast.LENGTH_SHORT).show();
@@ -974,7 +973,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                 message.setMessageType("file");
                 message.setFileUrl(fileUrl);
                 message.setFileName(fileUri.getLastPathSegment());
-                message.setPublicId(publicId);
 
                 sendMessage(message);
                 Toast.makeText(ChatActivity.this, "File sent", Toast.LENGTH_SHORT).show();
