@@ -31,6 +31,7 @@ public class User {
     private String role; // "user", "admin"
     private long createdAt;
     private long lastActive;
+    private boolean emailVerified;
     private Map<String, Object> socialLinks;
     private Map<String, Object> privacySettings;
 
@@ -131,6 +132,9 @@ public class User {
 
     public long getLastActive() { return lastActive; }
     public void setLastActive(long lastActive) { this.lastActive = lastActive; }
+
+    public boolean isEmailVerified() { return emailVerified; }
+    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
 
     public Map<String, Object> getSocialLinks() { return socialLinks; }
     public void setSocialLinks(Map<String, Object> socialLinks) { this.socialLinks = socialLinks; }

@@ -62,6 +62,29 @@ public class ViewProfileActivity extends AppCompatActivity {
     private void setupClickListeners() {
         binding.btnRequestMentorship.setOnClickListener(v -> showMentorshipRequestDialog());
         binding.btnShareProfile.setOnClickListener(v -> shareProfile());
+        binding.btnCopyLink.setOnClickListener(v -> copyProfileLink());
+        binding.tvViewMoreBio.setOnClickListener(v -> toggleBioExpanded());
+    }
+    
+    private void copyProfileLink() {
+        String profileLink = "https://alumni-portal.app/profile/" + userId;
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("Profile Link", profileLink);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "Profile link copied!", Toast.LENGTH_SHORT).show();
+    }
+    
+    private boolean bioExpanded = false;
+    private void toggleBioExpanded() {
+        if (bioExpanded) {
+            binding.tvBio.setMaxLines(3);
+            binding.tvViewMoreBio.setText("View More");
+            bioExpanded = false;
+        } else {
+            binding.tvBio.setMaxLines(Integer.MAX_VALUE);
+            binding.tvViewMoreBio.setText("View Less");
+            bioExpanded = true;
+        }
     }
     
     private void shareProfile() {
@@ -142,6 +165,18 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         // Basic info - always visible
         binding.tvFullName.setText(user.getFullName() != null ? user.getFullName() : "Alumni User");
+        
+        // Show verification badge if email is verified
+        if (user.isEmailVerified()) {
+            binding.verificationBadge.setVisibility(View.VISIBLE);
+            binding.verificationBadgeSmall.setVisibility(View.VISIBLE);
+        }
+        
+        // Show last active status
+        displayLastActiveStatus(user);
+        
+        // Calculate and display profile completion
+        calculateProfileCompletion(user);
         
         // Current job
         if (user.getCurrentJob() != null && !user.getCurrentJob().isEmpty()) {
@@ -278,19 +313,20 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
 
     private void sendMentorshipRequest(String topic, String message) {
-        String currentUserId = mAuth.getCurrentUser().getUid();
+        final String currentUserId = mAuth.getCurrentUser().getUid();
+        final String mentorId = userId;
         
         // Get current user's name first
         db.collection("users").document(currentUserId).get()
             .addOnSuccessListener(currentUserDoc -> {
-                String currentUserName = currentUserDoc.getString("fullName");
-                if (currentUserName == null) currentUserName = "Unknown User";
+                final String currentUserName = currentUserDoc.getString("fullName") != null ? 
+                    currentUserDoc.getString("fullName") : "Unknown User";
                 
                 // Create mentorship connection (not just request)
                 Map<String, Object> connectionData = new HashMap<>();
                 connectionData.put("menteeId", currentUserId);
                 connectionData.put("menteeName", currentUserName);
-                connectionData.put("mentorId", userId);
+                connectionData.put("mentorId", mentorId);
                 connectionData.put("mentorName", viewedUser != null ? viewedUser.getFullName() : "Mentor");
                 connectionData.put("mentorTitle", viewedUser != null ? viewedUser.getCurrentJob() : "");
                 connectionData.put("mentorCompany", viewedUser != null ? viewedUser.getCompany() : "");
@@ -307,7 +343,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                         Toast.makeText(this, "Mentorship request sent successfully!", Toast.LENGTH_SHORT).show();
                         
                         // Send both email and push notification to mentor
-                        sendMentorshipNotifications(currentUserId, currentUserName, userId, documentReference.getId());
+                        sendMentorshipNotifications(currentUserId, currentUserName, mentorId, documentReference.getId());
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Error sending mentorship request", e);
@@ -343,6 +379,52 @@ public class ViewProfileActivity extends AppCompatActivity {
                 }
             })
             .addOnFailureListener(e -> Log.e(TAG, "Failed to get mentor info for notifications", e));
+    }
+    
+    private void calculateProfileCompletion(User user) {
+        int completionScore = 0;
+        int totalFields = 10;
+        
+        // Check each field
+        if (user.getFullName() != null && !user.getFullName().isEmpty()) completionScore++;
+        if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) completionScore++;
+        if (user.getBio() != null && !user.getBio().isEmpty()) completionScore++;
+        if (user.getMajor() != null && !user.getMajor().isEmpty()) completionScore++;
+        if (user.getGraduationYear() != null && !user.getGraduationYear().isEmpty()) completionScore++;
+        if (user.getCurrentJob() != null && !user.getCurrentJob().isEmpty()) completionScore++;
+        if (user.getCompany() != null && !user.getCompany().isEmpty()) completionScore++;
+        if (user.getLocation() != null && !user.getLocation().isEmpty()) completionScore++;
+        if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) completionScore++;
+        if (user.getSkills() != null && !user.getSkills().isEmpty()) completionScore++;
+        
+        int percentage = (completionScore * 100) / totalFields;
+        binding.tvProfileCompletion.setText(percentage + "%");
+        binding.profileCompletionBar.setProgress(percentage);
+    }
+    
+    private void displayLastActiveStatus(User user) {
+        long lastActiveTime = user.getLastActive();
+        if (lastActiveTime > 0) {
+            long currentTime = System.currentTimeMillis();
+            long diffMillis = currentTime - lastActiveTime;
+            
+            String statusText;
+            if (diffMillis < 60000) { // Less than 1 minute
+                statusText = "Active now";
+            } else if (diffMillis < 3600000) { // Less than 1 hour
+                long minutes = diffMillis / 60000;
+                statusText = "Active " + minutes + "m ago";
+            } else if (diffMillis < 86400000) { // Less than 1 day
+                long hours = diffMillis / 3600000;
+                statusText = "Active " + hours + "h ago";
+            } else {
+                long days = diffMillis / 86400000;
+                statusText = "Active " + days + "d ago";
+            }
+            binding.tvLastActive.setText(statusText);
+        } else {
+            binding.tvLastActive.setText("Last active: Unknown");
+        }
     }
 
 }

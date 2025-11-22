@@ -127,12 +127,14 @@ public class EventsNewsActivity extends AppCompatActivity {
     private void loadData() {
         showLoading(true);
         
-        // Load from EventsDataProvider (mock data) and Firestore (real data)
-        new Thread(() -> {
-            try {
-                // Load mock data first
-                allEvents = EventsDataProvider.getEvents();
-                allNews = EventsDataProvider.getNews();
+        // Load events
+        allEvents = EventsDataProvider.getEvents();
+        
+        // Load news asynchronously from Firestore
+        EventsDataProvider.getNewsAsync(new EventsDataProvider.NewsCallback() {
+            @Override
+            public void onNewsLoaded(List<News> newsList) {
+                allNews = newsList;
                 analytics = EventsDataProvider.getAnalytics(allEvents, allNews);
                 
                 // Update UI on main thread
@@ -143,14 +145,20 @@ public class EventsNewsActivity extends AppCompatActivity {
                     // Also load real events from Firestore in the background
                     loadFirestoreEvents();
                 });
+            }
+            
+            @Override
+            public void onError(Exception e) {
+                android.util.Log.e(TAG, "Error loading news", e);
+                allNews = new ArrayList<>();
                 
-            } catch (Exception e) {
                 runOnUiThread(() -> {
+                    updateUI();
                     showLoading(false);
-                    Toast.makeText(EventsNewsActivity.this, "Error loading data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventsNewsActivity.this, "Error loading news", Toast.LENGTH_SHORT).show();
                 });
             }
-        }).start();
+        });
     }
     
     private void loadFirestoreEvents() {
@@ -282,11 +290,40 @@ public class EventsNewsActivity extends AppCompatActivity {
     }
     
     private void updateAnalytics() {
-        if (analytics != null) {
-            binding.totalEventsText.setText(String.valueOf(analytics.getTotalEvents()));
-            binding.totalArticlesText.setText(String.valueOf(analytics.getTotalArticles()));
-            binding.topCategoryText.setText(analytics.getOverallTopCategory());
-        }
+        // Load incoming counts
+        loadIncomingCounts();
+    }
+    
+    private void loadIncomingCounts() {
+        com.google.firebase.auth.FirebaseAuth mAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) return;
+        
+        String currentUserId = mAuth.getCurrentUser().getUid();
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        
+        // Count mentorship requests
+        db.collection("mentorships")
+            .whereEqualTo("mentorId", currentUserId)
+            .whereEqualTo("status", "pending")
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                binding.mentorshipRequestsText.setText(String.valueOf(querySnapshot.size()));
+            });
+        
+        // Count unread messages
+        db.collection("chats")
+            .whereEqualTo("participantIds", currentUserId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                int unreadCount = 0;
+                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : querySnapshot) {
+                    Boolean isRead = doc.getBoolean("isRead");
+                    if (isRead != null && !isRead) {
+                        unreadCount++;
+                    }
+                }
+                binding.unreadMessagesText.setText(String.valueOf(unreadCount));
+            });
     }
     
     private void filterContent(String query) {
