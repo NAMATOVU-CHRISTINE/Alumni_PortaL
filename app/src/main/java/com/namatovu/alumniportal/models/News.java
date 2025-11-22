@@ -6,14 +6,14 @@ package com.namatovu.alumniportal.models;
 public class News {
     
     public enum Category {
-        UNIVERSITY("University News", "🏛️"),
-        ALUMNI("Alumni Stories", "👥"),
-        RESEARCH("Research", "🔬"),
-        ACADEMICS("Academics", "📚"),
-        SPORTS("Sports", "⚽"),
-        TECHNOLOGY("Technology", "💻"),
-        HEALTH("Health", "🏥"),
-        GENERAL("General", "📰");
+        UNIVERSITY("University News", ""),
+        ALUMNI("Alumni Stories", ""),
+        RESEARCH("Research", ""),
+        ACADEMICS("Academics", ""),
+        SPORTS("Sports", ""),
+        TECHNOLOGY("Technology", ""),
+        HEALTH("Health", ""),
+        GENERAL("General", "");
         
         private final String displayName;
         private final String icon;
