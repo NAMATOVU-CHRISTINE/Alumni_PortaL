@@ -77,15 +77,82 @@ public class NotificationSettingsActivity extends AppCompatActivity {
     private void setupListeners() {
         switchAllNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
             NotificationHelper.setNotificationsEnabled(isChecked);
-            updateDependentSwitches();
             
+            // Temporarily remove listeners to avoid recursive calls
+            switchMessages.setOnCheckedChangeListener(null);
+            switchMentorship.setOnCheckedChangeListener(null);
+            switchEvents.setOnCheckedChangeListener(null);
+            switchJobs.setOnCheckedChangeListener(null);
+            switchNews.setOnCheckedChangeListener(null);
+            
+            // Update all individual switches based on master switch
             if (isChecked) {
-                Toast.makeText(this, "Notifications enabled", Toast.LENGTH_SHORT).show();
+                // Master is ON - enable all individual notifications
+                NotificationHelper.setMessageNotificationsEnabled(true);
+                NotificationHelper.setMentorshipNotificationsEnabled(true);
+                NotificationHelper.setEventNotificationsEnabled(true);
+                NotificationHelper.setJobNotificationsEnabled(true);
+                NotificationHelper.setNewsNotificationsEnabled(true);
+                
+                // Update UI switches - set them to checked
+                switchMessages.setChecked(true);
+                switchMentorship.setChecked(true);
+                switchEvents.setChecked(true);
+                switchJobs.setChecked(true);
+                switchNews.setChecked(true);
+                
+                // Enable the switches
+                switchMessages.setEnabled(true);
+                switchMentorship.setEnabled(true);
+                switchEvents.setEnabled(true);
+                switchJobs.setEnabled(true);
+                switchNews.setEnabled(true);
+                
+                Toast.makeText(this, "All notifications enabled", Toast.LENGTH_SHORT).show();
             } else {
+                // Master is OFF - disable all individual notifications
+                NotificationHelper.setMessageNotificationsEnabled(false);
+                NotificationHelper.setMentorshipNotificationsEnabled(false);
+                NotificationHelper.setEventNotificationsEnabled(false);
+                NotificationHelper.setJobNotificationsEnabled(false);
+                NotificationHelper.setNewsNotificationsEnabled(false);
+                
+                // Update UI switches - set them to unchecked
+                switchMessages.setChecked(false);
+                switchMentorship.setChecked(false);
+                switchEvents.setChecked(false);
+                switchJobs.setChecked(false);
+                switchNews.setChecked(false);
+                
+                // Disable the switches
+                switchMessages.setEnabled(false);
+                switchMentorship.setEnabled(false);
+                switchEvents.setEnabled(false);
+                switchJobs.setEnabled(false);
+                switchNews.setEnabled(false);
+                
                 Toast.makeText(this, "All notifications disabled", Toast.LENGTH_SHORT).show();
             }
+            
+            // Re-attach listeners
+            attachSwitchListeners();
+            
+            updateDependentSwitches();
         });
         
+        attachSwitchListeners();
+        
+        cardSystemSettings.setOnClickListener(v -> {
+            // Open system notification settings
+            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(intent);
+            
+            AnalyticsHelper.logEvent("system_notification_settings_opened", null, null);
+        });
+    }
+    
+    private void attachSwitchListeners() {
         switchMessages.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (switchAllNotifications.isChecked()) {
                 NotificationHelper.setMessageNotificationsEnabled(isChecked);
@@ -115,34 +182,25 @@ public class NotificationSettingsActivity extends AppCompatActivity {
                 NotificationHelper.setNewsNotificationsEnabled(isChecked);
             }
         });
-        
-        cardSystemSettings.setOnClickListener(v -> {
-            // Open system notification settings
-            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-            
-            AnalyticsHelper.logEvent("system_notification_settings_opened", null, null);
-        });
     }
     
     private void updateDependentSwitches() {
         boolean masterEnabled = switchAllNotifications.isChecked();
         
+        // Enable/disable the switches based on master switch
         switchMessages.setEnabled(masterEnabled);
         switchMentorship.setEnabled(masterEnabled);
         switchEvents.setEnabled(masterEnabled);
         switchJobs.setEnabled(masterEnabled);
         switchNews.setEnabled(masterEnabled);
         
-        // Reset switches to current settings if master is re-enabled
-        if (masterEnabled) {
-            switchMessages.setChecked(NotificationHelper.areMessageNotificationsEnabled());
-            switchMentorship.setChecked(NotificationHelper.areMentorshipNotificationsEnabled());
-            switchEvents.setChecked(NotificationHelper.areEventNotificationsEnabled());
-            switchJobs.setChecked(NotificationHelper.areJobNotificationsEnabled());
-            switchNews.setChecked(NotificationHelper.areNewsNotificationsEnabled());
-        }
+        // Update alpha to show enabled/disabled state visually
+        float alpha = masterEnabled ? 1.0f : 0.5f;
+        switchMessages.setAlpha(alpha);
+        switchMentorship.setAlpha(alpha);
+        switchEvents.setAlpha(alpha);
+        switchJobs.setAlpha(alpha);
+        switchNews.setAlpha(alpha);
     }
     
     private void updateSystemSettingsCard() {

@@ -142,14 +142,15 @@
 
                     </LinearLayout>
 
-                    <!-- Last Active Status -->
+                    <!-- Last Active Status - REMOVED (was showing incorrect data) -->
                     <TextView
                         android:id="@+id/tvLastActive"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:textColor="?android:attr/textColorSecondary"
-                        android:layout_marginTop="8dp" />
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone" />
 
                     <!-- Current Job -->
                     <TextView

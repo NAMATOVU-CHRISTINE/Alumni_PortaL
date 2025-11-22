@@ -179,8 +179,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.verificationBadgeSmall.setVisibility(View.VISIBLE);
         }
         
-        // Show last active status
-        displayLastActiveStatus(user);
+        // Last active status removed - was showing incorrect data
+        // displayLastActiveStatus(user);
         
         // Calculate and display profile completion - ONLY for own profile
         if (isOwnProfile) {

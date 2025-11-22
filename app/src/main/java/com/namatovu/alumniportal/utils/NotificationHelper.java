@@ -229,23 +229,33 @@ public class NotificationHelper {
     }
     
     public static boolean areMessageNotificationsEnabled() {
-        return prefs.getBoolean(KEY_MESSAGES_ENABLED, true) && areNotificationsEnabled();
+        // If master is OFF, all are OFF. If master is ON, check individual setting
+        if (!areNotificationsEnabled()) return false;
+        return prefs.getBoolean(KEY_MESSAGES_ENABLED, true);
     }
     
     public static boolean areMentorshipNotificationsEnabled() {
-        return prefs.getBoolean(KEY_MENTORSHIP_ENABLED, true) && areNotificationsEnabled();
+        // If master is OFF, all are OFF. If master is ON, check individual setting
+        if (!areNotificationsEnabled()) return false;
+        return prefs.getBoolean(KEY_MENTORSHIP_ENABLED, true);
     }
     
     public static boolean areEventNotificationsEnabled() {
-        return prefs.getBoolean(KEY_EVENTS_ENABLED, true) && areNotificationsEnabled();
+        // If master is OFF, all are OFF. If master is ON, check individual setting
+        if (!areNotificationsEnabled()) return false;
+        return prefs.getBoolean(KEY_EVENTS_ENABLED, true);
     }
     
     public static boolean areJobNotificationsEnabled() {
-        return prefs.getBoolean(KEY_JOBS_ENABLED, true) && areNotificationsEnabled();
+        // If master is OFF, all are OFF. If master is ON, check individual setting
+        if (!areNotificationsEnabled()) return false;
+        return prefs.getBoolean(KEY_JOBS_ENABLED, true);
     }
     
     public static boolean areNewsNotificationsEnabled() {
-        return prefs.getBoolean(KEY_NEWS_ENABLED, false) && areNotificationsEnabled();
+        // If master is OFF, all are OFF. If master is ON, check individual setting
+        if (!areNotificationsEnabled()) return false;
+        return prefs.getBoolean(KEY_NEWS_ENABLED, false);
     }
     
     /**
