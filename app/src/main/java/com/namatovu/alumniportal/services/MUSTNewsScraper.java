@@ -43,45 +43,51 @@ public class MUSTNewsScraper {
                 
                 List<Map<String, Object>> newsList = new ArrayList<>();
                 
-                // Try multiple selectors to find news items
-                Elements newsItems = doc.select("article, .news-item, .post, .entry, .news-post, .blog-post, .item-list li, .news-list li");
+                // Try to find news items with various selectors
+                Elements newsItems = doc.select("article, .news-item, .post, .entry, .news-post, .blog-post, .item-list li, .news-list li, .card, .news-card, .article-item");
                 
-                Log.d(TAG, "Found " + newsItems.size() + " potential news items");
+                Log.d(TAG, "Found " + newsItems.size() + " potential news items with primary selectors");
                 
                 // If no items found, try broader search
                 if (newsItems.isEmpty()) {
-                    newsItems = doc.select("div[class*='news'], div[class*='post'], div[class*='article']");
+                    newsItems = doc.select("div[class*='news'], div[class*='post'], div[class*='article'], div[class*='item']");
                     Log.d(TAG, "Retrying with broader selectors, found: " + newsItems.size());
+                }
+                
+                // If still empty, try to get all divs and filter
+                if (newsItems.isEmpty()) {
+                    newsItems = doc.select("div");
+                    Log.d(TAG, "Last resort: found " + newsItems.size() + " divs total");
                 }
                 
                 for (Element item : newsItems) {
                     try {
                         // Extract title - try multiple selectors
                         String title = null;
-                        Element titleElement = item.selectFirst("h1, h2, h3, h4, .title, .headline, .post-title, .news-title");
+                        Element titleElement = item.selectFirst("h1, h2, h3, h4, h5, .title, .headline, .post-title, .news-title, .card-title");
                         if (titleElement != null) {
                             title = titleElement.text().trim();
                         }
                         
-                        if (title == null || title.isEmpty()) continue;
+                        if (title == null || title.isEmpty() || title.length() < 5) continue;
                         
                         // Extract summary/content
                         String summary = null;
-                        Element summaryElement = item.selectFirst("p, .summary, .excerpt, .content, .description, .post-excerpt");
+                        Element summaryElement = item.selectFirst("p, .summary, .excerpt, .content, .description, .post-excerpt, .card-text");
                         if (summaryElement != null) {
                             summary = summaryElement.text().trim();
-                            if (summary.length() > 250) {
-                                summary = summary.substring(0, 250) + "...";
+                            if (summary.length() > 300) {
+                                summary = summary.substring(0, 300) + "...";
                             }
                         }
                         
                         if (summary == null || summary.isEmpty()) {
-                            summary = title; // Use title as summary if no summary found
+                            summary = title;
                         }
                         
                         // Extract date
                         long publishedAt = System.currentTimeMillis();
-                        Element dateElement = item.selectFirst(".date, .published, time, .meta, .post-date, .news-date");
+                        Element dateElement = item.selectFirst(".date, .published, time, .meta, .post-date, .news-date, .timestamp");
                         if (dateElement != null) {
                             String dateStr = dateElement.text();
                             Log.d(TAG, "Found date: " + dateStr);
@@ -127,6 +133,9 @@ public class MUSTNewsScraper {
                         newsList.add(newsData);
                         Log.d(TAG, "Scraped: " + title);
                         
+                        // Limit to 20 news items
+                        if (newsList.size() >= 20) break;
+                        
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing news item", e);
                     }
@@ -137,6 +146,7 @@ public class MUSTNewsScraper {
                     Log.d(TAG, "Total news to save: " + newsList.size());
                     saveToFirestore(newsList, callback);
                 } else {
+                    Log.w(TAG, "No news items found on MUST website");
                     callback.onError("No news items found on MUST website");
                 }
                 
