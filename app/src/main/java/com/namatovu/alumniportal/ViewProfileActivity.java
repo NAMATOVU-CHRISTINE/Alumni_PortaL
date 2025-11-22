@@ -156,6 +156,10 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
 
     private void displayUserProfile(User user) {
+        // Check if viewing own profile or someone else's
+        String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+        boolean isOwnProfile = currentUserId != null && currentUserId.equals(userId);
+        
         // Profile image - always visible
         if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
             ImageLoadingHelper.loadProfileImage(this, user.getProfileImageUrl(), binding.profileImage);
@@ -175,8 +179,29 @@ public class ViewProfileActivity extends AppCompatActivity {
         // Show last active status
         displayLastActiveStatus(user);
         
-        // Calculate and display profile completion
-        calculateProfileCompletion(user);
+        // Calculate and display profile completion - ONLY for own profile
+        if (isOwnProfile) {
+            calculateProfileCompletion(user);
+            binding.profileCompletionCard.setVisibility(View.VISIBLE);
+        } else {
+            binding.profileCompletionCard.setVisibility(View.GONE);
+        }
+        
+        // Hide Share and Copy buttons for other users - ONLY show Request Mentorship
+        if (isOwnProfile) {
+            binding.btnShareProfile.setVisibility(View.VISIBLE);
+            binding.btnCopyLink.setVisibility(View.VISIBLE);
+            binding.btnRequestMentorship.setVisibility(View.GONE);
+        } else {
+            binding.btnShareProfile.setVisibility(View.GONE);
+            binding.btnCopyLink.setVisibility(View.GONE);
+            // Show mentorship button only if user allows requests
+            if (user.getPrivacySetting("allowMentorRequests")) {
+                binding.btnRequestMentorship.setVisibility(View.VISIBLE);
+            } else {
+                binding.btnRequestMentorship.setVisibility(View.GONE);
+            }
+        }
         
         // Current job
         if (user.getCurrentJob() != null && !user.getCurrentJob().isEmpty()) {
@@ -268,11 +293,6 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
 
         binding.contactCard.setVisibility(hasContactInfo ? View.VISIBLE : View.GONE);
-
-        // Hide mentorship button if user doesn't allow requests
-        if (!user.getPrivacySetting("allowMentorRequests")) {
-            binding.btnRequestMentorship.setVisibility(View.GONE);
-        }
     }
 
     private void showMentorshipRequestDialog() {
