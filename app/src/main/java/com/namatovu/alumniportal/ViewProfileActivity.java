@@ -194,42 +194,55 @@ public class ViewProfileActivity extends AppCompatActivity {
     }
     
     private void clearProfileUI() {
-        // Clear all UI elements to prevent showing stale data
-        // Header
-        binding.tvFullName.setText("");
-        binding.profileImage.setImageResource(R.drawable.ic_person);
-        binding.verificationBadge.setVisibility(View.GONE);
-        binding.verificationBadgeSmall.setVisibility(View.GONE);
-        binding.statusBadge.setVisibility(View.GONE);
-        
-        // Profile info
-        binding.tvCurrentJob.setVisibility(View.GONE);
-        binding.locationContainer.setVisibility(View.GONE);
-        
-        // Cards
-        binding.bioCard.setVisibility(View.GONE);
-        binding.majorContainer.setVisibility(View.GONE);
-        binding.graduationContainer.setVisibility(View.GONE);
-        binding.companyContainer.setVisibility(View.GONE);
-        binding.skillsCard.setVisibility(View.GONE);
-        binding.contactCard.setVisibility(View.GONE);
-        
-        // Progress
-        binding.tvProfileCompletion.setVisibility(View.GONE);
-        binding.profileCompletionBar.setVisibility(View.GONE);
-        binding.profileCompletionBar.setProgress(0);
-        
-        // Clear collections
-        binding.skillsChipGroup.removeAllViews();
-        
-        // Clear text fields
-        binding.tvBio.setText("");
-        binding.tvMajor.setText("");
-        binding.tvGraduationYear.setText("");
-        binding.tvCompany.setText("");
-        binding.tvEmail.setText("");
-        binding.tvPhone.setText("");
-        binding.tvLocation.setText("");
+        try {
+            // AGGRESSIVELY clear all UI elements to prevent showing stale data
+            
+            // Header - set to empty/default
+            binding.tvFullName.setText("");
+            binding.tvFullName.setVisibility(View.GONE);
+            binding.profileImage.setImageResource(R.drawable.ic_person);
+            binding.verificationBadge.setVisibility(View.GONE);
+            binding.verificationBadgeSmall.setVisibility(View.GONE);
+            binding.statusBadge.setVisibility(View.GONE);
+            binding.statusBadge.setText("");
+            
+            // Profile info
+            binding.tvCurrentJob.setText("");
+            binding.tvCurrentJob.setVisibility(View.GONE);
+            binding.locationContainer.setVisibility(View.GONE);
+            binding.tvLocation.setText("");
+            
+            // Cards - hide all
+            binding.bioCard.setVisibility(View.GONE);
+            binding.tvBio.setText("");
+            binding.majorContainer.setVisibility(View.GONE);
+            binding.tvMajor.setText("");
+            binding.graduationContainer.setVisibility(View.GONE);
+            binding.tvGraduationYear.setText("");
+            binding.companyContainer.setVisibility(View.GONE);
+            binding.tvCompany.setText("");
+            binding.skillsCard.setVisibility(View.GONE);
+            binding.contactCard.setVisibility(View.GONE);
+            binding.tvEmail.setText("");
+            binding.tvPhone.setText("");
+            
+            // Progress
+            binding.tvProfileCompletion.setText("");
+            binding.tvProfileCompletion.setVisibility(View.GONE);
+            binding.profileCompletionBar.setVisibility(View.GONE);
+            binding.profileCompletionBar.setProgress(0);
+            
+            // Clear collections
+            binding.skillsChipGroup.removeAllViews();
+            
+            // View more bio
+            binding.tvViewMoreBio.setVisibility(View.GONE);
+            binding.tvViewMoreBio.setText("");
+            
+            Log.d(TAG, "Profile UI cleared completely");
+        } catch (Exception e) {
+            Log.e(TAG, "Error clearing profile UI", e);
+        }
     }
 
     private void displayUserProfile(User user) {
