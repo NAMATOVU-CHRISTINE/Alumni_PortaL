@@ -27,6 +27,7 @@ public class AlmaterAdapter extends RecyclerView.Adapter<AlmaterAdapter.AlmaterV
     public interface OnUserClickListener {
         void onUserClick(User user);
         void onEmailClick(User user);
+        void onConnectClick(User user);
     }
     
     public AlmaterAdapter(List<User> users, OnUserClickListener listener) {
@@ -72,6 +73,14 @@ public class AlmaterAdapter extends RecyclerView.Adapter<AlmaterAdapter.AlmaterV
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener.onEmailClick(users.get(position));
+                }
+            });
+            
+            // Connect button click listener
+            binding.mentorAvailableText.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onConnectClick(users.get(position));
                 }
             });
         }
