@@ -36,9 +36,16 @@ public class User {
     private String role; // "user", "admin"
     private long createdAt;
     private long lastActive;
+    private long updatedAt;
     private boolean emailVerified;
     private Map<String, Object> socialLinks;
     private Map<String, Object> privacySettings;
+    private String fcmToken;
+    private long lastTokenUpdate;
+    private boolean emailNotificationsEnabled;
+    private String industry;
+    private String currency;
+    private String profileImagePublicId;
     
     // Transient fields (not stored in Firestore)
     private transient boolean isConnected; // Whether current user is connected to this user
@@ -96,6 +103,10 @@ public class User {
 
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
+    
+    // Handle both studentId and studentID from Firestore
+    public void setStudentID(String studentID) { this.studentId = studentID; }
+    public String getStudentID() { return studentId; }
 
     public String getProfileImageUrl() { return profileImageUrl; }
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
@@ -145,8 +156,29 @@ public class User {
     public long getLastActive() { return lastActive; }
     public void setLastActive(long lastActive) { this.lastActive = lastActive; }
 
+    public long getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
+
     public boolean isEmailVerified() { return emailVerified; }
     public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+    
+    public String getFcmToken() { return fcmToken; }
+    public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
+    
+    public long getLastTokenUpdate() { return lastTokenUpdate; }
+    public void setLastTokenUpdate(long lastTokenUpdate) { this.lastTokenUpdate = lastTokenUpdate; }
+    
+    public boolean isEmailNotificationsEnabled() { return emailNotificationsEnabled; }
+    public void setEmailNotificationsEnabled(boolean emailNotificationsEnabled) { this.emailNotificationsEnabled = emailNotificationsEnabled; }
+    
+    public String getIndustry() { return industry; }
+    public void setIndustry(String industry) { this.industry = industry; }
+    
+    public String getCurrency() { return currency; }
+    public void setCurrency(String currency) { this.currency = currency; }
+    
+    public String getProfileImagePublicId() { return profileImagePublicId; }
+    public void setProfileImagePublicId(String profileImagePublicId) { this.profileImagePublicId = profileImagePublicId; }
 
     public Map<String, Object> getSocialLinks() { return socialLinks; }
     public void setSocialLinks(Map<String, Object> socialLinks) { this.socialLinks = socialLinks; }
