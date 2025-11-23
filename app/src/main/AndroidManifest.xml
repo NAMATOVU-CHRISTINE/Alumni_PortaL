@@ -78,6 +78,9 @@
             android:name=".AlumniDirectoryActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity 
+            android:name=".AlmaterDirectoryActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
             android:name=".JobBoardActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity 
