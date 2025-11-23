@@ -84,7 +84,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void signUpWithGoogle() {
         showLoadingIndicator();
-        // Launch Google Sign-in directly without signing out first (faster)
+        // Launch Google Sign-in to get email and account info
         Intent signInIntent = googleSignInClient.getSignInIntent();
         googleSignInLauncher.launch(signInIntent);
     }
@@ -119,24 +119,38 @@ public class SignupActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         String userId = mAuth.getCurrentUser().getUid();
+                        String googleEmail = mAuth.getCurrentUser().getEmail();
                         
-                        // Check if user already exists with timeout
+                        // Check if user already exists
                         db.collection("users").document(userId).get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
                                         // New user - redirect to complete profile
                                         hideLoadingIndicator();
                                         Intent intent = new Intent(SignupActivity.this, CompleteGoogleSignupActivity.class);
+                                        intent.putExtra("googleEmail", googleEmail);
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        // User already exists, just login
+                                        // User already exists - check if email is verified
                                         hideLoadingIndicator();
-                                        Toast.makeText(SignupActivity.this, "Account already exists. Logging you in...", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
+                                        Boolean emailVerified = documentSnapshot.getBoolean("emailVerified");
+                                        if (emailVerified != null && emailVerified) {
+                                            // Email verified, go to home
+                                            Toast.makeText(SignupActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            // Email not verified yet, show verification screen
+                                            Toast.makeText(SignupActivity.this, "Please verify your email first.", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                            intent.putExtra("email_verification_pending", true);
+                                            intent.putExtra("user_email", googleEmail);
+                                            startActivity(intent);
+                                            finish();
+                                        }
                                     }
                                 })
                                 .addOnFailureListener(e -> {
