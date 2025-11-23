@@ -270,6 +270,29 @@ public class NotificationHelper {
     }
     
     /**
+     * Update notification preferences in Firestore for Cloud Functions to read
+     */
+    private static void updateNotificationPreferencesInFirestore(String key, boolean value) {
+        if (auth.getCurrentUser() == null) {
+            Log.w(TAG, "No authenticated user, cannot update notification preferences");
+            return;
+        }
+        
+        String userId = auth.getCurrentUser().getUid();
+        Map<String, Object> preferences = new HashMap<>();
+        preferences.put("notificationPreferences." + key, value);
+        
+        db.collection("users").document(userId)
+                .update(preferences)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Notification preference updated: " + key + " = " + value);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to update notification preference", e);
+                });
+    }
+    
+    /**
      * Clear notification data (for logout)
      */
     public static void clearNotificationData() {
