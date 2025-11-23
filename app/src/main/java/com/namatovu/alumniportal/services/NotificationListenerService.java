@@ -11,6 +11,11 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.namatovu.alumniportal.HomeActivity;
@@ -26,14 +31,17 @@ public class NotificationListenerService {
     private static final int NOTIFICATION_ID = 1001;
     
     private FirebaseFirestore db;
+    private FirebaseDatabase realtimeDb;
     private FirebaseAuth mAuth;
     private Context context;
     private ListenerRegistration listenerRegistration;
+    private ValueEventListener realtimeListener;
     private static int notificationCounter = 0;
     
     public NotificationListenerService(Context context) {
         this.context = context;
         this.db = FirebaseFirestore.getInstance();
+        this.realtimeDb = FirebaseDatabase.getInstance();
         this.mAuth = FirebaseAuth.getInstance();
     }
     
@@ -52,33 +60,72 @@ public class NotificationListenerService {
         // Create notification channel for Android 8+
         createNotificationChannel();
         
-        // Listen for new notifications for this user
-        listenerRegistration = db.collection("notifications")
-            .whereEqualTo("userId", currentUserId)
-            .whereEqualTo("read", false)
-            .addSnapshotListener((querySnapshot, error) -> {
-                if (error != null) {
-                    Log.e(TAG, "Error listening for notifications", error);
-                    return;
+        // Try Firestore first, fallback to Realtime Database
+        try {
+            // Listen for new notifications for this user in Firestore
+            listenerRegistration = db.collection("notifications")
+                .whereEqualTo("userId", currentUserId)
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Error listening for Firestore notifications", error);
+                        return;
+                    }
+                    
+                    if (querySnapshot != null) {
+                        Log.d(TAG, "Received " + querySnapshot.getDocumentChanges().size() + " notification changes");
+                        querySnapshot.getDocumentChanges().forEach(change -> {
+                            if (change.getType().toString().equals("ADDED")) {
+                                // New notification received
+                                String title = change.getDocument().getString("title");
+                                String message = change.getDocument().getString("message");
+                                String type = change.getDocument().getString("type");
+                                String referenceId = change.getDocument().getString("referenceId");
+                                
+                                Log.d(TAG, "New Firestore notification: " + title + " - " + message);
+                                
+                                // Show notification
+                                showNotification(title, message, type, referenceId);
+                            }
+                        });
+                    }
+                });
+            Log.d(TAG, "Firestore listener registered successfully");
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up Firestore listener", e);
+        }
+    }
+    
+    /**
+     * Start listening using Realtime Database as fallback
+     */
+    private void startRealtimeListener(String currentUserId) {
+        DatabaseReference notificationsRef = realtimeDb.getReference("notifications").child(currentUserId);
+        
+        realtimeListener = notificationsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String title = snapshot.child("title").getValue(String.class);
+                    String message = snapshot.child("message").getValue(String.class);
+                    String type = snapshot.child("type").getValue(String.class);
+                    String referenceId = snapshot.child("referenceId").getValue(String.class);
+                    Boolean read = snapshot.child("read").getValue(Boolean.class);
+                    
+                    if (read == null || !read) {
+                        Log.d(TAG, "New Realtime DB notification: " + title + " - " + message);
+                        showNotification(title, message, type, referenceId);
+                        
+                        // Mark as read
+                        snapshot.getRef().child("read").setValue(true);
+                    }
                 }
-                
-                if (querySnapshot != null) {
-                    querySnapshot.getDocumentChanges().forEach(change -> {
-                        if (change.getType().toString().equals("ADDED")) {
-                            // New notification received
-                            String title = change.getDocument().getString("title");
-                            String message = change.getDocument().getString("message");
-                            String type = change.getDocument().getString("type");
-                            String referenceId = change.getDocument().getString("referenceId");
-                            
-                            Log.d(TAG, "New notification: " + title + " - " + message);
-                            
-                            // Show notification
-                            showNotification(title, message, type, referenceId);
-                        }
-                    });
-                }
-            });
+            }
+            
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e(TAG, "Error listening for Realtime DB notifications", error.toException());
+            }
+        });
     }
     
     /**
