@@ -22,6 +22,7 @@ import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AlumniDirectoryActivity extends AppCompatActivity {
     private static final String TAG = "AlumniDirectoryActivity";
@@ -183,12 +184,13 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                             // Directory includes:
                             // - "alumni" = Graduated students
                             // - "staff" = Faculty/staff members
+                            // - null/empty = Default to showing (for backward compatibility)
                             // Excluded: "student" = Current students
                             String userTypeValue = user.getUserType();
-                            boolean isAlumniOrStaff = "alumni".equalsIgnoreCase(userTypeValue) || "staff".equalsIgnoreCase(userTypeValue);
                             
-                            if (!isAlumniOrStaff) {
-                                // Skip students - only show alumni and staff in directory
+                            // Skip only if explicitly marked as "student"
+                            if ("student".equalsIgnoreCase(userTypeValue)) {
+                                Log.d(TAG, "Skipping current student: " + user.getFullName());
                                 continue;
                             }
                             
@@ -204,10 +206,11 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                             // Check if user has opted to be visible in directory
                             // Default to true if privacy settings are not explicitly set to false
                             boolean isVisible = true;
-                            if (user.getPrivacySettings() != null && !user.getPrivacySettings().isEmpty()) {
-                                Boolean showInDirectory = user.getPrivacySetting("showInDirectory");
-                                if (showInDirectory != null) {
-                                    isVisible = showInDirectory;
+                            Map<String, Object> privacySettings = user.getPrivacySettings();
+                            if (privacySettings != null && privacySettings.containsKey("showInDirectory")) {
+                                Object showInDirObj = privacySettings.get("showInDirectory");
+                                if (showInDirObj instanceof Boolean) {
+                                    isVisible = (Boolean) showInDirObj;
                                 }
                             }
                             

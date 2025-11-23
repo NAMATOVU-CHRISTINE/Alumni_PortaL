@@ -87,7 +87,8 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
                     "Class of " + user.getGraduationYear() : "Graduation year not specified");
             
             // Current position (if user allows it to be shown)
-            if (user.getPrivacySetting("showCurrentJob") && user.getCurrentJob() != null) {
+            boolean showJob = getPrivacySetting(user, "showCurrentJob", true);
+            if (showJob && user.getCurrentJob() != null) {
                 String jobInfo = user.getCurrentJob();
                 if (user.getCompany() != null) {
                     jobInfo += " at " + user.getCompany();
@@ -99,7 +100,8 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
             }
             
             // Location (if user allows it to be shown)
-            if (user.getPrivacySetting("showLocation") && user.getLocation() != null) {
+            boolean showLocation = getPrivacySetting(user, "showLocation", true);
+            if (showLocation && user.getLocation() != null) {
                 binding.locationText.setText(user.getLocation());
                 binding.locationText.setVisibility(View.VISIBLE);
             } else {
@@ -154,7 +156,8 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
             }
             
             // Mentor availability indicator
-            if (user.getPrivacySetting("allowMentorRequests")) {
+            boolean allowMentoring = getPrivacySetting(user, "allowMentorRequests", true);
+            if (allowMentoring) {
                 binding.mentorAvailableText.setVisibility(View.VISIBLE);
                 binding.mentorAvailableText.setText("Available for mentoring");
             } else {
@@ -162,7 +165,8 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
             }
             
             // Email button visibility (show if user allows email to be shown)
-            if (user.getPrivacySetting("showEmail") && user.getEmail() != null && !user.getEmail().isEmpty()) {
+            boolean showEmail = getPrivacySetting(user, "showEmail", false);
+            if (showEmail && user.getEmail() != null && !user.getEmail().isEmpty()) {
                 binding.btnEmail.setVisibility(View.VISIBLE);
             } else {
                 binding.btnEmail.setVisibility(View.GONE);
@@ -170,6 +174,17 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
             
             // End performance timing
             PerformanceHelper.getInstance().endTiming("alumni_adapter_bind");
+        }
+        
+        private boolean getPrivacySetting(User user, String setting, boolean defaultValue) {
+            if (user == null || user.getPrivacySettings() == null) {
+                return defaultValue;
+            }
+            Object value = user.getPrivacySettings().get(setting);
+            if (value instanceof Boolean) {
+                return (Boolean) value;
+            }
+            return defaultValue;
         }
     }
 }
