@@ -16,6 +16,11 @@
             android:id="@+id/nav_directory"
             android:icon="@drawable/ic_people"
             android:title="Alumni Directory" />
+        
+        <item
+            android:id="@+id/nav_almater_directory"
+            android:icon="@drawable/ic_people"
+            android:title="Almater Directory" />
     </group>
     
     <group android:id="@+id/group_connect">
