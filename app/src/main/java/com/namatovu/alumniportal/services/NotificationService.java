@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
+import com.namatovu.alumniportal.utils.NotificationHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -158,6 +159,12 @@ public class NotificationService {
      * Send incoming message notification (to recipient)
      */
     public void sendIncomingMessageNotification(String recipientId, String senderName, String messagePreview) {
+        // Check if message notifications are enabled
+        if (!NotificationHelper.areMessageNotificationsEnabled()) {
+            Log.d(TAG, "Message notifications disabled, skipping notification for: " + recipientId);
+            return;
+        }
+        
         // Send push notification to recipient
         sendPushNotification(
             recipientId,
