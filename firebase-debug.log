@@ -1,0 +1,102 @@
+[debug] [2025-11-23T09:54:04.834Z] ----------------------------------------------------------------------
+[debug] [2025-11-23T09:54:04.840Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only firestore:rules
+[debug] [2025-11-23T09:54:04.841Z] CLI Version:   14.24.1
+[debug] [2025-11-23T09:54:04.842Z] Platform:      linux
+[debug] [2025-11-23T09:54:04.842Z] Node Version:  v20.19.2
+[debug] [2025-11-23T09:54:04.842Z] Time:          Sun Nov 23 2025 12:54:04 GMT+0300 (East Africa Time)
+[debug] [2025-11-23T09:54:04.843Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-23T09:54:04.848Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-11-23T09:54:05.383Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-23T09:54:05.384Z] > authorizing via signed-in user (christinenamatovu972@gmail.com)
+[debug] [2025-11-23T09:54:05.385Z] [iam] checking project alumniportal-198ec for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2025-11-23T09:54:05.386Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:05.387Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:05.388Z] > refreshing access token with scopes: []
+[debug] [2025-11-23T09:54:05.391Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-23T09:54:05.391Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T09:54:21.465Z] ----------------------------------------------------------------------
+[debug] [2025-11-23T09:54:21.470Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only firestore:rules
+[debug] [2025-11-23T09:54:21.471Z] CLI Version:   14.24.1
+[debug] [2025-11-23T09:54:21.471Z] Platform:      linux
+[debug] [2025-11-23T09:54:21.472Z] Node Version:  v20.19.2
+[debug] [2025-11-23T09:54:21.472Z] Time:          Sun Nov 23 2025 12:54:21 GMT+0300 (East Africa Time)
+[debug] [2025-11-23T09:54:21.472Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-23T09:54:21.477Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-11-23T09:54:22.012Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-23T09:54:22.013Z] > authorizing via signed-in user (christinenamatovu972@gmail.com)
+[debug] [2025-11-23T09:54:22.014Z] [iam] checking project alumniportal-198ec for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2025-11-23T09:54:22.015Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:22.015Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:22.016Z] > refreshing access token with scopes: []
+[debug] [2025-11-23T09:54:22.018Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-23T09:54:22.018Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T09:54:22.758Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-11-23T09:54:22.759Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-11-23T09:54:32.032Z] *** [apiv2] error from fetch(https://www.googleapis.com/oauth2/v3/token, {"headers":{},"method":"POST","body":{"_overheadLength":545,"_valueLength":212,"_valuesToMeasure":[],"writable":false,"readable":true,"dataSize":0,"maxDataSize":2097152,"pauseStreams":true,"_released":true,"_streams":[],"_currentStream":null,"_insideLoop":false,"_pendingNext":false,"_boundary":"--------------------------c7338ad279a174855f44406e","_events":{},"_eventsCount":1}}): FetchError: request to https://www.googleapis.com/oauth2/v3/token failed, reason: getaddrinfo EAI_AGAIN www.googleapis.com
+[error] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[debug] [2025-11-23T09:54:32.034Z] [iam] error while checking permissions, command may fail: Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[info] 
+[info] === Deploying to 'alumniportal-198ec'...
+[info] 
+[info] i  deploying firestore 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2025-11-23T09:54:32.040Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:32.040Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:32.040Z] > refreshing access token with scopes: []
+[debug] [2025-11-23T09:54:32.042Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-23T09:54:32.042Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T09:54:47.055Z] *** [apiv2] error from fetch(https://www.googleapis.com/oauth2/v3/token, {"headers":{},"method":"POST","body":{"_overheadLength":545,"_valueLength":212,"_valuesToMeasure":[],"writable":false,"readable":true,"dataSize":0,"maxDataSize":2097152,"pauseStreams":true,"_released":true,"_streams":[],"_currentStream":null,"_insideLoop":false,"_pendingNext":false,"_boundary":"--------------------------b8f20998159e6e74f6929ed7","_events":{},"_eventsCount":1}}): FetchError: request to https://www.googleapis.com/oauth2/v3/token failed, reason: getaddrinfo EAI_AGAIN www.googleapis.com
+[error] Authentication Error: Your credentials are no longer valid. Please run firebase login --reauth
+
+For CI servers and headless environments, generate a new token with firebase login:ci
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2025-11-23T09:54:47.060Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:47.060Z] Checked if tokens are valid: false, expires at: 1763891355065
+[debug] [2025-11-23T09:54:47.060Z] > refreshing access token with scopes: []
+[debug] [2025-11-23T09:54:47.061Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-23T09:54:47.061Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T09:54:50.384Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-23T09:54:50.384Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T09:54:50.398Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test [none]
+[debug] [2025-11-23T09:54:50.399Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test [omitted]
+[debug] [2025-11-23T09:54:53.396Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test 200
+[debug] [2025-11-23T09:54:53.396Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test {}
+[info] ✔  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2025-11-23T09:54:53.399Z] Checked if tokens are valid: true, expires at: 1763895289385
+[debug] [2025-11-23T09:54:53.399Z] Checked if tokens are valid: true, expires at: 1763895289385
+[debug] [2025-11-23T09:54:53.401Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases pageSize=10&pageToken=
+[debug] [2025-11-23T09:54:54.381Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases 200
+[debug] [2025-11-23T09:54:54.381Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases {"releases":[{"name":"projects/alumniportal-198ec/releases/cloud.firestore","rulesetName":"projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2","createTime":"2025-11-02T12:57:13.468731Z","updateTime":"2025-11-23T09:14:00.949758Z"}]}
+[debug] [2025-11-23T09:54:54.382Z] Checked if tokens are valid: true, expires at: 1763895289385
+[debug] [2025-11-23T09:54:54.382Z] Checked if tokens are valid: true, expires at: 1763895289385
+[debug] [2025-11-23T09:54:54.382Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2 [none]
+[debug] [2025-11-23T09:54:55.299Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2 200
+[debug] [2025-11-23T09:54:55.300Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2 [omitted]
+[info] i  firestore: latest version of firestore.rules already up to date, skipping upload... 
+[debug] [2025-11-23T09:54:55.303Z] [rules] releasing cloud.firestore/(default) with ruleset projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2
+[debug] [2025-11-23T09:54:55.303Z] Checked if tokens are valid: true, expires at: 1763895289385
+[debug] [2025-11-23T09:54:55.303Z] Checked if tokens are valid: true, expires at: 1763895289385
+[debug] [2025-11-23T09:54:55.304Z] >>> [apiv2][query] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) [none]
+[debug] [2025-11-23T09:54:55.304Z] >>> [apiv2][body] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) {"release":{"name":"projects/alumniportal-198ec/releases/cloud.firestore/(default)","rulesetName":"projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2"}}
+[debug] [2025-11-23T09:54:56.353Z] <<< [apiv2][status] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) 200
+[debug] [2025-11-23T09:54:56.353Z] <<< [apiv2][body] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) {"name":"projects/alumniportal-198ec/releases/cloud.firestore","rulesetName":"projects/alumniportal-198ec/rulesets/3ef37be4-71c8-4137-8064-ce2393a689e2","createTime":"2025-11-02T12:57:13.468731Z","updateTime":"2025-11-23T09:54:56.159139Z"}
+[debug] [2025-11-23T09:54:56.354Z] [rules] updated release projects/alumniportal-198ec/releases/cloud.firestore
+[info] ✔  firestore: released rules firestore.rules to cloud.firestore 
+[info] 
+[info] ✔  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/alumniportal-198ec/overview
+[debug] [2025-11-23T09:55:06.381Z] Error: Timed out.
+    at Timeout._onTimeout (/usr/local/lib/node_modules/firebase-tools/lib/utils.js:275:49)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7)
+[error] 
+[error] Error: An unexpected error has occurred.
