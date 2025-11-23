@@ -81,8 +81,11 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
 
     class OpportunityViewHolder extends RecyclerView.ViewHolder {
         TextView tvLogo, tvTitle, tvCompany, tvLocation, tvDeadline, tvShortDesc;
+        TextView tvPosterName, tvPosterBio, tvDatePosted;
+        ImageView imageViewPoster;
         Chip chipCategory;
         MaterialButton btnSave;
+        FirebaseFirestore db;
 
         public OpportunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,6 +98,11 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
             tvShortDesc = itemView.findViewById(R.id.tvDescription);
             chipCategory = itemView.findViewById(R.id.chipCategory);
             btnSave = itemView.findViewById(R.id.btnSave);
+            tvPosterName = itemView.findViewById(R.id.tvPosterName);
+            tvPosterBio = itemView.findViewById(R.id.tvPosterBio);
+            imageViewPoster = itemView.findViewById(R.id.imageViewPoster);
+            tvDatePosted = itemView.findViewById(R.id.tvDatePosted);
+            db = FirebaseFirestore.getInstance();
             MaterialButton btnApply = itemView.findViewById(R.id.btnApply);
             MaterialButton btnDetails = itemView.findViewById(R.id.btnDetails);
 
@@ -135,6 +143,11 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
         }
 
         public void bind(Opportunity opportunity) {
+            // Load poster profile data
+            if (opportunity.getPostedBy() != null && !opportunity.getPostedBy().isEmpty()) {
+                loadPosterProfile(opportunity.getPostedBy());
+            }
+            
             // Logo or initial
             if (opportunity.getCompanyLogo() != null && !opportunity.getCompanyLogo().isEmpty()) {
                 tvLogo.setText(opportunity.getCompanyLogo());
@@ -146,7 +159,14 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
 
             tvTitle.setText(opportunity.getTitle());
             tvCompany.setText(opportunity.getCompany());
-            tvShortDesc.setText(opportunity.getShortDescription());
+            
+            // Use actual description from opportunity
+            String description = opportunity.getDescription();
+            if (description != null && !description.isEmpty()) {
+                tvShortDesc.setText(description);
+            } else {
+                tvShortDesc.setText(opportunity.getShortDescription());
+            }
 
             if (opportunity.getLocation() != null && !opportunity.getLocation().isEmpty()) {
                 tvLocation.setText("📍 " + opportunity.getLocation());
@@ -162,6 +182,11 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
                 tvDeadline.setTextColor(context.getResources().getColor(R.color.must_green));
             }
 
+            // Set date posted
+            if (tvDatePosted != null) {
+                tvDatePosted.setText(opportunity.getFormattedDatePosted());
+            }
+
             chipCategory.setText(opportunity.getCategoryIcon() + " " + opportunity.getCategory());
 
             // Save state as text (keeps resources simple and compatible)
@@ -172,6 +197,52 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
                 btnSave.setText("Save");
                 btnSave.setContentDescription("Save opportunity");
             }
+        }
+        
+        private void loadPosterProfile(String userId) {
+            db.collection("users").document(userId)
+                    .addSnapshotListener((documentSnapshot, error) -> {
+                        if (error != null || documentSnapshot == null || !documentSnapshot.exists()) {
+                            imageViewPoster.setImageResource(R.drawable.ic_person);
+                            tvPosterName.setText("Unknown");
+                            tvPosterBio.setText("");
+                            return;
+                        }
+                        
+                        try {
+                            User user = documentSnapshot.toObject(User.class);
+                            if (user != null) {
+                                // Load profile picture
+                                String profileImageUrl = user.getProfileImageUrl();
+                                if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                    Glide.with(context)
+                                            .load(profileImageUrl)
+                                            .circleCrop()
+                                            .placeholder(R.drawable.ic_person)
+                                            .error(R.drawable.ic_person)
+                                            .into(imageViewPoster);
+                                } else {
+                                    imageViewPoster.setImageResource(R.drawable.ic_person);
+                                }
+                                
+                                // Load poster name
+                                String fullName = user.getFullName();
+                                tvPosterName.setText(fullName != null ? fullName : "Unknown");
+                                
+                                // Load poster bio/about
+                                String bio = user.getBio();
+                                if (bio != null && !bio.isEmpty()) {
+                                    tvPosterBio.setText(bio);
+                                } else {
+                                    String job = user.getCurrentJob();
+                                    tvPosterBio.setText(job != null ? job : "Alumni");
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e("OpportunityAdapter", "Error loading poster profile", e);
+                            imageViewPoster.setImageResource(R.drawable.ic_person);
+                        }
+                    });
         }
     }
 }
