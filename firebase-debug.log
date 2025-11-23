@@ -1,0 +1,37 @@
+[debug] [2025-11-23T08:49:14.136Z] ----------------------------------------------------------------------
+[debug] [2025-11-23T08:49:14.148Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only firestore:rules
+[debug] [2025-11-23T08:49:14.149Z] CLI Version:   14.24.1
+[debug] [2025-11-23T08:49:14.150Z] Platform:      linux
+[debug] [2025-11-23T08:49:14.150Z] Node Version:  v20.19.2
+[debug] [2025-11-23T08:49:14.150Z] Time:          Sun Nov 23 2025 11:49:14 GMT+0300 (East Africa Time)
+[debug] [2025-11-23T08:49:14.151Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-23T08:49:14.625Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-23T08:49:14.626Z] > authorizing via signed-in user (christinenamatovu972@gmail.com)
+[debug] [2025-11-23T08:49:14.626Z] [iam] checking project alumniportal-198ec for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2025-11-23T08:49:14.628Z] Checked if tokens are valid: false, expires at: 1763887711534
+[debug] [2025-11-23T08:49:14.629Z] Checked if tokens are valid: false, expires at: 1763887711534
+[debug] [2025-11-23T08:49:14.630Z] > refreshing access token with scopes: []
+[debug] [2025-11-23T08:49:14.634Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-23T08:49:14.635Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T08:49:16.063Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-23T08:49:16.064Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-23T08:49:16.082Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions [none]
+[debug] [2025-11-23T08:49:16.082Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions x-goog-quota-user=projects/alumniportal-198ec
+[debug] [2025-11-23T08:49:16.083Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2025-11-23T08:49:26.734Z] ----------------------------------------------------------------------
+[debug] [2025-11-23T08:49:26.741Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only firestore:rules
+[debug] [2025-11-23T08:49:26.742Z] CLI Version:   14.24.1
+[debug] [2025-11-23T08:49:26.743Z] Platform:      linux
+[debug] [2025-11-23T08:49:26.743Z] Node Version:  v20.19.2
+[debug] [2025-11-23T08:49:26.743Z] Time:          Sun Nov 23 2025 11:49:26 GMT+0300 (East Africa Time)
+[debug] [2025-11-23T08:49:26.743Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-23T08:49:27.317Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-23T08:49:27.318Z] > authorizing via signed-in user (christinenamatovu972@gmail.com)
+[debug] [2025-11-23T08:49:27.318Z] [iam] checking project alumniportal-198ec for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2025-11-23T08:49:27.320Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T08:49:27.321Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T08:49:27.323Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions [none]
+[debug] [2025-11-23T08:49:27.324Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions x-goog-quota-user=projects/alumniportal-198ec
+[debug] [2025-11-23T08:49:27.324Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
