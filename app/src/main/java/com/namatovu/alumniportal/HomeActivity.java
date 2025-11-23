@@ -242,7 +242,7 @@ public class HomeActivity extends AppCompatActivity {
         } else if (itemId == R.id.nav_directory) {
             intent = new Intent(this, AlumniDirectoryActivity.class);
         } else if (itemId == R.id.nav_almater_directory) {
-            intent = new Intent(this, AlumniDirectoryActivity.class);
+            intent = new Intent(this, AlmaterDirectoryActivity.class);
         } else if (itemId == R.id.nav_mentorship) {
             intent = new Intent(this, MentorshipActivity.class);
         } else if (itemId == R.id.nav_jobs) {
