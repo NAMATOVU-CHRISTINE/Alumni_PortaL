@@ -101,6 +101,19 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
                     // Open email app with implicit intent
                     sendEmailToUser(user);
                 }
+                
+                @Override
+                public void onConnectClick(User user) {
+                    // Open chat with the user
+                    Intent intent = new Intent(AlmaterDirectoryActivity.this, ChatActivity.class);
+                    intent.putExtra("userId", user.getUserId());
+                    intent.putExtra("userName", user.getFullName());
+                    intent.putExtra("userProfileImage", user.getProfileImageUrl());
+                    startActivity(intent);
+                    
+                    // Log analytics
+                    AnalyticsHelper.logNavigation("ChatActivity", "AlmaterDirectoryActivity");
+                }
             });
             
             if (binding.alumniRecyclerView != null) {
