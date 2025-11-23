@@ -243,37 +243,47 @@ public class SignupActivity extends AppCompatActivity {
                                         user.put("userType", selectedUserType.toLowerCase());
                                         user.put("isAlumni", "alumni".equalsIgnoreCase(selectedUserType));
                                         user.put("emailVerified", false);
-
-                                        db.collection("users").document(userId)
-                                                .set(user)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    // Send email verification after saving user
-                                                    mAuth.getCurrentUser().sendEmailVerification()
-                                                            .addOnCompleteListener(emailTask -> {
+                                        
+                                        // Get and save FCM token immediately
+                                        com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
+                                                .addOnCompleteListener(tokenTask -> {
+                                                    if (tokenTask.isSuccessful()) {
+                                                        String fcmToken = tokenTask.getResult();
+                                                        user.put("fcmToken", fcmToken);
+                                                        android.util.Log.d("SignupActivity", "FCM token obtained: " + fcmToken);
+                                                    }
+                                                    
+                                                    db.collection("users").document(userId)
+                                                            .set(user)
+                                                            .addOnSuccessListener(aVoid -> {
+                                                                // Send email verification after saving user
+                                                                mAuth.getCurrentUser().sendEmailVerification()
+                                                                        .addOnCompleteListener(emailTask -> {
+                                                                            hideLoadingIndicator();
+                                                                            if (emailTask.isSuccessful()) {
+                                                                                Toast.makeText(SignupActivity.this, "Registration successful! Please verify your email to continue.", Toast.LENGTH_LONG).show();
+                                                                                // Sign out user until they verify email
+                                                                                mAuth.signOut();
+                                                                                // Show verification pending message and go back to login
+                                                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                                                intent.putExtra("email_verification_pending", true);
+                                                                                intent.putExtra("user_email", personalEmail);
+                                                                                startActivity(intent);
+                                                                                finish();
+                                                                            } else {
+                                                                                Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
+                                                                                // Sign out and go back to login
+                                                                                mAuth.signOut();
+                                                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                                                startActivity(intent);
+                                                                                finish();
+                                                                            }
+                                                                        });
+                                                            })
+                                                            .addOnFailureListener(e -> {
                                                                 hideLoadingIndicator();
-                                                                if (emailTask.isSuccessful()) {
-                                                                    Toast.makeText(SignupActivity.this, "Registration successful! Please verify your email to continue.", Toast.LENGTH_LONG).show();
-                                                                    // Sign out user until they verify email
-                                                                    mAuth.signOut();
-                                                                    // Show verification pending message and go back to login
-                                                                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                                                    intent.putExtra("email_verification_pending", true);
-                                                                    intent.putExtra("user_email", personalEmail);
-                                                                    startActivity(intent);
-                                                                    finish();
-                                                                } else {
-                                                                    Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
-                                                                    // Sign out and go back to login
-                                                                    mAuth.signOut();
-                                                                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                                                    startActivity(intent);
-                                                                    finish();
-                                                                }
+                                                                Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                             });
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    hideLoadingIndicator();
-                                                    Toast.makeText(SignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 });
                                     } else {
                                         hideLoadingIndicator();

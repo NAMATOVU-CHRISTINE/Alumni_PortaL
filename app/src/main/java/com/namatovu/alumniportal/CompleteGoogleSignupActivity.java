@@ -116,10 +116,19 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                     user.put("userId", userId);
                                     user.put("userType", "student"); // Default: Current students
                                     user.put("isAlumni", false);
-
-                                    db.collection("users").document(userId)
-                                            .set(user)
-                                            .addOnSuccessListener(aVoid2 -> {
+                                    
+                                    // Get and save FCM token immediately
+                                    com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
+                                            .addOnCompleteListener(tokenTask -> {
+                                                if (tokenTask.isSuccessful()) {
+                                                    String fcmToken = tokenTask.getResult();
+                                                    user.put("fcmToken", fcmToken);
+                                                    android.util.Log.d("CompleteGoogleSignup", "FCM token obtained: " + fcmToken);
+                                                }
+                                                
+                                                db.collection("users").document(userId)
+                                                        .set(user)
+                                                        .addOnSuccessListener(aVoid2 -> {
                                                 // Send email verification
                                                 mAuth.getCurrentUser().sendEmailVerification()
                                                         .addOnCompleteListener(emailTask -> {
@@ -146,9 +155,10 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                                             }
                                                         });
                                             })
-                                            .addOnFailureListener(e -> {
-                                                hideLoadingIndicator();
-                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        .addOnFailureListener(e -> {
+                                                            hideLoadingIndicator();
+                                                            Toast.makeText(CompleteGoogleSignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        });
                                             });
                                 })
                                 .addOnFailureListener(e -> {

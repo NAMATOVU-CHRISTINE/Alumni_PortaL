@@ -140,19 +140,33 @@ public class LoginActivity extends AppCompatActivity {
                                         user.put("userType", "student"); // Default: Current students
                                         user.put("isAlumni", false);
                                         user.put("createdAt", System.currentTimeMillis());
-
-                                        db.collection("users").document(userId).set(user)
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.d(TAG, "New user created via Google Sign-in");
-                                                    navigateToHome();
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    Log.e(TAG, "Error saving user data", e);
-                                                    hideLoadingIndicator();
-                                                    Toast.makeText(LoginActivity.this, "Error saving user data", Toast.LENGTH_SHORT).show();
+                                        
+                                        // Get and save FCM token immediately
+                                        com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
+                                                .addOnCompleteListener(tokenTask -> {
+                                                    if (tokenTask.isSuccessful()) {
+                                                        String fcmToken = tokenTask.getResult();
+                                                        user.put("fcmToken", fcmToken);
+                                                        Log.d(TAG, "FCM token obtained: " + fcmToken);
+                                                    }
+                                                    
+                                                    db.collection("users").document(userId).set(user)
+                                                            .addOnSuccessListener(aVoid -> {
+                                                                Log.d(TAG, "New user created via Google Sign-in");
+                                                                navigateToHome();
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Log.e(TAG, "Error saving user data", e);
+                                                                hideLoadingIndicator();
+                                                                Toast.makeText(LoginActivity.this, "Error saving user data", Toast.LENGTH_SHORT).show();
+                                                            });
                                                 });
                                     } else {
                                         Log.d(TAG, "Existing user logging in via Google");
+                                        // Update FCM token for existing user
+                                        com.namatovu.alumniportal.utils.NotificationHelper.updateTokenInFirestore(
+                                            com.namatovu.alumniportal.utils.NotificationHelper.getFCMToken()
+                                        );
                                         navigateToHome();
                                     }
                                 })
