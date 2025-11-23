@@ -220,7 +220,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                buttonSend.setEnabled(s.toString().trim().length() > 0);
+                boolean hasText = s.toString().trim().length() > 0;
+                buttonSend.setEnabled(hasText);
+                Log.d(TAG, "Text changed: '" + s.toString() + "' - Button enabled: " + hasText);
             }
 
             @Override
@@ -229,6 +231,7 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         });
 
         buttonSend.setOnClickListener(v -> {
+            Log.d(TAG, "Send button clicked");
             sendTextMessage();
             scrollToBottom(true);
         });
