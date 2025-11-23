@@ -1,18 +1,23 @@
 package com.namatovu.alumniportal.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.models.Opportunity;
+import com.namatovu.alumniportal.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
