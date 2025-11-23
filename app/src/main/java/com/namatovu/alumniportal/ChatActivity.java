@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.namatovu.alumniportal.adapters.ChatAdapter;
 import com.namatovu.alumniportal.databinding.ActivityChatBinding;
 import com.namatovu.alumniportal.models.ChatMessage;
@@ -300,15 +301,9 @@ public class ChatActivity extends AppCompatActivity {
                     // Update user activity
                     updateCurrentUserActivity();
                     
-                    // Broadcast message received event to recipient
+                    // Send FCM notification to recipient
                     loadCurrentUserNameForNotification(currentUserId, senderName -> {
-                        Intent broadcastIntent = new Intent(MessageBroadcastReceiver.ACTION_MESSAGE_RECEIVED);
-                        broadcastIntent.putExtra("senderName", senderName);
-                        broadcastIntent.putExtra("messageText", messageText);
-                        broadcastIntent.putExtra("chatId", chatRoomId);
-                        broadcastIntent.putExtra("senderId", currentUserId);
-                        LocalBroadcastManager.getInstance(ChatActivity.this).sendBroadcast(broadcastIntent);
-                        Log.d(TAG, "Message broadcast sent");
+                        sendFCMNotification(otherUserId, senderName, messageText, chatRoomId);
                     });
                     
                     // Update last message in chat room info
@@ -509,5 +504,81 @@ public class ChatActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, "Error sending notification to user", e);
         }
+    }
+    
+    /**
+     * Send FCM notification to recipient's phone
+     */
+    private void sendFCMNotification(String recipientUserId, String senderName, String messageText, String chatId) {
+        // Get recipient's FCM token from Firestore
+        db.collection("users").document(recipientUserId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        String fcmToken = doc.getString("fcmToken");
+                        if (fcmToken != null && !fcmToken.isEmpty()) {
+                            // Call backend to send FCM notification
+                            sendNotificationViaBackend(fcmToken, senderName, messageText, chatId);
+                        } else {
+                            Log.w(TAG, "Recipient has no FCM token");
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to get recipient FCM token", e));
+    }
+    
+    /**
+     * Send notification via Render backend API
+     */
+    private void sendNotificationViaBackend(String fcmToken, String senderName, String messageText, String chatId) {
+        try {
+            // TODO: Replace with your Render backend URL
+            String backendUrl = "https://your-render-app.onrender.com/api/notifications/message";
+            
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("recipientUserId", otherUserId);
+            payload.put("senderName", senderName);
+            payload.put("messageText", messageText);
+            payload.put("chatId", chatId);
+            payload.put("senderId", currentUserId);
+            
+            // Send HTTP POST request to backend
+            sendHttpRequest(backendUrl, payload);
+        } catch (Exception e) {
+            Log.e(TAG, "Error sending notification via backend", e);
+        }
+    }
+    
+    /**
+     * Send HTTP POST request to backend
+     */
+    private void sendHttpRequest(String url, Map<String, Object> payload) {
+        new Thread(() -> {
+            try {
+                java.net.URL urlObj = new java.net.URL(url);
+                java.net.HttpURLConnection conn = (java.net.HttpURLConnection) urlObj.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+                
+                // Convert payload to JSON
+                String jsonPayload = new com.google.gson.Gson().toJson(payload);
+                
+                try (java.io.OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonPayload.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+                
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200) {
+                    Log.d(TAG, "Notification sent successfully via backend");
+                } else {
+                    Log.e(TAG, "Backend returned error code: " + responseCode);
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                Log.e(TAG, "Error sending HTTP request", e);
+            }
+        }).start();
     }
 }
