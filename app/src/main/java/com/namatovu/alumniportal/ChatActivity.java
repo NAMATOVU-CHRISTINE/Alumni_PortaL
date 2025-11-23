@@ -128,7 +128,20 @@ public class ChatActivity extends AppCompatActivity {
             // Setup send button
             binding.buttonSend.setOnClickListener(v -> sendMessage());
             
-            // Setup input field
+            // Setup input field with text watcher to enable/disable send button
+            binding.editTextMessage.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    binding.buttonSend.setEnabled(s.toString().trim().length() > 0);
+                }
+
+                @Override
+                public void afterTextChanged(android.text.Editable s) {}
+            });
+            
             binding.editTextMessage.setOnEditorActionListener((v, actionId, event) -> {
                 if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
                     sendMessage();
