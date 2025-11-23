@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.namatovu.alumniportal.EmailService;
 import com.namatovu.alumniportal.models.MentorshipConnection;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 import com.namatovu.alumniportal.utils.NotificationHelper;
@@ -343,7 +344,7 @@ public class MentorshipService {
                             // Send in-app notification
                             String title = "New Mentorship Request";
                             String message = menteeName + " wants to connect with you as a mentor";
-                            notificationHelper.sendNotification(title, message, "mentorship_request", menteeId);
+                            NotificationHelper.sendMentorshipNotification(mentorId, menteeName, "request", menteeId);
                             
                             // Send email notification
                             sendEmailNotification(menteeEmail, menteeName, mentorName, "request");
@@ -370,7 +371,7 @@ public class MentorshipService {
                             // Send in-app notification
                             String title = "Mentorship Request Accepted!";
                             String message = mentorName + " accepted your mentorship request";
-                            notificationHelper.sendNotification(title, message, "mentorship_accepted", mentorName);
+                            NotificationHelper.sendMentorshipNotification(menteeId, mentorName, "accepted", menteeId);
                             
                             // Send email notification
                             sendEmailNotification(menteeEmail, null, mentorName, "accepted");
@@ -410,7 +411,7 @@ public class MentorshipService {
             }
             
             // Create email intent
-            EmailService emailService = new EmailService();
+            EmailService emailService = new EmailService(context);
             emailService.sendEmail(recipientEmail, subject, body);
             
             Log.d(TAG, "Email notification sent to: " + recipientEmail);
