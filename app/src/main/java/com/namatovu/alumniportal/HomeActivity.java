@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.namatovu.alumniportal.services.NotificationListenerService;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -42,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private NotificationListenerService notificationListenerService;
     
     // Adapters for dynamic content
     private RecommendationsAdapter recommendationsAdapter;
@@ -193,6 +195,10 @@ public class HomeActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        
+        // Initialize notification listener
+        notificationListenerService = new NotificationListenerService(this);
+        notificationListenerService.startListening();
 
         setupToolbar();
         setupRecyclerViews();
@@ -410,6 +416,10 @@ public class HomeActivity extends AppCompatActivity {
         // Clean up handler
         if (motivationHandler != null) {
             motivationHandler.removeCallbacks(motivationRunnable);
+        }
+        // Stop notification listener
+        if (notificationListenerService != null) {
+            notificationListenerService.stopListening();
         }
     }
 
