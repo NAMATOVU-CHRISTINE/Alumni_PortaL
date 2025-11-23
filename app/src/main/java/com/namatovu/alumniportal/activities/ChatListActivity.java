@@ -122,11 +122,12 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
         
         swipeRefreshLayout.setRefreshing(true);
         
-        // Listen for real-time updates to user's chats
+        // Listen for real-time updates to user's chats - ordered by most recent first
         chatsListener = db.collection("chats")
                 .whereArrayContains("participantIds", currentUserId)
                 .whereEqualTo("isActive", true)
                 .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING)
+                .limit(50) // Limit to 50 most recent chats for performance
                 .addSnapshotListener((querySnapshot, error) -> {
                     swipeRefreshLayout.setRefreshing(false);
                     
@@ -147,6 +148,8 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
                                     // Validate chat data
                                     if (SecurityHelper.isValidChatData(chat, currentUserId)) {
                                         allChats.add(chat);
+                                        Log.d(TAG, "Added chat: " + chat.getDisplayName(currentUserId) + 
+                                              ", lastMessageTime: " + chat.getLastMessageTimestamp());
                                     }
                                 }
                             } catch (Exception e) {
@@ -158,7 +161,7 @@ public class ChatListActivity extends AppCompatActivity implements ChatListAdapt
                         String currentQuery = searchView.getQuery().toString();
                         filterChats(currentQuery);
                         
-                        Log.d(TAG, "Loaded " + allChats.size() + " chats");
+                        Log.d(TAG, "Loaded " + allChats.size() + " chats, ordered by most recent");
                     }
                 });
     }
