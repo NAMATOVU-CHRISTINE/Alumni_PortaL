@@ -1,26 +1,57 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme for night mode. -->
-    <style name="Theme.Alumni_Portal" parent="Theme.MaterialComponents.NoActionBar">
-        <!-- Primary brand color (Green). -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Dark Theme - LinkedIn Style -->
+    <style name="Theme.Alumni_Portal" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Core colors -->
         <item name="colorPrimary">@color/must_green</item>
-        <item name="colorPrimaryVariant">@color/must_green_dark</item>
-        <item name="colorOnPrimary">@color/white</item> <!-- Text on green surfaces. -->
-
-        <!-- Secondary brand color (Gold). -->
+        <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/must_gold</item>
-        <item name="colorOnSecondary">@color/black</item> <!-- Text on gold surfaces. -->
+        <item name="colorOnSecondary">@color/dark_background</item>
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Background colors - Pure black base like LinkedIn -->
+        <item name="android:colorBackground">@color/dark_background</item>
+        <item name="colorSurface">@color/dark_surface</item>
+        <item name="colorSurfaceVariant">@color/dark_elevated</item>
+        <item name="colorOnSurface">@color/dark_text_primary</item>
+        <item name="colorOnBackground">@color/dark_text_primary</item>
 
-        <!-- Set background and surface to dark gray. -->
-        <item name="android:colorBackground">@color/dark_gray</item>
-        <item name="colorSurface">@color/dark_gray</item>
+        <!-- App bar and system bars -->
+        <item name="android:statusBarColor">@color/dark_background</item>
+        <item name="android:navigationBarColor">@color/dark_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
 
-        <!-- Set default text colors to white for readability. -->
-        <item name="colorOnBackground">@color/white</item>
-        <item name="colorOnSurface">@color/white</item>
-        <item name="android:textColor">@color/white</item>
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/dark_text_primary</item>
+        <item name="android:textColorSecondary">@color/dark_text_secondary</item>
+        <item name="android:textColorHint">@color/dark_text_hint</item>
+        <item name="android:textColorTertiary">@color/dark_text_disabled</item>
 
+        <!-- Card and elevation -->
+        <item name="materialCardViewStyle">@style/Widget.Alumni.Card</item>
+        <item name="elevationOverlayEnabled">false</item>
+        
+        <!-- Divider color -->
+        <item name="android:listDivider">@color/dark_border</item>
+        
+        <!-- Button styles -->
+        <item name="materialButtonStyle">@style/Widget.Alumni.Button</item>
     </style>
+
+    <!-- Custom Card Style for Dark Theme -->
+    <style name="Widget.Alumni.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/dark_card</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/dark_border</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
+    <!-- Custom Button Style -->
+    <style name="Widget.Alumni.Button" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/must_green</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

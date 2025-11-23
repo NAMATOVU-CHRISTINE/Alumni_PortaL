@@ -17,22 +17,22 @@ This is a native Android application for the alumni. The app serves as a central
 
 ## Technology Stack
 
-*   **Language:** Java
-*   **Platform:** Android
-*   **Backend Services (Firebase):**
-    *   **Firebase Authentication:** For managing user accounts (login, signup, password reset).
-    *   **Firebase Firestore:** As the primary NoSQL database for storing all user data, posts, and other app content.
-    *   **Firebase Storage:** For storing user-uploaded content like profile pictures.
-*   **UI Components:**
-    *   Modern Material Design Components (`MaterialCardView`, `TextInputLayout`, etc.).
-    *   `RecyclerView` for efficiently displaying lists of data (news, profiles, etc.).
-    *   `WebView` for displaying web content within the app.
-    *   `CircleImageView` for profile images.
-*   **Data Fetching & Parsing:**
-    *   `XmlPullParser`: For robustly parsing the RSS feed from the MUST website.
-    *   **Glide:** For efficient loading and caching of profile images.
-*   **Networking (Demo):**
-    *   `Retrofit` & `Gson`: Used in a separate demo screen to showcase industry-standard REST API communication.
+- **Language:** Java
+- **Platform:** Android
+- **Backend Services (Firebase):**
+    - **Firebase Authentication:** For managing user accounts (login, signup, password reset).
+    - **Firebase Firestore:** As the primary NoSQL database for storing all user data, posts, and other app content.
+    - **Firebase Storage:** For storing user-uploaded content like profile pictures.
+- **UI Components:**
+    - Modern Material Design Components (`MaterialCardView`, `TextInputLayout`, etc.).
+    - `RecyclerView` for efficiently displaying lists of data (news, profiles, etc.).
+    - `WebView` for displaying web content within the app.
+    - `CircleImageView` for profile images.
+- **Data Fetching & Parsing:**
+    - `XmlPullParser`: For robustly parsing the RSS feed from the MUST website.
+    - **Glide:** For efficient loading and caching of profile images.
+- **Networking (Demo):**
+    - `Retrofit` & `Gson`: Used in a separate demo screen to showcase industry-standard REST API communication.
 
 ## Setup and Installation
 
@@ -51,7 +51,7 @@ To run this project, you will need to configure your own Firebase backend.
 
     Note: This project currently uses the Java package `com.namatovu.alumniportal`. If you prefer a different applicationId (for example `com.example.alumni_portal`), update `app/build.gradle.kts`'s `applicationId` and `namespace` accordingly and download the matching `google-services.json` from Firebase.
 4.  **Enable Firebase Services:** In the Firebase Console, ensure you have enabled the following services:
-    *   **Authentication:** Enable the "Email/Password" sign-in method.
-    *   **Firestore:** Create a new Firestore database.
-    *   **Storage:** Create a new Firebase Storage bucket.
+    - **Authentication:** Enable the "Email/Password" sign-in method.
+    - **Firestore:** Create a new Firestore database.
+    - **Storage:** Create a new Firebase Storage bucket.
 5.  **Build and Run:** Build and run the application on an Android device or emulator.

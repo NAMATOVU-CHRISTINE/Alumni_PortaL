@@ -12,11 +12,13 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="Job Details" />
+            app:title="Job Details"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -35,9 +37,7 @@
                 android:id="@+id/jobTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="24sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/App.TextAppearance.Title"
                 tools:text="Software Engineering Intern" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="18sp"
+                android:textAppearance="@style/App.TextAppearance.Subtitle"
                 tools:text="Google" />
 
             <TextView
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textSize="16sp"
+                android:textAppearance="@style/App.TextAppearance.Body"
                 tools:text="Kampala, Uganda" />
 
             <View
@@ -67,8 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Job Description"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
+                android:textAppearance="@style/App.TextAppearance.Subtitle"
                 android:textStyle="bold" />
 
             <TextView
@@ -91,7 +90,7 @@
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:padding="12dp"
-        android:text="Apply Now"
-        android:textSize="16sp" />
+        style="@style/App.Material3.Button"
+        android:text="Apply Now" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

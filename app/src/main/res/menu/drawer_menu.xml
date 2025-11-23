@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person"
+            android:title="My Profile" />
+        
+        <item
+            android:id="@+id/nav_directory"
+            android:icon="@drawable/ic_people"
+            android:title="Alumni Directory" />
+        
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_group"
+            android:title="Alumni Groups" />
+        
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_chat"
+            android:title="Messages" />
+    </group>
+
+    <item android:title="Opportunities">
+        <menu>
+            <item
+                android:id="@+id/nav_jobs"
+                android:icon="@drawable/ic_work"
+                android:title="Job Board" />
+            
+            <item
+                android:id="@+id/nav_events"
+                android:icon="@drawable/ic_event"
+                android:title="Events" />
+            
+            <item
+                android:id="@+id/nav_mentorship"
+                android:icon="@drawable/ic_mentor"
+                android:title="Mentorship" />
+        </menu>
+    </item>
+
+    <item android:title="Resources">
+        <menu>
+            <item
+                android:id="@+id/nav_career_tips"
+                android:icon="@drawable/ic_tips"
+                android:title="Career Tips" />
+            
+            <item
+                android:id="@+id/nav_knowledge"
+                android:icon="@drawable/ic_book"
+                android:title="Knowledge Base" />
+        </menu>
+    </item>
+
+    <item android:title="Account">
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings" />
+            
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+</menu>

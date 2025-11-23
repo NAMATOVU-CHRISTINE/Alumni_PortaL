@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".KnowledgeActivity">
+
+    <!-- App Bar Layout -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/must_green"
+            app:title="📚 Knowledge Hub"
+            app:titleTextColor="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/white"
+            app:menu="@menu/menu_search"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Quick Search -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                android:layout_marginBottom="20dp">
+
+                <SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_margin="4dp"
+                    android:queryHint="Search articles and tips..."
+                    android:iconifiedByDefault="false"
+                    android:background="?android:attr/colorBackground" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Categories Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📂 Filter by Category"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="?attr/colorSurface">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none"
+                        android:layout_margin="8dp">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupCategories"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:selectionRequired="false"
+                            android:layout_margin="4dp">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipAll"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="All"
+                                android:checked="true"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipNetworking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🤝 Networking"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipSkills"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💡 Skills"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipMentorship"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🌟 Mentorship"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipCareer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🚀 Career Growth"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipLeadership"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🏆 Leadership"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                app:chipBackgroundColor="@color/light_green"
+                                android:textColor="@color/must_green" />
+
+                        </com.google.android.material.chip.ChipGroup>
+
+                    </HorizontalScrollView>
+
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Articles Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="80dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📰 Featured Articles"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/must_green"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Handpicked articles, tips, and resources"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="4dp" />
+
+                <!-- Articles RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewArticles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_article_card" />
+
+                <!-- Empty State -->
+                <LinearLayout
+                    android:id="@+id/emptyStateLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="32dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📚"
+                        android:textSize="48sp"
+                        android:layout_marginBottom="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No articles found"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Check back soon for new resources! 🌟"
+                        android:textSize="14sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:gravity="center" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddArticle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/must_green"
+        app:tint="@color/white"
+        android:contentDescription="Add Article" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

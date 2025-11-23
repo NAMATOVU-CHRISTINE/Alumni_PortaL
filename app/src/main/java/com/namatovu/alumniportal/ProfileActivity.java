@@ -3,7 +3,10 @@ package com.namatovu.alumniportal;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.databinding.ActivityProfileBinding;
+import com.namatovu.alumniportal.utils.ImageLoadingHelper;
+import com.namatovu.alumniportal.models.User;
 
 import java.util.List;
 
@@ -26,6 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ActivityProfileBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ActivityResultLauncher<Intent> editProfileLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +42,34 @@ public class ProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        setSupportActionBar(binding.toolbar);
+        // Setup edit profile launcher to refresh on return
+        editProfileLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Profile was updated, refresh immediately
+                    Toast.makeText(this, "Refreshing profile...", Toast.LENGTH_SHORT).show();
+                    loadProfile();
+                }
+            }
+        );
 
-        binding.editProfileFab.setOnClickListener(v -> {
-            startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+        setSupportActionBar(binding.toolbar);
+        
+        // Setup navigation
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        binding.toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        // Setup button click listeners
+        binding.editProfileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+            editProfileLauncher.launch(intent);
+        });
+        
+        binding.logoutButton.setOnClickListener(v -> {
+            logoutUser();
         });
     }
 
@@ -58,39 +88,82 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        setLoadingState(true);
+        // Clear UI before loading new data
+        clearProfileUI();
+        
+        // Show loading state
+        showLoading(true);
+        
         db.collection("users").document(user.getUid()).get().addOnCompleteListener(task -> {
-            setLoadingState(false);
+            // Hide loading state
+            showLoading(false);
+            
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
                 if (doc != null && doc.exists()) {
                     try {
                         User u = doc.toObject(User.class);
-                        if (u != null) updateUi(u);
+                        if (u != null) updateUIWithUserData(u);
                     } catch (RuntimeException e) {
                         Log.e(TAG, "Failed to deserialize user", e);
+                        Toast.makeText(this, "Error loading profile data", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(this, "Profile not found", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Log.e(TAG, "Failed to load user profile", task.getException());
+                Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
             }
         });
     }
+    
+    private void clearProfileUI() {
+        // Clear all text fields
+        binding.nameText.setText("");
+        binding.emailText.setText("");
+        binding.bioText.setText("");
+        binding.careerText.setText("");
+        
+        // Clear profile image
+        binding.profileImage.setImageResource(R.drawable.ic_person);
+        
+        // Clear skills
+        binding.skillsChipGroup.removeAllViews();
+        
+        Log.d(TAG, "Profile UI cleared");
+    }
+    
+    private void showLoading(boolean show) {
+        if (show) {
+            // Disable buttons during loading
+            binding.editProfileButton.setEnabled(false);
+            binding.editProfileButton.setText("Loading...");
+        } else {
+            // Re-enable buttons
+            binding.editProfileButton.setEnabled(true);
+            binding.editProfileButton.setText("Edit Profile");
+        }
+    }
 
-    private void updateUi(@NonNull User user) {
-        binding.nameText.setText(user.getName());
+    private void updateUIWithUserData(User user) {
+        binding.nameText.setText(user.getFullName());
         binding.emailText.setText(user.getEmail());
         binding.bioText.setText(user.getBio());
-        binding.careerText.setText(user.getCareer());
+        binding.careerText.setText(user.getCurrentJob());
 
-        // profile image
+        // profile image - skip all caches to ensure fresh data
         String url = user.getProfileImageUrl();
+        Log.d(TAG, "Loading profile image URL: " + url);
         if (url != null && !url.isEmpty()) {
+            // Skip both memory and disk cache to ensure we get the latest image
             Glide.with(this)
-                    .load(url)
-                    .placeholder(R.drawable.ic_person)
-                    .error(R.drawable.ic_person)
-                    .into(binding.profileImage);
+                .load(url)
+                .skipMemoryCache(true)
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .into(binding.profileImage);
         } else {
             binding.profileImage.setImageResource(R.drawable.ic_person);
         }
@@ -98,12 +171,19 @@ public class ProfileActivity extends AppCompatActivity {
         // skills
         binding.skillsChipGroup.removeAllViews();
         List<String> skills = user.getSkills();
-        for (String s : skills) {
-            Chip c = new Chip(this);
-            c.setText(s);
-            c.setClickable(false);
-            c.setCheckable(false);
-            binding.skillsChipGroup.addView(c);
+        if (skills != null && !skills.isEmpty()) {
+            for (String s : skills) {
+                Chip c = new Chip(this);
+                c.setText(s);
+                c.setClickable(false);
+                c.setCheckable(false);
+                // Apply custom styling
+                c.setChipBackgroundColorResource(R.color.light_gray);
+                c.setTextColor(getColor(R.color.black));
+                c.setChipStrokeColorResource(R.color.must_green);
+                c.setChipStrokeWidth(2.0f);
+                binding.skillsChipGroup.addView(c);
+            }
         }
     }
 
@@ -111,5 +191,21 @@ public class ProfileActivity extends AppCompatActivity {
         if (loading) {
             binding.nameText.setText("Loading...");
         }
+    }
+    
+    private void logoutUser() {
+        // Show confirmation dialog
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Log Out")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yes", (dialog, which) -> {
+                mAuth.signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 }

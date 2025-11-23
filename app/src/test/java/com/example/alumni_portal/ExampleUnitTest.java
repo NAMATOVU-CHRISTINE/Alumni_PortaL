@@ -1,4 +1,4 @@
-package com.example.alumni_portal;
+package com.namatovu.alumniportal;
 
 import org.junit.Test;
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/textViewSystemMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/system_message_background"
+        android:padding="8dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:maxWidth="240dp"
+        tools:text="Alumni joined the conversation" />
+
+    <TextView
+        android:id="@+id/textViewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?android:attr/textColorTertiary"
+        android:textSize="10sp"
+        android:layout_marginTop="2dp"
+        tools:text="2:30 PM" />
+
+</LinearLayout>

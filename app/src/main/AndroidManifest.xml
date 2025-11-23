@@ -4,12 +4,30 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    
+    <!-- Runtime permissions for core features -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    
+    <!-- Permissions for Service and BroadcastReceiver -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
-        android:name=".AlumniApplication"
+        android:name=".AlumniPortalApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,41 +39,236 @@
         android:theme="@style/Theme.Alumni_Portal">
         <activity
             android:name=".SignupActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".CompleteGoogleSignupActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <!-- FIX: LoginActivity is now the starting point of the app -->
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".EventsActivity" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".MentorSearchActivity" />
-        <activity android:name=".JobsActivity" />
-        <activity android:name=".KnowledgeHubActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".MentorDetailActivity" />
-        <activity android:name=".JobDetailActivity" />
-        <activity android:name=".CreatePostActivity" /> <!-- Static Receiver for System-Wide Events -->
+        <activity 
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".HomeActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EventsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EditProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".AlumniDirectoryActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobBoardActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".MentorshipActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".MentorSearchActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".SettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".NewsFeedActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ViewProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".PostJobActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EventDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".CreateEventActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ArticleDetailsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".CreateArticleActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".MentorDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".CreatePostActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.ChatListActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.NotificationSettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.PrivacySettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity 
+            android:name=".CareerTipsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".SavedCareerTipsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".GrowSectionActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".KnowledgeActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".AddArticleActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ArticleDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".JobsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".AddOpportunityActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".OpportunityDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".RecentActivitiesActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".CustomizePreferencesActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".EventsNewsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".ProfileEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Alumni Groups Activities -->
+        <activity 
+            android:name=".activities.AlumniGroupsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.CreateGroupActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.GroupDetailActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Mentor Search Activity -->
+        <activity 
+            android:name=".activities.MentorSearchActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Debug News Activity -->
+        <activity 
+            android:name=".DebugNewsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Scrape News Activity -->
+        <activity 
+            android:name=".ScrapeNewsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        
+        <!-- Services -->
+        <service android:name=".services.AlumniNotificationService" 
+            android:exported="false" />
+        
+        <!-- Firebase Cloud Messaging Service -->
+        <service
+            android:name=".services.AlumniMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        
+        <!-- Data Sync Service (Background Service with ExecutorService) -->
+        <service
+            android:name=".services.DataSyncService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+        
+        <!-- Broadcast Receivers -->
+        <!-- Network Change Receiver -->
         <receiver
-            android:name=".NetworkReceiver"
+            android:name=".receivers.NetworkChangeReceiver"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
-
-                <!-- Listen for network connectivity changes -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <!-- Listen for power connected and disconnected events -->
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        
+        <!-- Boot Completed Receiver -->
+        <receiver
+            android:name=".receivers.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- NEW SERVICES FOR EXAM REQUIREMENTS -->
+        
+        <!-- Background Data Sync Service -->
+        <service
+            android:name=".services.DataSyncBackgroundService"
+            android:exported="false"
+            android:enabled="true" />
+            
+        <!-- Web Scraping Service -->
+        <service
+            android:name=".services.WebScrapingService"
+            android:exported="false"
+            android:enabled="true" />
+
+        <!-- Default notification icon and color -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/must_green" />
     </application>
 
 </manifest>

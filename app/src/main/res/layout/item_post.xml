@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp">
+    style="@style/App.Material3.Card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,9 +17,7 @@
             android:id="@+id/postTitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textAppearance="@style/App.TextAppearance.Subtitle"
             tools:text="This is a Sample Post Title" />
 
         <TextView
@@ -28,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp"
+            android:textAppearance="@style/App.TextAppearance.Body"
             tools:text="by Christine M."/>
 
         <TextView
@@ -38,6 +35,7 @@
             android:layout_marginTop="8dp"
             android:maxLines="3"
             android:ellipsize="end"
+            android:textAppearance="@style/App.TextAppearance.Body"
             tools:text="This is a short snippet of the post content to give the user a preview of what the post is about. It will be truncated if it is too long..." />
 
     </LinearLayout>
