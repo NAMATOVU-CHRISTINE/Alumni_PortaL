@@ -28,20 +28,27 @@ app.get('/health', (req, res) => {
 // Send message notification
 app.post('/api/notifications/message', async (req, res) => {
   try {
-    const { recipientUserId, senderName, messageText, chatId } = req.body;
+    const { recipientUserId, senderName, messageText, chatId, senderId } = req.body;
+
+    console.log('Notification request:', { recipientUserId, senderName, messageText, chatId });
 
     if (!recipientUserId || !senderName || !messageText || !chatId) {
+      console.error('Missing required fields');
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     // Get user's FCM token
     const userDoc = await db.collection('users').doc(recipientUserId).get();
     if (!userDoc.exists) {
+      console.error('User not found:', recipientUserId);
       return res.status(404).json({ error: 'User not found' });
     }
 
     const fcmToken = userDoc.data().fcmToken;
+    console.log('FCM Token found:', fcmToken ? 'Yes' : 'No');
+    
     if (!fcmToken) {
+      console.error('User has no FCM token:', recipientUserId);
       return res.status(400).json({ error: 'User has no FCM token' });
     }
 
@@ -49,7 +56,7 @@ app.post('/api/notifications/message', async (req, res) => {
     const message = {
       data: {
         type: 'message',
-        senderId: req.body.senderId || 'unknown',
+        senderId: senderId || 'unknown',
         senderName: senderName,
         messageText: messageText,
         chatId: chatId
@@ -57,7 +64,9 @@ app.post('/api/notifications/message', async (req, res) => {
       token: fcmToken
     };
 
+    console.log('Sending FCM message to token:', fcmToken.substring(0, 20) + '...');
     const response = await messaging.send(message);
+    console.log('FCM message sent successfully:', response);
     res.json({ success: true, messageId: response });
   } catch (error) {
     console.error('Error sending message notification:', error);
