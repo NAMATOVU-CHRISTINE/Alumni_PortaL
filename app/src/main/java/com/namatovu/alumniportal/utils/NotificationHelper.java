@@ -1,9 +1,15 @@
 package com.namatovu.alumniportal.utils;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -480,5 +486,59 @@ public class NotificationHelper {
             .add(emailData)
             .addOnSuccessListener(doc -> Log.d(TAG, "News update email queued"))
             .addOnFailureListener(e -> Log.e(TAG, "Failed to queue news email", e));
+    }
+    
+    /**
+     * Display a notification to the user
+     */
+    public static void showNotification(Context context, String title, String message, String notificationId, String type) {
+        if (!areNotificationsEnabled()) {
+            return;
+        }
+        
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        if (notificationManager == null) return;
+        
+        // Create notification channel for Android 8+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "alumni_" + type;
+            String channelName = getChannelName(type);
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("Alumni Portal " + channelName);
+            notificationManager.createNotificationChannel(channel);
+        }
+        
+        // Build notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "alumni_" + type)
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        
+        // Show notification
+        notificationManager.notify(notificationId.hashCode(), builder.build());
+        
+        Log.d(TAG, "Notification shown: " + title);
+    }
+    
+    /**
+     * Get channel name based on notification type
+     */
+    private static String getChannelName(String type) {
+        switch (type) {
+            case "message":
+                return "Messages";
+            case "event":
+                return "Events";
+            case "job":
+                return "Jobs";
+            case "mentorship":
+                return "Mentorship";
+            case "news":
+                return "News";
+            default:
+                return "Notifications";
+        }
     }
 }
