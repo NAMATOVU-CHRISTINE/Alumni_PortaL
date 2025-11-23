@@ -342,6 +342,9 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                     }
                     
                     Log.d(TAG, "Loaded connection status for " + connectedUserIds.size() + " connected users");
+                    
+                    // Refresh the adapter to show updated connection status
+                    filterUsers();
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error loading connection status", e);
