@@ -1,14 +1,18 @@
 package com.namatovu.alumniportal.adapters;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.namatovu.alumniportal.R;
 import com.namatovu.alumniportal.models.MentorshipConnection;
 import com.namatovu.alumniportal.models.User;
@@ -89,6 +93,8 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
             private TextView textCompany;
             private TextView textSkills;
             private TextView textRating;
+            private ImageView imageViewProfile;
+            private FirebaseFirestore db;
             
             public MentorViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -98,6 +104,8 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 textCompany = itemView.findViewById(R.id.textViewJob); // Assuming company and job are the same text view
                 textSkills = itemView.findViewById(R.id.textViewExpertise);
                 textRating = itemView.findViewById(R.id.textViewRating);
+                imageViewProfile = itemView.findViewById(R.id.imageViewProfile);
+                db = FirebaseFirestore.getInstance();
                 
                 itemView.setOnClickListener(v -> {
                     if (actionListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
@@ -158,12 +166,14 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 String displayName = "";
                 String displayTitle = "";
                 String displayCompany = "";
+                String otherUserId = "";
                 
                 if (isCurrentUserMentor) {
                     // If I'm the mentor, show the mentee's name
                     displayName = connection.getMenteeName() != null && !connection.getMenteeName().isEmpty() 
                                   ? connection.getMenteeName() : "Mentee";
                     displayTitle = "Your Mentee";
+                    otherUserId = connection.getMenteeId();
                     String msg = connection.getMessage();
                     if (msg != null && !msg.isEmpty()) {
                         displayCompany = msg.length() > 50 ? msg.substring(0, 47) + "..." : msg;
@@ -175,6 +185,7 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                     displayTitle = connection.getMentorTitle() != null && !connection.getMentorTitle().isEmpty() 
                                    ? connection.getMentorTitle() : "Alumni";
                     displayCompany = connection.getMentorCompany() != null ? connection.getMentorCompany() : "";
+                    otherUserId = connection.getMentorId();
                 }
                 
                 if (textMentorName != null) {
@@ -185,6 +196,11 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                 }
                 if (textCompany != null) {
                     textCompany.setText(displayCompany);
+                }
+                
+                // Load profile picture and bio from Firestore
+                if (!otherUserId.isEmpty()) {
+                    loadUserProfileData(otherUserId);
                 }
                 
                 if (textSkills != null) {
