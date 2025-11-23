@@ -38,6 +38,10 @@ public class User {
     private boolean emailVerified;
     private Map<String, Object> socialLinks;
     private Map<String, Object> privacySettings;
+    
+    // Transient fields (not stored in Firestore)
+    private transient boolean isConnected; // Whether current user is connected to this user
+    private transient String connectionStatus; // "connected", "pending", "not_connected"
 
     // Default constructor required for Firebase
     public User() {
