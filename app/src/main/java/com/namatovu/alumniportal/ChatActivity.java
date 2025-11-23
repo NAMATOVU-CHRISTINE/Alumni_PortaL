@@ -179,6 +179,25 @@ public class ChatActivity extends AppCompatActivity {
                     
                     if (querySnapshot != null) {
                         Log.d(TAG, "Messages received: " + querySnapshot.size());
+                        
+                        // Check for new incoming messages
+                        querySnapshot.getDocumentChanges().forEach(change -> {
+                            if (change.getType().toString().equals("ADDED")) {
+                                try {
+                                    ChatMessage newMessage = change.getDocument().toObject(ChatMessage.class);
+                                    if (newMessage != null && !newMessage.getSenderId().equals(currentUserId)) {
+                                        // New incoming message from other user
+                                        Log.d(TAG, "New incoming message: " + newMessage.getMessageText());
+                                        
+                                        // Show notification for incoming message
+                                        showIncomingMessageNotification(newMessage);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error processing new message", e);
+                                }
+                            }
+                        });
+                        
                         messages.clear();
                         for (com.google.firebase.firestore.DocumentSnapshot messageDoc : querySnapshot.getDocuments()) {
                             try {
@@ -424,6 +443,59 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {}
             });
+        }
+    }
+    
+    /**
+     * Show incoming message notification to the other user
+     */
+    private void showIncomingMessageNotification(ChatMessage message) {
+        try {
+            // Get current user name for notification
+            if (mAuth.getCurrentUser() == null) return;
+            
+            String senderName = mAuth.getCurrentUser().getDisplayName();
+            if (senderName == null || senderName.isEmpty()) {
+                // Try to get from Firestore
+                db.collection("users").document(currentUserId).get()
+                    .addOnSuccessListener(doc -> {
+                        if (doc.exists()) {
+                            String name = doc.getString("fullName");
+                            if (name != null) {
+                                sendNotificationToUser(otherUserId, name, message.getMessageText());
+                            }
+                        }
+                    });
+            } else {
+                sendNotificationToUser(otherUserId, senderName, message.getMessageText());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error showing incoming message notification", e);
+        }
+    }
+    
+    private void sendNotificationToUser(String userId, String senderName, String messageText) {
+        try {
+            // Create notification in Firestore for the recipient
+            Map<String, Object> notification = new HashMap<>();
+            notification.put("userId", userId);
+            notification.put("type", "incoming_message");
+            notification.put("title", "New message from " + senderName);
+            notification.put("message", messageText);
+            notification.put("referenceId", chatRoomId);
+            notification.put("timestamp", System.currentTimeMillis());
+            notification.put("read", false);
+            
+            db.collection("notifications")
+                .add(notification)
+                .addOnSuccessListener(doc -> {
+                    Log.d(TAG, "Incoming message notification created for user: " + userId);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to create incoming message notification", e);
+                });
+        } catch (Exception e) {
+            Log.e(TAG, "Error sending notification to user", e);
         }
     }
 }

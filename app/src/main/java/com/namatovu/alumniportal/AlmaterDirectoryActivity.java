@@ -72,6 +72,18 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
                     finish();
                 });
             }
+            
+            // Update title and subtitle for Almater Directory
+            android.widget.TextView titleView = binding.getRoot().findViewById(R.id.directoryTitle);
+            android.widget.TextView subtitleView = binding.getRoot().findViewById(R.id.directorySubtitle);
+            
+            if (titleView != null) {
+                titleView.setText("Almater Directory");
+            }
+            if (subtitleView != null) {
+                subtitleView.setText("Connect with students and staff");
+            }
+            
             // Update search hint for Almater Directory
             if (binding.searchLayout != null) {
                 binding.searchLayout.setHint("Search almater...");
