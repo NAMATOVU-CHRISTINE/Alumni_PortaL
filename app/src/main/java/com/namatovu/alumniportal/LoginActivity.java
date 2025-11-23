@@ -87,15 +87,23 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null && account.getIdToken() != null) {
+                Log.d(TAG, "Google account obtained: " + account.getEmail());
                 firebaseAuthWithGoogle(account.getIdToken());
             } else {
                 hideLoadingIndicator();
+                Log.e(TAG, "Google account is null or missing ID token");
                 Toast.makeText(this, "Google sign in failed: Invalid account", Toast.LENGTH_SHORT).show();
             }
         } catch (ApiException e) {
             hideLoadingIndicator();
-            Log.e(TAG, "Google sign in error: " + e.getStatusCode(), e);
-            Toast.makeText(this, "Google sign in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Google sign in error code: " + e.getStatusCode() + ", message: " + e.getMessage(), e);
+            String errorMsg = "Google sign in failed";
+            if (e.getStatusCode() == 12500) {
+                errorMsg = "Network error. Please check your connection.";
+            } else if (e.getStatusCode() == 12501) {
+                errorMsg = "Sign in was cancelled.";
+            }
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
         }
     }
 
