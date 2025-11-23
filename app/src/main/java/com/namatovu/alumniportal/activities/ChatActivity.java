@@ -61,7 +61,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     private ChatMessageAdapter adapter;
     private EditText editTextMessage;
     private ImageButton buttonSend;
-    private ImageButton buttonAttach;
     private TextView textViewTyping;
     private ImageView imageViewProfile;
     private TextView textViewChatName;
@@ -112,6 +111,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             return;
         }
         
+        // Update current user's last active time
+        updateCurrentUserActivity();
+        
         // Load current user's name
         loadCurrentUserName();
         
@@ -143,6 +145,17 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         AnalyticsHelper.logScreenView(this, "chat_conversation");
     }
     
+    private void updateCurrentUserActivity() {
+        if (currentUserId == null) return;
+        
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("lastActive", System.currentTimeMillis());
+        
+        db.collection("users").document(currentUserId)
+                .update(updates)
+                .addOnFailureListener(e -> Log.w(TAG, "Failed to update user activity", e));
+    }
+    
     private void initViews() {
         com.google.android.material.appbar.MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -155,7 +168,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         recyclerView = findViewById(R.id.recyclerView);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
-        buttonAttach = findViewById(R.id.buttonAttach);
         textViewTyping = findViewById(R.id.textViewTyping);
         imageViewProfile = findViewById(R.id.imageViewProfile);
         textViewChatName = findViewById(R.id.textViewChatName);
@@ -220,8 +232,6 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
             sendTextMessage();
             scrollToBottom(true);
         });
-
-        buttonAttach.setOnClickListener(v -> showAttachmentOptions());
 
         imageViewProfile.setOnClickListener(v -> {
             if (otherUserId != null) {
@@ -408,18 +418,25 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
     private void loadOtherUserProfile() {
         if (otherUserId == null) return;
 
+        // Use real-time listener to get profile image updates
         db.collection("users").document(otherUserId)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        String profileImageUrl = doc.getString("profileImageUrl");
-                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                            Glide.with(this)
-                                    .load(profileImageUrl)
-                                    .circleCrop()
-                                    .placeholder(R.drawable.ic_person)
-                                    .into(imageViewProfile);
-                        }
+                .addSnapshotListener((documentSnapshot, error) -> {
+                    if (error != null || documentSnapshot == null || !documentSnapshot.exists()) {
+                        imageViewProfile.setImageResource(R.drawable.ic_person);
+                        return;
+                    }
+                    
+                    String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+                    if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                        Glide.with(this)
+                                .load(profileImageUrl)
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_person)
+                                .error(R.drawable.ic_person)
+                                .into(imageViewProfile);
+                        Log.d(TAG, "Profile image loaded: " + profileImageUrl);
+                    } else {
+                        imageViewProfile.setImageResource(R.drawable.ic_person);
                     }
                 });
     }
@@ -441,16 +458,21 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                         return;
                     }
 
-                    Boolean isOnline = documentSnapshot.getBoolean("isOnline");
-                    Long lastSeen = documentSnapshot.getLong("lastSeen");
+                    Long lastActive = documentSnapshot.getLong("lastActive");
 
-                    if (isOnline != null && isOnline) {
-                        textViewOnlineStatus.setText("Active now");
-                        textViewOnlineStatus.setTextColor(getColor(android.R.color.holo_green_light));
-                    } else if (lastSeen != null) {
-                        String lastSeenText = getLastSeenText(lastSeen);
-                        textViewOnlineStatus.setText(lastSeenText);
-                        textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
+                    if (lastActive != null) {
+                        long diff = System.currentTimeMillis() - lastActive;
+                        long minutes = diff / (60 * 1000);
+                        
+                        // If active within last 5 minutes, show as active
+                        if (minutes < 5) {
+                            textViewOnlineStatus.setText("Active now");
+                            textViewOnlineStatus.setTextColor(getColor(android.R.color.holo_green_light));
+                        } else {
+                            String lastSeenText = getLastSeenText(lastActive);
+                            textViewOnlineStatus.setText(lastSeenText);
+                            textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
+                        }
                     } else {
                         textViewOnlineStatus.setText("Offline");
                         textViewOnlineStatus.setTextColor(getColor(android.R.color.darker_gray));
@@ -542,6 +564,9 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         loadCurrentUserProfileImage(message);
 
         sendMessage(message);
+        
+        // Update user activity
+        updateCurrentUserActivity();
         
         // Clear the input field immediately
         editTextMessage.setText("");
