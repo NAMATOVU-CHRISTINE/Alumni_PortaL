@@ -505,42 +505,50 @@ public class NotificationHelper {
      * Display a notification to the user
      */
     public static void showNotification(Context context, String title, String message, String notificationId, String type) {
-        Log.d(TAG, "showNotification called - title: " + title + ", type: " + type);
+        Log.d(TAG, "=== showNotification called ===");
+        Log.d(TAG, "Title: " + title);
+        Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "Type: " + type);
+        Log.d(TAG, "NotificationId: " + notificationId);
         
-        if (!areNotificationsEnabled()) {
-            Log.d(TAG, "Notifications are disabled globally");
-            return;
-        }
-        
-        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-        if (notificationManager == null) {
-            Log.e(TAG, "NotificationManager is null");
-            return;
-        }
-        
-        // Create notification channel for Android 8+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        try {
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager == null) {
+                Log.e(TAG, "ERROR: NotificationManager is null");
+                return;
+            }
+            Log.d(TAG, "NotificationManager obtained successfully");
+            
+            // Create notification channel for Android 8+
             String channelId = "alumni_" + type;
-            String channelName = getChannelName(type);
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Alumni Portal " + channelName);
-            notificationManager.createNotificationChannel(channel);
-            Log.d(TAG, "Notification channel created: " + channelId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String channelName = getChannelName(type);
+                NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+                channel.setDescription("Alumni Portal " + channelName);
+                channel.enableVibration(true);
+                channel.enableLights(true);
+                notificationManager.createNotificationChannel(channel);
+                Log.d(TAG, "Notification channel created: " + channelId + " with IMPORTANCE_HIGH");
+            }
+            
+            // Build notification with all required fields
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(com.namatovu.alumniportal.R.drawable.ic_notification)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setVibrate(new long[]{0, 500, 250, 500})
+                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+            
+            // Show notification
+            int notificationId_int = notificationId != null ? notificationId.hashCode() : (int) System.currentTimeMillis();
+            notificationManager.notify(notificationId_int, builder.build());
+            
+            Log.d(TAG, "✓ Notification successfully shown with ID: " + notificationId_int);
+            Log.d(TAG, "=== showNotification completed ===");
+        } catch (Exception e) {
+            Log.e(TAG, "ERROR in showNotification: " + e.getMessage(), e);
         }
-        
-        // Build notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "alumni_" + type)
-                .setSmallIcon(com.namatovu.alumniportal.R.drawable.ic_notification)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        
-        // Show notification
-        int notificationId_int = notificationId.hashCode();
-        notificationManager.notify(notificationId_int, builder.build());
-        
-        Log.d(TAG, "Notification shown with ID: " + notificationId_int + ", title: " + title);
     }
     
     /**

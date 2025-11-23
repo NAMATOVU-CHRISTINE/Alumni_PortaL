@@ -42,55 +42,86 @@ public class AlumniMessagingService extends FirebaseMessagingService {
     }
     
     private void handleNotificationByType(String type, Map<String, String> data) {
-        Log.d(TAG, "handleNotificationByType called with type: " + type);
+        Log.d(TAG, ">>> handleNotificationByType called with type: " + type);
+        Log.d(TAG, "Data keys: " + data.keySet().toString());
         
-        if ("message".equals(type)) {
-            Log.d(TAG, "Handling message notification");
-            NotificationHelper.showNotification(
-                this,
-                "New Message",
-                data.get("senderName") + ": " + data.get("messageText"),
-                data.get("chatId"),
-                "message"
-            );
-        } else if ("event".equals(type)) {
-            Log.d(TAG, "Handling event notification");
-            NotificationHelper.showNotification(
-                this,
-                "Event Update",
-                data.get("eventTitle") + " - " + data.get("action"),
-                data.get("eventId"),
-                "event"
-            );
-        } else if ("job".equals(type)) {
-            Log.d(TAG, "Handling job notification");
-            NotificationHelper.showNotification(
-                this,
-                "New Job Opportunity",
-                data.get("jobTitle") + " at " + data.get("company"),
-                data.get("jobId"),
-                "job"
-            );
-        } else if ("mentorship".equals(type)) {
-            Log.d(TAG, "Handling mentorship notification");
-            NotificationHelper.showNotification(
-                this,
-                "Mentorship Update",
-                data.get("fromUserName") + " - " + data.get("action"),
-                data.get("requestId"),
-                "mentorship"
-            );
-        } else if ("news".equals(type)) {
-            Log.d(TAG, "Handling news notification");
-            NotificationHelper.showNotification(
-                this,
-                "New Article",
-                data.get("newsTitle") + " by " + data.get("authorName"),
-                data.get("newsId"),
-                "news"
-            );
-        } else {
-            Log.w(TAG, "Unknown notification type: " + type);
+        try {
+            if ("message".equals(type)) {
+                Log.d(TAG, ">>> Handling MESSAGE notification");
+                String senderName = data.get("senderName");
+                String messageText = data.get("messageText");
+                String chatId = data.get("chatId");
+                Log.d(TAG, "Sender: " + senderName + ", Message: " + messageText + ", ChatId: " + chatId);
+                
+                NotificationHelper.showNotification(
+                    this,
+                    "New Message",
+                    senderName + ": " + messageText,
+                    chatId,
+                    "message"
+                );
+            } else if ("event".equals(type)) {
+                Log.d(TAG, ">>> Handling EVENT notification");
+                String eventTitle = data.get("eventTitle");
+                String action = data.get("action");
+                String eventId = data.get("eventId");
+                Log.d(TAG, "Event: " + eventTitle + ", Action: " + action + ", EventId: " + eventId);
+                
+                NotificationHelper.showNotification(
+                    this,
+                    "Event Update",
+                    eventTitle + " - " + action,
+                    eventId,
+                    "event"
+                );
+            } else if ("job".equals(type)) {
+                Log.d(TAG, ">>> Handling JOB notification");
+                String jobTitle = data.get("jobTitle");
+                String company = data.get("company");
+                String jobId = data.get("jobId");
+                Log.d(TAG, "Job: " + jobTitle + " at " + company + ", JobId: " + jobId);
+                
+                NotificationHelper.showNotification(
+                    this,
+                    "New Job Opportunity",
+                    jobTitle + " at " + company,
+                    jobId,
+                    "job"
+                );
+            } else if ("mentorship".equals(type)) {
+                Log.d(TAG, ">>> Handling MENTORSHIP notification");
+                String fromUserName = data.get("fromUserName");
+                String action = data.get("action");
+                String requestId = data.get("requestId");
+                Log.d(TAG, "From: " + fromUserName + ", Action: " + action + ", RequestId: " + requestId);
+                
+                NotificationHelper.showNotification(
+                    this,
+                    "Mentorship Update",
+                    fromUserName + " - " + action,
+                    requestId,
+                    "mentorship"
+                );
+            } else if ("news".equals(type)) {
+                Log.d(TAG, ">>> Handling NEWS notification");
+                String newsTitle = data.get("newsTitle");
+                String authorName = data.get("authorName");
+                String newsId = data.get("newsId");
+                Log.d(TAG, "News: " + newsTitle + " by " + authorName + ", NewsId: " + newsId);
+                
+                NotificationHelper.showNotification(
+                    this,
+                    "New Article",
+                    newsTitle + " by " + authorName,
+                    newsId,
+                    "news"
+                );
+            } else {
+                Log.w(TAG, "!!! Unknown notification type: " + type);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "ERROR in handleNotificationByType: " + e.getMessage(), e);
+            e.printStackTrace();
         }
     }
 }
