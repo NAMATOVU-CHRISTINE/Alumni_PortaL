@@ -201,6 +201,7 @@ public class NotificationHelper {
      */
     public static void setJobNotificationsEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_JOBS_ENABLED, enabled).apply();
+        updateNotificationPreferencesInFirestore("jobsEnabled", enabled);
         
         if (enabled) {
             subscribeToTopic("jobs");
