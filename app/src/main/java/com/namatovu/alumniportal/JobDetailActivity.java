@@ -42,24 +42,32 @@ public class JobDetailActivity extends AppCompatActivity {
         }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("jobs").document(jobId).get()
+        db.collection("job_opportunities").document(jobId).get()
                 .addOnSuccessListener((DocumentSnapshot doc) -> {
                     if (doc.exists()) {
-                        Job job = doc.toObject(Job.class);
-                        if (job != null) {
-                            jobTitleText.setText(job.getTitle());
-                            companyNameText.setText(job.getCompany());
-                            locationText.setText(job.getLocation());
-                            descriptionText.setText(job.getDescription());
-                            String applyUrl = job.getApplyUrl();
-                            if (applyUrl != null && !applyUrl.isEmpty()) {
+                        String title = doc.getString("title");
+                        String company = doc.getString("company");
+                        String location = doc.getString("location");
+                        String description = doc.getString("description");
+                        String applicationLink = doc.getString("applicationInstructions");
+                        
+                        if (title != null && company != null && location != null && description != null) {
+                            jobTitleText.setText(title);
+                            companyNameText.setText(company);
+                            locationText.setText(location);
+                            descriptionText.setText(description);
+                            
+                            if (applicationLink != null && !applicationLink.isEmpty()) {
                                 applyButton.setOnClickListener(v -> {
-                                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(applyUrl));
+                                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(applicationLink));
                                     startActivity(i);
                                 });
                             } else {
                                 applyButton.setEnabled(false);
                             }
+                        } else {
+                            Toast.makeText(this, "Job data incomplete.", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     } else {
                         Toast.makeText(this, "Job not found.", Toast.LENGTH_SHORT).show();

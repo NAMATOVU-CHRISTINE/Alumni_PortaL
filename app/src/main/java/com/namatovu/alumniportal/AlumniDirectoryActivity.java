@@ -208,11 +208,13 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                             }
                             
                             // Check if user has opted to be visible in directory
-                            boolean isVisible = user.getPrivacySetting("showInDirectory");
-                            
-                            // If privacy settings are null/empty, default to showing them
-                            if (user.getPrivacySettings() == null || user.getPrivacySettings().isEmpty()) {
-                                isVisible = true;
+                            // Default to true if privacy settings are not explicitly set to false
+                            boolean isVisible = true;
+                            if (user.getPrivacySettings() != null && !user.getPrivacySettings().isEmpty()) {
+                                Boolean showInDirectory = user.getPrivacySetting("showInDirectory");
+                                if (showInDirectory != null) {
+                                    isVisible = showInDirectory;
+                                }
                             }
                             
                             if ("alumni".equalsIgnoreCase(userTypeValue)) {
@@ -294,7 +296,9 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Refresh data when returning to this activity
-        loadAlumniData();
+        // Only reload if we don't have data yet
+        if (allUsers.isEmpty()) {
+            loadAlumniData();
+        }
     }
 }
