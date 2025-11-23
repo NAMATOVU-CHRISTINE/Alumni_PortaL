@@ -167,6 +167,7 @@ public class NotificationHelper {
      */
     public static void setMessageNotificationsEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_MESSAGES_ENABLED, enabled).apply();
+        updateNotificationPreferencesInFirestore("messagesEnabled", enabled);
         AnalyticsHelper.logEvent("message_notifications_toggled", "enabled", String.valueOf(enabled));
     }
     
@@ -175,6 +176,7 @@ public class NotificationHelper {
      */
     public static void setMentorshipNotificationsEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_MENTORSHIP_ENABLED, enabled).apply();
+        updateNotificationPreferencesInFirestore("mentorshipEnabled", enabled);
         AnalyticsHelper.logEvent("mentorship_notifications_toggled", "enabled", String.valueOf(enabled));
     }
     
@@ -183,6 +185,7 @@ public class NotificationHelper {
      */
     public static void setEventNotificationsEnabled(boolean enabled) {
         prefs.edit().putBoolean(KEY_EVENTS_ENABLED, enabled).apply();
+        updateNotificationPreferencesInFirestore("eventsEnabled", enabled);
         
         if (enabled) {
             subscribeToTopic("events");
