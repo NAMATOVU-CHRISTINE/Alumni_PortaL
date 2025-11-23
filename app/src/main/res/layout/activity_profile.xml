@@ -84,25 +84,25 @@
                         android:id="@+id/nameText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Christine Namatovu"
+                        android:text=""
                         android:textAppearance="@style/App.TextAppearance.Title"
                         android:textStyle="bold"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textSize="22sp"
                         android:layout_marginBottom="4dp"
-                        tools:text="Christine Namatovu" />
+                        tools:text="Your Name" />
 
                     <!-- Email -->
                     <TextView
                         android:id="@+id/emailText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2023bcs004@std.must.ac.ug"
+                        android:text=""
                         android:textAppearance="@style/App.TextAppearance.Subtitle"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="16dp"
-                        tools:text="2023bcs004@std.must.ac.ug" />
+                        tools:text="your.email@example.com" />
 
                     <!-- Action Buttons Row -->
                     <LinearLayout
@@ -194,12 +194,12 @@
                         android:id="@+id/bioText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Computer Science student at Mbarara University of Science and Technology, passionate about mobile development and AI."
+                        android:text=""
                         android:textAppearance="@style/App.TextAppearance.Body"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
                         android:lineSpacingExtra="2dp"
-                        tools:text="Computer Science student at Mbarara University of Science and Technology, passionate about mobile development and AI." />
+                        tools:text="Your bio will appear here" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -255,11 +255,11 @@
                         android:id="@+id/careerText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Aspiring Mobile App Developer"
+                        android:text=""
                         android:textAppearance="@style/App.TextAppearance.Body"
                         android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp"
-                        tools:text="Aspiring Mobile App Developer" />
+                        tools:text="Your career goals will appear here" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
