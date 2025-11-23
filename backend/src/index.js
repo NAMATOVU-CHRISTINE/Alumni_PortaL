@@ -25,6 +25,18 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Helper function to handle invalid tokens
+async function handleInvalidToken(userId, fcmToken) {
+  try {
+    await db.collection('users').doc(userId).update({
+      fcmToken: admin.firestore.FieldValue.delete()
+    });
+    console.log(`Removed invalid FCM token for user ${userId}`);
+  } catch (error) {
+    console.error(`Error removing invalid token for user ${userId}:`, error);
+  }
+}
+
 // Send message notification
 app.post('/api/notifications/message', async (req, res) => {
   try {
@@ -61,6 +73,14 @@ app.post('/api/notifications/message', async (req, res) => {
     res.json({ success: true, messageId: response });
   } catch (error) {
     console.error('Error sending message notification:', error);
+    
+    // Handle invalid token errors
+    if (error.code === 'messaging/invalid-registration-token' || 
+        error.code === 'messaging/registration-token-not-registered') {
+      await handleInvalidToken(req.body.recipientUserId, req.body.fcmToken);
+      return res.status(400).json({ error: 'Invalid or expired FCM token. Token has been removed.' });
+    }
+    
     res.status(500).json({ error: error.message });
   }
 });
@@ -93,12 +113,24 @@ app.post('/api/notifications/event', async (req, res) => {
       const { recipientUserId } = req.body;
       const userDoc = await db.collection('users').doc(recipientUserId).get();
       const fcmToken = userDoc.data().fcmToken;
+      
+      if (!fcmToken) {
+        return res.status(400).json({ error: 'User has no FCM token' });
+      }
+      
       message.token = fcmToken;
       const response = await messaging.send(message);
       res.json({ success: true, messageId: response });
     }
   } catch (error) {
     console.error('Error sending event notification:', error);
+    
+    if (error.code === 'messaging/invalid-registration-token' || 
+        error.code === 'messaging/registration-token-not-registered') {
+      await handleInvalidToken(req.body.recipientUserId, req.body.fcmToken);
+      return res.status(400).json({ error: 'Invalid or expired FCM token. Token has been removed.' });
+    }
+    
     res.status(500).json({ error: error.message });
   }
 });
@@ -129,12 +161,24 @@ app.post('/api/notifications/job', async (req, res) => {
       const { recipientUserId } = req.body;
       const userDoc = await db.collection('users').doc(recipientUserId).get();
       const fcmToken = userDoc.data().fcmToken;
+      
+      if (!fcmToken) {
+        return res.status(400).json({ error: 'User has no FCM token' });
+      }
+      
       message.token = fcmToken;
       const response = await messaging.send(message);
       res.json({ success: true, messageId: response });
     }
   } catch (error) {
     console.error('Error sending job notification:', error);
+    
+    if (error.code === 'messaging/invalid-registration-token' || 
+        error.code === 'messaging/registration-token-not-registered') {
+      await handleInvalidToken(req.body.recipientUserId, req.body.fcmToken);
+      return res.status(400).json({ error: 'Invalid or expired FCM token. Token has been removed.' });
+    }
+    
     res.status(500).json({ error: error.message });
   }
 });
@@ -172,6 +216,13 @@ app.post('/api/notifications/mentorship', async (req, res) => {
     res.json({ success: true, messageId: response });
   } catch (error) {
     console.error('Error sending mentorship notification:', error);
+    
+    if (error.code === 'messaging/invalid-registration-token' || 
+        error.code === 'messaging/registration-token-not-registered') {
+      await handleInvalidToken(recipientUserId, fcmToken);
+      return res.status(400).json({ error: 'Invalid or expired FCM token. Token has been removed.' });
+    }
+    
     res.status(500).json({ error: error.message });
   }
 });
@@ -202,12 +253,24 @@ app.post('/api/notifications/news', async (req, res) => {
       const { recipientUserId } = req.body;
       const userDoc = await db.collection('users').doc(recipientUserId).get();
       const fcmToken = userDoc.data().fcmToken;
+      
+      if (!fcmToken) {
+        return res.status(400).json({ error: 'User has no FCM token' });
+      }
+      
       message.token = fcmToken;
       const response = await messaging.send(message);
       res.json({ success: true, messageId: response });
     }
   } catch (error) {
     console.error('Error sending news notification:', error);
+    
+    if (error.code === 'messaging/invalid-registration-token' || 
+        error.code === 'messaging/registration-token-not-registered') {
+      await handleInvalidToken(req.body.recipientUserId, req.body.fcmToken);
+      return res.status(400).json({ error: 'Invalid or expired FCM token. Token has been removed.' });
+    }
+    
     res.status(500).json({ error: error.message });
   }
 });

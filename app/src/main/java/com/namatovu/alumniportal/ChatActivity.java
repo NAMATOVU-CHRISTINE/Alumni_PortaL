@@ -532,8 +532,7 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void sendNotificationViaBackend(String fcmToken, String senderName, String messageText, String chatId) {
         try {
-            // TODO: Replace with your Render backend URL
-            String backendUrl = "https://your-render-app.onrender.com/api/notifications/message";
+            String backendUrl = "https://alumni-portal-backend-6auy.onrender.com/api/notifications/message";
             
             Map<String, Object> payload = new HashMap<>();
             payload.put("recipientUserId", otherUserId);
