@@ -155,13 +155,20 @@ public class AlumniAdapter extends RecyclerView.Adapter<AlumniAdapter.AlumniView
                 binding.verifiedBadge.setVisibility(View.GONE);
             }
             
-            // Mentor availability indicator
-            boolean allowMentoring = getPrivacySetting(user, "allowMentorRequests", true);
-            if (allowMentoring) {
+            // Mentor availability indicator or connection status
+            if (user.isConnected()) {
+                // Show "Connected" for connected users
                 binding.mentorAvailableText.setVisibility(View.VISIBLE);
-                binding.mentorAvailableText.setText("Available for mentoring");
+                binding.mentorAvailableText.setText("✓ Connected");
             } else {
-                binding.mentorAvailableText.setVisibility(View.GONE);
+                // Show "Available for mentoring" for non-connected users who allow requests
+                boolean allowMentoring = getPrivacySetting(user, "allowMentorRequests", true);
+                if (allowMentoring) {
+                    binding.mentorAvailableText.setVisibility(View.VISIBLE);
+                    binding.mentorAvailableText.setText("Available for mentoring");
+                } else {
+                    binding.mentorAvailableText.setVisibility(View.GONE);
+                }
             }
             
             // Email button visibility (show if user allows email to be shown)
