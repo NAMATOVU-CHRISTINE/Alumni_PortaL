@@ -143,51 +143,65 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
         }
 
         public void bind(Opportunity opportunity) {
-            // Load poster profile data
-            if (opportunity.getPostedBy() != null && !opportunity.getPostedBy().isEmpty()) {
-                loadPosterProfile(opportunity.getPostedBy());
-            }
-            
-            // Logo or initial
-            if (opportunity.getCompanyLogo() != null && !opportunity.getCompanyLogo().isEmpty()) {
-                tvLogo.setText(opportunity.getCompanyLogo());
-            } else if (opportunity.getCompany() != null && !opportunity.getCompany().isEmpty()) {
-                tvLogo.setText(opportunity.getCompany().substring(0, 1).toUpperCase());
-            } else {
-                tvLogo.setText("?");
-            }
+            try {
+                if (opportunity == null) {
+                    Log.e("OpportunityAdapter", "Opportunity is null");
+                    return;
+                }
+                
+                // Load poster profile data
+                if (opportunity.getPostedBy() != null && !opportunity.getPostedBy().isEmpty()) {
+                    loadPosterProfile(opportunity.getPostedBy());
+                }
+                
+                // Logo or initial
+                if (opportunity.getCompanyLogo() != null && !opportunity.getCompanyLogo().isEmpty()) {
+                    tvLogo.setText(opportunity.getCompanyLogo());
+                } else if (opportunity.getCompany() != null && !opportunity.getCompany().isEmpty()) {
+                    tvLogo.setText(opportunity.getCompany().substring(0, 1).toUpperCase());
+                } else {
+                    tvLogo.setText("?");
+                }
 
-            tvTitle.setText(opportunity.getTitle());
-            tvCompany.setText(opportunity.getCompany());
-            
-            // Use actual description from opportunity
-            String description = opportunity.getDescription();
-            if (description != null && !description.isEmpty()) {
-                tvShortDesc.setText(description);
-            } else {
-                tvShortDesc.setText(opportunity.getShortDescription());
-            }
+                tvTitle.setText(opportunity.getTitle() != null ? opportunity.getTitle() : "");
+                tvCompany.setText(opportunity.getCompany() != null ? opportunity.getCompany() : "");
+                
+                // Use actual description from opportunity
+                String description = opportunity.getDescription();
+                if (description != null && !description.isEmpty()) {
+                    tvShortDesc.setText(description);
+                } else {
+                    String shortDesc = opportunity.getShortDescription();
+                    tvShortDesc.setText(shortDesc != null ? shortDesc : "");
+                }
 
-            if (opportunity.getLocation() != null && !opportunity.getLocation().isEmpty()) {
-                tvLocation.setText("📍 " + opportunity.getLocation());
-                tvLocation.setVisibility(View.VISIBLE);
-            } else {
-                tvLocation.setVisibility(View.GONE);
-            }
+                if (opportunity.getLocation() != null && !opportunity.getLocation().isEmpty()) {
+                    tvLocation.setText("📍 " + opportunity.getLocation());
+                    tvLocation.setVisibility(View.VISIBLE);
+                } else {
+                    tvLocation.setVisibility(View.GONE);
+                }
 
-            tvDeadline.setText(opportunity.getFormattedDeadline());
-            if (opportunity.isDeadlineApproaching()) {
-                tvDeadline.setTextColor(context.getResources().getColor(R.color.orange));
-            } else {
-                tvDeadline.setTextColor(context.getResources().getColor(R.color.must_green));
-            }
+                String deadline = opportunity.getFormattedDeadline();
+                tvDeadline.setText(deadline != null ? deadline : "");
+                if (opportunity.isDeadlineApproaching()) {
+                    tvDeadline.setTextColor(context.getResources().getColor(R.color.orange));
+                } else {
+                    tvDeadline.setTextColor(context.getResources().getColor(R.color.must_green));
+                }
 
-            // Set date posted
-            if (tvDatePosted != null) {
-                tvDatePosted.setText(opportunity.getFormattedDatePosted());
-            }
+                // Set date posted
+                if (tvDatePosted != null) {
+                    String datePosted = opportunity.getFormattedDatePosted();
+                    tvDatePosted.setText(datePosted != null ? datePosted : "");
+                }
 
-            chipCategory.setText(opportunity.getCategoryIcon() + " " + opportunity.getCategory());
+                String category = opportunity.getCategory() != null ? opportunity.getCategory() : "Job";
+                String icon = opportunity.getCategoryIcon() != null ? opportunity.getCategoryIcon() : "💼";
+                chipCategory.setText(icon + " " + category);
+            } catch (Exception e) {
+                Log.e("OpportunityAdapter", "Error binding opportunity", e);
+            }
 
             // Save state as text (keeps resources simple and compatible)
             if (opportunity.isSaved()) {
