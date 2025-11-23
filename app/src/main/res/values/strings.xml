@@ -70,6 +70,9 @@
     <string name="fetch_users_from_api">Fetch Users from API</string>
     <string name="logo">Logo</string>
     
+    <!-- Google Sign-In Web Client ID -->
+    <string name="default_web_client_id">511866402860-rtp3f0a1k9j6bmigtn8vbsv36kh2d9h2.apps.googleusercontent.com</string>
+    
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

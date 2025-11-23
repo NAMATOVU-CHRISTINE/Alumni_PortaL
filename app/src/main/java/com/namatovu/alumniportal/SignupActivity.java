@@ -93,15 +93,23 @@ public class SignupActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null && account.getIdToken() != null) {
+                android.util.Log.d("SignupActivity", "Google account obtained: " + account.getEmail());
                 firebaseAuthWithGoogle(account.getIdToken());
             } else {
                 hideLoadingIndicator();
+                android.util.Log.e("SignupActivity", "Google account is null or missing ID token");
                 Toast.makeText(this, "Google sign up failed: Invalid account", Toast.LENGTH_SHORT).show();
             }
         } catch (ApiException e) {
             hideLoadingIndicator();
-            android.util.Log.e("SignupActivity", "Google sign up error: " + e.getStatusCode(), e);
-            Toast.makeText(this, "Google sign up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            android.util.Log.e("SignupActivity", "Google sign up error code: " + e.getStatusCode() + ", message: " + e.getMessage(), e);
+            String errorMsg = "Google sign up failed";
+            if (e.getStatusCode() == 12500) {
+                errorMsg = "Network error. Please check your connection.";
+            } else if (e.getStatusCode() == 12501) {
+                errorMsg = "Sign in was cancelled.";
+            }
+            Toast.makeText(this, errorMsg, Toast.LENGTH_SHORT).show();
         }
     }
 

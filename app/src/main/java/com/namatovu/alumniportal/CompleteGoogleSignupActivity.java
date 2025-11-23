@@ -83,12 +83,16 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
             return;
         }
 
+        // Show loading indicator
+        showLoadingIndicator();
+
         // Check if username already exists
         db.collection("users")
                 .whereEqualTo("username", username)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        hideLoadingIndicator();
                         usernameEditText.setError("Username already exists");
                         usernameEditText.requestFocus();
                     } else {
@@ -109,6 +113,7 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                     db.collection("users").document(userId)
                                             .set(user)
                                             .addOnSuccessListener(aVoid2 -> {
+                                                hideLoadingIndicator();
                                                 Toast.makeText(CompleteGoogleSignupActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(CompleteGoogleSignupActivity.this, HomeActivity.class);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -116,14 +121,32 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                                 finish();
                                             })
                                             .addOnFailureListener(e -> {
+                                                hideLoadingIndicator();
                                                 Toast.makeText(CompleteGoogleSignupActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                             });
                                 })
                                 .addOnFailureListener(e -> {
+                                    hideLoadingIndicator();
                                     Toast.makeText(CompleteGoogleSignupActivity.this, "Failed to set password: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 });
                     }
                 });
+    }
+
+    private void showLoadingIndicator() {
+        Button completeSignupButton = findViewById(R.id.completeSignupButton);
+        if (completeSignupButton != null) {
+            completeSignupButton.setText("");
+            completeSignupButton.setEnabled(false);
+        }
+    }
+
+    private void hideLoadingIndicator() {
+        Button completeSignupButton = findViewById(R.id.completeSignupButton);
+        if (completeSignupButton != null) {
+            completeSignupButton.setText("Complete Signup");
+            completeSignupButton.setEnabled(true);
+        }
     }
 
     @Override
