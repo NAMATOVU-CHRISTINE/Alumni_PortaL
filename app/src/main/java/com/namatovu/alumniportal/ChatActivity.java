@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -117,6 +118,9 @@ public class ChatActivity extends AppCompatActivity {
             // Set chat header with other user's name
             binding.textViewChatName.setText(otherUserName != null ? otherUserName : "User");
             binding.textViewOnlineStatus.setText("Active now");
+            
+            // Load other user's profile picture
+            loadOtherUserProfile();
             
             // Setup RecyclerView
             adapter = new ChatAdapter(messages, currentUserId);
@@ -306,6 +310,33 @@ public class ChatActivity extends AppCompatActivity {
     private String createChatRoomId(String userId1, String userId2) {
         // Create consistent chat room ID regardless of parameter order
         return userId1.compareTo(userId2) < 0 ? userId1 + "_" + userId2 : userId2 + "_" + userId1;
+    }
+    
+    private void loadOtherUserProfile() {
+        if (otherUserId == null) return;
+
+        // Use real-time listener to get profile image updates
+        db.collection("users").document(otherUserId)
+                .addSnapshotListener((documentSnapshot, error) -> {
+                    if (error != null || documentSnapshot == null || !documentSnapshot.exists()) {
+                        binding.imageViewProfile.setImageResource(R.drawable.ic_person);
+                        Log.d(TAG, "Profile image not found, using default");
+                        return;
+                    }
+                    
+                    String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+                    if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                        Glide.with(this)
+                                .load(profileImageUrl)
+                                .circleCrop()
+                                .placeholder(R.drawable.ic_person)
+                                .error(R.drawable.ic_person)
+                                .into(binding.imageViewProfile);
+                        Log.d(TAG, "Profile image loaded: " + profileImageUrl);
+                    } else {
+                        binding.imageViewProfile.setImageResource(R.drawable.ic_person);
+                    }
+                });
     }
     
     @Override
