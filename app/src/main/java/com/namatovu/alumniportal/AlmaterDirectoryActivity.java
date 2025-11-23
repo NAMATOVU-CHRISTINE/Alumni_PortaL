@@ -60,39 +60,49 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Almater Directory");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            setSupportActionBar(binding.toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Almater Directory");
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+            binding.toolbar.setNavigationOnClickListener(v -> {
+                finish();
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up toolbar", e);
         }
-        binding.toolbar.setNavigationOnClickListener(v -> {
-            finish();
-        });
     }
 
     private void setupRecyclerView() {
-        adapter = new AlumniAdapter(filteredUsers, new AlumniAdapter.OnUserClickListener() {
-            @Override
-            public void onUserClick(User user) {
-                // Open profile details
-                Intent intent = new Intent(AlmaterDirectoryActivity.this, ViewProfileActivity.class);
-                intent.putExtra("userId", user.getUserId());
-                intent.putExtra("username", user.getUsername());
-                startActivity(intent);
+        try {
+            adapter = new AlumniAdapter(filteredUsers, new AlumniAdapter.OnUserClickListener() {
+                @Override
+                public void onUserClick(User user) {
+                    // Open profile details
+                    Intent intent = new Intent(AlmaterDirectoryActivity.this, ViewProfileActivity.class);
+                    intent.putExtra("userId", user.getUserId());
+                    intent.putExtra("username", user.getUsername());
+                    startActivity(intent);
+                    
+                    // Log analytics
+                    AnalyticsHelper.logNavigation("ViewProfileActivity", "AlmaterDirectoryActivity");
+                }
                 
-                // Log analytics
-                AnalyticsHelper.logNavigation("ViewProfileActivity", "AlmaterDirectoryActivity");
-            }
+                @Override
+                public void onEmailClick(User user) {
+                    // Open email app with implicit intent
+                    sendEmailToUser(user);
+                }
+            });
             
-            @Override
-            public void onEmailClick(User user) {
-                // Open email app with implicit intent
-                sendEmailToUser(user);
+            if (binding.alumniRecyclerView != null) {
+                binding.alumniRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                binding.alumniRecyclerView.setAdapter(adapter);
             }
-        });
-        
-        binding.alumniRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.alumniRecyclerView.setAdapter(adapter);
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up RecyclerView", e);
+        }
     }
     
     private void sendEmailToUser(User user) {
@@ -121,39 +131,53 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
     }
 
     private void setupSearchAndFilters() {
-        // Real-time search as user types
-        binding.searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        try {
+            if (binding.searchEditText != null) {
+                // Real-time search as user types
+                binding.searchEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchQuery = s.toString().trim();
-                filterUsers();
-            }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        searchQuery = s.toString().trim();
+                        filterUsers();
+                    }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        
-        // Handle search action on keyboard
-        binding.searchEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
-                // Hide keyboard
-                android.view.inputmethod.InputMethodManager imm = 
-                    (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-                if (imm != null && getCurrentFocus() != null) {
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                }
-                return true;
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+                
+                // Handle search action on keyboard
+                binding.searchEditText.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                        // Hide keyboard
+                        android.view.inputmethod.InputMethodManager imm = 
+                            (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                        if (imm != null && getCurrentFocus() != null) {
+                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        }
+                        return true;
+                    }
+                    return false;
+                });
             }
-            return false;
-        });
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up search", e);
+        }
     }
 
     private void loadAlmaterData() {
-        binding.progressBar.setVisibility(View.VISIBLE);
-        binding.noResultsText.setVisibility(View.GONE);
+        try {
+            if (binding.progressBar != null) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+            }
+            if (binding.noResultsText != null) {
+                binding.noResultsText.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error showing progress bar", e);
+        }
 
         // Load students and staff only (not alumni)
         db.collection("users")
