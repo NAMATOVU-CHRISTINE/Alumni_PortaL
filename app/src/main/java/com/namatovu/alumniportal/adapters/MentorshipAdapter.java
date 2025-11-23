@@ -242,5 +242,43 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
                     }
                 }
             }
+            
+            private void loadUserProfileData(String userId) {
+                db.collection("users").document(userId)
+                        .addSnapshotListener((documentSnapshot, error) -> {
+                            if (error != null || documentSnapshot == null || !documentSnapshot.exists()) {
+                                imageViewProfile.setImageResource(R.drawable.ic_person);
+                                return;
+                            }
+                            
+                            try {
+                                User user = documentSnapshot.toObject(User.class);
+                                if (user != null) {
+                                    // Load profile picture
+                                    String profileImageUrl = user.getProfileImageUrl();
+                                    if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                                        Glide.with(itemView.getContext())
+                                                .load(profileImageUrl)
+                                                .circleCrop()
+                                                .placeholder(R.drawable.ic_person)
+                                                .error(R.drawable.ic_person)
+                                                .into(imageViewProfile);
+                                    } else {
+                                        imageViewProfile.setImageResource(R.drawable.ic_person);
+                                    }
+                                    
+                                    // Load bio/about info
+                                    String bio = user.getBio();
+                                    if (textSkills != null && bio != null && !bio.isEmpty()) {
+                                        textSkills.setText(bio);
+                                        textSkills.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                Log.e("MentorshipAdapter", "Error loading user profile", e);
+                                imageViewProfile.setImageResource(R.drawable.ic_person);
+                            }
+                        });
+            }
         }
 }
