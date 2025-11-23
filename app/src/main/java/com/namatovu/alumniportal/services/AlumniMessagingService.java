@@ -17,6 +17,7 @@ public class AlumniMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "Message received from: " + remoteMessage.getFrom());
+        Log.d(TAG, "Data payload size: " + remoteMessage.getData().size());
         
         // Handle data payload
         if (remoteMessage.getData().size() > 0) {
@@ -24,8 +25,11 @@ public class AlumniMessagingService extends FirebaseMessagingService {
             String notificationType = data.get("type");
             
             Log.d(TAG, "Notification type: " + notificationType);
+            Log.d(TAG, "Full data: " + data.toString());
             
             handleNotificationByType(notificationType, data);
+        } else {
+            Log.w(TAG, "No data payload in message");
         }
     }
     
@@ -38,7 +42,10 @@ public class AlumniMessagingService extends FirebaseMessagingService {
     }
     
     private void handleNotificationByType(String type, Map<String, String> data) {
+        Log.d(TAG, "handleNotificationByType called with type: " + type);
+        
         if ("message".equals(type)) {
+            Log.d(TAG, "Handling message notification");
             NotificationHelper.showNotification(
                 this,
                 "New Message",
@@ -47,6 +54,7 @@ public class AlumniMessagingService extends FirebaseMessagingService {
                 "message"
             );
         } else if ("event".equals(type)) {
+            Log.d(TAG, "Handling event notification");
             NotificationHelper.showNotification(
                 this,
                 "Event Update",
@@ -55,6 +63,7 @@ public class AlumniMessagingService extends FirebaseMessagingService {
                 "event"
             );
         } else if ("job".equals(type)) {
+            Log.d(TAG, "Handling job notification");
             NotificationHelper.showNotification(
                 this,
                 "New Job Opportunity",
@@ -63,6 +72,7 @@ public class AlumniMessagingService extends FirebaseMessagingService {
                 "job"
             );
         } else if ("mentorship".equals(type)) {
+            Log.d(TAG, "Handling mentorship notification");
             NotificationHelper.showNotification(
                 this,
                 "Mentorship Update",
@@ -71,6 +81,7 @@ public class AlumniMessagingService extends FirebaseMessagingService {
                 "mentorship"
             );
         } else if ("news".equals(type)) {
+            Log.d(TAG, "Handling news notification");
             NotificationHelper.showNotification(
                 this,
                 "New Article",
@@ -78,6 +89,8 @@ public class AlumniMessagingService extends FirebaseMessagingService {
                 data.get("newsId"),
                 "news"
             );
+        } else {
+            Log.w(TAG, "Unknown notification type: " + type);
         }
     }
 }

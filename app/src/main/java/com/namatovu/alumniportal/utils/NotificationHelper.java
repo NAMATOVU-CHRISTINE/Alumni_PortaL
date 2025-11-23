@@ -81,13 +81,21 @@ public class NotificationHelper {
                     
                     // Get new FCM registration token
                     String token = task.getResult();
-                    Log.d(TAG, "FCM Registration Token: " + token);
+                    if (token == null || token.isEmpty()) {
+                        Log.e(TAG, "FCM token is null or empty");
+                        return;
+                    }
+                    
+                    Log.d(TAG, "FCM Registration Token obtained: " + token.substring(0, Math.min(20, token.length())) + "...");
                     
                     // Store token locally
                     prefs.edit().putString(KEY_FCM_TOKEN, token).apply();
                     
                     // Update token in Firestore
                     updateTokenInFirestore(token);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to get FCM token", e);
                 });
     }
     
@@ -95,6 +103,11 @@ public class NotificationHelper {
      * Update FCM token in Firestore for the current user
      */
     public static void updateTokenInFirestore(String token) {
+        if (token == null || token.isEmpty()) {
+            Log.w(TAG, "Token is null or empty, cannot update FCM token");
+            return;
+        }
+        
         if (auth.getCurrentUser() == null) {
             Log.w(TAG, "No authenticated user, cannot update FCM token");
             return;
@@ -108,11 +121,11 @@ public class NotificationHelper {
         db.collection("users").document(userId)
                 .update(tokenData)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "FCM token updated in Firestore");
+                    Log.d(TAG, "FCM token updated in Firestore for user: " + userId);
                     AnalyticsHelper.logEvent("fcm_token_updated", null, null);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Failed to update FCM token in Firestore", e);
+                    Log.e(TAG, "Failed to update FCM token in Firestore for user " + userId, e);
                 });
     }
     
@@ -492,12 +505,18 @@ public class NotificationHelper {
      * Display a notification to the user
      */
     public static void showNotification(Context context, String title, String message, String notificationId, String type) {
+        Log.d(TAG, "showNotification called - title: " + title + ", type: " + type);
+        
         if (!areNotificationsEnabled()) {
+            Log.d(TAG, "Notifications are disabled globally");
             return;
         }
         
         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-        if (notificationManager == null) return;
+        if (notificationManager == null) {
+            Log.e(TAG, "NotificationManager is null");
+            return;
+        }
         
         // Create notification channel for Android 8+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -506,20 +525,22 @@ public class NotificationHelper {
             NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("Alumni Portal " + channelName);
             notificationManager.createNotificationChannel(channel);
+            Log.d(TAG, "Notification channel created: " + channelId);
         }
         
         // Build notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "alumni_" + type)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(com.namatovu.alumniportal.R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         
         // Show notification
-        notificationManager.notify(notificationId.hashCode(), builder.build());
+        int notificationId_int = notificationId.hashCode();
+        notificationManager.notify(notificationId_int, builder.build());
         
-        Log.d(TAG, "Notification shown: " + title);
+        Log.d(TAG, "Notification shown with ID: " + notificationId_int + ", title: " + title);
     }
     
     /**
