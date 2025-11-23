@@ -161,9 +161,9 @@ public class ViewProfileActivity extends AppCompatActivity {
         binding.tvFullName.setText("Loading...");
         binding.tvFullName.setVisibility(View.VISIBLE);
         
-        // Force fetch from server only (bypass cache) to prevent stale data
+        // Try cache first, then server
         db.collection("users").document(userId)
-            .get(com.google.firebase.firestore.Source.SERVER)
+            .get()
             .addOnSuccessListener(document -> {
                 Log.d(TAG, "Document fetched for userId: " + userId);
                 if (document.exists()) {
@@ -173,8 +173,19 @@ public class ViewProfileActivity extends AppCompatActivity {
                         
                         viewedUser = document.toObject(User.class);
                         if (viewedUser != null) {
-                            Log.d(TAG, "Displaying profile for: " + viewedUser.getFullName());
-                            displayUserProfile(viewedUser);
+                            String fullName = viewedUser.getFullName();
+                            Log.d(TAG, "Displaying profile for: " + fullName);
+                            
+                            // If fullName is empty, show a default message
+                            if (fullName == null || fullName.trim().isEmpty()) {
+                                Log.w(TAG, "User fullName is empty for userId: " + userId);
+                                binding.tvFullName.setText("Profile Incomplete");
+                            } else {
+                                displayUserProfile(viewedUser);
+                            }
+                        } else {
+                            Log.w(TAG, "User object is null");
+                            binding.tvFullName.setText("Unable to load profile");
                         }
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing user data", e);

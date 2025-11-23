@@ -141,6 +141,12 @@ public class EditProfileActivity extends AppCompatActivity {
             this, android.R.layout.simple_dropdown_item_1line, userTypes);
         binding.statusDropdown.setAdapter(statusAdapter);
         
+        // Work Status dropdown
+        String[] workStatuses = {"Employed", "Self-employed", "Not working", "Looking for a job", "Student"};
+        android.widget.ArrayAdapter<String> workStatusAdapter = new android.widget.ArrayAdapter<>(
+            this, android.R.layout.simple_dropdown_item_1line, workStatuses);
+        binding.workStatusDropdown.setAdapter(workStatusAdapter);
+        
         // Skills dropdown
         String[] skills = {
             "Java", "Python", "JavaScript", "C++", "C#", "PHP", "Ruby", "Swift", "Kotlin",
@@ -234,6 +240,12 @@ public class EditProfileActivity extends AppCompatActivity {
         } else {
             binding.statusDropdown.setText("Student", false);
         }
+        
+        // Set work status
+        String workStatus = u.getWorkStatus();
+        if (workStatus != null && !workStatus.isEmpty()) {
+            binding.workStatusDropdown.setText(workStatus, false);
+        }
 
         binding.skillsChipGroup.removeAllViews();
         for (String s : u.getSkills()) {
@@ -254,6 +266,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String bio = binding.bioEditText.getText() != null ? binding.bioEditText.getText().toString().trim() : "";
         String career = binding.careerEditText.getText() != null ? binding.careerEditText.getText().toString().trim() : "";
         String status = binding.statusDropdown.getText() != null ? binding.statusDropdown.getText().toString().trim() : "Student";
+        String workStatus = binding.workStatusDropdown.getText() != null ? binding.workStatusDropdown.getText().toString().trim() : "";
         String industry = binding.industryDropdown.getText() != null ? binding.industryDropdown.getText().toString().trim() : "";
         String currency = binding.currencyDropdown.getText() != null ? binding.currencyDropdown.getText().toString().trim() : "";
 
@@ -327,6 +340,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl, String publicId) {
         String userType = binding.statusDropdown.getText() != null ? binding.statusDropdown.getText().toString().trim() : "Student";
+        String workStatus = binding.workStatusDropdown.getText() != null ? binding.workStatusDropdown.getText().toString().trim() : "";
         String industry = binding.industryDropdown.getText() != null ? binding.industryDropdown.getText().toString().trim() : "";
         String currency = binding.currencyDropdown.getText() != null ? binding.currencyDropdown.getText().toString().trim() : "";
         
@@ -334,6 +348,7 @@ public class EditProfileActivity extends AppCompatActivity {
         updates.put("fullName", name);
         updates.put("bio", bio);
         updates.put("currentJob", career);
+        updates.put("workStatus", workStatus);
         updates.put("userType", userType.toLowerCase());
         updates.put("isAlumni", "alumni".equalsIgnoreCase(userType));
         updates.put("industry", industry);

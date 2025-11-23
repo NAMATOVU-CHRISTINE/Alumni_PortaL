@@ -22,6 +22,7 @@ public class User {
     private String graduationYear;
     private String currentJob;
     private String company;
+    private String workStatus; // "Employed", "Self-employed", "Not working", "Looking for a job", "Student"
     private String location;
     private String phoneNumber;
     private List<String> skills;
@@ -113,6 +114,9 @@ public class User {
 
     public String getCompany() { return company; }
     public void setCompany(String company) { this.company = company; }
+    
+    public String getWorkStatus() { return workStatus; }
+    public void setWorkStatus(String workStatus) { this.workStatus = workStatus; }
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
