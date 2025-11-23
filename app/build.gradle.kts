@@ -20,8 +20,8 @@ android {
         
         // Support for 16 KB page sizes (required for Android 15+)
         ndk {
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            // Ensure 16KB page alignment
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
+            // Reduce debug symbols for smaller size
             debugSymbolLevel = "FULL"
         }
         
@@ -31,7 +31,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -68,15 +69,16 @@ android {
                 "META-INF/NOTICE.md",
                 "META-INF/notice.txt",
                 "META-INF/ASL2.0",
-                "META-INF/*.kotlin_module"
+                "META-INF/*.kotlin_module",
+                "META-INF/proguard/androidx-*.pro",
+                "META-INF/com.android.tools/**",
+                "DebugProbesKt.bin"
             )
         }
         
         // Enable 16 KB page size alignment for native libraries (Android 15+)
         jniLibs {
             useLegacyPackaging = false
-            // Keep debug symbols for better crash reports
-            keepDebugSymbols += listOf("**/*.so")
         }
     }
     
