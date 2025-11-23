@@ -88,6 +88,9 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
+        // Clear UI before loading new data
+        clearProfileUI();
+        
         // Show loading state
         showLoading(true);
         
@@ -115,6 +118,22 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
     
+    private void clearProfileUI() {
+        // Clear all text fields
+        binding.nameText.setText("");
+        binding.emailText.setText("");
+        binding.bioText.setText("");
+        binding.careerText.setText("");
+        
+        // Clear profile image
+        binding.profileImage.setImageResource(R.drawable.ic_person);
+        
+        // Clear skills
+        binding.skillsChipGroup.removeAllViews();
+        
+        Log.d(TAG, "Profile UI cleared");
+    }
+    
     private void showLoading(boolean show) {
         if (show) {
             // Disable buttons during loading
@@ -133,14 +152,15 @@ public class ProfileActivity extends AppCompatActivity {
         binding.bioText.setText(user.getBio());
         binding.careerText.setText(user.getCurrentJob());
 
-        // profile image
+        // profile image - skip all caches to ensure fresh data
         String url = user.getProfileImageUrl();
         Log.d(TAG, "Loading profile image URL: " + url);
         if (url != null && !url.isEmpty()) {
-            // Skip cache to ensure we get the latest image
+            // Skip both memory and disk cache to ensure we get the latest image
             Glide.with(this)
                 .load(url)
                 .skipMemoryCache(true)
+                .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
                 .placeholder(R.drawable.ic_person)
                 .error(R.drawable.ic_person)
                 .into(binding.profileImage);
@@ -151,17 +171,19 @@ public class ProfileActivity extends AppCompatActivity {
         // skills
         binding.skillsChipGroup.removeAllViews();
         List<String> skills = user.getSkills();
-        for (String s : skills) {
-            Chip c = new Chip(this);
-            c.setText(s);
-            c.setClickable(false);
-            c.setCheckable(false);
-            // Apply custom styling
-            c.setChipBackgroundColorResource(R.color.light_gray);
-            c.setTextColor(getColor(R.color.black));
-            c.setChipStrokeColorResource(R.color.must_green);
-            c.setChipStrokeWidth(2.0f);
-            binding.skillsChipGroup.addView(c);
+        if (skills != null && !skills.isEmpty()) {
+            for (String s : skills) {
+                Chip c = new Chip(this);
+                c.setText(s);
+                c.setClickable(false);
+                c.setCheckable(false);
+                // Apply custom styling
+                c.setChipBackgroundColorResource(R.color.light_gray);
+                c.setTextColor(getColor(R.color.black));
+                c.setChipStrokeColorResource(R.color.must_green);
+                c.setChipStrokeWidth(2.0f);
+                binding.skillsChipGroup.addView(c);
+            }
         }
     }
 
