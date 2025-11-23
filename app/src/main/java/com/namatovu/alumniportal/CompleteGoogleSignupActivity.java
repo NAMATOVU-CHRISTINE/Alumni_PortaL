@@ -125,15 +125,21 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                                         .addOnCompleteListener(emailTask -> {
                                                             hideLoadingIndicator();
                                                             if (emailTask.isSuccessful()) {
-                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Registration successful! Please verify your email.", Toast.LENGTH_LONG).show();
-                                                                // Navigate to home
-                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, HomeActivity.class);
+                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Profile complete! Verification email sent. Please check your inbox.", Toast.LENGTH_LONG).show();
+                                                                // Sign out user until they verify email
+                                                                mAuth.signOut();
+                                                                // Go back to login with verification pending message
+                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, LoginActivity.class);
+                                                                intent.putExtra("email_verification_pending", true);
+                                                                intent.putExtra("user_email", emailEditText.getText().toString());
                                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                 startActivity(intent);
                                                                 finish();
                                                             } else {
-                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Registration successful! Verification email failed to send.", Toast.LENGTH_LONG).show();
-                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, HomeActivity.class);
+                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Profile complete! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
+                                                                // Sign out and go back to login
+                                                                mAuth.signOut();
+                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, LoginActivity.class);
                                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                 startActivity(intent);
                                                                 finish();
