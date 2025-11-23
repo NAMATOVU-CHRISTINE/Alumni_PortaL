@@ -235,13 +235,23 @@ public class SignupActivity extends AppCompatActivity {
                                                             .addOnCompleteListener(emailTask -> {
                                                                 hideLoadingIndicator();
                                                                 if (emailTask.isSuccessful()) {
-                                                                    Toast.makeText(SignupActivity.this, "Registration successful! Verification email sent.", Toast.LENGTH_LONG).show();
+                                                                    Toast.makeText(SignupActivity.this, "Registration successful! Please verify your email to continue.", Toast.LENGTH_LONG).show();
+                                                                    // Sign out user until they verify email
+                                                                    mAuth.signOut();
+                                                                    // Show verification pending message and go back to login
+                                                                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                                    intent.putExtra("email_verification_pending", true);
+                                                                    intent.putExtra("user_email", personalEmail);
+                                                                    startActivity(intent);
+                                                                    finish();
                                                                 } else {
-                                                                    Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send.", Toast.LENGTH_LONG).show();
+                                                                    Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
+                                                                    // Sign out and go back to login
+                                                                    mAuth.signOut();
+                                                                    Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                                    startActivity(intent);
+                                                                    finish();
                                                                 }
-                                                                // Navigate to home
-                                                                startActivity(new Intent(SignupActivity.this, HomeActivity.class));
-                                                                finish();
                                                             });
                                                 })
                                                 .addOnFailureListener(e -> {

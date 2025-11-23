@@ -162,7 +162,22 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is already signed in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            navigateToHome();
+            // Check if email is verified
+            if (!currentUser.isEmailVerified()) {
+                Log.d(TAG, "User is signed in but email not verified");
+                // Show message about email verification
+                Toast.makeText(this, "Please verify your email to continue. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                // Sign out the user
+                mAuth.signOut();
+            } else {
+                navigateToHome();
+            }
+        }
+        
+        // Check if coming from signup with pending verification
+        if (getIntent().getBooleanExtra("email_verification_pending", false)) {
+            String userEmail = getIntent().getStringExtra("user_email");
+            Toast.makeText(this, "Verification email sent to " + userEmail + ". Please check your inbox.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -220,7 +235,16 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Login successful
+                            // Check if email is verified
+                            if (!user.isEmailVerified()) {
+                                hideLoadingIndicator();
+                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                // Sign out the user since they haven't verified their email
+                                mAuth.signOut();
+                                Log.d(TAG, "User attempted login without email verification");
+                                return;
+                            }
+                            // Email is verified, proceed to home
                             Log.d(TAG, "Login successful.");
                             navigateToHome();
                         } else {
