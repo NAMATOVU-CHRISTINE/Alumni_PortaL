@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import com.namatovu.alumniportal.adapters.ChatAdapter;
 import com.namatovu.alumniportal.databinding.ActivityChatBinding;
 import com.namatovu.alumniportal.models.ChatMessage;
 import com.namatovu.alumniportal.models.User;
+import com.namatovu.alumniportal.receivers.MessageBroadcastReceiver;
 import com.namatovu.alumniportal.services.NotificationService;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
@@ -189,8 +191,14 @@ public class ChatActivity extends AppCompatActivity {
                                         // New incoming message from other user
                                         Log.d(TAG, "New incoming message: " + newMessage.getMessageText());
                                         
-                                        // Show notification for incoming message
-                                        showIncomingMessageNotification(newMessage);
+                                        // Broadcast incoming message
+                                        Intent broadcastIntent = new Intent(MessageBroadcastReceiver.ACTION_MESSAGE_RECEIVED);
+                                        broadcastIntent.putExtra("senderName", otherUserName);
+                                        broadcastIntent.putExtra("messageText", newMessage.getMessageText());
+                                        broadcastIntent.putExtra("chatId", chatRoomId);
+                                        broadcastIntent.putExtra("senderId", newMessage.getSenderId());
+                                        LocalBroadcastManager.getInstance(ChatActivity.this).sendBroadcast(broadcastIntent);
+                                        Log.d(TAG, "Incoming message broadcast sent");
                                     }
                                 } catch (Exception e) {
                                     Log.e(TAG, "Error processing new message", e);
@@ -291,12 +299,15 @@ public class ChatActivity extends AppCompatActivity {
                     // Update user activity
                     updateCurrentUserActivity();
                     
-                    // Send notification to confirm message was sent to sender
-                    notificationService.sendMessageSentNotification(messageText, otherUserName);
-                    
-                    // Send notification to recipient about incoming message
+                    // Broadcast message received event to recipient
                     loadCurrentUserNameForNotification(currentUserId, senderName -> {
-                        notificationService.sendIncomingMessageNotification(otherUserId, senderName, messageText);
+                        Intent broadcastIntent = new Intent(MessageBroadcastReceiver.ACTION_MESSAGE_RECEIVED);
+                        broadcastIntent.putExtra("senderName", senderName);
+                        broadcastIntent.putExtra("messageText", messageText);
+                        broadcastIntent.putExtra("chatId", chatRoomId);
+                        broadcastIntent.putExtra("senderId", currentUserId);
+                        LocalBroadcastManager.getInstance(ChatActivity.this).sendBroadcast(broadcastIntent);
+                        Log.d(TAG, "Message broadcast sent");
                     });
                     
                     // Update last message in chat room info
