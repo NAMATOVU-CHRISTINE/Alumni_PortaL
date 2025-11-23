@@ -155,33 +155,28 @@ public class NotificationSettingsActivity extends AppCompatActivity {
     
     private void attachSwitchListeners() {
         switchMessages.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (switchAllNotifications.isChecked()) {
-                NotificationHelper.setMessageNotificationsEnabled(isChecked);
-            }
+            NotificationHelper.setMessageNotificationsEnabled(isChecked);
         });
         
         switchMentorship.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (switchAllNotifications.isChecked()) {
-                NotificationHelper.setMentorshipNotificationsEnabled(isChecked);
-            }
+            NotificationHelper.setMentorshipNotificationsEnabled(isChecked);
         });
         
         switchEvents.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (switchAllNotifications.isChecked()) {
-                NotificationHelper.setEventNotificationsEnabled(isChecked);
-            }
+            NotificationHelper.setEventNotificationsEnabled(isChecked);
         });
         
         switchJobs.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (switchAllNotifications.isChecked()) {
-                NotificationHelper.setJobNotificationsEnabled(isChecked);
-            }
+            NotificationHelper.setJobNotificationsEnabled(isChecked);
         });
         
         switchNews.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (switchAllNotifications.isChecked()) {
-                NotificationHelper.setNewsNotificationsEnabled(isChecked);
-            }
+            NotificationHelper.setNewsNotificationsEnabled(isChecked);
+        });
+        
+        switchAllNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            NotificationHelper.setNotificationsEnabled(isChecked);
+            updateDependentSwitches();
         });
     }
     
