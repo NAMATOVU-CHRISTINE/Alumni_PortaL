@@ -228,6 +228,16 @@
             android:foregroundServiceType="dataSync" />
         
         <!-- Broadcast Receivers -->
+        <!-- Message Broadcast Receiver -->
+        <receiver
+            android:name=".receivers.MessageBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.namatovu.alumniportal.MESSAGE_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        
         <!-- Network Change Receiver -->
         <receiver
             android:name=".receivers.NetworkChangeReceiver"
