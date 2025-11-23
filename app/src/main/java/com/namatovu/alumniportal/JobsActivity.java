@@ -173,7 +173,8 @@ public class JobsActivity extends AppCompatActivity implements
                 sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerSort.setAdapter(sortAdapter);
                 
-                spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                // Use a flag to prevent triggering on initial selection
+                spinnerSort.post(() -> spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         currentSortOption = sortOptions[position];
@@ -182,7 +183,7 @@ public class JobsActivity extends AppCompatActivity implements
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
-                });
+                }));
             }
 
             // Setup category chips
