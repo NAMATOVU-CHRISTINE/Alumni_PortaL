@@ -544,7 +544,17 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
 
     private void sendTextMessage() {
         String messageText = editTextMessage.getText().toString().trim();
-        if (messageText.isEmpty() || chatId == null) return;
+        
+        if (messageText.isEmpty()) {
+            Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        if (chatId == null) {
+            Log.e(TAG, "Cannot send message - chatId is null");
+            Toast.makeText(this, "Chat not initialized. Please try again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // Validate message content
         if (!SecurityHelper.isValidMessageContent(messageText)) {
@@ -559,6 +569,8 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
                 otherUserId,
                 messageText
         );
+        
+        Log.d(TAG, "Sending message: " + messageText + " to chat: " + chatId);
         
         // Load and set sender profile image
         loadCurrentUserProfileImage(message);
