@@ -149,6 +149,13 @@ public class User {
 
     public Map<String, Object> getPrivacySettings() { return privacySettings; }
     public void setPrivacySettings(Map<String, Object> privacySettings) { this.privacySettings = privacySettings; }
+    
+    // Connection status getters and setters (transient fields)
+    public boolean isConnected() { return isConnected; }
+    public void setConnected(boolean connected) { isConnected = connected; }
+    
+    public String getConnectionStatus() { return connectionStatus; }
+    public void setConnectionStatus(String connectionStatus) { this.connectionStatus = connectionStatus; }
 
     // Helper methods
     public void addSkill(String skill) {

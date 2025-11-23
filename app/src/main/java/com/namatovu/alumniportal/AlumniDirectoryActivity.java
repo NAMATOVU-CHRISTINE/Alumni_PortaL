@@ -174,6 +174,10 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                             User user = document.toObject(User.class);
                             user.setUserId(userId);
                             
+                            // Set default connection status
+                            user.setConnectionStatus("not_connected");
+                            user.setConnected(false);
+                            
                             // Debug logging
                             Log.d(TAG, "User: " + user.getFullName() + 
                                   ", isAlumni: " + user.isAlumni() + 
