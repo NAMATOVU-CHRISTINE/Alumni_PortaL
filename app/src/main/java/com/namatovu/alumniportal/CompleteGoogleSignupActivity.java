@@ -37,11 +37,17 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
         // Pre-fill data from Google account
         if (mAuth.getCurrentUser() != null) {
             fullNameEditText.setText(mAuth.getCurrentUser().getDisplayName());
-            emailEditText.setText(mAuth.getCurrentUser().getEmail());
+            
+            // Get email from intent or from Google account
+            String googleEmail = getIntent().getStringExtra("googleEmail");
+            if (googleEmail == null) {
+                googleEmail = mAuth.getCurrentUser().getEmail();
+            }
+            emailEditText.setText(googleEmail);
             emailEditText.setEnabled(true); // Allow user to edit email
             
             // Suggest a username from email
-            String suggestedUsername = mAuth.getCurrentUser().getEmail().split("@")[0];
+            String suggestedUsername = googleEmail.split("@")[0];
             usernameEditText.setText(suggestedUsername);
         }
 
