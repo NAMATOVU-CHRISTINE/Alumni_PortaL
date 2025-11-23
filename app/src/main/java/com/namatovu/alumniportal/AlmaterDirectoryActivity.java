@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.namatovu.alumniportal.adapters.AlumniAdapter;
+import com.namatovu.alumniportal.adapters.AlmaterAdapter;
 import com.namatovu.alumniportal.databinding.ActivityAlumniDirectoryBinding;
 import com.namatovu.alumniportal.models.User;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
@@ -29,7 +29,7 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
     private ActivityAlumniDirectoryBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private AlumniAdapter adapter;
+    private AlmaterAdapter adapter;
     private List<User> allUsers;
     private List<User> filteredUsers;
     
@@ -72,6 +72,10 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
                     finish();
                 });
             }
+            // Update search hint for Almater Directory
+            if (binding.searchLayout != null) {
+                binding.searchLayout.setHint("Search almater...");
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error setting up toolbar", e);
         }
@@ -79,7 +83,7 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         try {
-            adapter = new AlumniAdapter(filteredUsers, new AlumniAdapter.OnUserClickListener() {
+            adapter = new AlmaterAdapter(filteredUsers, new AlmaterAdapter.OnUserClickListener() {
                 @Override
                 public void onUserClick(User user) {
                     // Open profile details
