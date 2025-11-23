@@ -139,6 +139,38 @@ public class NotificationService {
     }
     
     /**
+     * Send message sent notification (local notification to sender)
+     */
+    public void sendMessageSentNotification(String messageText, String recipientName) {
+        // Send local notification to confirm message was sent
+        sendPushNotification(
+            "local",
+            "Message Sent",
+            "Your message to " + recipientName + " was sent",
+            "message_sent",
+            recipientName
+        );
+        
+        Log.d(TAG, "Message sent notification created for: " + recipientName);
+    }
+    
+    /**
+     * Send incoming message notification (to recipient)
+     */
+    public void sendIncomingMessageNotification(String recipientId, String senderName, String messagePreview) {
+        // Send push notification to recipient
+        sendPushNotification(
+            recipientId,
+            "New Message from " + senderName,
+            messagePreview,
+            "incoming_message",
+            senderName
+        );
+        
+        Log.d(TAG, "Incoming message notification sent to: " + recipientId);
+    }
+    
+    /**
      * Send push notification to specific user
      */
     private void sendPushNotification(String userId, String title, String message, String type, String referenceId) {

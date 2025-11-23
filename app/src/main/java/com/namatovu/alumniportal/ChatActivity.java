@@ -20,6 +20,7 @@ import com.namatovu.alumniportal.adapters.ChatAdapter;
 import com.namatovu.alumniportal.databinding.ActivityChatBinding;
 import com.namatovu.alumniportal.models.ChatMessage;
 import com.namatovu.alumniportal.models.User;
+import com.namatovu.alumniportal.services.NotificationService;
 import com.namatovu.alumniportal.utils.AnalyticsHelper;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference chatRef;
     private ChatAdapter adapter;
     private List<ChatMessage> messages = new ArrayList<>();
+    private NotificationService notificationService;
     
     private String currentUserId;
     private String otherUserId;
@@ -56,6 +58,7 @@ public class ChatActivity extends AppCompatActivity {
             // Initialize Firebase
             mAuth = FirebaseAuth.getInstance();
             db = FirebaseFirestore.getInstance();
+            notificationService = new NotificationService(this);
             
             // Get current user ID
             currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
@@ -109,8 +112,11 @@ public class ChatActivity extends AppCompatActivity {
             setSupportActionBar(binding.toolbar);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle("Chat with " + (otherUserName != null ? otherUserName : "User"));
             }
+            
+            // Set chat header with other user's name
+            binding.textViewChatName.setText(otherUserName != null ? otherUserName : "User");
+            binding.textViewOnlineStatus.setText("Active now");
             
             // Setup RecyclerView
             adapter = new ChatAdapter(messages, currentUserId);
@@ -235,6 +241,9 @@ public class ChatActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     binding.editTextMessage.setText("");
                     Log.d(TAG, "Message sent successfully");
+                    
+                    // Send notification to confirm message was sent
+                    notificationService.sendMessageSentNotification(messageText, otherUserName);
                     
                     // Update last message in chat room info
                     updateChatRoomInfo(message);
