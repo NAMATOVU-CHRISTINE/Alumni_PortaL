@@ -10,13 +10,18 @@ service cloud.firestore {
     
     match /notifications/{notificationId} {
       allow read: if request.auth != null && 
-                     (resource.data.notificationFor == request.auth.uid || 
-                      resource.data.sentBy == request.auth.uid);
-      allow create: if request.auth != null && 
-                       request.auth.uid == request.resource.data.sentBy;
+                     (resource.data.userId == request.auth.uid || 
+                      resource.data.broadcast == true);
+      allow create: if request.auth != null;
       allow update, delete: if request.auth != null && 
-                               (resource.data.notificationFor == request.auth.uid ||
-                                resource.data.sentBy == request.auth.uid);
+                               (resource.data.userId == request.auth.uid ||
+                                request.auth.uid == resource.data.userId);
+    }
+    
+    match /emailQueue/{emailId} {
+      allow read: if false;
+      allow create: if request.auth != null;
+      allow update, delete: if false;
     }
     
     match /articles/{articleId} {
