@@ -155,13 +155,13 @@ public class AlmaterAdapter extends RecyclerView.Adapter<AlmaterAdapter.AlmaterV
                 binding.verifiedBadge.setVisibility(View.GONE);
             }
             
-            // Connection status only - NO mentoring options for students
+            // Show Connect button for almater (students/staff)
             if (user.isConnected()) {
                 binding.mentorAvailableText.setVisibility(View.VISIBLE);
                 binding.mentorAvailableText.setText("✓ Connected");
             } else {
-                // Hide mentoring text for almater (students/staff)
-                binding.mentorAvailableText.setVisibility(View.GONE);
+                binding.mentorAvailableText.setVisibility(View.VISIBLE);
+                binding.mentorAvailableText.setText("Connect");
             }
             
             // Email button visibility (show if user allows email to be shown)
