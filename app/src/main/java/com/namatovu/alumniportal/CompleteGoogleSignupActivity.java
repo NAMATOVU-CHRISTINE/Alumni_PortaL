@@ -38,6 +38,7 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             fullNameEditText.setText(mAuth.getCurrentUser().getDisplayName());
             emailEditText.setText(mAuth.getCurrentUser().getEmail());
+            emailEditText.setEnabled(true); // Allow user to edit email
             
             // Suggest a username from email
             String suggestedUsername = mAuth.getCurrentUser().getEmail().split("@")[0];
@@ -113,12 +114,25 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                     db.collection("users").document(userId)
                                             .set(user)
                                             .addOnSuccessListener(aVoid2 -> {
-                                                hideLoadingIndicator();
-                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, HomeActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                                finish();
+                                                // Send email verification
+                                                mAuth.getCurrentUser().sendEmailVerification()
+                                                        .addOnCompleteListener(emailTask -> {
+                                                            hideLoadingIndicator();
+                                                            if (emailTask.isSuccessful()) {
+                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Registration successful! Please verify your email.", Toast.LENGTH_LONG).show();
+                                                                // Navigate to home
+                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, HomeActivity.class);
+                                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            } else {
+                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Registration successful! Verification email failed to send.", Toast.LENGTH_LONG).show();
+                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, HomeActivity.class);
+                                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            }
+                                                        });
                                             })
                                             .addOnFailureListener(e -> {
                                                 hideLoadingIndicator();
