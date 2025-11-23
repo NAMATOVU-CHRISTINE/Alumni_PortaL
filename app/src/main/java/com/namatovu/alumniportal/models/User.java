@@ -109,10 +109,6 @@ public class User {
 
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
-    
-    // Handle both studentId and studentID from Firestore
-    public void setStudentID(String studentID) { this.studentId = studentID; }
-    public String getStudentID() { return studentId; }
 
     public String getProfileImageUrl() { return profileImageUrl; }
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
