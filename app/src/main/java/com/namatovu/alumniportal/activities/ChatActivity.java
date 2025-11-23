@@ -174,8 +174,18 @@ public class ChatActivity extends AppCompatActivity implements ChatMessageAdapte
         textViewOnlineStatus = findViewById(R.id.textViewOnlineStatus);
         fabScrollToBottom = findViewById(R.id.fabScrollToBottom);
         
+        // Check if views are initialized
+        if (buttonSend == null) {
+            Log.e(TAG, "buttonSend is null - check layout file");
+        }
+        if (editTextMessage == null) {
+            Log.e(TAG, "editTextMessage is null - check layout file");
+        }
+        
         // Initially disable send button
-        buttonSend.setEnabled(false);
+        if (buttonSend != null) {
+            buttonSend.setEnabled(false);
+        }
         
         // Set default text for name and status
         textViewChatName.setText("");
