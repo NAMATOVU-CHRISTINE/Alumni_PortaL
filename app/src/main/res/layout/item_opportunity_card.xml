@@ -115,7 +115,6 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Senior Frontend Developer"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
@@ -126,7 +125,6 @@
                     android:id="@+id/tvCompany"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Google Inc."
                     android:textSize="14sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="2dp" />
@@ -135,7 +133,6 @@
                     android:id="@+id/tvLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📍 Mountain View, CA"
                     android:textSize="12sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:layout_marginTop="1dp" />
@@ -157,50 +154,13 @@
 
         </LinearLayout>
 
-        <!-- Tags Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="💼 Full-time"
-                android:textSize="12sp"
-                android:textColor="@color/must_green"
-                app:chipBackgroundColor="@color/light_green"
-                app:chipMinHeight="32dp"
-                style="@style/Widget.Material3.Chip.Assist" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tvDeadline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Apply by Dec 15"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="@color/must_green"
-                android:drawableStart="@drawable/ic_event"
-                android:drawablePadding="4dp"
-                app:drawableTint="@color/must_green" />
-
-        </LinearLayout>
 
         <!-- Description -->
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="We're looking for a talented frontend developer to join our innovative team and help build the next generation of web applications. You'll work with cutting-edge technologies and collaborate with world-class engineers."
             android:textSize="13sp"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginBottom="12dp"
