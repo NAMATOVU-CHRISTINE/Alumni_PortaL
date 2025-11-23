@@ -165,50 +165,39 @@ public class ChatActivity extends AppCompatActivity {
     
     private void setupChat() {
         try {
-            // Initialize Firebase Realtime Database reference
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            
-            // Enable offline persistence for better reliability
-            try {
-                database.setPersistenceEnabled(true);
-            } catch (Exception e) {
-                Log.w(TAG, "Persistence already enabled or not available", e);
-            }
-            
-            chatRef = database.getReference("chats").child(chatRoomId).child("messages");
-            
             Log.d(TAG, "Setting up chat for room: " + chatRoomId);
             
-            // Listen for new messages
-            chatRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "Messages received: " + dataSnapshot.getChildrenCount());
-                    messages.clear();
-                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
-                        try {
-                            ChatMessage message = messageSnapshot.getValue(ChatMessage.class);
-                            if (message != null) {
-                                messages.add(message);
-                                Log.d(TAG, "Message loaded: " + message.getMessageText());
+            // Listen for new messages from Firestore
+            db.collection("chats").document(chatRoomId).collection("messages")
+                .orderBy("timestamp")
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Failed to load messages: " + error.getMessage(), error);
+                        Toast.makeText(ChatActivity.this, "Failed to load messages: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    
+                    if (querySnapshot != null) {
+                        Log.d(TAG, "Messages received: " + querySnapshot.size());
+                        messages.clear();
+                        for (com.google.firebase.firestore.DocumentSnapshot messageDoc : querySnapshot.getDocuments()) {
+                            try {
+                                ChatMessage message = messageDoc.toObject(ChatMessage.class);
+                                if (message != null) {
+                                    messages.add(message);
+                                    Log.d(TAG, "Message loaded: " + message.getMessageText());
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error parsing message", e);
                             }
-                        } catch (Exception e) {
-                            Log.e(TAG, "Error parsing message", e);
                         }
+                        adapter.notifyDataSetChanged();
+                        if (!messages.isEmpty()) {
+                            binding.recyclerView.smoothScrollToPosition(messages.size() - 1);
+                        }
+                        updateEmptyState();
                     }
-                    adapter.notifyDataSetChanged();
-                    if (!messages.isEmpty()) {
-                        binding.recyclerView.smoothScrollToPosition(messages.size() - 1);
-                    }
-                    updateEmptyState();
-                }
-                
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e(TAG, "Failed to load messages: " + databaseError.getMessage(), databaseError.toException());
-                    Toast.makeText(ChatActivity.this, "Failed to load messages: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+                });
         } catch (Exception e) {
             Log.e(TAG, "Error setting up chat", e);
             Toast.makeText(this, "Error initializing chat: " + e.getMessage(), Toast.LENGTH_LONG).show();
