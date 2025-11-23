@@ -14,3 +14,62 @@
 [debug] [2025-11-23T09:00:42.209Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions [none]
 [debug] [2025-11-23T09:00:42.209Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions x-goog-quota-user=projects/alumniportal-198ec
 [debug] [2025-11-23T09:00:42.209Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2025-11-23T09:00:49.071Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions 200
+[debug] [2025-11-23T09:00:49.071Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[info] 
+[info] === Deploying to 'alumniportal-198ec'...
+[info] 
+[info] i  deploying firestore 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2025-11-23T09:00:49.079Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:49.079Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:49.079Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/alumniportal-198ec/databases/(default) [none]
+[debug] [2025-11-23T09:00:55.854Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/alumniportal-198ec/databases/(default) 200
+[debug] [2025-11-23T09:00:55.854Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/alumniportal-198ec/databases/(default) {"name":"projects/alumniportal-198ec/databases/(default)","uid":"67aeb805-2e2d-41d1-ac34-ff74bc183f19","createTime":"2025-10-26T14:04:51.337891Z","updateTime":"2025-10-26T14:04:51.337891Z","locationId":"nam5","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2025-11-23T08:00:55.795160Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"s","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"II3/0sb0h5EDMKTb1KyEwpAD"}
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2025-11-23T09:00:55.857Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:55.857Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:55.857Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test [none]
+[debug] [2025-11-23T09:00:55.857Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test [omitted]
+[debug] [2025-11-23T09:00:57.900Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test 200
+[debug] [2025-11-23T09:00:57.901Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec:test {}
+[info] ✔  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2025-11-23T09:00:57.905Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:57.905Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:57.907Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases pageSize=10&pageToken=
+[debug] [2025-11-23T09:00:58.337Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases 200
+[debug] [2025-11-23T09:00:58.337Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases {"releases":[{"name":"projects/alumniportal-198ec/releases/cloud.firestore","rulesetName":"projects/alumniportal-198ec/rulesets/e08ae4a1-aa8d-4a0a-b61b-398b1683a949","createTime":"2025-11-02T12:57:13.468731Z","updateTime":"2025-11-23T08:49:41.440744Z"}]}
+[debug] [2025-11-23T09:00:58.338Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:58.338Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:58.338Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets/e08ae4a1-aa8d-4a0a-b61b-398b1683a949 [none]
+[debug] [2025-11-23T09:00:58.836Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets/e08ae4a1-aa8d-4a0a-b61b-398b1683a949 200
+[debug] [2025-11-23T09:00:58.837Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets/e08ae4a1-aa8d-4a0a-b61b-398b1683a949 [omitted]
+[info] i  firestore: uploading rules firestore.rules... 
+[debug] [2025-11-23T09:00:58.841Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:58.841Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:58.841Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets [none]
+[debug] [2025-11-23T09:00:58.842Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets [omitted]
+[debug] [2025-11-23T09:00:59.812Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets 200
+[debug] [2025-11-23T09:00:59.813Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/rulesets {"name":"projects/alumniportal-198ec/rulesets/3a562fec-bae3-4ff5-8e91-e34f8b54dabb","source":{"files":[{"content":"rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    \n    match /users/{userId} {\n      allow read: if true;\n      allow create: if request.auth != null && request.auth.uid == userId;\n      allow update, delete: if request.auth != null && request.auth.uid == userId;\n    }\n    \n    match /notifications/{notificationId} {\n      allow read: if request.auth != null && \n                     (resource.data.userId == request.auth.uid || \n                      resource.data.broadcast == true);\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               (resource.data.userId == request.auth.uid ||\n                                request.auth.uid == resource.data.userId);\n    }\n    \n    match /emailQueue/{emailId} {\n      allow read: if false;\n      allow create: if request.auth != null;\n      allow update, delete: if false;\n    }\n    \n    match /articles/{articleId} {\n      allow read: if request.auth != null;\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               request.auth.uid == resource.data.authorId;\n    }\n    \n    match /job_postings/{postId} {\n      allow read: if request.auth != null;\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               request.auth.uid == resource.data.postedBy;\n    }\n    \n    match /job_opportunities/{opportunityId} {\n      allow read: if request.auth != null;\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               request.auth.uid == resource.data.postedBy;\n    }\n    \n    match /mentorships/{mentorshipId} {\n      allow read: if request.auth != null && \n                     (resource.data.mentorId == request.auth.uid || \n                      resource.data.menteeId == request.auth.uid);\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               (resource.data.mentorId == request.auth.uid || \n                                resource.data.menteeId == request.auth.uid);\n    }\n    \n    match /events/{eventId} {\n      allow read: if true;\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               resource.data.createdBy == request.auth.uid;\n    }\n    \n    match /chats/{chatId} {\n      allow read: if request.auth != null;\n      allow create: if request.auth != null;\n      allow update: if request.auth != null;\n      \n      match /messages/{messageId} {\n        allow read: if request.auth != null;\n        allow create: if request.auth != null;\n        allow update, delete: if request.auth != null && \n                                 request.auth.uid == resource.data.senderId;\n      }\n    }\n    \n    match /event_registrations/{registrationId} {\n      allow read: if request.auth != null;\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               resource.data.participantEmail == request.auth.token.email;\n    }\n    \n    match /news/{newsId} {\n      allow read: if true;\n      allow create: if request.auth != null;\n      allow update, delete: if request.auth != null && \n                               resource.data.authorId == request.auth.uid;\n    }\n  }\n}\n","name":"firestore.rules"}]},"createTime":"2025-11-23T09:00:59.704975Z","metadata":{"services":["cloud.firestore"]}}
+[debug] [2025-11-23T09:00:59.813Z] [rules] created ruleset projects/alumniportal-198ec/rulesets/3a562fec-bae3-4ff5-8e91-e34f8b54dabb
+[debug] [2025-11-23T09:00:59.814Z] [rules] releasing cloud.firestore/(default) with ruleset projects/alumniportal-198ec/rulesets/3a562fec-bae3-4ff5-8e91-e34f8b54dabb
+[debug] [2025-11-23T09:00:59.815Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:59.815Z] Checked if tokens are valid: true, expires at: 1763891355065
+[debug] [2025-11-23T09:00:59.815Z] >>> [apiv2][query] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) [none]
+[debug] [2025-11-23T09:00:59.815Z] >>> [apiv2][body] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) {"release":{"name":"projects/alumniportal-198ec/releases/cloud.firestore/(default)","rulesetName":"projects/alumniportal-198ec/rulesets/3a562fec-bae3-4ff5-8e91-e34f8b54dabb"}}
+[debug] [2025-11-23T09:01:00.500Z] <<< [apiv2][status] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) 200
+[debug] [2025-11-23T09:01:00.500Z] <<< [apiv2][body] PATCH https://firebaserules.googleapis.com/v1/projects/alumniportal-198ec/releases/cloud.firestore/(default) {"name":"projects/alumniportal-198ec/releases/cloud.firestore","rulesetName":"projects/alumniportal-198ec/rulesets/3a562fec-bae3-4ff5-8e91-e34f8b54dabb","createTime":"2025-11-02T12:57:13.468731Z","updateTime":"2025-11-23T09:01:00.252612Z"}
+[debug] [2025-11-23T09:01:00.500Z] [rules] updated release projects/alumniportal-198ec/releases/cloud.firestore
+[info] ✔  firestore: released rules firestore.rules to cloud.firestore 
+[info] 
+[info] ✔  Deploy complete! 
+[info] 
+[info] Project Console: https://console.firebase.google.com/project/alumniportal-198ec/overview
+[debug] [2025-11-23T09:01:06.477Z] Error: Timed out.
+    at Timeout.<anonymous> (/usr/local/lib/node_modules/firebase-tools/lib/utils.js:275:49)
+    at listOnTimeout (node:internal/timers:581:17)
+    at process.processTimers (node:internal/timers:519:7)
+[error] 
+[error] Error: An unexpected error has occurred.
