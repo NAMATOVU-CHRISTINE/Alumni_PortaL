@@ -311,7 +311,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.profileCompletionBar.setVisibility(View.GONE);
         }
         
-        // Hide Share and Copy buttons for other users - ONLY show Request Mentorship
+        // Hide Share and Copy buttons for other users - ONLY show Request Mentorship for alumni
         if (isOwnProfile) {
             binding.btnShareProfile.setVisibility(View.VISIBLE);
             binding.btnCopyLink.setVisibility(View.VISIBLE);
@@ -319,8 +319,8 @@ public class ViewProfileActivity extends AppCompatActivity {
         } else {
             binding.btnShareProfile.setVisibility(View.GONE);
             binding.btnCopyLink.setVisibility(View.GONE);
-            // Show mentorship button only if user allows requests
-            if (user.getPrivacySetting("allowMentorRequests")) {
+            // Show mentorship button ONLY for alumni, not for students or staff
+            if ("alumni".equalsIgnoreCase(userType) && user.getPrivacySetting("allowMentorRequests")) {
                 binding.btnRequestMentorship.setVisibility(View.VISIBLE);
             } else {
                 binding.btnRequestMentorship.setVisibility(View.GONE);

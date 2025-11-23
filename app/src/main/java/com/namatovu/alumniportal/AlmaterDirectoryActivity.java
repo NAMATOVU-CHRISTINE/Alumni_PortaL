@@ -106,9 +106,11 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
                 public void onConnectClick(User user) {
                     // Open chat with the user
                     Intent intent = new Intent(AlmaterDirectoryActivity.this, ChatActivity.class);
-                    intent.putExtra("userId", user.getUserId());
-                    intent.putExtra("userName", user.getFullName());
-                    intent.putExtra("userProfileImage", user.getProfileImageUrl());
+                    // ChatActivity expects connectionId and otherUserId
+                    String connectionId = mAuth.getCurrentUser().getUid() + "_" + user.getUserId();
+                    intent.putExtra("connectionId", connectionId);
+                    intent.putExtra("otherUserId", user.getUserId());
+                    intent.putExtra("otherUserName", user.getFullName());
                     startActivity(intent);
                     
                     // Log analytics
