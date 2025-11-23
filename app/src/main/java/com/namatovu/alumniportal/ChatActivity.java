@@ -252,12 +252,6 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
         
-        if (chatRef == null) {
-            Toast.makeText(this, "Chat not initialized. Please try again.", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Cannot send message - chatRef is null");
-            return;
-        }
-        
         // Create new message
         ChatMessage message = new ChatMessage();
         message.setSenderId(currentUserId);
@@ -268,9 +262,10 @@ public class ChatActivity extends AppCompatActivity {
         
         Log.d(TAG, "Sending message: " + messageText + " to room: " + chatRoomId);
         
-        // Send to Firebase Realtime Database
-        chatRef.push().setValue(message.toMap())
-                .addOnSuccessListener(aVoid -> {
+        // Send to Firestore
+        db.collection("chats").document(chatRoomId).collection("messages")
+                .add(message.toMap())
+                .addOnSuccessListener(documentReference -> {
                     binding.editTextMessage.setText("");
                     Log.d(TAG, "Message sent successfully");
                     
