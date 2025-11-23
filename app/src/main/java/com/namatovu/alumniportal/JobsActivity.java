@@ -122,57 +122,72 @@ public class JobsActivity extends AppCompatActivity implements
     }
 
     private void setupRecyclerViews() {
-        // Featured opportunities (horizontal)
-        featuredAdapter = new FeaturedOpportunityAdapter(this, featuredOpportunities);
-        featuredAdapter.setOnFeaturedOpportunityClickListener(this);
-        
-        LinearLayoutManager featuredLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewFeatured.setLayoutManager(featuredLayoutManager);
-        recyclerViewFeatured.setAdapter(featuredAdapter);
-        
-        // All opportunities (vertical)
-        opportunityAdapter = new OpportunityAdapter(this, allOpportunities);
-        opportunityAdapter.setOnOpportunityClickListener(this);
-        
-        LinearLayoutManager opportunityLayoutManager = new LinearLayoutManager(this);
-        recyclerViewOpportunities.setLayoutManager(opportunityLayoutManager);
-        recyclerViewOpportunities.setAdapter(opportunityAdapter);
+        try {
+            if (recyclerViewFeatured == null || recyclerViewOpportunities == null) {
+                Log.e(TAG, "RecyclerViews not found");
+                return;
+            }
+            
+            // Featured opportunities (horizontal)
+            featuredAdapter = new FeaturedOpportunityAdapter(this, featuredOpportunities);
+            featuredAdapter.setOnFeaturedOpportunityClickListener(this);
+            
+            LinearLayoutManager featuredLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            recyclerViewFeatured.setLayoutManager(featuredLayoutManager);
+            recyclerViewFeatured.setAdapter(featuredAdapter);
+            
+            // All opportunities (vertical)
+            opportunityAdapter = new OpportunityAdapter(this, allOpportunities);
+            opportunityAdapter.setOnOpportunityClickListener(this);
+            
+            LinearLayoutManager opportunityLayoutManager = new LinearLayoutManager(this);
+            recyclerViewOpportunities.setLayoutManager(opportunityLayoutManager);
+            recyclerViewOpportunities.setAdapter(opportunityAdapter);
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up RecyclerViews", e);
+        }
     }
 
     private void setupSearchAndFilters() {
-        // Setup search
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        try {
+            // Setup search
+            if (etSearch != null) {
+                etSearch.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterOpportunities();
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        filterOpportunities();
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+            // Setup sort spinner
+            if (spinnerSort != null) {
+                String[] sortOptions = {"Date", "Deadline", "Relevance", "Company"};
+                ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
+                sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSort.setAdapter(sortAdapter);
+                
+                spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        currentSortOption = sortOptions[position];
+                        sortAndFilterOpportunities();
+                    }
 
-        // Setup sort spinner
-        String[] sortOptions = {"Date", "Deadline", "Relevance", "Company"};
-        ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
-        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSort.setAdapter(sortAdapter);
-        
-        spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currentSortOption = sortOptions[position];
-                sortAndFilterOpportunities();
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
-        // Setup category chips
-        chipGroupCategories.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            // Setup category chips
+            if (chipGroupCategories != null) {
+                chipGroupCategories.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) {
                 currentCategory = "All";
             } else {
@@ -191,9 +206,13 @@ public class JobsActivity extends AppCompatActivity implements
                 } else if (chipText.contains("Apprenticeships")) {
                     currentCategory = "Apprenticeship";
                 }
+                }
+                filterOpportunities();
+            });
             }
-            filterOpportunities();
-        });
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up search and filters", e);
+        }
     }
 
     private void setupFab() {
