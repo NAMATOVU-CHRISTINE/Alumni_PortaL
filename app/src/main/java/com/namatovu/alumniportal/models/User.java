@@ -40,11 +40,17 @@ public class User {
     private boolean emailVerified;
     private Map<String, Object> socialLinks;
     private Map<String, Object> privacySettings;
+    @com.google.firebase.firestore.PropertyName("fcmToken")
     private String fcmToken;
+    @com.google.firebase.firestore.PropertyName("lastTokenUpdate")
     private long lastTokenUpdate;
+    @com.google.firebase.firestore.PropertyName("emailNotificationsEnabled")
     private boolean emailNotificationsEnabled;
+    @com.google.firebase.firestore.PropertyName("industry")
     private String industry;
+    @com.google.firebase.firestore.PropertyName("currency")
     private String currency;
+    @com.google.firebase.firestore.PropertyName("profileImagePublicId")
     private String profileImagePublicId;
     
     // Transient fields (not stored in Firestore)
