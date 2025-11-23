@@ -168,48 +168,66 @@ public class JobsActivity extends AppCompatActivity implements
 
             // Setup sort spinner
             if (spinnerSort != null) {
-                String[] sortOptions = {"Date", "Deadline", "Relevance", "Company"};
-                ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
-                sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerSort.setAdapter(sortAdapter);
-                
-                // Use a flag to prevent triggering on initial selection
-                spinnerSort.post(() -> spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        currentSortOption = sortOptions[position];
-                        sortAndFilterOpportunities();
-                    }
+                try {
+                    String[] sortOptions = {"Date", "Deadline", "Relevance", "Company"};
+                    ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
+                    sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerSort.setAdapter(sortAdapter);
+                    
+                    // Set listener after a brief delay to avoid initialization issues
+                    spinnerSort.post(() -> {
+                        try {
+                            spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position >= 0 && position < sortOptions.length) {
+                                        currentSortOption = sortOptions[position];
+                                        sortAndFilterOpportunities();
+                                    }
+                                }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {}
-                }));
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {}
+                            });
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error setting spinner listener", e);
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, "Error setting up sort spinner", e);
+                }
             }
 
             // Setup category chips
             if (chipGroupCategories != null) {
                 chipGroupCategories.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty()) {
-                currentCategory = "All";
-            } else {
-                Chip selectedChip = findViewById(checkedIds.get(0));
-                String chipText = selectedChip.getText().toString();
-                
-                // Extract category from chip text
-                if (chipText.equals("All")) {
-                    currentCategory = "All";
-                } else if (chipText.contains("Internships")) {
-                    currentCategory = "Internship";
-                } else if (chipText.contains("Jobs")) {
-                    currentCategory = "Job";
-                } else if (chipText.contains("Graduate Training")) {
-                    currentCategory = "Graduate Training";
-                } else if (chipText.contains("Apprenticeships")) {
-                    currentCategory = "Apprenticeship";
-                }
-                }
-                filterOpportunities();
-            });
+                    try {
+                        if (checkedIds.isEmpty()) {
+                            currentCategory = "All";
+                        } else {
+                            Chip selectedChip = findViewById(checkedIds.get(0));
+                            if (selectedChip != null) {
+                                String chipText = selectedChip.getText().toString();
+                                
+                                // Extract category from chip text
+                                if (chipText.equals("All")) {
+                                    currentCategory = "All";
+                                } else if (chipText.contains("Internships")) {
+                                    currentCategory = "Internship";
+                                } else if (chipText.contains("Jobs")) {
+                                    currentCategory = "Job";
+                                } else if (chipText.contains("Graduate Training")) {
+                                    currentCategory = "Graduate Training";
+                                } else if (chipText.contains("Apprenticeships")) {
+                                    currentCategory = "Apprenticeship";
+                                }
+                            }
+                        }
+                        filterOpportunities();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error handling chip selection", e);
+                    }
+                });
             }
         } catch (Exception e) {
             Log.e(TAG, "Error setting up search and filters", e);
@@ -243,21 +261,31 @@ public class JobsActivity extends AppCompatActivity implements
     }
     
     private void clearFilters() {
-        etSearch.setText("");
-        currentCategory = "All";
-        currentSortOption = "Date";
-        
-        // Reset chip selection
-        chipGroupCategories.clearCheck();
-        Chip chipAll = findViewById(R.id.chipAll);
-        if (chipAll != null) {
-            chipAll.setChecked(true);
+        try {
+            if (etSearch != null) {
+                etSearch.setText("");
+            }
+            currentCategory = "All";
+            currentSortOption = "Date";
+            
+            // Reset chip selection
+            if (chipGroupCategories != null) {
+                chipGroupCategories.clearCheck();
+                Chip chipAll = findViewById(R.id.chipAll);
+                if (chipAll != null) {
+                    chipAll.setChecked(true);
+                }
+            }
+            
+            // Reset spinner
+            if (spinnerSort != null) {
+                spinnerSort.setSelection(0);
+            }
+            
+            filterOpportunities();
+        } catch (Exception e) {
+            Log.e(TAG, "Error clearing filters", e);
         }
-        
-        // Reset spinner
-        spinnerSort.setSelection(0);
-        
-        filterOpportunities();
     }
 
     private void filterOpportunities() {
@@ -269,7 +297,8 @@ public class JobsActivity extends AppCompatActivity implements
             
             List<Opportunity> filtered = new ArrayList<>();
             for (Opportunity opportunity : allOpportunities) {
-                boolean matchesCategory = currentCategory.equals("All") || opportunity.getCategory().equals(currentCategory);
+                String oppCategory = opportunity.getCategory() != null ? opportunity.getCategory() : "";
+                boolean matchesCategory = currentCategory.equals("All") || oppCategory.equals(currentCategory);
                 boolean matchesSearch = query.isEmpty() || 
                     (opportunity.getTitle() != null && opportunity.getTitle().toLowerCase().contains(query)) ||
                     (opportunity.getCompany() != null && opportunity.getCompany().toLowerCase().contains(query)) ||
@@ -277,7 +306,7 @@ public class JobsActivity extends AppCompatActivity implements
                 
                 Log.d(TAG, "Opportunity: " + opportunity.getTitle() + 
                       ", Category match: " + matchesCategory + 
-                      " (opp=" + opportunity.getCategory() + ", filter=" + currentCategory + ")" +
+                      " (opp=" + oppCategory + ", filter=" + currentCategory + ")" +
                       ", Search match: " + matchesSearch);
                 
                 if (matchesCategory && matchesSearch) {
