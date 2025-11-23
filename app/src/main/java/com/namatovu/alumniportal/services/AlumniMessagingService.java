@@ -1,154 +1,86 @@
 package com.namatovu.alumniportal.services;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.content.IntentFilter;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.namatovu.alumniportal.HomeActivity;
-import com.namatovu.alumniportal.R;
+import com.namatovu.alumniportal.receivers.NotificationBroadcastReceiver;
 import com.namatovu.alumniportal.utils.NotificationHelper;
 
+import java.util.Map;
+
 /**
- * Firebase Cloud Messaging Service for handling push notifications
+ * Service to handle incoming FCM messages
  */
 public class AlumniMessagingService extends FirebaseMessagingService {
-    
     private static final String TAG = "AlumniMessagingService";
-    private static final String CHANNEL_ID = "alumni_notifications";
-    private static final String CHANNEL_NAME = "Alumni Portal Notifications";
     
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "Message received from: " + remoteMessage.getFrom());
         
-        // Check if notifications are enabled
-        if (!NotificationHelper.areNotificationsEnabled()) {
-            Log.d(TAG, "Notifications are disabled, ignoring message");
-            return;
+        // Handle data payload
+        if (remoteMessage.getData().size() > 0) {
+            Map<String, String> data = remoteMessage.getData();
+            String notificationType = data.get("type");
+            
+            Log.d(TAG, "Notification type: " + notificationType);
+            
+            handleNotificationByType(notificationType, data);
         }
         
-        // Get notification data
-        String title = remoteMessage.getNotification() != null ? 
-            remoteMessage.getNotification().getTitle() : "Alumni Portal";
-        String body = remoteMessage.getNotification() != null ? 
-            remoteMessage.getNotification().getBody() : "You have a new notification";
-        
-        // Check notification type and if it's enabled
-        String notificationType = remoteMessage.getData().get("type");
-        if (!isNotificationTypeEnabled(notificationType)) {
-            Log.d(TAG, "Notification type " + notificationType + " is disabled");
-            return;
+        // Handle notification payload
+        if (remoteMessage.getNotification() != null) {
+            RemoteMessage.Notification notification = remoteMessage.getNotification();
+            Log.d(TAG, "Notification title: " + notification.getTitle());
+            Log.d(TAG, "Notification body: " + notification.getBody());
         }
-        
-        // Send notification
-        sendNotification(title, body, notificationType, remoteMessage.getData());
     }
     
     @Override
     public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+        Log.d(TAG, "New FCM token: " + token);
         
-        // Update token in Firestore
+        // Update token in local storage and Firestore
         NotificationHelper.updateTokenInFirestore(token);
     }
     
-    /**
-     * Check if a specific notification type is enabled
-     */
-    private boolean isNotificationTypeEnabled(String type) {
-        if (type == null) return true; // Allow if no type specified
+    private void handleNotificationByType(String type, Map<String, String> data) {
+        Intent intent = new Intent();
         
-        switch (type) {
-            case "message":
-                return NotificationHelper.areMessageNotificationsEnabled();
-            case "mentorship":
-            case "mentorship_request":
-            case "mentorship_status":
-                return NotificationHelper.areMentorshipNotificationsEnabled();
-            case "event":
-            case "event_update":
-                return NotificationHelper.areEventNotificationsEnabled();
-            case "job":
-                return NotificationHelper.areJobNotificationsEnabled();
-            case "news":
-            case "news_update":
-                return NotificationHelper.areNewsNotificationsEnabled();
-            default:
-                return true;
-        }
-    }
-    
-    /**
-     * Send notification to device
-     */
-    private void sendNotification(String title, String body, String type, java.util.Map<String, String> data) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        
-        // Add data to intent
-        if (data != null) {
-            for (String key : data.keySet()) {
-                intent.putExtra(key, data.get(key));
-            }
+        if ("message".equals(type)) {
+            intent.setAction(NotificationBroadcastReceiver.ACTION_MESSAGE_RECEIVED);
+            intent.putExtra("senderId", data.get("senderId"));
+            intent.putExtra("senderName", data.get("senderName"));
+            intent.putExtra("messageText", data.get("messageText"));
+            intent.putExtra("chatId", data.get("chatId"));
+        } else if ("event".equals(type)) {
+            intent.setAction(NotificationBroadcastReceiver.ACTION_EVENT_RECEIVED);
+            intent.putExtra("eventId", data.get("eventId"));
+            intent.putExtra("eventTitle", data.get("eventTitle"));
+            intent.putExtra("action", data.get("action"));
+        } else if ("job".equals(type)) {
+            intent.setAction(NotificationBroadcastReceiver.ACTION_JOB_RECEIVED);
+            intent.putExtra("jobId", data.get("jobId"));
+            intent.putExtra("jobTitle", data.get("jobTitle"));
+            intent.putExtra("company", data.get("company"));
+        } else if ("mentorship".equals(type)) {
+            intent.setAction(NotificationBroadcastReceiver.ACTION_MENTORSHIP_RECEIVED);
+            intent.putExtra("requestId", data.get("requestId"));
+            intent.putExtra("fromUserName", data.get("fromUserName"));
+            intent.putExtra("action", data.get("action"));
+        } else if ("news".equals(type)) {
+            intent.setAction(NotificationBroadcastReceiver.ACTION_NEWS_RECEIVED);
+            intent.putExtra("newsId", data.get("newsId"));
+            intent.putExtra("newsTitle", data.get("newsTitle"));
+            intent.putExtra("authorName", data.get("authorName"));
         }
         
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        // Create notification channel for Android 8+
-        createNotificationChannel();
-        
-        // Build notification
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
-            .setContentText(body)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        
-        // Add style for longer text
-        if (body.length() > 50) {
-            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
-                .bigText(body));
-        }
-        
-        NotificationManager notificationManager = 
-            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        
-        if (notificationManager != null) {
-            notificationManager.notify(0, notificationBuilder.build());
-            Log.d(TAG, "Notification sent: " + title);
-        }
-    }
-    
-    /**
-     * Create notification channel for Android 8+
-     */
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription("Notifications from Alumni Portal");
-            
-            NotificationManager notificationManager = 
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
+        // Broadcast the intent
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
