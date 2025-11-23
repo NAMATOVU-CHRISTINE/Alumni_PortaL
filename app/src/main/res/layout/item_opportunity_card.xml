@@ -218,32 +218,14 @@
 
             <TextView
                 android:id="@+id/tvDatePosted"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="Posted 3 days ago"
                 android:textSize="12sp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:drawableStart="@drawable/ic_access_time"
                 android:drawablePadding="6dp"
                 app:drawableTint="@color/text_secondary" />
-
-            <TextView
-                android:id="@+id/tvApplications"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="👥 24 applicants"
-                android:textSize="12sp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:layout_marginEnd="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="💰 $80k-120k"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/must_green" />
 
         </LinearLayout>
 
@@ -256,33 +238,16 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDetails"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="44dp"
-                android:layout_weight="1"
                 android:text="View Details"
                 android:textSize="13sp"
                 android:textColor="@color/must_green"
-                android:layout_marginEnd="8dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 app:strokeColor="@color/must_green"
                 app:cornerRadius="10dp"
                 app:icon="@drawable/ic_info"
                 app:iconTint="@color/must_green" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnApply"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_weight="1"
-                android:text="Apply Now"
-                android:textSize="13sp"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/must_green"
-                android:layout_marginStart="8dp"
-                app:cornerRadius="10dp"
-                style="@style/Widget.Material3.Button"
-                app:icon="@drawable/ic_send"
-                app:iconTint="@color/white" />
 
         </LinearLayout>
 
