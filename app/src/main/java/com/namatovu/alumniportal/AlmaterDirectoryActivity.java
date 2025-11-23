@@ -38,37 +38,40 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAlumniDirectoryBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        try {
+            binding = ActivityAlumniDirectoryBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
 
-        // Initialize Firebase
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        
-        // Initialize Analytics
-        AnalyticsHelper.initialize(this);
-        AnalyticsHelper.logNavigation("AlmaterDirectoryActivity", "HomeActivity");
+            // Initialize Firebase
+            db = FirebaseFirestore.getInstance();
+            mAuth = FirebaseAuth.getInstance();
+            
+            // Initialize Analytics
+            AnalyticsHelper.initialize(this);
+            AnalyticsHelper.logNavigation("AlmaterDirectoryActivity", "HomeActivity");
 
-        // Initialize lists
-        allUsers = new ArrayList<>();
-        filteredUsers = new ArrayList<>();
+            // Initialize lists
+            allUsers = new ArrayList<>();
+            filteredUsers = new ArrayList<>();
 
-        setupToolbar();
-        setupRecyclerView();
-        setupSearchAndFilters();
-        loadAlmaterData();
+            setupToolbar();
+            setupRecyclerView();
+            setupSearchAndFilters();
+            loadAlmaterData();
+        } catch (Exception e) {
+            Log.e(TAG, "Error in onCreate", e);
+            Toast.makeText(this, "Error loading directory: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void setupToolbar() {
         try {
-            setSupportActionBar(binding.toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setTitle("Almater Directory");
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (binding.toolbar != null) {
+                binding.toolbar.setNavigationOnClickListener(v -> {
+                    finish();
+                });
             }
-            binding.toolbar.setNavigationOnClickListener(v -> {
-                finish();
-            });
         } catch (Exception e) {
             Log.e(TAG, "Error setting up toolbar", e);
         }

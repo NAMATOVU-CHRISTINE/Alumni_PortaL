@@ -137,25 +137,13 @@ public class SignupActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        // User already exists - check if email is verified
+                                        // User already exists - just login, no email verification needed
                                         hideLoadingIndicator();
-                                        Boolean emailVerified = documentSnapshot.getBoolean("emailVerified");
-                                        if (emailVerified != null && emailVerified) {
-                                            // Email verified, go to home
-                                            Toast.makeText(SignupActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            // Email not verified yet, show verification screen
-                                            Toast.makeText(SignupActivity.this, "Please verify your email first.", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                            intent.putExtra("email_verification_pending", true);
-                                            intent.putExtra("user_email", googleEmail);
-                                            startActivity(intent);
-                                            finish();
-                                        }
+                                        Toast.makeText(SignupActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
                                     }
                                 })
                                 .addOnFailureListener(e -> {
