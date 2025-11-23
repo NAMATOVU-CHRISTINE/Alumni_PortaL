@@ -192,19 +192,13 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                                 continue;
                             }
                             
-                            // Filter out incomplete profiles - require essential fields
+                            // Filter out incomplete profiles - require at least name
                             String fullName = user.getFullName();
-                            String currentJob = user.getCurrentJob();
-                            String company = user.getCompany();
-                            String bio = user.getBio();
                             
-                            // Skip if essential fields are null or empty
-                            if (fullName == null || fullName.trim().isEmpty() ||
-                                currentJob == null || currentJob.trim().isEmpty() ||
-                                company == null || company.trim().isEmpty() ||
-                                bio == null || bio.trim().isEmpty()) {
-                                Log.d(TAG, "Skipping incomplete profile: " + fullName);
-                                continue; // Skip incomplete profiles
+                            // Skip if name is null or empty (this is the only required field)
+                            if (fullName == null || fullName.trim().isEmpty()) {
+                                Log.d(TAG, "Skipping profile with no name");
+                                continue; // Skip profiles without names
                             }
                             
                             // Check if user has opted to be visible in directory
