@@ -231,6 +231,31 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
     
+    private void loadCurrentUserNameForNotification(String userId, UserNameCallback callback) {
+        db.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user != null && user.getFullName() != null) {
+                            callback.onNameLoaded(user.getFullName());
+                        } else {
+                            callback.onNameLoaded("User");
+                        }
+                    } else {
+                        callback.onNameLoaded("User");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to load user name for notification", e);
+                    callback.onNameLoaded("User");
+                });
+    }
+    
+    private interface UserNameCallback {
+        void onNameLoaded(String name);
+    }
+    
     private void sendMessage() {
         String messageText = binding.editTextMessage.getText().toString().trim();
         if (TextUtils.isEmpty(messageText)) {
@@ -263,8 +288,13 @@ public class ChatActivity extends AppCompatActivity {
                     // Update user activity
                     updateCurrentUserActivity();
                     
-                    // Send notification to confirm message was sent
+                    // Send notification to confirm message was sent to sender
                     notificationService.sendMessageSentNotification(messageText, otherUserName);
+                    
+                    // Send notification to recipient about incoming message
+                    loadCurrentUserNameForNotification(currentUserId, senderName -> {
+                        notificationService.sendIncomingMessageNotification(otherUserId, senderName, messageText);
+                    });
                     
                     // Update last message in chat room info
                     updateChatRoomInfo(message);

@@ -33,8 +33,6 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
     private List<User> allUsers;
     private List<User> filteredUsers;
     
-    private String selectedMajor = "All";
-    private String selectedYear = "All";
     private String searchQuery = "";
 
     @Override
@@ -146,42 +144,6 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        // Major filter
-        binding.majorFilterSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                selectedMajor = parent.getItemAtPosition(position).toString();
-                filterUsers();
-            }
-
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-        });
-
-        // Year filter
-        binding.yearFilterSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                selectedYear = parent.getItemAtPosition(position).toString();
-                filterUsers();
-            }
-
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-        });
-
-        // Clear filters button
-        binding.clearFiltersButton.setOnClickListener(v -> {
-            binding.searchEditText.setText("");
-            binding.majorFilterSpinner.setSelection(0);
-            binding.yearFilterSpinner.setSelection(0);
-            selectedMajor = "All";
-            selectedYear = "All";
-            searchQuery = "";
-            filterUsers();
-            Toast.makeText(this, "Filters cleared", Toast.LENGTH_SHORT).show();
-        });
     }
 
     private void loadAlumniData() {
@@ -275,7 +237,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
         filteredUsers.clear();
         String lowerSearchQuery = searchQuery.toLowerCase();
         
-        Log.d(TAG, "Filtering with: search='" + searchQuery + "', major='" + selectedMajor + "', year='" + selectedYear + "'");
+        Log.d(TAG, "Filtering with: search='" + searchQuery + "'");
         
         for (User user : allUsers) {
             // Enhanced search - includes name, major, job, company, skills, and bio
@@ -288,24 +250,7 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                     (user.getLocation() != null && user.getLocation().toLowerCase().contains(lowerSearchQuery)) ||
                     (user.getSkillsAsString() != null && user.getSkillsAsString().toLowerCase().contains(lowerSearchQuery));
             
-            // Major filter - if "All" is selected, show everyone. Otherwise filter by major if user has one
-            boolean matchesMajor = true;
-            if (!selectedMajor.equals("All") && !selectedMajor.isEmpty()) {
-                // Only filter if user has a major set
-                if (user.getMajor() != null && !user.getMajor().isEmpty()) {
-                    matchesMajor = user.getMajor().equalsIgnoreCase(selectedMajor) || 
-                                   user.getMajor().toLowerCase().contains(selectedMajor.toLowerCase());
-                } else {
-                    // If user doesn't have major set, don't filter them out
-                    matchesMajor = true;
-                }
-            }
-            
-            // Year filter
-            boolean matchesYear = selectedYear.equals("All") || selectedYear.isEmpty() ||
-                    (user.getGraduationYear() != null && user.getGraduationYear().equals(selectedYear));
-            
-            if (matchesSearch && matchesMajor && matchesYear) {
+            if (matchesSearch) {
                 filteredUsers.add(user);
             }
         }
