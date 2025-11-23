@@ -60,7 +60,11 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        binding.toolbar.setTitle("Almater Directory");
+        setSupportActionBar(binding.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Almater Directory");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         binding.toolbar.setNavigationOnClickListener(v -> {
             finish();
         });

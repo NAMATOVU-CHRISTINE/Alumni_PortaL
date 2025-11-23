@@ -184,12 +184,12 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                                   ", userType: " + user.getUserType() +
                                   ", showInDirectory: " + user.getPrivacySetting("showInDirectory"));
                             
-                            // Show ALL users (students, alumni, staff) in directory
+                            // Show ONLY alumni in directory
                             String userTypeValue = user.getUserType();
                             
-                            // Show all user types - students, alumni, and staff
-                            if (userTypeValue == null || userTypeValue.trim().isEmpty()) {
-                                Log.d(TAG, "Skipping user with no type: " + user.getFullName());
+                            // Only show alumni
+                            if (!"alumni".equalsIgnoreCase(userTypeValue)) {
+                                Log.d(TAG, "Skipping non-alumni user: " + user.getFullName() + " (type: " + userTypeValue + ")");
                                 continue;
                             }
                             
