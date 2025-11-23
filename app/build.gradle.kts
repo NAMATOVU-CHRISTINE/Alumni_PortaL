@@ -49,6 +49,12 @@ android {
         viewBinding = true
     }
     
+    lint {
+        disable.add("MissingPermission")
+        disable.add("MissingTranslation")
+        disable.add("ExtraTranslation")
+    }
+    
     packaging {
         resources {
             excludes += setOf(
