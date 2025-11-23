@@ -93,6 +93,7 @@ public class ChatActivity extends AppCompatActivity {
             setupUI();
             setupChat();
             loadCurrentUserInfo();
+            updateCurrentUserActivity();
             
             // Log analytics
             AnalyticsHelper.logMentorConnection("chat_opened", otherUserId);
@@ -117,10 +118,10 @@ public class ChatActivity extends AppCompatActivity {
             
             // Set chat header with other user's name
             binding.textViewChatName.setText(otherUserName != null ? otherUserName : "User");
-            binding.textViewOnlineStatus.setText("Active now");
             
-            // Load other user's profile picture
+            // Load other user's profile picture and online status
             loadOtherUserProfile();
+            updateOnlineStatus();
             
             // Setup RecyclerView
             adapter = new ChatAdapter(messages, currentUserId);
@@ -259,6 +260,9 @@ public class ChatActivity extends AppCompatActivity {
                     binding.editTextMessage.setText("");
                     Log.d(TAG, "Message sent successfully");
                     
+                    // Update user activity
+                    updateCurrentUserActivity();
+                    
                     // Send notification to confirm message was sent
                     notificationService.sendMessageSentNotification(messageText, otherUserName);
                     
@@ -337,6 +341,57 @@ public class ChatActivity extends AppCompatActivity {
                         binding.imageViewProfile.setImageResource(R.drawable.ic_person);
                     }
                 });
+    }
+    
+    private void updateOnlineStatus() {
+        if (otherUserId == null) {
+            binding.textViewOnlineStatus.setText("Offline");
+            return;
+        }
+
+        // Check user's online status with real-time listener
+        db.collection("users").document(otherUserId)
+                .addSnapshotListener((documentSnapshot, error) -> {
+                    if (error != null || documentSnapshot == null || !documentSnapshot.exists()) {
+                        binding.textViewOnlineStatus.setText("Offline");
+                        return;
+                    }
+
+                    Long lastActive = documentSnapshot.getLong("lastActive");
+
+                    if (lastActive != null) {
+                        long diff = System.currentTimeMillis() - lastActive;
+                        long minutes = diff / (60 * 1000);
+                        long hours = diff / (60 * 60 * 1000);
+                        long days = diff / (24 * 60 * 60 * 1000);
+                        
+                        // If active within last 5 minutes, show as active
+                        if (minutes < 5) {
+                            binding.textViewOnlineStatus.setText("Active now");
+                        } else if (minutes < 60) {
+                            binding.textViewOnlineStatus.setText("Active " + minutes + "m ago");
+                        } else if (hours < 24) {
+                            binding.textViewOnlineStatus.setText("Active " + hours + "h ago");
+                        } else if (days < 7) {
+                            binding.textViewOnlineStatus.setText("Active " + days + "d ago");
+                        } else {
+                            binding.textViewOnlineStatus.setText("Offline");
+                        }
+                    } else {
+                        binding.textViewOnlineStatus.setText("Offline");
+                    }
+                });
+    }
+    
+    private void updateCurrentUserActivity() {
+        if (currentUserId == null || currentUserId.isEmpty()) return;
+        
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("lastActive", System.currentTimeMillis());
+        
+        db.collection("users").document(currentUserId)
+                .update(updates)
+                .addOnFailureListener(e -> Log.w(TAG, "Failed to update user activity", e));
     }
     
     @Override
