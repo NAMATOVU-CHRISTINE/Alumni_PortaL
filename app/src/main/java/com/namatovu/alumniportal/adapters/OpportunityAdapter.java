@@ -115,31 +115,37 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
                 }
             });
 
-            btnSave.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    Opportunity opp = opportunities.get(pos);
-                    // Delegate save action to the listener (JobsActivity will toggle/persist)
-                    listener.onSaveClick(opp);
-                    notifyItemChanged(pos);
-                }
-            });
+            if (btnSave != null) {
+                btnSave.setOnClickListener(v -> {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && listener != null) {
+                        Opportunity opp = opportunities.get(pos);
+                        // Delegate save action to the listener (JobsActivity will toggle/persist)
+                        listener.onSaveClick(opp);
+                        notifyItemChanged(pos);
+                    }
+                });
+            }
 
-            btnApply.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    Opportunity opp = opportunities.get(pos);
-                    listener.onApplyClick(opp);
-                    notifyItemChanged(pos);
-                }
-            });
+            if (btnApply != null) {
+                btnApply.setOnClickListener(v -> {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && listener != null) {
+                        Opportunity opp = opportunities.get(pos);
+                        listener.onApplyClick(opp);
+                        notifyItemChanged(pos);
+                    }
+                });
+            }
 
-            btnDetails.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onOpportunityClick(opportunities.get(pos));
-                }
-            });
+            if (btnDetails != null) {
+                btnDetails.setOnClickListener(v -> {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onOpportunityClick(opportunities.get(pos));
+                    }
+                });
+            }
         }
 
         public void bind(Opportunity opportunity) {
