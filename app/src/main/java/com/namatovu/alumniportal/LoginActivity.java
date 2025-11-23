@@ -48,10 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         AnalyticsHelper.initialize(this);
         AnalyticsHelper.logNavigation("LoginActivity", "App Launch");
 
-        // Configure Google Sign-In
+        // Configure Google Sign-In with email selection
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -79,8 +80,12 @@ public class LoginActivity extends AppCompatActivity {
         binding.loginButton.setEnabled(false);
         binding.googleSignInButton.setEnabled(false);
         
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        googleSignInLauncher.launch(signInIntent);
+        // Sign out first to show account picker
+        mAuth.signOut();
+        googleSignInClient.signOut().addOnCompleteListener(task -> {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
+        });
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {

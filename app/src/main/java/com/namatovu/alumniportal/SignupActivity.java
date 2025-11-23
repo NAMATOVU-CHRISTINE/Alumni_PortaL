@@ -56,10 +56,11 @@ public class SignupActivity extends AppCompatActivity {
         // Setup user type dropdown
         setupUserTypeDropdown();
 
-        // Configure Google Sign-In
+        // Configure Google Sign-In with email selection
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -84,9 +85,13 @@ public class SignupActivity extends AppCompatActivity {
 
     private void signUpWithGoogle() {
         showLoadingIndicator();
-        // Launch Google Sign-in to get email and account info
-        Intent signInIntent = googleSignInClient.getSignInIntent();
-        googleSignInLauncher.launch(signInIntent);
+        // Sign out first to show account picker
+        mAuth.signOut();
+        googleSignInClient.signOut().addOnCompleteListener(task -> {
+            // Launch Google Sign-in to get email and account info
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
+        });
     }
 
     private void handleGoogleSignInResult(Task<GoogleSignInAccount> completedTask) {
