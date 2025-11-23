@@ -81,18 +81,33 @@ public class JobsActivity extends AppCompatActivity implements
     }
 
     private void initializeViews() {
-        recyclerViewFeatured = findViewById(R.id.recyclerViewFeatured);
-        recyclerViewOpportunities = findViewById(R.id.recyclerViewOpportunities);
-        etSearch = findViewById(R.id.etSearch);
-        spinnerSort = findViewById(R.id.spinnerSort);
-        chipGroupCategories = findViewById(R.id.chipGroupCategories);
-        fabAddOpportunity = findViewById(R.id.fabAddOpportunity);
-        emptyStateLayout = findViewById(R.id.emptyStateLayout);
-        tvResultsCount = findViewById(R.id.tvResultsCount);
-        btnClearFilters = findViewById(R.id.btnClearFilters);
-        
-        allOpportunities = new ArrayList<>();
-        featuredOpportunities = new ArrayList<>();
+        try {
+            recyclerViewFeatured = findViewById(R.id.recyclerViewFeatured);
+            recyclerViewOpportunities = findViewById(R.id.recyclerViewOpportunities);
+            etSearch = findViewById(R.id.etSearch);
+            spinnerSort = findViewById(R.id.spinnerSort);
+            chipGroupCategories = findViewById(R.id.chipGroupCategories);
+            fabAddOpportunity = findViewById(R.id.fabAddOpportunity);
+            emptyStateLayout = findViewById(R.id.emptyStateLayout);
+            tvResultsCount = findViewById(R.id.tvResultsCount);
+            btnClearFilters = findViewById(R.id.btnClearFilters);
+            
+            // Verify critical views exist
+            if (recyclerViewFeatured == null || recyclerViewOpportunities == null || 
+                etSearch == null || spinnerSort == null || chipGroupCategories == null) {
+                Log.e(TAG, "Critical views not found in layout");
+                Toast.makeText(this, "Error loading layout", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+            
+            allOpportunities = new ArrayList<>();
+            featuredOpportunities = new ArrayList<>();
+        } catch (Exception e) {
+            Log.e(TAG, "Error initializing views", e);
+            Toast.makeText(this, "Error initializing views: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void setupToolbar() {
@@ -182,22 +197,28 @@ public class JobsActivity extends AppCompatActivity implements
     }
 
     private void setupFab() {
-        // TODO: Check user role - only show for mentors/admins
-        fabAddOpportunity.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddOpportunityActivity.class);
-            startActivityForResult(intent, 100);
-        });
-        
-        // Long press to force reload (for debugging)
-        fabAddOpportunity.setOnLongClickListener(v -> {
-            Toast.makeText(this, "Reloading opportunities...", Toast.LENGTH_SHORT).show();
-            loadOpportunitiesFromFirestore();
-            return true;
-        });
-        
-        // Setup clear filters button
-        if (btnClearFilters != null) {
-            btnClearFilters.setOnClickListener(v -> clearFilters());
+        try {
+            // TODO: Check user role - only show for mentors/admins
+            if (fabAddOpportunity != null) {
+                fabAddOpportunity.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, AddOpportunityActivity.class);
+                    startActivityForResult(intent, 100);
+                });
+                
+                // Long press to force reload (for debugging)
+                fabAddOpportunity.setOnLongClickListener(v -> {
+                    Toast.makeText(this, "Reloading opportunities...", Toast.LENGTH_SHORT).show();
+                    loadOpportunitiesFromFirestore();
+                    return true;
+                });
+            }
+            
+            // Setup clear filters button
+            if (btnClearFilters != null) {
+                btnClearFilters.setOnClickListener(v -> clearFilters());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting up FAB", e);
         }
     }
     
@@ -220,37 +241,43 @@ public class JobsActivity extends AppCompatActivity implements
     }
 
     private void filterOpportunities() {
-        String query = etSearch != null ? etSearch.getText().toString().toLowerCase().trim() : "";
-        
-        Log.d(TAG, "Filtering opportunities. Query: '" + query + "', Category: '" + currentCategory + "'");
-        Log.d(TAG, "Total opportunities before filter: " + allOpportunities.size());
-        
-        List<Opportunity> filtered = new ArrayList<>();
-        for (Opportunity opportunity : allOpportunities) {
-            boolean matchesCategory = currentCategory.equals("All") || opportunity.getCategory().equals(currentCategory);
-            boolean matchesSearch = query.isEmpty() || 
-                opportunity.getTitle().toLowerCase().contains(query) ||
-                opportunity.getCompany().toLowerCase().contains(query) ||
-                opportunity.getDescription().toLowerCase().contains(query);
+        try {
+            String query = etSearch != null ? etSearch.getText().toString().toLowerCase().trim() : "";
             
-            Log.d(TAG, "Opportunity: " + opportunity.getTitle() + 
-                  ", Category match: " + matchesCategory + 
-                  " (opp=" + opportunity.getCategory() + ", filter=" + currentCategory + ")" +
-                  ", Search match: " + matchesSearch);
+            Log.d(TAG, "Filtering opportunities. Query: '" + query + "', Category: '" + currentCategory + "'");
+            Log.d(TAG, "Total opportunities before filter: " + allOpportunities.size());
             
-            if (matchesCategory && matchesSearch) {
-                filtered.add(opportunity);
+            List<Opportunity> filtered = new ArrayList<>();
+            for (Opportunity opportunity : allOpportunities) {
+                boolean matchesCategory = currentCategory.equals("All") || opportunity.getCategory().equals(currentCategory);
+                boolean matchesSearch = query.isEmpty() || 
+                    (opportunity.getTitle() != null && opportunity.getTitle().toLowerCase().contains(query)) ||
+                    (opportunity.getCompany() != null && opportunity.getCompany().toLowerCase().contains(query)) ||
+                    (opportunity.getDescription() != null && opportunity.getDescription().toLowerCase().contains(query));
+                
+                Log.d(TAG, "Opportunity: " + opportunity.getTitle() + 
+                      ", Category match: " + matchesCategory + 
+                      " (opp=" + opportunity.getCategory() + ", filter=" + currentCategory + ")" +
+                      ", Search match: " + matchesSearch);
+                
+                if (matchesCategory && matchesSearch) {
+                    filtered.add(opportunity);
+                }
             }
+            
+            Log.d(TAG, "Filtered opportunities count: " + filtered.size());
+            
+            // Apply sorting
+            sortOpportunities(filtered);
+            
+            if (opportunityAdapter != null) {
+                opportunityAdapter.updateOpportunities(filtered);
+            }
+            updateResultsCount(filtered.size());
+            updateEmptyState();
+        } catch (Exception e) {
+            Log.e(TAG, "Error filtering opportunities", e);
         }
-        
-        Log.d(TAG, "Filtered opportunities count: " + filtered.size());
-        
-        // Apply sorting
-        sortOpportunities(filtered);
-        
-        opportunityAdapter.updateOpportunities(filtered);
-        updateResultsCount(filtered.size());
-        updateEmptyState();
     }
     
     private void updateResultsCount(int count) {

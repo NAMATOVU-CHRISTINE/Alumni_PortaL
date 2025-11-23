@@ -232,14 +232,28 @@ public class MentorSearchActivity extends AppCompatActivity {
                             continue; // Skip students
                         }
                         
+                        // Filter out incomplete profiles - require essential fields
+                        String fullName = document.getString("fullName");
+                        String currentJob = document.getString("currentJob");
+                        String company = document.getString("company");
+                        String bio = document.getString("bio");
+                        
+                        // Skip if essential fields are null or empty
+                        if (fullName == null || fullName.trim().isEmpty() ||
+                            currentJob == null || currentJob.trim().isEmpty() ||
+                            company == null || company.trim().isEmpty() ||
+                            bio == null || bio.trim().isEmpty()) {
+                            continue; // Skip incomplete profiles
+                        }
+                        
                         MentorEntity mentor = new MentorEntity();
                         mentor.setMentorId(document.getId());
-                        mentor.setFullName(document.getString("fullName"));
+                        mentor.setFullName(fullName);
                         mentor.setEmail(document.getString("email"));
                         mentor.setProfileImageUrl(document.getString("profileImageUrl"));
-                        mentor.setCurrentJob(document.getString("currentJob"));
-                        mentor.setCompany(document.getString("company"));
-                        mentor.setBio(document.getString("bio"));
+                        mentor.setCurrentJob(currentJob);
+                        mentor.setCompany(company);
+                        mentor.setBio(bio);
                         mentor.setGraduationYear(document.getString("graduationYear"));
                         
                         // Set default values for fields not in users collection
