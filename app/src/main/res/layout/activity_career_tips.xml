@@ -52,7 +52,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🎯 Choose Your Focus Area"
+                    android:text="Choose Your Focus Area"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
@@ -102,7 +102,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✨ Featured Tip"
+                    android:text="Featured Tip"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
@@ -209,7 +209,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⚡ Quick Actions"
+                    android:text="Quick Actions"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
@@ -235,7 +235,7 @@
                             android:layout_width="0dp"
                             android:layout_height="44dp"
                             android:layout_weight="1"
-                            android:text="💾 Save"
+                            android:text="Save"
                             android:textColor="@color/must_green"
                             android:textSize="14sp"
                             app:strokeColor="@color/must_green"
@@ -252,7 +252,7 @@
                             android:layout_width="0dp"
                             android:layout_height="44dp"
                             android:layout_weight="1"
-                            android:text="📤 Share"
+                            android:text="Share"
                             android:textColor="@color/white"
                             android:textSize="14sp"
                             android:backgroundTint="@color/must_green"
@@ -272,7 +272,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📚 Quick Access"
+                    android:text="Quick Access"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/must_green"
@@ -283,7 +283,7 @@
                     android:id="@+id/btnSavedTips"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="📖 View Saved Tips"
+                    android:text="View Saved Tips"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -311,12 +311,7 @@
                     android:gravity="center"
                     android:padding="40dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🤔"
-                        android:textSize="64sp"
-                        android:layout_marginBottom="16dp" />
+
 
                     <TextView
                         android:layout_width="wrap_content"
