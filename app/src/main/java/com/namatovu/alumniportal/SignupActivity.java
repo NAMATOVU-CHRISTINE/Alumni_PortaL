@@ -112,7 +112,7 @@ public class SignupActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         String userId = mAuth.getCurrentUser().getUid();
                         
-                        // Check if user already exists
+                        // Check if user already exists with timeout
                         db.collection("users").document(userId).get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
@@ -135,6 +135,8 @@ public class SignupActivity extends AppCompatActivity {
                                     hideLoadingIndicator();
                                     android.util.Log.e("SignupActivity", "Error checking user", e);
                                     Toast.makeText(SignupActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    // Sign out on failure
+                                    mAuth.signOut();
                                 });
                     } else {
                         hideLoadingIndicator();
