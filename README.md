@@ -1,57 +1,242 @@
-# Alumni Portal Android Application
+# Alumni Portal
 
-## Project Overview
+A comprehensive Android application designed to connect alumni, facilitate networking, and provide access to career opportunities and university news.
 
-This is a native Android application for the alumni. The app serves as a central hub for former students to connect, stay informed about university news, find job opportunities, and engage with the alumni community.
+## Overview
 
-## Core Features
+Alumni Portal is a native Android application that serves as a central hub for former students to maintain connections, stay informed about university developments, discover job opportunities, and engage with the alumni community. The app combines modern Android development practices with Firebase backend services to deliver a seamless user experience.
 
-- **Complete User Authentication:** Secure login, signup, and password reset functionality using Firebase Authentication.
-- **Username Login:** Users can sign up with an email but log in with a unique username for convenience.
-- **Profile Management:** Users can view and edit their profiles, including their name, bio, career information, and personal skills.
-- **Profile Picture Uploads:** Users can upload and update their profile pictures, which are stored securely in Firebase Storage.
-- **Dynamic Home Dashboard:** A central screen that welcomes the user by name and provides easy navigation to all app features.
-- **Live News Feed:** The "News & Events" page displays the latest news directly from the official MUST website by parsing its RSS feed, ensuring reliable and up-to-date content.
-- **Embedded Web Content:** The home screen features an integrated `WebView` displaying the MUST homepage.
-- **Feature-Rich Navigation:** Includes dedicated sections for Job Postings, Mentor Search, and a Knowledge Hub (functionality to be implemented).
+## Key Features
+
+Authentication and User Management
+- Secure email and password authentication with Firebase
+- Username-based login for convenience
+- Password reset functionality
+- Profile creation and management
+- Profile picture uploads with cloud storage
+
+Community and Networking
+- Alumni directory with search and filtering
+- Mentor search and mentorship connection system
+- Alumni groups for community engagement
+- Direct messaging between users
+- Real-time chat functionality
+
+Content and Information
+- Live news feed from university RSS feeds
+- Event listings and management
+- Job board with career opportunities
+- Career tips and knowledge hub
+- Web content integration via WebView
+
+Notifications
+- Push notifications for messages and updates
+- Customizable notification preferences
+- Real-time notification delivery via Firebase Cloud Messaging
 
 ## Technology Stack
 
-- **Language:** Java
-- **Platform:** Android
-- **Backend Services (Firebase):**
-    - **Firebase Authentication:** For managing user accounts (login, signup, password reset).
-    - **Firebase Firestore:** As the primary NoSQL database for storing all user data, posts, and other app content.
-    - **Firebase Storage:** For storing user-uploaded content like profile pictures.
-- **UI Components:**
-    - Modern Material Design Components (`MaterialCardView`, `TextInputLayout`, etc.).
-    - `RecyclerView` for efficiently displaying lists of data (news, profiles, etc.).
-    - `WebView` for displaying web content within the app.
-    - `CircleImageView` for profile images.
-- **Data Fetching & Parsing:**
-    - `XmlPullParser`: For robustly parsing the RSS feed from the MUST website.
-    - **Glide:** For efficient loading and caching of profile images.
-- **Networking (Demo):**
-    - `Retrofit` & `Gson`: Used in a separate demo screen to showcase industry-standard REST API communication.
+Core Development
+- Language: Java
+- Platform: Android (API 23+)
+- Build System: Gradle with Kotlin DSL
 
-## Setup and Installation
+Backend Services
+- Firebase Authentication for user management
+- Firebase Firestore for real-time database
+- Firebase Storage for file uploads
+- Firebase Cloud Messaging for push notifications
+- Firebase Realtime Database for chat
 
-To run this project, you will need to configure your own Firebase backend.
+UI and Design
+- Material Design 3 components
+- RecyclerView for efficient list rendering
+- WebView for embedded web content
+- Glide for image loading and caching
+- CircleImageView for profile images
 
-1.  **Clone the Repository:**
-    ```sh
-    git clone <your-repository-url>
-    ```
-2.  **Open in Android Studio:** Open the cloned directory as a new project in Android Studio.
-3.  **Connect to Firebase:**
-    *   Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
-    *   Add an Android app to your Firebase project with the package name `com.namatovu.alumniportal`.
-    *   Follow the setup steps to download the `google-services.json` file.
-    *   Place the downloaded `google-services.json` file into the `app/` directory of this project. Make sure the `package_name`/`applicationId` inside the file matches `com.namatovu.alumniportal`. If you keep a different `applicationId`, re-download the correct `google-services.json` from the Firebase console and replace the existing one.
+Data and Networking
+- Retrofit for REST API communication
+- Gson for JSON serialization
+- JSoup for web scraping
+- XmlPullParser for RSS feed parsing
 
-    Note: This project currently uses the Java package `com.namatovu.alumniportal`. If you prefer a different applicationId (for example `com.example.alumni_portal`), update `app/build.gradle.kts`'s `applicationId` and `namespace` accordingly and download the matching `google-services.json` from Firebase.
-4.  **Enable Firebase Services:** In the Firebase Console, ensure you have enabled the following services:
-    - **Authentication:** Enable the "Email/Password" sign-in method.
-    - **Firestore:** Create a new Firestore database.
-    - **Storage:** Create a new Firebase Storage bucket.
-5.  **Build and Run:** Build and run the application on an Android device or emulator.
+Local Storage and Background Tasks
+- Room database for offline storage
+- WorkManager for background synchronization
+- SharedPreferences for user preferences
+
+## Project Structure
+
+```
+app/
+├── src/main/java/com/namatovu/alumniportal/
+│   ├── activities/          # UI screens and activities
+│   ├── services/            # Background services and messaging
+│   ├── models/              # Data models and entities
+│   ├── utils/               # Helper utilities and managers
+│   ├── adapters/            # RecyclerView adapters
+│   └── receivers/           # Broadcast receivers
+├── src/main/res/
+│   ├── layout/              # XML layout files
+│   ├── drawable/            # Vector drawables and images
+│   ├── values/              # Strings, colors, dimensions
+│   └── menu/                # Menu resources
+└── build.gradle.kts         # Build configuration
+```
+
+## Getting Started
+
+Prerequisites
+- Android Studio (latest version)
+- Android SDK 23 or higher
+- Firebase account
+
+Installation Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/NAMATOVU-CHRISTINE/Alumni_PortaL.git
+   cd Alumni_PortaL
+   ```
+
+2. Open in Android Studio:
+   - Launch Android Studio
+   - Select "Open an Existing Project"
+   - Navigate to the cloned directory
+
+3. Configure Firebase:
+   - Go to Firebase Console (https://console.firebase.google.com/)
+   - Create a new project or use existing one
+   - Add Android app with package name: com.namatovu.alumniportal
+   - Download google-services.json
+   - Place it in the app/ directory
+
+4. Enable Firebase Services:
+   - Authentication: Enable Email/Password sign-in
+   - Firestore: Create database in production mode
+   - Storage: Create storage bucket
+   - Cloud Messaging: Enable for push notifications
+
+5. Build and Run:
+   - Sync Gradle files
+   - Build the project
+   - Run on device or emulator
+
+## Build Configuration
+
+The project is optimized for Play Store distribution with the following configurations:
+
+Release Build Optimization
+- Code minification enabled (ProGuard)
+- Resource shrinking enabled
+- Debug symbols removed
+- Unused dependencies excluded
+- Expected AAB size: 8-10 MB
+
+To generate release AAB:
+```bash
+./gradlew bundleRelease
+```
+
+Output location: app/build/outputs/bundle/release/app-release.aab
+
+## Firebase Setup Details
+
+Firestore Database Structure
+- users: User profiles and preferences
+- chats: Chat conversations
+- messages: Chat messages
+- events: Event information
+- jobs: Job postings
+- news: News articles
+- notifications: User notifications
+
+Security Rules
+- Users can only read/write their own data
+- Public collections (events, jobs, news) are readable by all authenticated users
+- Admin operations require custom claims
+
+## Development Guidelines
+
+Code Organization
+- Activities handle UI and user interaction
+- Services manage background tasks and messaging
+- Models define data structures
+- Utils provide reusable functionality
+- Adapters handle list rendering
+
+Best Practices
+- Use LiveData for reactive UI updates
+- Implement proper error handling
+- Follow Material Design guidelines
+- Optimize images and resources
+- Handle permissions properly for Android 6+
+
+## Testing
+
+The application has been tested on:
+- Android 6.0 (API 23) and above
+- Various device sizes and orientations
+- Real devices and emulators
+
+## Deployment
+
+Play Store Release Process
+1. Generate signed release APK/AAB
+2. Test thoroughly on real devices
+3. Upload to Google Play Console
+4. Configure store listing and screenshots
+5. Submit for review
+
+## Troubleshooting
+
+Common Issues
+
+Firebase Connection Issues
+- Verify google-services.json is in app/ directory
+- Check Firebase project settings match package name
+- Ensure Firebase services are enabled in console
+
+Notification Problems
+- Verify FCM is enabled in Firebase
+- Check notification permissions on device
+- Ensure device has valid FCM token
+
+Build Errors
+- Run "Sync Now" in Android Studio
+- Clear build cache: ./gradlew clean
+- Invalidate caches and restart Android Studio
+
+## Contributing
+
+To contribute to this project:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is proprietary and intended for Makerere University alumni.
+
+## Support
+
+For issues or questions:
+- Check existing GitHub issues
+- Create a new issue with detailed description
+- Contact the development team
+
+## Version History
+
+Version 1.1 (Current)
+- Added push notifications
+- Improved chat functionality
+- Enhanced user profiles
+- Optimized for Play Store
+
+Version 1.0
+- Initial release
+- Core features implemented
+- Firebase integration
