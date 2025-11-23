@@ -39,6 +39,14 @@
 -keep interface retrofit2.** { *; }
 -dontwarn retrofit2.**
 
+# OkHttp
+-dontwarn com.squareup.okhttp.CipherSuite
+-dontwarn com.squareup.okhttp.ConnectionSpec
+-dontwarn com.squareup.okhttp.TlsVersion
+
+# Joda Time
+-dontwarn org.joda.time.Instant
+
 # Gson
 -keep class com.google.gson.** { *; }
 -keep interface com.google.gson.** { *; }
