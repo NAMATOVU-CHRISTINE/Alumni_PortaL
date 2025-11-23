@@ -305,36 +305,51 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
     private void loadConnectionStatus() {
         String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
         if (currentUserId == null) {
+            Log.d(TAG, "No current user, skipping connection status load");
             return;
         }
         
+        Log.d(TAG, "Loading connection status for current user: " + currentUserId);
+        
         // Query for accepted mentorship connections
         db.collection("mentorshipConnections")
-                .whereIn("status", java.util.Arrays.asList("accepted", "active"))
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d(TAG, "Found " + queryDocumentSnapshots.size() + " total mentorship connections");
+                    
                     // Create a set of connected user IDs
                     java.util.Set<String> connectedUserIds = new java.util.HashSet<>();
                     
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String status = doc.getString("status");
                         String mentorId = doc.getString("mentorId");
                         String menteeId = doc.getString("menteeId");
                         
-                        // If current user is mentor, mentee is connected
-                        if (currentUserId.equals(mentorId) && menteeId != null) {
-                            connectedUserIds.add(menteeId);
-                        }
-                        // If current user is mentee, mentor is connected
-                        else if (currentUserId.equals(menteeId) && mentorId != null) {
-                            connectedUserIds.add(mentorId);
+                        Log.d(TAG, "Connection: mentor=" + mentorId + ", mentee=" + menteeId + ", status=" + status);
+                        
+                        // Only count accepted or active connections
+                        if ("accepted".equals(status) || "active".equals(status)) {
+                            // If current user is mentor, mentee is connected
+                            if (currentUserId.equals(mentorId) && menteeId != null) {
+                                connectedUserIds.add(menteeId);
+                                Log.d(TAG, "Added connected mentee: " + menteeId);
+                            }
+                            // If current user is mentee, mentor is connected
+                            else if (currentUserId.equals(menteeId) && mentorId != null) {
+                                connectedUserIds.add(mentorId);
+                                Log.d(TAG, "Added connected mentor: " + mentorId);
+                            }
                         }
                     }
+                    
+                    Log.d(TAG, "Total connected users: " + connectedUserIds.size());
                     
                     // Update connection status for all users
                     for (User user : allUsers) {
                         if (connectedUserIds.contains(user.getUserId())) {
                             user.setConnected(true);
                             user.setConnectionStatus("connected");
+                            Log.d(TAG, "Marked as connected: " + user.getFullName());
                         } else {
                             user.setConnected(false);
                             user.setConnectionStatus("not_connected");
