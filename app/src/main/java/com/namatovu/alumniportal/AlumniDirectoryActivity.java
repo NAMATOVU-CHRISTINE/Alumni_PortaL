@@ -232,6 +232,10 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
                     }
                     
                     binding.progressBar.setVisibility(View.GONE);
+                    
+                    // Load connection status for all users
+                    loadConnectionStatus();
+                    
                     filterUsers();
                     
                     String message = "Found " + totalUsers + " total users, " + 
@@ -292,6 +296,56 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
         }
         
         binding.resultCountText.setText(filteredUsers.size() + " members found");
+    }
+
+    /**
+     * Load connection status for all users
+     * Checks if current user has accepted mentorship connections with each user
+     */
+    private void loadConnectionStatus() {
+        String currentUserId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+        if (currentUserId == null) {
+            return;
+        }
+        
+        // Query for accepted mentorship connections
+        db.collection("mentorshipConnections")
+                .whereIn("status", java.util.Arrays.asList("accepted", "active"))
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Create a set of connected user IDs
+                    java.util.Set<String> connectedUserIds = new java.util.HashSet<>();
+                    
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String mentorId = doc.getString("mentorId");
+                        String menteeId = doc.getString("menteeId");
+                        
+                        // If current user is mentor, mentee is connected
+                        if (currentUserId.equals(mentorId) && menteeId != null) {
+                            connectedUserIds.add(menteeId);
+                        }
+                        // If current user is mentee, mentor is connected
+                        else if (currentUserId.equals(menteeId) && mentorId != null) {
+                            connectedUserIds.add(mentorId);
+                        }
+                    }
+                    
+                    // Update connection status for all users
+                    for (User user : allUsers) {
+                        if (connectedUserIds.contains(user.getUserId())) {
+                            user.setConnected(true);
+                            user.setConnectionStatus("connected");
+                        } else {
+                            user.setConnected(false);
+                            user.setConnectionStatus("not_connected");
+                        }
+                    }
+                    
+                    Log.d(TAG, "Loaded connection status for " + connectedUserIds.size() + " connected users");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading connection status", e);
+                });
     }
 
     @Override
