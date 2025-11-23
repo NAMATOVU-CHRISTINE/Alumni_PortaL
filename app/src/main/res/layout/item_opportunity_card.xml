@@ -21,6 +21,64 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Poster Profile Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp"
+            android:padding="8dp"
+            android:background="@drawable/light_background"
+            android:backgroundTint="@color/light_gray">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageViewPoster"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_person"
+                android:layout_marginEnd="8dp"
+                app:shapeAppearanceOverlay="@style/CircleImageView" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvPosterName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
+                    tools:text="John Doe" />
+
+                <TextView
+                    android:id="@+id/tvPosterBio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_marginTop="2dp"
+                    tools:text="Software Engineer at Google" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewOnlineIndicator"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/online_indicator"
+                android:layout_marginStart="8dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
         <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
