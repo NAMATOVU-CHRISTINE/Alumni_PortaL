@@ -431,12 +431,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_notifications) {
-            // Open Notifications Activity
-            Intent intent = new Intent(this, com.namatovu.alumniportal.activities.NotificationsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (item.getItemId() == R.id.action_events_news) {
+        if (item.getItemId() == R.id.action_events_news) {
             // Open Events & News Activity
             Intent intent = new Intent(this, EventsNewsActivity.class);
             startActivity(intent);

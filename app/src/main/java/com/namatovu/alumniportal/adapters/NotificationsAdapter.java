@@ -64,7 +64,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             binding.notificationMessage.setText(notification.getMessage());
             
             // Format timestamp
-            if (notification.getTimestamp() != null) {
+            if (notification.getTimestamp() > 0) {
                 String timeAgo = getTimeAgo(notification.getTimestamp());
                 binding.notificationTime.setText(timeAgo);
             }

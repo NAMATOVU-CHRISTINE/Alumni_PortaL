@@ -234,8 +234,29 @@ public class AlumniNotificationService extends FirebaseMessagingService {
     
     private void createNotification(String channelId, String title, String body, Intent intent, int notificationId) {
         PendingIntent pendingIntent = null;
+        String referenceId = null;
+        String notificationType = null;
         
         if (intent != null) {
+            // Extract reference ID and type from intent extras
+            referenceId = intent.getStringExtra("chatId");
+            if (referenceId == null) referenceId = intent.getStringExtra("eventId");
+            if (referenceId == null) referenceId = intent.getStringExtra("jobId");
+            if (referenceId == null) referenceId = intent.getStringExtra("articleId");
+            
+            // Determine notification type from channel
+            if (CHANNEL_MESSAGES.equals(channelId)) {
+                notificationType = "message";
+            } else if (CHANNEL_MENTORSHIP.equals(channelId)) {
+                notificationType = "mentorship_request";
+            } else if (CHANNEL_EVENTS.equals(channelId)) {
+                notificationType = "event";
+            } else if (CHANNEL_JOBS.equals(channelId)) {
+                notificationType = "job";
+            } else if (CHANNEL_NEWS.equals(channelId)) {
+                notificationType = "news";
+            }
+            
             pendingIntent = PendingIntent.getActivity(
                 this, 
                 notificationId, 
@@ -252,6 +273,7 @@ public class AlumniNotificationService extends FirebaseMessagingService {
                 defaultIntent, 
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
+            notificationType = "general";
         }
         
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
@@ -286,8 +308,40 @@ public class AlumniNotificationService extends FirebaseMessagingService {
             notificationManager.notify(notificationId, notificationBuilder.build());
         }
         
+        // Save notification to Firestore for persistence
+        saveNotificationToFirestore(title, body, notificationType, referenceId);
+        
         // Track notification displayed
         AnalyticsHelper.logEvent("notification_displayed", "channel", channelId);
+    }
+    
+    /**
+     * Save notification to Firestore so it persists after clearing
+     */
+    private void saveNotificationToFirestore(String title, String body, String type, String referenceId) {
+        com.google.firebase.auth.FirebaseAuth mAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) return;
+        
+        String userId = mAuth.getCurrentUser().getUid();
+        
+        java.util.Map<String, Object> notificationData = new java.util.HashMap<>();
+        notificationData.put("userId", userId);
+        notificationData.put("title", title);
+        notificationData.put("message", body);
+        notificationData.put("type", type);
+        notificationData.put("referenceId", referenceId);
+        notificationData.put("timestamp", System.currentTimeMillis());
+        notificationData.put("read", false);
+        
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("notifications")
+            .add(notificationData)
+            .addOnSuccessListener(docRef -> {
+                Log.d(TAG, "Notification saved to Firestore: " + docRef.getId());
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error saving notification to Firestore", e);
+            });
     }
     
     private void createNotificationChannels() {

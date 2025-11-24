@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
-                android:marginStart="8dp" />
+                android:layout_marginStart="8dp" />
         </LinearLayout>
 
         <TextView
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
-            android:marginTop="8dp"
+            android:layout_marginTop="8dp"
             android:maxLines="2"
             android:ellipsize="end" />
     </LinearLayout>

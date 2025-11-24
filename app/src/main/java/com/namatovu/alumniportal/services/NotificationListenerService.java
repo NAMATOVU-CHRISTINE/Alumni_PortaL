@@ -166,9 +166,12 @@ public class NotificationListenerService {
         
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         
+        // Use a unique request code based on referenceId to ensure proper intent handling
+        int requestCode = referenceId != null ? referenceId.hashCode() : (int) System.currentTimeMillis();
+        
         PendingIntent pendingIntent = PendingIntent.getActivity(
             context, 
-            (int) System.currentTimeMillis(), 
+            requestCode, 
             intent, 
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
@@ -191,13 +194,44 @@ public class NotificationListenerService {
             Log.w(TAG, "Could not set notification color", e);
         }
         
-        // Show notification with unique ID to prevent replacement
-        notificationCounter++;
-        int notificationId = NOTIFICATION_ID + (notificationCounter % 100);
+        // Use a stable notification ID based on type and referenceId to prevent duplicates
+        int notificationId = (type + referenceId).hashCode() % 10000;
+        if (notificationId < 0) notificationId = -notificationId;
+        
         if (notificationManager != null) {
             notificationManager.notify(notificationId, builder.build());
             Log.d(TAG, "Notification displayed: " + title + " (type: " + type + ", id: " + notificationId + ")");
         }
+        
+        // Save notification to Firestore so it persists
+        saveNotificationToFirestore(title, message, type, referenceId);
+    }
+    
+    /**
+     * Save notification to Firestore for persistence
+     */
+    private void saveNotificationToFirestore(String title, String message, String type, String referenceId) {
+        if (mAuth.getCurrentUser() == null) return;
+        
+        String userId = mAuth.getCurrentUser().getUid();
+        
+        java.util.Map<String, Object> notificationData = new java.util.HashMap<>();
+        notificationData.put("userId", userId);
+        notificationData.put("title", title);
+        notificationData.put("message", message);
+        notificationData.put("type", type);
+        notificationData.put("referenceId", referenceId);
+        notificationData.put("timestamp", System.currentTimeMillis());
+        notificationData.put("read", false);
+        
+        db.collection("notifications")
+            .add(notificationData)
+            .addOnSuccessListener(docRef -> {
+                Log.d(TAG, "Notification saved to Firestore: " + docRef.getId());
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error saving notification to Firestore", e);
+            });
     }
     
     /**
