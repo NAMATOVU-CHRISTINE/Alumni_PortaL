@@ -145,10 +145,25 @@ public class NotificationListenerService {
         NotificationManager notificationManager = 
             (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         
-        // Create intent to open app when notification is clicked
-        Intent intent = new Intent(context, HomeActivity.class);
-        intent.putExtra("notification_type", type);
-        intent.putExtra("reference_id", referenceId);
+        // Create intent based on notification type
+        Intent intent;
+        
+        if ("message".equalsIgnoreCase(type) || "chat".equalsIgnoreCase(type)) {
+            // For message notifications, open ChatActivity directly
+            intent = new Intent(context, com.namatovu.alumniportal.activities.ChatActivity.class);
+            intent.putExtra("chatId", referenceId);
+            intent.putExtra("otherUserId", referenceId);
+        } else if ("mentorship_request".equalsIgnoreCase(type)) {
+            // For mentorship requests, open MentorshipActivity
+            intent = new Intent(context, com.namatovu.alumniportal.MentorshipActivity.class);
+            intent.putExtra("mentorship_id", referenceId);
+        } else {
+            // Default: open HomeActivity
+            intent = new Intent(context, HomeActivity.class);
+            intent.putExtra("notification_type", type);
+            intent.putExtra("reference_id", referenceId);
+        }
+        
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -175,7 +190,7 @@ public class NotificationListenerService {
         notificationCounter++;
         if (notificationManager != null) {
             notificationManager.notify(NOTIFICATION_ID + notificationCounter, builder.build());
-            Log.d(TAG, "Notification displayed: " + title);
+            Log.d(TAG, "Notification displayed: " + title + " (type: " + type + ")");
         }
     }
     

@@ -138,6 +138,16 @@ public class LoginActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
+                                        // Check if account is deleted
+                                        Boolean isDeleted = documentSnapshot.getBoolean("deleted");
+                                        if (isDeleted != null && isDeleted) {
+                                            hideLoadingIndicator();
+                                            Log.d(TAG, "User attempted login with deleted account");
+                                            Toast.makeText(LoginActivity.this, "This account has been deleted and cannot be used.", Toast.LENGTH_LONG).show();
+                                            mAuth.signOut();
+                                            return;
+                                        }
+                                        
                                         // Existing user - check both Firestore and Firebase Auth
                                         Boolean emailVerified = documentSnapshot.getBoolean("emailVerified");
                                         Log.d(TAG, "User emailVerified from Firestore: " + emailVerified);
@@ -278,32 +288,52 @@ public class LoginActivity extends AppCompatActivity {
                             user.reload().addOnCompleteListener(reloadTask -> {
                                 hideLoadingIndicator();
                                 if (reloadTask.isSuccessful()) {
-                                    // Check if email is verified in Firebase Auth
-                                    if (user.isEmailVerified()) {
-                                        // Email is verified, update Firestore and proceed to home
-                                        Log.d(TAG, "Login successful. Email verified.");
-                                        
-                                        // Update Firestore to mark email as verified
-                                        Map<String, Object> updateData = new HashMap<>();
-                                        updateData.put("emailVerified", true);
-                                        db.collection("users").document(user.getUid())
-                                                .update(updateData)
-                                                .addOnSuccessListener(aVoid -> navigateToHome())
-                                                .addOnFailureListener(e -> {
-                                                    Log.e(TAG, "Error updating email verification status", e);
-                                                    // Still proceed to home even if update fails
-                                                    navigateToHome();
-                                                });
-                                    } else {
-                                        // Email NOT verified - block login
-                                        Log.d(TAG, "User attempted login without email verification. isEmailVerified=" + user.isEmailVerified());
-                                        Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
-                                        // Sign out the user since they haven't verified their email
-                                        mAuth.signOut();
-                                        // Make sure UI is reset
-                                        binding.emailHint.setText("");
-                                        binding.passwordHint.setText("");
-                                    }
+                                    // Check if account is deleted
+                                    db.collection("users").document(user.getUid()).get()
+                                            .addOnSuccessListener(doc -> {
+                                                if (doc.exists()) {
+                                                    Boolean isDeleted = doc.getBoolean("deleted");
+                                                    if (isDeleted != null && isDeleted) {
+                                                        Log.d(TAG, "User attempted login with deleted account");
+                                                        Toast.makeText(LoginActivity.this, "This account has been deleted and cannot be used.", Toast.LENGTH_LONG).show();
+                                                        mAuth.signOut();
+                                                        binding.emailHint.setText("");
+                                                        binding.passwordHint.setText("");
+                                                        return;
+                                                    }
+                                                }
+                                                
+                                                // Check if email is verified in Firebase Auth
+                                                if (user.isEmailVerified()) {
+                                                    // Email is verified, update Firestore and proceed to home
+                                                    Log.d(TAG, "Login successful. Email verified.");
+                                                    
+                                                    // Update Firestore to mark email as verified
+                                                    Map<String, Object> updateData = new HashMap<>();
+                                                    updateData.put("emailVerified", true);
+                                                    db.collection("users").document(user.getUid())
+                                                            .update(updateData)
+                                                            .addOnSuccessListener(aVoid -> navigateToHome())
+                                                            .addOnFailureListener(e -> {
+                                                                Log.e(TAG, "Error updating email verification status", e);
+                                                                // Still proceed to home even if update fails
+                                                                navigateToHome();
+                                                            });
+                                                } else {
+                                                    // Email NOT verified - block login
+                                                    Log.d(TAG, "User attempted login without email verification. isEmailVerified=" + user.isEmailVerified());
+                                                    Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                                    // Sign out the user since they haven't verified their email
+                                                    mAuth.signOut();
+                                                    // Make sure UI is reset
+                                                    binding.emailHint.setText("");
+                                                    binding.passwordHint.setText("");
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.e(TAG, "Error checking deleted status", e);
+                                                Toast.makeText(LoginActivity.this, "Error verifying account status.", Toast.LENGTH_SHORT).show();
+                                            });
                                 } else {
                                     Log.e(TAG, "Error reloading user", reloadTask.getException());
                                     Toast.makeText(LoginActivity.this, "Error checking email verification status.", Toast.LENGTH_SHORT).show();

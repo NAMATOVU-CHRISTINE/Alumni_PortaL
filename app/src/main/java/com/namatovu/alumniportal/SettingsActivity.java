@@ -2,6 +2,7 @@ package com.namatovu.alumniportal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -347,113 +348,168 @@ public class SettingsActivity extends AppCompatActivity {
     }
     
     private void deleteUserData(String userId, com.google.firebase.firestore.FirebaseFirestore db) {
-        // Delete user document
-        db.collection("users").document(userId).delete();
+        // Step 1: Mark user as deleted in Firestore FIRST to prevent login
+        db.collection("users").document(userId).update("deleted", true, "deletedAt", System.currentTimeMillis())
+            .addOnSuccessListener(aVoid -> {
+                Log.d("DeleteAccount", "User marked as deleted in Firestore");
+                // Step 2: Delete all user-related data
+                deleteUserCollectionData(userId, db);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Failed to mark user as deleted", e);
+                Toast.makeText(SettingsActivity.this, "Error marking account for deletion", Toast.LENGTH_SHORT).show();
+            });
+    }
+    
+    private void deleteUserCollectionData(String userId, com.google.firebase.firestore.FirebaseFirestore db) {
+        java.util.concurrent.atomic.AtomicInteger deletionCounter = new java.util.concurrent.atomic.AtomicInteger(0);
+        final int totalCollections = 9; // Number of collections to delete from
+        
+        // Helper to check if all deletions are complete
+        java.util.function.Consumer<Void> checkAllDeleted = v -> {
+            if (deletionCounter.incrementAndGet() == totalCollections) {
+                Log.d("DeleteAccount", "All user data deleted from Firestore");
+                // Step 3: Only after all Firestore data is deleted, delete Firebase Auth account
+                deleteFirebaseAuthAccount();
+            }
+        };
         
         // Delete user's posts
-        db.collection("posts")
-            .whereEqualTo("userId", userId)
-            .get()
+        db.collection("posts").whereEqualTo("userId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting posts", e);
+                checkAllDeleted.accept(null);
             });
         
         // Delete user's articles
-        db.collection("articles")
-            .whereEqualTo("userId", userId)
-            .get()
+        db.collection("articles").whereEqualTo("userId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting articles", e);
+                checkAllDeleted.accept(null);
             });
         
         // Delete user's events
-        db.collection("events")
-            .whereEqualTo("userId", userId)
-            .get()
+        db.collection("events").whereEqualTo("userId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting events", e);
+                checkAllDeleted.accept(null);
             });
         
         // Delete user's jobs
-        db.collection("jobs")
-            .whereEqualTo("userId", userId)
-            .get()
+        db.collection("jobs").whereEqualTo("userId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting jobs", e);
+                checkAllDeleted.accept(null);
             });
         
-        // Delete user's mentorships (as mentor or mentee)
-        db.collection("mentorships")
-            .whereEqualTo("mentorId", userId)
-            .get()
+        // Delete user's mentorships (as mentor)
+        db.collection("mentorships").whereEqualTo("mentorId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting mentorships (mentor)", e);
+                checkAllDeleted.accept(null);
             });
         
-        db.collection("mentorships")
-            .whereEqualTo("menteeId", userId)
-            .get()
+        // Delete user's mentorships (as mentee)
+        db.collection("mentorships").whereEqualTo("menteeId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting mentorships (mentee)", e);
+                checkAllDeleted.accept(null);
             });
         
         // Delete user's notifications
-        db.collection("notifications")
-            .whereEqualTo("userId", userId)
-            .get()
+        db.collection("notifications").whereEqualTo("userId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting notifications", e);
+                checkAllDeleted.accept(null);
             });
         
         // Delete user's comments
-        db.collection("comments")
-            .whereEqualTo("userId", userId)
-            .get()
+        db.collection("comments").whereEqualTo("userId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting comments", e);
+                checkAllDeleted.accept(null);
             });
         
         // Delete user's messages
-        db.collection("messages")
-            .whereEqualTo("senderId", userId)
-            .get()
+        db.collection("messages").whereEqualTo("senderId", userId).get()
             .addOnSuccessListener(querySnapshot -> {
                 for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
                     doc.getReference().delete();
                 }
+                checkAllDeleted.accept(null);
+            })
+            .addOnFailureListener(e -> {
+                Log.e("DeleteAccount", "Error deleting messages", e);
+                checkAllDeleted.accept(null);
             });
-        
-        // After all data is deleted, delete Firebase Auth account
-        deleteFirebaseAuthAccount();
     }
     
     private void deleteFirebaseAuthAccount() {
+        if (mAuth.getCurrentUser() == null) {
+            Toast.makeText(SettingsActivity.this, "Error: User not authenticated", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
         mAuth.getCurrentUser().delete()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    Log.d("DeleteAccount", "Firebase Auth account deleted successfully");
                     Toast.makeText(SettingsActivity.this, "Account and all data deleted successfully", Toast.LENGTH_LONG).show();
                     // Navigate to login
-                    Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                    Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 } else {
+                    Log.e("DeleteAccount", "Failed to delete Firebase Auth account", task.getException());
                     Toast.makeText(SettingsActivity.this, "Failed to delete account: " + 
                         task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
