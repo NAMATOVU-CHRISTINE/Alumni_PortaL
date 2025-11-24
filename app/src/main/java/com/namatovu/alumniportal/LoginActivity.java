@@ -149,10 +149,32 @@ public class LoginActivity extends AppCompatActivity {
                                             );
                                             navigateToHome();
                                         } else {
-                                            // Email not verified yet
-                                            hideLoadingIndicator();
-                                            Toast.makeText(LoginActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
-                                            mAuth.signOut();
+                                            // Email not verified yet - check if user actually verified it
+                                            mAuth.getCurrentUser().reload().addOnCompleteListener(reloadTask -> {
+                                                if (reloadTask.isSuccessful() && mAuth.getCurrentUser().isEmailVerified()) {
+                                                    // User verified email! Update Firestore and proceed
+                                                    Log.d(TAG, "Email was verified, updating Firestore");
+                                                    Map<String, Object> updateData = new HashMap<>();
+                                                    updateData.put("emailVerified", true);
+                                                    db.collection("users").document(userId)
+                                                            .update(updateData)
+                                                            .addOnSuccessListener(aVoid -> {
+                                                                com.namatovu.alumniportal.utils.NotificationHelper.updateTokenInFirestore(
+                                                                    com.namatovu.alumniportal.utils.NotificationHelper.getFCMToken()
+                                                                );
+                                                                navigateToHome();
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Log.e(TAG, "Error updating email verification", e);
+                                                                navigateToHome();
+                                                            });
+                                                } else {
+                                                    // Email still not verified
+                                                    hideLoadingIndicator();
+                                                    Toast.makeText(LoginActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                                    mAuth.signOut();
+                                                }
+                                            });
                                         }
                                     }
                                 })
@@ -253,13 +275,25 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Reload user to get latest email verification status
+                            // Reload user to get latest email verification status from Firebase
                             user.reload().addOnCompleteListener(reloadTask -> {
                                 if (reloadTask.isSuccessful()) {
+                                    // Force refresh the email verification status
                                     if (user.isEmailVerified()) {
-                                        // Email is verified, proceed to home
-                                        Log.d(TAG, "Login successful.");
-                                        navigateToHome();
+                                        // Email is verified, update Firestore and proceed to home
+                                        Log.d(TAG, "Login successful. Email verified.");
+                                        
+                                        // Update Firestore to mark email as verified
+                                        Map<String, Object> updateData = new HashMap<>();
+                                        updateData.put("emailVerified", true);
+                                        db.collection("users").document(user.getUid())
+                                                .update(updateData)
+                                                .addOnSuccessListener(aVoid -> navigateToHome())
+                                                .addOnFailureListener(e -> {
+                                                    Log.e(TAG, "Error updating email verification status", e);
+                                                    // Still proceed to home even if update fails
+                                                    navigateToHome();
+                                                });
                                     } else {
                                         hideLoadingIndicator();
                                         Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
