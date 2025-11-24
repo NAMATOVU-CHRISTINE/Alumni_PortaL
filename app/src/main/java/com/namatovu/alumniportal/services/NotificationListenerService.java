@@ -181,16 +181,22 @@ public class NotificationListenerService {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         
         // Set notification color
-        builder.setColor(context.getResources().getColor(R.color.must_green, null));
+        try {
+            builder.setColor(context.getResources().getColor(R.color.must_green, null));
+        } catch (Exception e) {
+            Log.w(TAG, "Could not set notification color", e);
+        }
         
-        // Show notification
+        // Show notification with unique ID to prevent replacement
         notificationCounter++;
+        int notificationId = NOTIFICATION_ID + (notificationCounter % 100);
         if (notificationManager != null) {
-            notificationManager.notify(NOTIFICATION_ID + notificationCounter, builder.build());
-            Log.d(TAG, "Notification displayed: " + title + " (type: " + type + ")");
+            notificationManager.notify(notificationId, builder.build());
+            Log.d(TAG, "Notification displayed: " + title + " (type: " + type + ", id: " + notificationId + ")");
         }
     }
     

@@ -26,4 +26,25 @@
                 android:layout_weight="1"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor=
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/notificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                android:marginStart="8dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notificationMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:marginTop="8dp"
+            android:maxLines="2"
+            android:ellipsize="end" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
