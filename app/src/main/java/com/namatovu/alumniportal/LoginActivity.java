@@ -189,16 +189,21 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is already signed in
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            // Check if email is verified
-            if (!currentUser.isEmailVerified()) {
-                Log.d(TAG, "User is signed in but email not verified");
-                // Show message about email verification
-                Toast.makeText(this, "Please verify your email to continue. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
-                // Sign out the user
-                mAuth.signOut();
-            } else {
-                navigateToHome();
-            }
+            // Refresh the user to get latest email verification status
+            currentUser.reload().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (currentUser.isEmailVerified()) {
+                        // Email is verified, proceed to home
+                        Log.d(TAG, "User email verified, navigating to home");
+                        navigateToHome();
+                    } else {
+                        // Email not verified yet, show message and sign out
+                        Log.d(TAG, "User is signed in but email not verified");
+                        Toast.makeText(LoginActivity.this, "Please verify your email to continue. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                        mAuth.signOut();
+                    }
+                }
+            });
         }
         
         // Check if coming from signup with pending verification
