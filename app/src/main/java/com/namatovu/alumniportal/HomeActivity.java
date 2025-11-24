@@ -667,16 +667,29 @@ public class HomeActivity extends AppCompatActivity {
         
         String userId = currentUser.getUid();
         
-        // Load connections count
+        // Load connections count - simplified query for performance
         db.collection("mentorships")
-            .where(com.google.firebase.firestore.Filter.or(
-                com.google.firebase.firestore.Filter.equalTo("mentorId", userId),
-                com.google.firebase.firestore.Filter.equalTo("menteeId", userId)
-            ))
+            .whereEqualTo("mentorId", userId)
             .whereEqualTo("status", "accepted")
+            .limit(100)
             .get()
             .addOnSuccessListener(docs -> {
-                binding.tvConnectionsCount.setText(String.valueOf(docs.size()));
+                int count = docs.size();
+                // Also count mentee connections
+                db.collection("mentorships")
+                    .whereEqualTo("menteeId", userId)
+                    .whereEqualTo("status", "accepted")
+                    .limit(100)
+                    .get()
+                    .addOnSuccessListener(docs2 -> {
+                        binding.tvConnectionsCount.setText(String.valueOf(count + docs2.size()));
+                    })
+                    .addOnFailureListener(e -> {
+                        binding.tvConnectionsCount.setText(String.valueOf(count));
+                    });
+            })
+            .addOnFailureListener(e -> {
+                binding.tvConnectionsCount.setText("0");
             });
         
         // Profile views would come from analytics - for now show 0
@@ -684,15 +697,18 @@ public class HomeActivity extends AppCompatActivity {
     }
     
     private void startBackgroundServices() {
+        // Background services disabled for performance optimization
+        // Uncomment below if needed for specific features
+        
         // Start data sync service (demonstrates Service component)
-        Intent syncIntent = new Intent(this, com.namatovu.alumniportal.services.DataSyncBackgroundService.class);
-        startService(syncIntent);
+        // Intent syncIntent = new Intent(this, com.namatovu.alumniportal.services.DataSyncBackgroundService.class);
+        // startService(syncIntent);
         
         // Start web scraping service (demonstrates advanced feature)
-        Intent scrapingIntent = new Intent(this, com.namatovu.alumniportal.services.WebScrapingService.class);
-        startService(scrapingIntent);
+        // Intent scrapingIntent = new Intent(this, com.namatovu.alumniportal.services.WebScrapingService.class);
+        // startService(scrapingIntent);
         
-        Log.d(TAG, "Background services started for exam demonstration");
+        Log.d(TAG, "Background services optimization applied");
     }
     
     /**
