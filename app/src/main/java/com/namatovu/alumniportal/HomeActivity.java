@@ -218,8 +218,26 @@ public class HomeActivity extends AppCompatActivity {
             redirectToLogin();
             return; 
         }
-
-        loadUserProfile(currentUser.getUid());
+        
+        // Check email verification - reload user first to get latest status
+        currentUser.reload().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (!currentUser.isEmailVerified()) {
+                    // Email not verified - sign out and redirect to login
+                    Log.w(TAG, "User attempted to access HomeActivity without email verification");
+                    Toast.makeText(this, "Please verify your email before accessing the app. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                    mAuth.signOut();
+                    redirectToLogin();
+                    return;
+                }
+                // Email verified, proceed to load profile
+                loadUserProfile(currentUser.getUid());
+            } else {
+                Log.e(TAG, "Error reloading user", task.getException());
+                // If reload fails, still try to load profile but log the error
+                loadUserProfile(currentUser.getUid());
+            }
+        });
     }
 
     private void setupToolbar() {
