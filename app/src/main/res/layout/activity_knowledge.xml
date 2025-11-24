@@ -98,16 +98,6 @@
                             android:layout_margin="4dp">
 
                             <com.google.android.material.chip.Chip
-                                android:id="@+id/chipAll"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="All"
-                                android:checked="true"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                app:chipBackgroundColor="@color/light_green"
-                                android:textColor="@color/must_green" />
-
-                            <com.google.android.material.chip.Chip
                                 android:id="@+id/chipNetworking"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
