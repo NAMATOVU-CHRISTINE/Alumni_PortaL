@@ -173,12 +173,21 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void logoutUser() {
-        mAuth.signOut();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        try {
+            mAuth.signOut();
+            
+            // Clear local preferences
+            prefs.edit().clear().apply();
+            
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("Logout", "Error during logout", e);
+            Toast.makeText(this, "Logout error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showChangePasswordDialog() {

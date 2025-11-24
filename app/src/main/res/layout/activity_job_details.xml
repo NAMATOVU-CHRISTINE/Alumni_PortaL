@@ -51,8 +51,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:text="Software Engineer" />
+                    android:textColor="?android:attr/textColorPrimary" />
 
                 <!-- Company -->
                 <TextView
@@ -61,8 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textSize="18sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:text="Tech Company" />
+                    android:textColor="?android:attr/textColorSecondary" />
 
                 <!-- Location -->
                 <TextView
@@ -72,8 +70,7 @@
                     android:layout_marginTop="8dp"
                     android:textSize="14sp"
                     android:drawableStart="@drawable/ic_location"
-                    android:drawablePadding="8dp"
-                    android:text="San Francisco, CA" />
+                    android:drawablePadding="8dp" />
 
                 <!-- Job Type & Experience -->
                 <LinearLayout
@@ -88,8 +85,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/chip_background"
                         android:padding="8dp"
-                        android:textSize="12sp"
-                        android:text="Full-time" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/experienceLevelText"
@@ -98,8 +94,7 @@
                         android:layout_marginStart="8dp"
                         android:background="@drawable/chip_background"
                         android:padding="8dp"
-                        android:textSize="12sp"
-                        android:text="Mid Level" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -111,8 +106,7 @@
                     android:layout_marginTop="12dp"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"
-                    android:text="$80k - $120k" />
+                    android:textColor="?attr/colorPrimary" />
 
                 <!-- Posted Info -->
                 <LinearLayout
@@ -127,16 +121,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:text="Posted by John Doe" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <TextView
                         android:id="@+id/postedAtText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:text="2 days ago" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>
 
@@ -153,16 +145,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:text="0 views" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                     <TextView
                         android:id="@+id/applicationCountText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
-                        android:text="0 applications" />
+                        android:textColor="?android:attr/textColorSecondary" />
 
                 </LinearLayout>
 
@@ -188,8 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textSize="14sp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="Job description goes here..." />
+                    android:lineSpacingExtra="4dp" />
 
                 <!-- Requirements -->
                 <LinearLayout
@@ -214,8 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:textSize="14sp"
-                        android:lineSpacingExtra="4dp"
-                        android:text="Requirements go here..." />
+                        android:lineSpacingExtra="4dp" />
 
                 </LinearLayout>
 
@@ -242,8 +230,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:textSize="14sp"
-                        android:autoLink="email"
-                        android:text="contact@company.com" />
+                        android:autoLink="email" />
 
                 </LinearLayout>
 

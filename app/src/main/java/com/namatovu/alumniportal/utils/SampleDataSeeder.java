@@ -30,6 +30,8 @@ public class SampleDataSeeder {
      * Seed sample job postings
      */
     public void seedJobPostings() {
+        Date now = new Date();
+        
         // Sample job posting 1
         Map<String, Object> job1 = new HashMap<>();
         job1.put("title", "Software Engineer");
@@ -37,11 +39,9 @@ public class SampleDataSeeder {
         job1.put("location", "Kampala, Uganda");
         job1.put("jobType", "Full-time");
         job1.put("experienceLevel", "Mid-level");
-        job1.put("description", "We are looking for a skilled software engineer to join our team. Experience with Java, Android development, and Firebase required.");
-        job1.put("requirements", "Bachelor's degree in Computer Science, 3+ years experience");
         job1.put("salary", "UGX 2,500,000 - 4,000,000");
         job1.put("contactEmail", "hr@techsolutions.ug");
-        job1.put("postedAt", new Date());
+        job1.put("postedAt", now);
         job1.put("isActive", true);
 
         // Sample job posting 2
@@ -51,11 +51,9 @@ public class SampleDataSeeder {
         job2.put("location", "Entebbe, Uganda");
         job2.put("jobType", "Full-time");
         job2.put("experienceLevel", "Senior");
-        job2.put("description", "Lead our marketing team and develop strategic marketing campaigns for our clients.");
-        job2.put("requirements", "MBA or equivalent, 5+ years marketing experience");
         job2.put("salary", "UGX 3,000,000 - 5,000,000");
         job2.put("contactEmail", "jobs@digitalmarketing.ug");
-        job2.put("postedAt", new Date());
+        job2.put("postedAt", now);
         job2.put("isActive", true);
 
         // Sample job posting 3
@@ -65,11 +63,9 @@ public class SampleDataSeeder {
         job3.put("location", "Kampala, Uganda");
         job3.put("jobType", "Part-time");
         job3.put("experienceLevel", "Entry-level");
-        job3.put("description", "Analyze financial data and create reports to support business decisions.");
-        job3.put("requirements", "Bachelor's in Mathematics, Statistics, or related field");
         job3.put("salary", "UGX 1,500,000 - 2,500,000");
         job3.put("contactEmail", "careers@financialservices.ug");
-        job3.put("postedAt", new Date());
+        job3.put("postedAt", now);
         job3.put("isActive", true);
 
         // Add to Firestore
