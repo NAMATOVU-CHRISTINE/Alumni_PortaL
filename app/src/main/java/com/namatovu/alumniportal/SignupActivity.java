@@ -388,12 +388,11 @@ public class SignupActivity extends AppCompatActivity {
     
     private void updateStudentIDLabel(String userType) {
         // Find the TextInputLayout for Student ID
-        com.google.android.material.textfield.TextInputLayout studentIDLayout = 
-            findViewById(R.id.studentID).getParent().getParent() instanceof 
-            com.google.android.material.textfield.TextInputLayout ? 
-            (com.google.android.material.textfield.TextInputLayout) studentIDEditText.getParent() : null;
-        
-        if (studentIDLayout != null) {
+        android.view.ViewParent parent = studentIDEditText.getParent();
+        if (parent instanceof com.google.android.material.textfield.TextInputLayout) {
+            com.google.android.material.textfield.TextInputLayout studentIDLayout = 
+                (com.google.android.material.textfield.TextInputLayout) parent;
+            
             if ("Alumni".equalsIgnoreCase(userType)) {
                 studentIDLayout.setHint("Alumni ID / Student ID");
             } else if ("Staff".equalsIgnoreCase(userType)) {

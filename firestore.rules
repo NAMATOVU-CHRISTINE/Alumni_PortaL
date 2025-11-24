@@ -4,10 +4,42 @@ service cloud.firestore {
     
     // Users collection - authenticated users can read/write their own data
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
     
-    // Allow all authenticated users to read and write to other collections
+    // Public collections - allow authenticated users to read
+    match /jobs/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    match /events/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    match /mentors/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    match /posts/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    match /articles/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    // Chats - allow authenticated users to read/write their own chats
+    match /chats/{chatId}/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Default - allow all authenticated operations
     match /{document=**} {
       allow read, write: if request.auth != null;
     }
