@@ -338,19 +338,31 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void deleteUserAccount() {
         if (mAuth.getCurrentUser() != null) {
-            mAuth.getCurrentUser().delete()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Account deleted successfully", Toast.LENGTH_LONG).show();
-                        // Navigate to login
-                        Intent intent = new Intent(this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(this, "Failed to delete account: " + 
-                            task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
+            String userId = mAuth.getCurrentUser().getUid();
+            com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+            
+            // First delete user document from Firestore
+            db.collection("users").document(userId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Then delete Firebase Auth account
+                    mAuth.getCurrentUser().delete()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(SettingsActivity.this, "Account deleted successfully", Toast.LENGTH_LONG).show();
+                                // Navigate to login
+                                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(SettingsActivity.this, "Failed to delete account: " + 
+                                    task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(SettingsActivity.this, "Failed to delete profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
         }
     }
