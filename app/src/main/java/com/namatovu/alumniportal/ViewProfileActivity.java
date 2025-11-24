@@ -597,7 +597,7 @@ public class ViewProfileActivity extends AppCompatActivity {
             idValue = user.getStaffID();
             idLabel = "Staff ID";
         } else {
-            idValue = user.getStudentID();
+            idValue = user.getStudentId();
             idLabel = "Student ID";
         }
         
