@@ -14,3 +14,14 @@
 [debug] [2025-11-24T14:25:29.531Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions [none]
 [debug] [2025-11-24T14:25:29.531Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions x-goog-quota-user=projects/alumniportal-198ec
 [debug] [2025-11-24T14:25:29.532Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2025-11-24T14:25:37.361Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions 200
+[debug] [2025-11-24T14:25:37.362Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[info] 
+[info] === Deploying to 'alumniportal-198ec'...
+[info] 
+[info] i  deploying firestore 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2025-11-24T14:25:37.374Z] Checked if tokens are valid: true, expires at: 1763997889024
+[debug] [2025-11-24T14:25:37.375Z] Checked if tokens are valid: true, expires at: 1763997889024
+[debug] [2025-11-24T14:25:37.375Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/alumniportal-198ec/databases/(default) [none]
