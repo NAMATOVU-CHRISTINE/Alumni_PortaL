@@ -1,66 +1,16 @@
-[debug] [2025-11-23T10:04:05.960Z] ----------------------------------------------------------------------
-[debug] [2025-11-23T10:04:05.965Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only functions
-[debug] [2025-11-23T10:04:05.966Z] CLI Version:   14.24.1
-[debug] [2025-11-23T10:04:05.967Z] Platform:      linux
-[debug] [2025-11-23T10:04:05.967Z] Node Version:  v20.19.2
-[debug] [2025-11-23T10:04:05.967Z] Time:          Sun Nov 23 2025 13:04:05 GMT+0300 (East Africa Time)
-[debug] [2025-11-23T10:04:05.968Z] ----------------------------------------------------------------------
+[debug] [2025-11-24T14:25:29.037Z] ----------------------------------------------------------------------
+[debug] [2025-11-24T14:25:29.043Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy --only firestore:rules
+[debug] [2025-11-24T14:25:29.044Z] CLI Version:   14.24.1
+[debug] [2025-11-24T14:25:29.044Z] Platform:      linux
+[debug] [2025-11-24T14:25:29.044Z] Node Version:  v20.19.2
+[debug] [2025-11-24T14:25:29.044Z] Time:          Mon Nov 24 2025 17:25:29 GMT+0300 (East Africa Time)
+[debug] [2025-11-24T14:25:29.045Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2025-11-23T10:04:06.495Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-11-23T10:04:06.497Z] > authorizing via signed-in user (christinenamatovu972@gmail.com)
-[debug] [2025-11-23T10:04:06.497Z] [iam] checking project alumniportal-198ec for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
-[debug] [2025-11-23T10:04:06.500Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:06.501Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:06.504Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions [none]
-[debug] [2025-11-23T10:04:06.505Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions x-goog-quota-user=projects/alumniportal-198ec
-[debug] [2025-11-23T10:04:06.505Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
-[debug] [2025-11-23T10:04:08.659Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions 200
-[debug] [2025-11-23T10:04:08.659Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
-[debug] [2025-11-23T10:04:08.660Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:08.660Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:08.660Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions [none]
-[debug] [2025-11-23T10:04:08.661Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
-[debug] [2025-11-23T10:04:18.673Z] *** [apiv2] error from fetch(https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions, {"headers":{},"method":"POST","body":"{\"permissions\":[\"iam.serviceAccounts.actAs\"]}"}): FetchError: request to https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions failed, reason: getaddrinfo EAI_AGAIN iam.googleapis.com
-[debug] [2025-11-23T10:04:18.679Z] [functions] service account IAM check errored, deploy may fail: Failed to make request to https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions {"name":"FirebaseError","children":[],"exit":1,"message":"Failed to make request to https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions","original":{"message":"request to https://iam.googleapis.com/v1/projects/alumniportal-198ec/serviceAccounts/alumniportal-198ec@appspot.gserviceaccount.com:testIamPermissions failed, reason: getaddrinfo EAI_AGAIN iam.googleapis.com","type":"system","errno":"EAI_AGAIN","code":"EAI_AGAIN"},"status":500}
-[info] 
-[info] === Deploying to 'alumniportal-198ec'...
-[info] 
-[info] i  deploying functions 
-[debug] [2025-11-23T10:04:18.701Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:18.702Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:18.702Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec [none]
-[debug] [2025-11-23T10:04:20.778Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec 200
-[debug] [2025-11-23T10:04:20.779Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec {"projectNumber":"511866402860","projectId":"alumniportal-198ec","lifecycleState":"ACTIVE","name":"AlumniPortal","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-22T13:25:17.661662Z"}
-[info] i  functions: preparing codebase default for deployment 
-[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
-[debug] [2025-11-23T10:04:20.786Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:20.787Z] Checked if tokens are valid: true, expires at: 1763895289385
-[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
-[debug] [2025-11-23T10:04:20.792Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:20.793Z] Checked if tokens are valid: true, expires at: 1763895289385
-[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
-[debug] [2025-11-23T10:04:20.795Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:20.795Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:20.795Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/runtimeconfig.googleapis.com [none]
-[debug] [2025-11-23T10:04:20.795Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/alumniportal-198ec
-[debug] [2025-11-23T10:04:20.803Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com [none]
-[debug] [2025-11-23T10:04:20.804Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com x-goog-quota-user=projects/alumniportal-198ec
-[debug] [2025-11-23T10:04:20.810Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/artifactregistry.googleapis.com [none]
-[debug] [2025-11-23T10:04:20.810Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/artifactregistry.googleapis.com x-goog-quota-user=projects/alumniportal-198ec
-[debug] [2025-11-23T10:04:24.315Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/runtimeconfig.googleapis.com 200
-[debug] [2025-11-23T10:04:24.316Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/runtimeconfig.googleapis.com [omitted]
-[debug] [2025-11-23T10:04:24.323Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com 200
-[debug] [2025-11-23T10:04:24.323Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com [omitted]
-[warn] ⚠  functions: missing required API cloudbuild.googleapis.com. Enabling now... 
-[debug] [2025-11-23T10:04:24.325Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:24.325Z] Checked if tokens are valid: true, expires at: 1763895289385
-[debug] [2025-11-23T10:04:24.326Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com:enable [none]
-[debug] [2025-11-23T10:04:24.326Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com:enable x-goog-quota-user=projects/alumniportal-198ec
-[debug] [2025-11-23T10:04:25.895Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com:enable 400
-[debug] [2025-11-23T10:04:25.895Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/alumniportal-198ec/services/cloudbuild.googleapis.com:enable [omitted]
-[debug] [2025-11-23T10:04:30.925Z] Error: Timed out.
-    at Timeout._onTimeout (/usr/local/lib/node_modules/firebase-tools/lib/utils.js:275:49)
-    at listOnTimeout (node:internal/timers:581:17)
-    at process.processTimers (node:internal/timers:519:7)
-[error] 
-[error] Error: An unexpected error has occurred.
+[debug] [2025-11-24T14:25:29.523Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-24T14:25:29.524Z] > authorizing via signed-in user (christinenamatovu972@gmail.com)
+[debug] [2025-11-24T14:25:29.524Z] [iam] checking project alumniportal-198ec for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2025-11-24T14:25:29.527Z] Checked if tokens are valid: true, expires at: 1763997889024
+[debug] [2025-11-24T14:25:29.527Z] Checked if tokens are valid: true, expires at: 1763997889024
+[debug] [2025-11-24T14:25:29.531Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions [none]
+[debug] [2025-11-24T14:25:29.531Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions x-goog-quota-user=projects/alumniportal-198ec
+[debug] [2025-11-24T14:25:29.532Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/alumniportal-198ec:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
