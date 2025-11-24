@@ -378,5 +378,29 @@ public class SignupActivity extends AppCompatActivity {
             this, android.R.layout.simple_dropdown_item_1line, userTypes);
         userTypeDropdown.setAdapter(adapter);
         userTypeDropdown.setText("Student", false); // Default to Student
+        
+        // Add listener to change Student ID label based on user type
+        userTypeDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedType = userTypes[position];
+            updateStudentIDLabel(selectedType);
+        });
+    }
+    
+    private void updateStudentIDLabel(String userType) {
+        // Find the TextInputLayout for Student ID
+        com.google.android.material.textfield.TextInputLayout studentIDLayout = 
+            findViewById(R.id.studentID).getParent().getParent() instanceof 
+            com.google.android.material.textfield.TextInputLayout ? 
+            (com.google.android.material.textfield.TextInputLayout) studentIDEditText.getParent() : null;
+        
+        if (studentIDLayout != null) {
+            if ("Alumni".equalsIgnoreCase(userType)) {
+                studentIDLayout.setHint("Alumni ID / Student ID");
+            } else if ("Staff".equalsIgnoreCase(userType)) {
+                studentIDLayout.setHint("Staff ID");
+            } else {
+                studentIDLayout.setHint("Student ID");
+            }
+        }
     }
 }
