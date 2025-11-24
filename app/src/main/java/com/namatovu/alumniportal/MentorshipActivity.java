@@ -97,12 +97,13 @@ public class MentorshipActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0:
                         currentTab = "as_mentor";
+                        loadExistingConnections(); // Load existing mentee requests
                         break;
                     case 1:
                         currentTab = "as_mentee";
+                        loadAvailableMentors(); // Load available mentors to find
                         break;
                 }
-                filterConnections();
             }
 
             @Override
@@ -192,8 +193,12 @@ public class MentorshipActivity extends AppCompatActivity {
             return;
         }
 
-        // Load only existing mentorship connections for both tabs
-        loadExistingConnections();
+        // Load based on current tab
+        if ("as_mentee".equals(currentTab)) {
+            loadAvailableMentors();
+        } else {
+            loadExistingConnections();
+        }
     }
     
     private void loadAvailableMentors() {

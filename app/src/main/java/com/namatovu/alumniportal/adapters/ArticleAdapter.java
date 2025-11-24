@@ -79,11 +79,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
 
     public void filterByCategory(String category) {
         filteredArticles.clear();
-        if (category.equals("All")) {
+        if (category == null || category.equals("All")) {
+            // Show all articles when category is null or "All"
             filteredArticles.addAll(articles);
         } else {
             for (Article article : articles) {
-                if (article.getCategory().equals(category)) {
+                if (article.getCategory() != null && article.getCategory().equals(category)) {
                     filteredArticles.add(article);
                 }
             }

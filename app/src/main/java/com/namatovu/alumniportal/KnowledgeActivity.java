@@ -140,15 +140,13 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
     private void setupCategoryFilters() {
         chipGroupCategories.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) {
-                currentCategory = "All";
+                currentCategory = null; // Show all articles when no category selected
             } else {
                 Chip selectedChip = findViewById(checkedIds.get(0));
                 String chipText = selectedChip.getText().toString();
                 
                 // Extract category name from chip text (remove emoji)
-                if (chipText.equals("All")) {
-                    currentCategory = "All";
-                } else if (chipText.contains("Networking")) {
+                if (chipText.contains("Networking")) {
                     currentCategory = "Networking";
                 } else if (chipText.contains("Skills")) {
                     currentCategory = "Skills";
@@ -158,6 +156,8 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
                     currentCategory = "Career Growth";
                 } else if (chipText.contains("Leadership")) {
                     currentCategory = "Leadership";
+                } else {
+                    currentCategory = null; // Default to showing all
                 }
             }
             

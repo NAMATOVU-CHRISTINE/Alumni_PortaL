@@ -2,54 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Users collection
-    match /users/{userId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null;
-    }
-    
-    // Notifications collection
-    match /notifications/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    // Mentorships collection
-    match /mentorships/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    // Public collections - all authenticated users
-    match /articles/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    match /events/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    match /jobs/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    match /scrapedNews/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    match /mentors/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-    
-    // Default deny all other access
+    // Allow all authenticated users to read and write to all collections
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if request.auth != null;
     }
   }
 }
