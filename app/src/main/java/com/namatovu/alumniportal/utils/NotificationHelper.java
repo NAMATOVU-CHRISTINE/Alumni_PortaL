@@ -531,6 +531,15 @@ public class NotificationHelper {
                 Log.d(TAG, "Notification channel created: " + channelId + " with IMPORTANCE_HIGH");
             }
             
+            // Create intent based on notification type
+            Intent intent = createIntentForNotificationType(context, type, notificationId);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 
+                notificationId != null ? notificationId.hashCode() : 0, 
+                intent, 
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            
             // Build notification with all required fields
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                     .setSmallIcon(com.namatovu.alumniportal.R.drawable.ic_notification)
@@ -538,7 +547,8 @@ public class NotificationHelper {
                     .setContentText(message)
                     .setAutoCancel(true)
                     .setVibrate(new long[]{0, 500, 250, 500})
-                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent);
             
             // Show notification
             int notificationId_int = notificationId != null ? notificationId.hashCode() : (int) System.currentTimeMillis();
@@ -549,6 +559,104 @@ public class NotificationHelper {
         } catch (Exception e) {
             Log.e(TAG, "ERROR in showNotification: " + e.getMessage(), e);
         }
+    }
+    
+    /**
+     * Show notification with detailed chat information
+     */
+    public static void showChatNotification(Context context, String title, String message, 
+                                          String chatId, String senderId, String senderName) {
+        Log.d(TAG, "=== showChatNotification called ===");
+        Log.d(TAG, "Title: " + title + ", SenderId: " + senderId + ", SenderName: " + senderName);
+        
+        try {
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager == null) {
+                Log.e(TAG, "ERROR: NotificationManager is null");
+                return;
+            }
+            
+            // Create notification channel for messages
+            String channelId = "alumni_message";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(channelId, "Messages", NotificationManager.IMPORTANCE_HIGH);
+                channel.setDescription("Alumni Portal Messages");
+                channel.enableVibration(true);
+                channel.enableLights(true);
+                notificationManager.createNotificationChannel(channel);
+            }
+            
+            // Create intent to open chat directly
+            Intent intent = new Intent(context, com.namatovu.alumniportal.ChatActivity.class);
+            intent.putExtra("connectionId", chatId);
+            intent.putExtra("otherUserId", senderId);
+            intent.putExtra("otherUserName", senderName);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 
+                chatId != null ? chatId.hashCode() : 0, 
+                intent, 
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            
+            // Build notification
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                    .setSmallIcon(com.namatovu.alumniportal.R.drawable.ic_notification)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setVibrate(new long[]{0, 500, 250, 500})
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent);
+            
+            // Show notification
+            int notificationId = chatId != null ? chatId.hashCode() : (int) System.currentTimeMillis();
+            notificationManager.notify(notificationId, builder.build());
+            
+            Log.d(TAG, "✓ Chat notification successfully shown with ID: " + notificationId);
+        } catch (Exception e) {
+            Log.e(TAG, "ERROR in showChatNotification: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Create intent based on notification type
+     */
+    private static Intent createIntentForNotificationType(Context context, String type, String notificationId) {
+        Intent intent;
+        
+        switch (type) {
+            case "message":
+                // For chat messages, we need to open ChatActivity
+                // Since we don't have all the required data here, we'll open the chat list
+                // and let the user navigate to the specific chat
+                intent = new Intent(context, com.namatovu.alumniportal.activities.ChatListActivity.class);
+                intent.putExtra("highlightChatId", notificationId);
+                break;
+            case "event":
+                intent = new Intent(context, com.namatovu.alumniportal.EventsActivity.class);
+                intent.putExtra("eventId", notificationId);
+                break;
+            case "job":
+                intent = new Intent(context, com.namatovu.alumniportal.JobBoardActivity.class);
+                intent.putExtra("jobId", notificationId);
+                break;
+            case "mentorship":
+                intent = new Intent(context, com.namatovu.alumniportal.MentorshipActivity.class);
+                intent.putExtra("requestId", notificationId);
+                break;
+            case "news":
+                intent = new Intent(context, com.namatovu.alumniportal.NewsFeedActivity.class);
+                intent.putExtra("articleId", notificationId);
+                break;
+            default:
+                intent = new Intent(context, com.namatovu.alumniportal.HomeActivity.class);
+                break;
+        }
+        
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
     
     /**

@@ -117,16 +117,17 @@ public class AlumniNotificationService extends FirebaseMessagingService {
         String senderName = data.get("senderName");
         String messageText = data.get("messageText");
         String messageType = data.get("messageType");
+        String connectionId = data.get("connectionId");
         
         String title = senderName != null ? senderName : "New Message";
         String body = getMessageDisplayText(messageText, messageType);
         
-        // Create intent to open chat
+        // Create intent to open chat with correct parameters
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("chatId", chatId);
+        intent.putExtra("connectionId", connectionId != null ? connectionId : chatId);
         intent.putExtra("otherUserId", senderId);
         intent.putExtra("otherUserName", senderName);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         
         createNotification(CHANNEL_MESSAGES, title, body, intent, 1);
     }

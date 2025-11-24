@@ -49,16 +49,18 @@ public class AlumniMessagingService extends FirebaseMessagingService {
             if ("message".equals(type)) {
                 Log.d(TAG, ">>> Handling MESSAGE notification");
                 String senderName = data.get("senderName");
+                String senderId = data.get("senderId");
                 String messageText = data.get("messageText");
                 String chatId = data.get("chatId");
-                Log.d(TAG, "Sender: " + senderName + ", Message: " + messageText + ", ChatId: " + chatId);
+                Log.d(TAG, "Sender: " + senderName + ", SenderId: " + senderId + ", Message: " + messageText + ", ChatId: " + chatId);
                 
-                NotificationHelper.showNotification(
+                NotificationHelper.showChatNotification(
                     this,
-                    "New Message",
-                    senderName + ": " + messageText,
+                    senderName != null ? senderName : "New Message",
+                    messageText != null ? messageText : "You have a new message",
                     chatId,
-                    "message"
+                    senderId,
+                    senderName
                 );
             } else if ("event".equals(type)) {
                 Log.d(TAG, ">>> Handling EVENT notification");
