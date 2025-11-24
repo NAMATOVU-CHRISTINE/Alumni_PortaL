@@ -387,6 +387,9 @@ public class SignupActivity extends AppCompatActivity {
         userTypeDropdown.setAdapter(adapter);
         userTypeDropdown.setText("Student", false); // Default to Student
         
+        // Set initial hint for default selection
+        updateStudentIDLabel("Student");
+        
         // Add listener to change Student ID label based on user type
         userTypeDropdown.setOnItemClickListener((parent, view, position, id) -> {
             String selectedType = userTypes[position];

@@ -65,12 +65,15 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
         userTypeDropdown.setAdapter(adapter);
         userTypeDropdown.setText("Student", false); // Default to Student
         
+        // Set initial hint for default selection
+        updateIdFieldHint("Student");
+        
         // Add listener to update ID field hint when user type changes
         userTypeDropdown.setOnItemClickListener((parent, view, position, id) -> {
             String selectedType = userTypes[position];
             updateIdFieldHint(selectedType);
         });
-    }
+    }       
     
     private void updateIdFieldHint(String userType) {
         // Find the TextInputLayout for Student ID
