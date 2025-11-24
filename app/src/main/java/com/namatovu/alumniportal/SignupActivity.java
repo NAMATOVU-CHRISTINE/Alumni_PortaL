@@ -402,9 +402,10 @@ public class SignupActivity extends AppCompatActivity {
         if (studentIDLayout != null) {
             if ("Student".equalsIgnoreCase(userType)) {
                 studentIDLayout.setHint("Student ID");
-            } else {
-                // Alumni and Staff both use "ID NO"
-                studentIDLayout.setHint("ID NO");
+            } else if ("Alumni".equalsIgnoreCase(userType)) {
+                studentIDLayout.setHint("Alumni ID");
+            } else if ("Staff".equalsIgnoreCase(userType)) {
+                studentIDLayout.setHint("Staff ID");
             }
         }
     }

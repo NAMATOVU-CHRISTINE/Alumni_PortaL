@@ -79,11 +79,12 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
             com.google.android.material.textfield.TextInputLayout studentIdLayout = 
                 (com.google.android.material.textfield.TextInputLayout) parent;
             
-            if ("student".equalsIgnoreCase(userType)) {
+            if ("Student".equalsIgnoreCase(userType)) {
                 studentIdLayout.setHint("Student ID");
-            } else {
-                // Alumni and Staff both use "ID NO"
-                studentIdLayout.setHint("ID NO");
+            } else if ("Alumni".equalsIgnoreCase(userType)) {
+                studentIdLayout.setHint("Alumni ID");
+            } else if ("Staff".equalsIgnoreCase(userType)) {
+                studentIdLayout.setHint("Staff ID");
             }
         }
     }
