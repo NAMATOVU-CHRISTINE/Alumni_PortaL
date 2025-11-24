@@ -63,28 +63,36 @@ public class NotificationListenerService {
         // Try Firestore first, fallback to Realtime Database
         try {
             // Listen for new notifications for this user in Firestore
+            // Only listen for ADDED changes to avoid processing old notifications
             listenerRegistration = db.collection("notifications")
                 .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("read", false)
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(10)
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "Error listening for Firestore notifications", error);
                         return;
                     }
                     
-                    if (querySnapshot != null) {
+                    if (querySnapshot != null && !querySnapshot.getDocumentChanges().isEmpty()) {
                         Log.d(TAG, "Received " + querySnapshot.getDocumentChanges().size() + " notification changes");
                         querySnapshot.getDocumentChanges().forEach(change -> {
-                            if (change.getType().toString().equals("ADDED")) {
-                                // New notification received
-                                String title = change.getDocument().getString("title");
-                                String message = change.getDocument().getString("message");
-                                String type = change.getDocument().getString("type");
-                                String referenceId = change.getDocument().getString("referenceId");
-                                
-                                Log.d(TAG, "New Firestore notification: " + title + " - " + message);
-                                
-                                // Show notification
-                                showNotification(title, message, type, referenceId);
+                            try {
+                                if (change.getType().toString().equals("ADDED")) {
+                                    // New notification received
+                                    String title = change.getDocument().getString("title");
+                                    String message = change.getDocument().getString("message");
+                                    String type = change.getDocument().getString("type");
+                                    String referenceId = change.getDocument().getString("referenceId");
+                                    
+                                    Log.d(TAG, "New Firestore notification: " + title + " - " + message);
+                                    
+                                    // Show notification
+                                    showNotification(title, message, type, referenceId);
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error processing notification change", e);
                             }
                         });
                     }

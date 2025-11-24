@@ -213,8 +213,9 @@ public class AlmaterDirectoryActivity extends AppCompatActivity {
             Log.e(TAG, "Error showing progress bar", e);
         }
 
-        // Load students and staff only (not alumni)
+        // Load students and staff only (not alumni) - limit to 50 for performance
         db.collection("users")
+                .limit(50)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     allUsers.clear();

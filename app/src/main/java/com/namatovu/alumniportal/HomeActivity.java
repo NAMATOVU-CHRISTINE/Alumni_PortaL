@@ -196,16 +196,22 @@ public class HomeActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         
-        // Initialize notification listener
-        notificationListenerService = new NotificationListenerService(this);
-        notificationListenerService.startListening();
-
         setupToolbar();
         setupRecyclerViews();
         setupCardClickListeners();
         setupSeeAllClickListeners();
         setupMotivationalTipsRotation();
         setupSettingsClickListener();
+        
+        // Initialize notification listener on background thread to avoid blocking UI
+        new Thread(() -> {
+            try {
+                notificationListenerService = new NotificationListenerService(this);
+                notificationListenerService.startListening();
+            } catch (Exception e) {
+                Log.e("HomeActivity", "Error initializing notification listener", e);
+            }
+        }).start();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
