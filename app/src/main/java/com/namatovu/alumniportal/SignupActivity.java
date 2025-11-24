@@ -271,12 +271,20 @@ public class SignupActivity extends AppCompatActivity {
                                         Map<String, Object> user = new HashMap<>();
                                         user.put("fullName", fullName);
                                         user.put("username", username);
-                                        user.put("studentID", studentID);
                                         user.put("email", personalEmail);
                                         user.put("userId", userId);
                                         user.put("userType", selectedUserType.toLowerCase());
                                         user.put("isAlumni", "alumni".equalsIgnoreCase(selectedUserType));
                                         user.put("emailVerified", false);
+                                        
+                                        // Save ID field based on user type
+                                        if ("Alumni".equalsIgnoreCase(selectedUserType)) {
+                                            user.put("alumniID", studentID);
+                                        } else if ("Staff".equalsIgnoreCase(selectedUserType)) {
+                                            user.put("staffID", studentID);
+                                        } else {
+                                            user.put("studentID", studentID);
+                                        }
                                         
                                         // Get and save FCM token immediately
                                         com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()

@@ -133,10 +133,18 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                     user.put("fullName", fullNameEditText.getText().toString());
                                     user.put("email", emailEditText.getText().toString());
                                     user.put("username", username);
-                                    user.put("studentID", studentID);
                                     user.put("userId", userId);
                                     user.put("userType", selectedUserType);
                                     user.put("isAlumni", isAlumni);
+                                    
+                                    // Save ID field based on user type
+                                    if ("alumni".equalsIgnoreCase(selectedUserType)) {
+                                        user.put("alumniID", studentID);
+                                    } else if ("staff".equalsIgnoreCase(selectedUserType)) {
+                                        user.put("staffID", studentID);
+                                    } else {
+                                        user.put("studentID", studentID);
+                                    }
                                     
                                     // Get and save FCM token immediately
                                     com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
