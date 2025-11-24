@@ -277,8 +277,9 @@ public class LoginActivity extends AppCompatActivity {
                         if (user != null) {
                             // Reload user to get latest email verification status from Firebase
                             user.reload().addOnCompleteListener(reloadTask -> {
+                                hideLoadingIndicator();
                                 if (reloadTask.isSuccessful()) {
-                                    // Force refresh the email verification status
+                                    // Check if email is verified
                                     if (user.isEmailVerified()) {
                                         // Email is verified, update Firestore and proceed to home
                                         Log.d(TAG, "Login successful. Email verified.");
@@ -295,14 +296,13 @@ public class LoginActivity extends AppCompatActivity {
                                                     navigateToHome();
                                                 });
                                     } else {
-                                        hideLoadingIndicator();
+                                        // Email NOT verified - block login
+                                        Log.d(TAG, "User attempted login without email verification");
                                         Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
                                         // Sign out the user since they haven't verified their email
                                         mAuth.signOut();
-                                        Log.d(TAG, "User attempted login without email verification");
                                     }
                                 } else {
-                                    hideLoadingIndicator();
                                     Toast.makeText(LoginActivity.this, "Error checking email verification status.", Toast.LENGTH_SHORT).show();
                                 }
                             });
