@@ -233,6 +233,17 @@ public class AlumniNotificationService extends FirebaseMessagingService {
     }
     
     private void createNotification(String channelId, String title, String body, Intent intent, int notificationId) {
+        // Validate and set defaults for null values
+        if (title == null || title.isEmpty()) {
+            title = "Alumni Portal";
+        }
+        if (body == null || body.isEmpty()) {
+            body = "You have a new notification";
+        }
+        if (channelId == null || channelId.isEmpty()) {
+            channelId = CHANNEL_GENERAL;
+        }
+        
         PendingIntent pendingIntent = null;
         String referenceId = null;
         String notificationType = null;

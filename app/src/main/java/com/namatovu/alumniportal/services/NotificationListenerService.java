@@ -142,69 +142,89 @@ public class NotificationListenerService {
      * Show a push notification
      */
     private void showNotification(String title, String message, String type, String referenceId) {
-        NotificationManager notificationManager = 
-            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        
-        // Create intent based on notification type
-        Intent intent;
-        
-        if ("message".equalsIgnoreCase(type) || "chat".equalsIgnoreCase(type)) {
-            // For message notifications, open ChatActivity directly
-            intent = new Intent(context, com.namatovu.alumniportal.activities.ChatActivity.class);
-            intent.putExtra("chatId", referenceId);
-            intent.putExtra("otherUserId", referenceId);
-        } else if ("mentorship_request".equalsIgnoreCase(type)) {
-            // For mentorship requests, open MentorshipActivity
-            intent = new Intent(context, com.namatovu.alumniportal.MentorshipActivity.class);
-            intent.putExtra("mentorship_id", referenceId);
-        } else {
-            // Default: open HomeActivity
-            intent = new Intent(context, HomeActivity.class);
-            intent.putExtra("notification_type", type);
-            intent.putExtra("reference_id", referenceId);
-        }
-        
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        
-        // Use a unique request code based on referenceId to ensure proper intent handling
-        int requestCode = referenceId != null ? referenceId.hashCode() : (int) System.currentTimeMillis();
-        
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-            context, 
-            requestCode, 
-            intent, 
-            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-        
-        // Build notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        
-        // Set notification color
         try {
-            builder.setColor(context.getResources().getColor(R.color.must_green, null));
-        } catch (Exception e) {
-            Log.w(TAG, "Could not set notification color", e);
-        }
-        
-        // Use a stable notification ID based on type and referenceId to prevent duplicates
-        int notificationId = (type + referenceId).hashCode() % 10000;
-        if (notificationId < 0) notificationId = -notificationId;
-        
-        if (notificationManager != null) {
+            // Validate and set defaults for null values
+            if (title == null || title.isEmpty()) {
+                title = "Alumni Portal";
+            }
+            if (message == null || message.isEmpty()) {
+                message = "You have a new notification";
+            }
+            if (type == null || type.isEmpty()) {
+                type = "general";
+            }
+            
+            // Ensure notification channel is created
+            createNotificationChannel();
+            
+            NotificationManager notificationManager = 
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            
+            if (notificationManager == null) {
+                Log.e(TAG, "NotificationManager is null");
+                return;
+            }
+            
+            // Create intent based on notification type
+            Intent intent;
+            
+            if ("message".equalsIgnoreCase(type) || "chat".equalsIgnoreCase(type)) {
+                // For message notifications, open ChatActivity directly
+                intent = new Intent(context, com.namatovu.alumniportal.activities.ChatActivity.class);
+                intent.putExtra("chatId", referenceId);
+                intent.putExtra("otherUserId", referenceId);
+            } else if ("mentorship_request".equalsIgnoreCase(type)) {
+                // For mentorship requests, open MentorshipActivity
+                intent = new Intent(context, com.namatovu.alumniportal.MentorshipActivity.class);
+                intent.putExtra("mentorship_id", referenceId);
+            } else {
+                // Default: open HomeActivity
+                intent = new Intent(context, HomeActivity.class);
+                intent.putExtra("notification_type", type);
+                intent.putExtra("reference_id", referenceId);
+            }
+            
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            
+            // Use a unique request code based on referenceId to ensure proper intent handling
+            int requestCode = referenceId != null ? referenceId.hashCode() : (int) System.currentTimeMillis();
+            
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 
+                requestCode, 
+                intent, 
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+            
+            // Build notification with all required fields
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+            
+            // Set notification color
+            try {
+                builder.setColor(context.getResources().getColor(R.color.must_green, null));
+            } catch (Exception e) {
+                Log.w(TAG, "Could not set notification color", e);
+            }
+            
+            // Use a stable notification ID based on type and referenceId to prevent duplicates
+            int notificationId = Math.abs((type + referenceId).hashCode() % 10000);
+            
             notificationManager.notify(notificationId, builder.build());
             Log.d(TAG, "Notification displayed: " + title + " (type: " + type + ", id: " + notificationId + ")");
+            
+            // Save notification to Firestore so it persists
+            saveNotificationToFirestore(title, message, type, referenceId);
+        } catch (Exception e) {
+            Log.e(TAG, "Error in showNotification", e);
         }
-        
-        // Save notification to Firestore so it persists
-        saveNotificationToFirestore(title, message, type, referenceId);
     }
     
     /**
