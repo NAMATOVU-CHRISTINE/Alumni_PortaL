@@ -419,6 +419,16 @@ public class JobsActivity extends AppCompatActivity implements
                         Log.d(TAG, "Parsed fields - Title: " + title + ", Company: " + company + 
                               ", Category: " + category + ", Deadline: " + deadline);
                         
+                        // Check if deadline has passed
+                        if (deadline != null && deadline.getTime() < System.currentTimeMillis()) {
+                            Log.d(TAG, "Opportunity expired, deleting: " + title);
+                            // Auto-delete expired opportunity
+                            db.collection("job_opportunities").document(document.getId()).delete()
+                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Deleted expired opportunity: " + title))
+                                .addOnFailureListener(e -> Log.e(TAG, "Failed to delete expired opportunity", e));
+                            continue; // Skip adding to list
+                        }
+                        
                         if (title != null && company != null && category != null && description != null && deadline != null) {
                             Opportunity opp = new Opportunity(title, company, category, description, deadline);
                             opp.setId(document.getId());

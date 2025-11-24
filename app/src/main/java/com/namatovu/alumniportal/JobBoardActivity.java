@@ -174,6 +174,16 @@ public class JobBoardActivity extends AppCompatActivity {
                             JobPosting job = document.toObject(JobPosting.class);
                             job.setJobId(document.getId());
                             
+                            // Check if job has expired
+                            if (job.isExpired()) {
+                                Log.d(TAG, "Job expired, deleting: " + job.getTitle());
+                                // Auto-delete expired job
+                                db.collection("job_postings").document(document.getId()).delete()
+                                    .addOnSuccessListener(aVoid -> Log.d(TAG, "Deleted expired job: " + job.getTitle()))
+                                    .addOnFailureListener(e -> Log.e(TAG, "Failed to delete expired job", e));
+                                continue; // Skip adding to list
+                            }
+                            
                             // Add all jobs for now, filter out invalid ones in the adapter
                             allJobs.add(job);
                         } catch (Exception e) {

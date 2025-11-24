@@ -40,7 +40,7 @@
         <activity
             android:name=".SignupActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".CompleteGoogleSignupActivity"
             android:exported="false"
@@ -139,6 +139,9 @@
             android:windowSoftInputMode="adjustResize" />
         <activity 
             android:name=".activities.PrivacySettingsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity 
+            android:name=".activities.NotificationsActivity"
             android:windowSoftInputMode="adjustResize" />
 
         <activity 
