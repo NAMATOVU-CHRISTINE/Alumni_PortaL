@@ -371,7 +371,9 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.graduationContainer.setVisibility(View.VISIBLE);
             hasEducationInfo = true;
         } else {
-            binding.graduationContainer.setVisibility(View.GONE);
+            binding.tvGraduationYear.setText("Year not specified");
+            binding.graduationContainer.setVisibility(View.VISIBLE);
+            hasEducationInfo = true;
         }
 
         if (user.getCompany() != null && !user.getCompany().isEmpty()) {

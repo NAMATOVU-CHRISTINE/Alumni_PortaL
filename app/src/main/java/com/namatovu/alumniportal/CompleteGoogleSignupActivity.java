@@ -15,6 +15,7 @@ import java.util.Map;
 public class CompleteGoogleSignupActivity extends AppCompatActivity {
 
     private EditText fullNameEditText, emailEditText, usernameEditText, studentIDEditText, passwordEditText, confirmPasswordEditText;
+    private android.widget.AutoCompleteTextView userTypeDropdown;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -32,7 +33,10 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
         studentIDEditText = findViewById(R.id.studentID);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirmPassword);
+        userTypeDropdown = findViewById(R.id.userTypeDropdown);
         Button completeSignupButton = findViewById(R.id.completeSignupButton);
+        
+        setupUserTypeDropdown();
 
         // Pre-fill data from Google account
         if (mAuth.getCurrentUser() != null) {
@@ -54,11 +58,20 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
         completeSignupButton.setOnClickListener(v -> completeSignup());
     }
 
+    private void setupUserTypeDropdown() {
+        String[] userTypes = {"Student", "Alumni", "Staff"};
+        android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(
+            this, android.R.layout.simple_dropdown_item_1line, userTypes);
+        userTypeDropdown.setAdapter(adapter);
+        userTypeDropdown.setText("Student", false); // Default to Student
+    }
+
     private void completeSignup() {
         String username = usernameEditText.getText().toString().trim();
         String studentID = studentIDEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+        String userType = userTypeDropdown.getText().toString().trim();
 
         if (TextUtils.isEmpty(username)) {
             usernameEditText.setError("Username is required");
@@ -69,6 +82,11 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(studentID)) {
             studentIDEditText.setError("Student ID is required");
             studentIDEditText.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(userType)) {
+            Toast.makeText(this, "Please select a user type", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -106,16 +124,19 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                         // Update the user's password in Firebase Auth
                         mAuth.getCurrentUser().updatePassword(password)
                                 .addOnSuccessListener(aVoid -> {
-                                    // Save user data to Firestore with default type as "student"
+                                    // Save user data to Firestore with selected user type
                                     String userId = mAuth.getCurrentUser().getUid();
+                                    String selectedUserType = userTypeDropdown.getText().toString().trim().toLowerCase();
+                                    boolean isAlumni = "alumni".equalsIgnoreCase(selectedUserType);
+                                    
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("fullName", fullNameEditText.getText().toString());
                                     user.put("email", emailEditText.getText().toString());
                                     user.put("username", username);
                                     user.put("studentID", studentID);
                                     user.put("userId", userId);
-                                    user.put("userType", "student"); // Default: Current students
-                                    user.put("isAlumni", false);
+                                    user.put("userType", selectedUserType);
+                                    user.put("isAlumni", isAlumni);
                                     
                                     // Get and save FCM token immediately
                                     com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()

@@ -230,6 +230,7 @@ public class EditProfileActivity extends AppCompatActivity {
         binding.nameEditText.setText(u.getFullName());
         binding.bioEditText.setText(u.getBio());
         binding.careerEditText.setText(u.getCurrentJob());
+        binding.graduationYearEditText.setText(u.getGraduationYear());
         
         // Set user type based on userType field
         String userType = u.getUserType();
@@ -265,6 +266,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String name = binding.nameEditText.getText() != null ? binding.nameEditText.getText().toString().trim() : "";
         String bio = binding.bioEditText.getText() != null ? binding.bioEditText.getText().toString().trim() : "";
         String career = binding.careerEditText.getText() != null ? binding.careerEditText.getText().toString().trim() : "";
+        String graduationYear = binding.graduationYearEditText.getText() != null ? binding.graduationYearEditText.getText().toString().trim() : "";
         String status = binding.statusDropdown.getText() != null ? binding.statusDropdown.getText().toString().trim() : "Student";
         String workStatus = binding.workStatusDropdown.getText() != null ? binding.workStatusDropdown.getText().toString().trim() : "";
         String industry = binding.industryDropdown.getText() != null ? binding.industryDropdown.getText().toString().trim() : "";
@@ -273,6 +275,7 @@ public class EditProfileActivity extends AppCompatActivity {
         final String finalName = SecurityHelper.sanitizeInput(name);
         final String finalBio = SecurityHelper.sanitizeInput(bio);
         final String finalCareer = SecurityHelper.sanitizeInput(career);
+        final String finalGraduationYear = SecurityHelper.sanitizeInput(graduationYear);
         final String finalIndustry = SecurityHelper.sanitizeInput(industry);
         final String finalCurrency = SecurityHelper.sanitizeInput(currency);
 
@@ -317,7 +320,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     Log.d(TAG, "Upload successful! URL: " + imageUrl);
                     runOnUiThread(() -> {
                         binding.changeProfilePhotoText.setText("Change Profile Photo");
-                        saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, imageUrl, publicId);
+                        saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, finalGraduationYear, skills, imageUrl, publicId);
                     });
                 }
 
@@ -334,11 +337,11 @@ public class EditProfileActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "No image selected, saving profile without image");
             // No image selected, save profile without image
-            saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, skills, null, null);
+            saveProfileDocument(user.getUid(), finalName, finalBio, finalCareer, finalGraduationYear, skills, null, null);
         }
     }
 
-    private void saveProfileDocument(String uid, String name, String bio, String career, List<String> skills, String imageUrl, String publicId) {
+    private void saveProfileDocument(String uid, String name, String bio, String career, String graduationYear, List<String> skills, String imageUrl, String publicId) {
         String userType = binding.statusDropdown.getText() != null ? binding.statusDropdown.getText().toString().trim() : "Student";
         String workStatus = binding.workStatusDropdown.getText() != null ? binding.workStatusDropdown.getText().toString().trim() : "";
         String industry = binding.industryDropdown.getText() != null ? binding.industryDropdown.getText().toString().trim() : "";
@@ -348,6 +351,7 @@ public class EditProfileActivity extends AppCompatActivity {
         updates.put("fullName", name);
         updates.put("bio", bio);
         updates.put("currentJob", career);
+        updates.put("graduationYear", graduationYear);
         updates.put("workStatus", workStatus);
         updates.put("userType", userType.toLowerCase());
         updates.put("isAlumni", "alumni".equalsIgnoreCase(userType));

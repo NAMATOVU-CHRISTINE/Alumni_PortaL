@@ -177,7 +177,10 @@ public class ChatActivity extends AppCompatActivity {
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "Failed to load messages: " + error.getMessage(), error);
-                        Toast.makeText(ChatActivity.this, "Failed to load messages: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        // Only show error if user is still authenticated
+                        if (mAuth.getCurrentUser() != null) {
+                            Toast.makeText(ChatActivity.this, "Failed to load messages: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                         return;
                     }
                     
