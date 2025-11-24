@@ -123,6 +123,7 @@
 
                     <!-- Student ID -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/studentIdLayout"
                         style="@style/App.Material3.TextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
