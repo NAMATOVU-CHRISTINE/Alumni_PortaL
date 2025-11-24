@@ -138,43 +138,24 @@ public class LoginActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        // Existing user - check if email is verified
+                                        // Existing user - check Firestore emailVerified flag (not Firebase Auth)
                                         Boolean emailVerified = documentSnapshot.getBoolean("emailVerified");
+                                        Log.d(TAG, "User emailVerified from Firestore: " + emailVerified);
+                                        
                                         if (emailVerified != null && emailVerified) {
                                             // Email verified, proceed to home
-                                            Log.d(TAG, "Existing user logging in via Google");
+                                            Log.d(TAG, "Existing user logging in via Google - email verified");
                                             // Update FCM token for existing user
                                             com.namatovu.alumniportal.utils.NotificationHelper.updateTokenInFirestore(
                                                 com.namatovu.alumniportal.utils.NotificationHelper.getFCMToken()
                                             );
                                             navigateToHome();
                                         } else {
-                                            // Email not verified yet - check if user actually verified it
-                                            mAuth.getCurrentUser().reload().addOnCompleteListener(reloadTask -> {
-                                                if (reloadTask.isSuccessful() && mAuth.getCurrentUser().isEmailVerified()) {
-                                                    // User verified email! Update Firestore and proceed
-                                                    Log.d(TAG, "Email was verified, updating Firestore");
-                                                    Map<String, Object> updateData = new HashMap<>();
-                                                    updateData.put("emailVerified", true);
-                                                    db.collection("users").document(userId)
-                                                            .update(updateData)
-                                                            .addOnSuccessListener(aVoid -> {
-                                                                com.namatovu.alumniportal.utils.NotificationHelper.updateTokenInFirestore(
-                                                                    com.namatovu.alumniportal.utils.NotificationHelper.getFCMToken()
-                                                                );
-                                                                navigateToHome();
-                                                            })
-                                                            .addOnFailureListener(e -> {
-                                                                Log.e(TAG, "Error updating email verification", e);
-                                                                navigateToHome();
-                                                            });
-                                                } else {
-                                                    // Email still not verified
-                                                    hideLoadingIndicator();
-                                                    Toast.makeText(LoginActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
-                                                    mAuth.signOut();
-                                                }
-                                            });
+                                            // Email not verified yet - block login
+                                            hideLoadingIndicator();
+                                            Log.d(TAG, "User attempted login without email verification");
+                                            Toast.makeText(LoginActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                            mAuth.signOut();
                                         }
                                     }
                                 })
