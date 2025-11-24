@@ -148,10 +148,35 @@ public class SignupActivity extends AppCompatActivity {
                                             startActivity(intent);
                                             finish();
                                         } else {
-                                            // Email not verified yet
-                                            hideLoadingIndicator();
-                                            Toast.makeText(SignupActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
-                                            mAuth.signOut();
+                                            // Email not verified yet - check if user actually verified it
+                                            mAuth.getCurrentUser().reload().addOnCompleteListener(reloadTask -> {
+                                                if (reloadTask.isSuccessful() && mAuth.getCurrentUser().isEmailVerified()) {
+                                                    // User verified email! Update Firestore and proceed
+                                                    android.util.Log.d("SignupActivity", "Email was verified, updating Firestore");
+                                                    Map<String, Object> updateData = new HashMap<>();
+                                                    updateData.put("emailVerified", true);
+                                                    db.collection("users").document(userId)
+                                                            .update(updateData)
+                                                            .addOnSuccessListener(aVoid -> {
+                                                                hideLoadingIndicator();
+                                                                Toast.makeText(SignupActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                                                                Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
+                                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                android.util.Log.e("SignupActivity", "Error updating email verification", e);
+                                                                hideLoadingIndicator();
+                                                                Toast.makeText(SignupActivity.this, "Error updating profile. Please try again.", Toast.LENGTH_SHORT).show();
+                                                            });
+                                                } else {
+                                                    // Email still not verified
+                                                    hideLoadingIndicator();
+                                                    Toast.makeText(SignupActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                                    mAuth.signOut();
+                                                }
+                                            });
                                         }
                                     }
                                 })
