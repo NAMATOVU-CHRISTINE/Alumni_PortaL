@@ -341,30 +341,123 @@ public class SettingsActivity extends AppCompatActivity {
             String userId = mAuth.getCurrentUser().getUid();
             com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
             
-            // First delete user document from Firestore
-            db.collection("users").document(userId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Then delete Firebase Auth account
-                    mAuth.getCurrentUser().delete()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(SettingsActivity.this, "Account deleted successfully", Toast.LENGTH_LONG).show();
-                                // Navigate to login
-                                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(SettingsActivity.this, "Failed to delete account: " + 
-                                    task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        });
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(SettingsActivity.this, "Failed to delete profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+            // Delete all user-related data from Firestore
+            deleteUserData(userId, db);
         }
+    }
+    
+    private void deleteUserData(String userId, com.google.firebase.firestore.FirebaseFirestore db) {
+        // Delete user document
+        db.collection("users").document(userId).delete();
+        
+        // Delete user's posts
+        db.collection("posts")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's articles
+        db.collection("articles")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's events
+        db.collection("events")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's jobs
+        db.collection("jobs")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's mentorships (as mentor or mentee)
+        db.collection("mentorships")
+            .whereEqualTo("mentorId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        db.collection("mentorships")
+            .whereEqualTo("menteeId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's notifications
+        db.collection("notifications")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's comments
+        db.collection("comments")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // Delete user's messages
+        db.collection("messages")
+            .whereEqualTo("senderId", userId)
+            .get()
+            .addOnSuccessListener(querySnapshot -> {
+                for (com.google.firebase.firestore.DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    doc.getReference().delete();
+                }
+            });
+        
+        // After all data is deleted, delete Firebase Auth account
+        deleteFirebaseAuthAccount();
+    }
+    
+    private void deleteFirebaseAuthAccount() {
+        mAuth.getCurrentUser().delete()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(SettingsActivity.this, "Account and all data deleted successfully", Toast.LENGTH_LONG).show();
+                    // Navigate to login
+                    Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(SettingsActivity.this, "Failed to delete account: " + 
+                        task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
     }
     
     private void sendTestNotification() {
