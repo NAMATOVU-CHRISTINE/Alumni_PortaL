@@ -16,6 +16,8 @@ public class User {
     private String email;
     private String personalEmail;
     private String studentId;
+    private String alumniID;
+    private String staffID;
     private String profileImageUrl;
     private String bio;
     private String major;
@@ -109,6 +111,15 @@ public class User {
 
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
+    
+    public String getStudentID() { return studentId; }
+    public void setStudentID(String studentId) { this.studentId = studentId; }
+
+    public String getAlumniID() { return alumniID; }
+    public void setAlumniID(String alumniID) { this.alumniID = alumniID; }
+
+    public String getStaffID() { return staffID; }
+    public void setStaffID(String staffID) { this.staffID = staffID; }
 
     public String getProfileImageUrl() { return profileImageUrl; }
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }

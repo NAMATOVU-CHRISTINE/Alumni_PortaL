@@ -419,6 +419,9 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
 
         binding.contactCard.setVisibility(hasContactInfo ? View.VISIBLE : View.GONE);
+        
+        // Display appropriate ID based on user type
+        displayUserID(user);
     }
 
     private void showMentorshipRequestDialog() {
@@ -578,6 +581,31 @@ public class ViewProfileActivity extends AppCompatActivity {
             binding.tvLastActive.setText(statusText);
         } else {
             binding.tvLastActive.setText("Offline");
+        }
+    }
+    
+    private void displayUserID(User user) {
+        String userType = user.getUserType();
+        String idValue = null;
+        String idLabel = null;
+        
+        // Get the appropriate ID based on user type
+        if ("alumni".equalsIgnoreCase(userType)) {
+            idValue = user.getAlumniID();
+            idLabel = "Alumni ID";
+        } else if ("staff".equalsIgnoreCase(userType)) {
+            idValue = user.getStaffID();
+            idLabel = "Staff ID";
+        } else {
+            idValue = user.getStudentID();
+            idLabel = "Student ID";
+        }
+        
+        // Display ID if available
+        if (idValue != null && !idValue.isEmpty()) {
+            // You can add a TextView to display this in the layout
+            // For now, logging it for verification
+            Log.d(TAG, idLabel + ": " + idValue);
         }
     }
 
