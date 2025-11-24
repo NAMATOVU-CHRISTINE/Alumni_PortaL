@@ -52,7 +52,8 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         setupCategoryFilters();
         setupFab();
         
-        updateEmptyState(); // Show empty state initially
+        // Load articles after UI is set up
+        loadArticlesFromFirestore();
     }
 
     private void initializeViews() {
@@ -248,7 +249,6 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
     protected void onResume() {
         super.onResume();
         // Refresh articles when returning from Add Article activity
-        // In a real app, you would reload from database/server
-        articleAdapter.notifyDataSetChanged();
+        loadArticlesFromFirestore();
     }
 }
