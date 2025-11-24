@@ -109,23 +109,6 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Student ID -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/App.Material3.TextInputLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="@string/student_id_hint">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/studentID"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="48dp"
-                            android:inputType="text"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
                     <!-- User Type Dropdown -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -139,6 +122,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Student ID -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/studentIdLayout"
+                        style="@style/App.Material3.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/student_id_hint">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/studentID"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:inputType="text"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 

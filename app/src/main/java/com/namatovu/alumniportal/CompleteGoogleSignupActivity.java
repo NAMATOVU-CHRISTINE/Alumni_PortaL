@@ -77,11 +77,10 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
     
     private void updateIdFieldHint(String userType) {
         // Find the TextInputLayout for Student ID
-        android.view.ViewParent parent = studentIDEditText.getParent();
-        if (parent instanceof com.google.android.material.textfield.TextInputLayout) {
-            com.google.android.material.textfield.TextInputLayout studentIdLayout = 
-                (com.google.android.material.textfield.TextInputLayout) parent;
-            
+        com.google.android.material.textfield.TextInputLayout studentIdLayout = 
+            findViewById(R.id.studentIdLayout);
+        
+        if (studentIdLayout != null) {
             if ("Student".equalsIgnoreCase(userType)) {
                 studentIdLayout.setHint("Student ID");
             } else if ("Alumni".equalsIgnoreCase(userType)) {
