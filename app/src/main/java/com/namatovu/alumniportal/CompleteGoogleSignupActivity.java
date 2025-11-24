@@ -64,6 +64,33 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
             this, android.R.layout.simple_dropdown_item_1line, userTypes);
         userTypeDropdown.setAdapter(adapter);
         userTypeDropdown.setText("Student", false); // Default to Student
+        
+        // Add listener to update ID field hint when user type changes
+        userTypeDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedType = userTypes[position];
+            updateIdFieldHint(selectedType);
+        });
+    }
+    
+    private void updateIdFieldHint(String userType) {
+        // Find the TextInputLayout for Student ID
+        android.view.ViewParent parent = studentIDEditText.getParent();
+        if (parent instanceof com.google.android.material.textfield.TextInputLayout) {
+            com.google.android.material.textfield.TextInputLayout studentIdLayout = 
+                (com.google.android.material.textfield.TextInputLayout) parent;
+            
+            switch (userType.toLowerCase()) {
+                case "alumni":
+                    studentIdLayout.setHint("Alumni ID");
+                    break;
+                case "staff":
+                    studentIdLayout.setHint("Staff ID");
+                    break;
+                default:
+                    studentIdLayout.setHint("Student ID");
+                    break;
+            }
+        }
     }
 
     private void completeSignup() {
