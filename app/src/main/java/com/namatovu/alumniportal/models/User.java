@@ -111,9 +111,6 @@ public class User {
 
     public String getStudentId() { return studentId; }
     public void setStudentId(String studentId) { this.studentId = studentId; }
-    
-    public String getStudentID() { return studentId; }
-    public void setStudentID(String studentId) { this.studentId = studentId; }
 
     public String getAlumniID() { return alumniID; }
     public void setAlumniID(String alumniID) { this.alumniID = alumniID; }
