@@ -132,19 +132,33 @@ public class CompleteGoogleSignupActivity extends AppCompatActivity {
                                                 // Send email verification
                                                 mAuth.getCurrentUser().sendEmailVerification()
                                                         .addOnCompleteListener(emailTask -> {
-                                                            hideLoadingIndicator();
                                                             if (emailTask.isSuccessful()) {
-                                                                Toast.makeText(CompleteGoogleSignupActivity.this, "Profile complete! Verification email sent. Please check your inbox.", Toast.LENGTH_LONG).show();
-                                                                // Sign out user until they verify email
-                                                                mAuth.signOut();
-                                                                // Go back to login with verification pending message
-                                                                Intent intent = new Intent(CompleteGoogleSignupActivity.this, LoginActivity.class);
-                                                                intent.putExtra("email_verification_pending", true);
-                                                                intent.putExtra("user_email", emailEditText.getText().toString());
-                                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                startActivity(intent);
-                                                                finish();
+                                                                // Update user document to mark email verification as pending
+                                                                Map<String, Object> updateData = new HashMap<>();
+                                                                updateData.put("emailVerified", false);
+                                                                updateData.put("emailVerificationSent", System.currentTimeMillis());
+                                                                
+                                                                db.collection("users").document(userId)
+                                                                        .update(updateData)
+                                                                        .addOnSuccessListener(aVoid3 -> {
+                                                                            hideLoadingIndicator();
+                                                                            Toast.makeText(CompleteGoogleSignupActivity.this, "Profile complete! Verification email sent. Please check your inbox.", Toast.LENGTH_LONG).show();
+                                                                            // Sign out user until they verify email
+                                                                            mAuth.signOut();
+                                                                            // Go back to login with verification pending message
+                                                                            Intent intent = new Intent(CompleteGoogleSignupActivity.this, LoginActivity.class);
+                                                                            intent.putExtra("email_verification_pending", true);
+                                                                            intent.putExtra("user_email", emailEditText.getText().toString());
+                                                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                            startActivity(intent);
+                                                                            finish();
+                                                                        })
+                                                                        .addOnFailureListener(e -> {
+                                                                            hideLoadingIndicator();
+                                                                            Toast.makeText(CompleteGoogleSignupActivity.this, "Error updating profile. Please try again.", Toast.LENGTH_SHORT).show();
+                                                                        });
                                                             } else {
+                                                                hideLoadingIndicator();
                                                                 Toast.makeText(CompleteGoogleSignupActivity.this, "Profile complete! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
                                                                 // Sign out and go back to login
                                                                 mAuth.signOut();

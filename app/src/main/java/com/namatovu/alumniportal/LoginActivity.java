@@ -131,43 +131,29 @@ public class LoginActivity extends AppCompatActivity {
                         db.collection("users").document(userId).get()
                                 .addOnSuccessListener(documentSnapshot -> {
                                     if (!documentSnapshot.exists()) {
-                                        // New user - save to Firestore with default type as "student"
-                                        Map<String, Object> user = new HashMap<>();
-                                        user.put("fullName", displayName != null ? displayName : "User");
-                                        user.put("email", email);
-                                        user.put("userId", userId);
-                                        user.put("username", email.split("@")[0]);
-                                        user.put("userType", "student"); // Default: Current students
-                                        user.put("isAlumni", false);
-                                        user.put("createdAt", System.currentTimeMillis());
-                                        
-                                        // Get and save FCM token immediately
-                                        com.google.firebase.messaging.FirebaseMessaging.getInstance().getToken()
-                                                .addOnCompleteListener(tokenTask -> {
-                                                    if (tokenTask.isSuccessful()) {
-                                                        String fcmToken = tokenTask.getResult();
-                                                        user.put("fcmToken", fcmToken);
-                                                        Log.d(TAG, "FCM token obtained: " + fcmToken);
-                                                    }
-                                                    
-                                                    db.collection("users").document(userId).set(user)
-                                                            .addOnSuccessListener(aVoid -> {
-                                                                Log.d(TAG, "New user created via Google Sign-in");
-                                                                navigateToHome();
-                                                            })
-                                                            .addOnFailureListener(e -> {
-                                                                Log.e(TAG, "Error saving user data", e);
-                                                                hideLoadingIndicator();
-                                                                Toast.makeText(LoginActivity.this, "Error saving user data", Toast.LENGTH_SHORT).show();
-                                                            });
-                                                });
+                                        // New user - redirect to complete profile
+                                        hideLoadingIndicator();
+                                        Intent intent = new Intent(LoginActivity.this, CompleteGoogleSignupActivity.class);
+                                        intent.putExtra("googleEmail", email);
+                                        startActivity(intent);
+                                        finish();
                                     } else {
-                                        Log.d(TAG, "Existing user logging in via Google");
-                                        // Update FCM token for existing user
-                                        com.namatovu.alumniportal.utils.NotificationHelper.updateTokenInFirestore(
-                                            com.namatovu.alumniportal.utils.NotificationHelper.getFCMToken()
-                                        );
-                                        navigateToHome();
+                                        // Existing user - check if email is verified
+                                        Boolean emailVerified = documentSnapshot.getBoolean("emailVerified");
+                                        if (emailVerified != null && emailVerified) {
+                                            // Email verified, proceed to home
+                                            Log.d(TAG, "Existing user logging in via Google");
+                                            // Update FCM token for existing user
+                                            com.namatovu.alumniportal.utils.NotificationHelper.updateTokenInFirestore(
+                                                com.namatovu.alumniportal.utils.NotificationHelper.getFCMToken()
+                                            );
+                                            navigateToHome();
+                                        } else {
+                                            // Email not verified yet
+                                            hideLoadingIndicator();
+                                            Toast.makeText(LoginActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                            mAuth.signOut();
+                                        }
                                     }
                                 })
                                 .addOnFailureListener(e -> {
@@ -267,18 +253,25 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Check if email is verified
-                            if (!user.isEmailVerified()) {
-                                hideLoadingIndicator();
-                                Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
-                                // Sign out the user since they haven't verified their email
-                                mAuth.signOut();
-                                Log.d(TAG, "User attempted login without email verification");
-                                return;
-                            }
-                            // Email is verified, proceed to home
-                            Log.d(TAG, "Login successful.");
-                            navigateToHome();
+                            // Reload user to get latest email verification status
+                            user.reload().addOnCompleteListener(reloadTask -> {
+                                if (reloadTask.isSuccessful()) {
+                                    if (user.isEmailVerified()) {
+                                        // Email is verified, proceed to home
+                                        Log.d(TAG, "Login successful.");
+                                        navigateToHome();
+                                    } else {
+                                        hideLoadingIndicator();
+                                        Toast.makeText(LoginActivity.this, "Please verify your email before logging in. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                        // Sign out the user since they haven't verified their email
+                                        mAuth.signOut();
+                                        Log.d(TAG, "User attempted login without email verification");
+                                    }
+                                } else {
+                                    hideLoadingIndicator();
+                                    Toast.makeText(LoginActivity.this, "Error checking email verification status.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } else {
                             hideLoadingIndicator();
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();

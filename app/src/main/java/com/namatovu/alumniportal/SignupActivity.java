@@ -137,13 +137,22 @@ public class SignupActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        // User already exists - just login, no email verification needed
-                                        hideLoadingIndicator();
-                                        Toast.makeText(SignupActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                        finish();
+                                        // User already exists - check if email is verified
+                                        Boolean emailVerified = documentSnapshot.getBoolean("emailVerified");
+                                        if (emailVerified != null && emailVerified) {
+                                            // Email verified, proceed to home
+                                            hideLoadingIndicator();
+                                            Toast.makeText(SignupActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            // Email not verified yet
+                                            hideLoadingIndicator();
+                                            Toast.makeText(SignupActivity.this, "Please verify your email first. Check your inbox for the verification link.", Toast.LENGTH_LONG).show();
+                                            mAuth.signOut();
+                                        }
                                     }
                                 })
                                 .addOnFailureListener(e -> {
@@ -259,25 +268,39 @@ public class SignupActivity extends AppCompatActivity {
                                                                 // Send email verification after saving user
                                                                 mAuth.getCurrentUser().sendEmailVerification()
                                                                         .addOnCompleteListener(emailTask -> {
-                                                                            hideLoadingIndicator();
                                                                             if (emailTask.isSuccessful()) {
-                                                                                Toast.makeText(SignupActivity.this, "Registration successful! Please verify your email to continue.", Toast.LENGTH_LONG).show();
-                                                                                // Sign out user until they verify email
-                                                                                mAuth.signOut();
-                                                                                // Show verification pending message and go back to login
-                                                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                                                                intent.putExtra("email_verification_pending", true);
-                                                                                intent.putExtra("user_email", personalEmail);
-                                                                                startActivity(intent);
-                                                                                finish();
-                                                                            } else {
-                                                                                Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
-                                                                                // Sign out and go back to login
-                                                                                mAuth.signOut();
-                                                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                                                                startActivity(intent);
-                                                                                finish();
-                                                                            }
+                                                                                // Update user document to mark email verification as pending
+                                                                                Map<String, Object> updateData = new HashMap<>();
+                                                                                updateData.put("emailVerified", false);
+                                                                                updateData.put("emailVerificationSent", System.currentTimeMillis());
+                                                                                
+                                                                                db.collection("users").document(userId)
+                                                                        .update(updateData)
+                                                                        .addOnSuccessListener(aVoid2 -> {
+                                                                            hideLoadingIndicator();
+                                                                            Toast.makeText(SignupActivity.this, "Registration successful! Please verify your email to continue.", Toast.LENGTH_LONG).show();
+                                                                            // Sign out user until they verify email
+                                                                            mAuth.signOut();
+                                                                            // Show verification pending message and go back to login
+                                                                            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                                            intent.putExtra("email_verification_pending", true);
+                                                                            intent.putExtra("user_email", personalEmail);
+                                                                            startActivity(intent);
+                                                                            finish();
+                                                                        })
+                                                                        .addOnFailureListener(e -> {
+                                                                            hideLoadingIndicator();
+                                                                            Toast.makeText(SignupActivity.this, "Error updating profile. Please try again.", Toast.LENGTH_SHORT).show();
+                                                                        });
+                                                            } else {
+                                                                hideLoadingIndicator();
+                                                                Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
+                                                                // Sign out and go back to login
+                                                                mAuth.signOut();
+                                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            }
                                                                         });
                                                             })
                                                             .addOnFailureListener(e -> {
