@@ -83,8 +83,6 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         
         recyclerViewArticles.setLayoutManager(layoutManager);
         recyclerViewArticles.setAdapter(articleAdapter);
-        
-        loadArticlesFromFirestore();
     }
     
     private void loadArticlesFromFirestore() {
