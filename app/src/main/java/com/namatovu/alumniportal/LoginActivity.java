@@ -63,6 +63,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK) {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
                         handleGoogleSignInResult(task);
+                    } else {
+                        // User cancelled or sign-in failed
+                        hideLoadingIndicator();
+                        Log.d(TAG, "Google Sign-In cancelled or failed with result code: " + result.getResultCode());
                     }
                 });
 
