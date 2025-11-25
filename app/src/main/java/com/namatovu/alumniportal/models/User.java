@@ -155,6 +155,12 @@ public class User {
     public boolean isAlumni() { return isAlumni; }
     @com.google.firebase.firestore.PropertyName("isAlumni")
     public void setAlumni(boolean alumni) { isAlumni = alumni; }
+    
+    // Firestore compatibility for 'alumni' field (alternative naming in some documents)
+    @com.google.firebase.firestore.PropertyName("alumni")
+    public boolean getAlumni() { return isAlumni; }
+    @com.google.firebase.firestore.PropertyName("alumni")  
+    public void setAlumniField(boolean alumni) { isAlumni = alumni; }
 
     public String getUserType() { return userType; }
     public void setUserType(String userType) { this.userType = userType; }
@@ -221,7 +227,6 @@ public class User {
         }
     }
 
-    @com.google.firebase.firestore.Exclude
     public String getSkillsAsString() {
         if (skills == null || skills.isEmpty()) {
             return "";
@@ -229,7 +234,6 @@ public class User {
         return String.join(", ", skills);
     }
 
-    @com.google.firebase.firestore.Exclude
     public void setSkillsAsString(String skillsString) {
         setSkillsFromString(skillsString);
     }
