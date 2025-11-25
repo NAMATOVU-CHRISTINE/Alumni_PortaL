@@ -417,7 +417,8 @@ public class MentorshipActivity extends AppCompatActivity {
         
         Log.d(TAG, "Filtered connections count: " + filteredConnections.size());
         
-        adapter.notifyDataSetChanged();
+        // Update adapter with filtered connections (this will also remove duplicates)
+        adapter.setConnections(filteredConnections);
         updateEmptyState();
         
         // Update toolbar subtitle with connection count
