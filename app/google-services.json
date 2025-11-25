@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "511866402860",
+    "firebase_url": "https://alumniportal-198ec-default-rtdb.firebaseio.com",
     "project_id": "alumniportal-198ec",
     "storage_bucket": "alumniportal-198ec.firebasestorage.app"
   },
@@ -19,6 +20,22 @@
           "android_info": {
             "package_name": "com.namatovu.alumniportal",
             "certificate_hash": "1f83566ddd22b4600b151cf0240dd1813a1d72e2"
+          }
+        },
+        {
+          "client_id": "511866402860-7fag8kurs1p3ersilsm1snrm22jq4lg3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.namatovu.alumniportal",
+            "certificate_hash": "f1f72fa5c0f4dee935515a2f440411ded6e1d50b"
+          }
+        },
+        {
+          "client_id": "511866402860-d11phs2dhs243fpber31laqe409ov7ue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.namatovu.alumniportal",
+            "certificate_hash": "e332b3a403bb0b9401803c01c1bd5bcdbb0d5095"
           }
         },
         {
