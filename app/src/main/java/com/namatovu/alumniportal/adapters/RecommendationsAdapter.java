@@ -48,7 +48,22 @@ public class RecommendationsAdapter extends RecyclerView.Adapter<Recommendations
     }
     
     public void updateRecommendations(List<Recommendation> newRecommendations) {
-        this.recommendations = newRecommendations;
+        // Filter out duplicates based on title and description
+        List<Recommendation> uniqueRecommendations = new java.util.ArrayList<>();
+        java.util.Set<String> seenKeys = new java.util.HashSet<>();
+        
+        if (newRecommendations != null) {
+            for (Recommendation rec : newRecommendations) {
+                // Create a unique key based on title and description
+                String key = rec.getTitle() + "|" + rec.getDescription();
+                if (!seenKeys.contains(key)) {
+                    seenKeys.add(key);
+                    uniqueRecommendations.add(rec);
+                }
+            }
+        }
+        
+        this.recommendations = uniqueRecommendations;
         notifyDataSetChanged();
     }
     

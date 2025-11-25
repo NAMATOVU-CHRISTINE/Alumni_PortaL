@@ -43,7 +43,22 @@ public class HomeRecentActivitiesAdapter extends RecyclerView.Adapter<HomeRecent
     }
     
     public void updateActivities(List<RecentActivity> newActivities) {
-        this.activities = newActivities;
+        // Filter out duplicates based on title and timestamp
+        List<RecentActivity> uniqueActivities = new java.util.ArrayList<>();
+        java.util.Set<String> seenKeys = new java.util.HashSet<>();
+        
+        if (newActivities != null) {
+            for (RecentActivity activity : newActivities) {
+                // Create a unique key based on title and timestamp
+                String key = activity.getTitle() + "|" + activity.getTimeStamp();
+                if (!seenKeys.contains(key)) {
+                    seenKeys.add(key);
+                    uniqueActivities.add(activity);
+                }
+            }
+        }
+        
+        this.activities = uniqueActivities;
         notifyDataSetChanged();
     }
     
