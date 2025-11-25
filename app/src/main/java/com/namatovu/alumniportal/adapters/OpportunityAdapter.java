@@ -235,12 +235,28 @@ public class OpportunityAdapter extends RecyclerView.Adapter<OpportunityAdapter.
                                 // Load profile picture
                                 String profileImageUrl = user.getProfileImageUrl();
                                 if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                                    Glide.with(context)
-                                            .load(profileImageUrl)
-                                            .circleCrop()
-                                            .placeholder(R.drawable.ic_person)
-                                            .error(R.drawable.ic_person)
-                                            .into(imageViewPoster);
+                                    // Check if context is still valid before loading with Glide
+                                    if (context instanceof android.app.Activity) {
+                                        android.app.Activity activity = (android.app.Activity) context;
+                                        if (!activity.isDestroyed() && !activity.isFinishing()) {
+                                            Glide.with(context)
+                                                    .load(profileImageUrl)
+                                                    .circleCrop()
+                                                    .placeholder(R.drawable.ic_person)
+                                                    .error(R.drawable.ic_person)
+                                                    .into(imageViewPoster);
+                                        } else {
+                                            imageViewPoster.setImageResource(R.drawable.ic_person);
+                                        }
+                                    } else {
+                                        // Context is not an Activity, safe to use
+                                        Glide.with(context)
+                                                .load(profileImageUrl)
+                                                .circleCrop()
+                                                .placeholder(R.drawable.ic_person)
+                                                .error(R.drawable.ic_person)
+                                                .into(imageViewPoster);
+                                    }
                                 } else {
                                     imageViewPoster.setImageResource(R.drawable.ic_person);
                                 }
