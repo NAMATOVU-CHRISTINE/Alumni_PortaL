@@ -48,23 +48,45 @@ public class MentorshipAdapter extends RecyclerView.Adapter<MentorshipAdapter.Me
     
     public void setMentors(List<User> mentors) {
         // Convert User list to MentorshipConnection list for compatibility
+        // Filter out duplicates based on user ID
         this.connections.clear();
+        java.util.Set<String> seenIds = new java.util.HashSet<>();
+        
         if (mentors != null) {
             for (User mentor : mentors) {
-                MentorshipConnection connection = new MentorshipConnection();
-                connection.setMentorId(mentor.getUserId());
-                connection.setMentorName(mentor.getFullName());
-                connection.setMentorTitle(mentor.getCurrentJob());
-                connection.setMentorCompany(mentor.getCompany());
-                connection.setStatus("available");
-                this.connections.add(connection);
+                String userId = mentor.getUserId();
+                if (userId != null && !seenIds.contains(userId)) {
+                    seenIds.add(userId);
+                    MentorshipConnection connection = new MentorshipConnection();
+                    connection.setMentorId(userId);
+                    connection.setMentorName(mentor.getFullName());
+                    connection.setMentorTitle(mentor.getCurrentJob());
+                    connection.setMentorCompany(mentor.getCompany());
+                    connection.setStatus("available");
+                    this.connections.add(connection);
+                }
             }
         }
         notifyDataSetChanged();
     }
     
     public void setConnections(List<MentorshipConnection> connections) {
-        this.connections = connections != null ? connections : new ArrayList<>();
+        // Filter out duplicates based on mentor/mentee IDs
+        List<MentorshipConnection> uniqueConnections = new ArrayList<>();
+        java.util.Set<String> seenKeys = new java.util.HashSet<>();
+        
+        if (connections != null) {
+            for (MentorshipConnection conn : connections) {
+                // Create a unique key based on mentor and mentee IDs
+                String key = conn.getMentorId() + "|" + conn.getMenteeId();
+                if (!seenKeys.contains(key)) {
+                    seenKeys.add(key);
+                    uniqueConnections.add(conn);
+                }
+            }
+        }
+        
+        this.connections = uniqueConnections;
         notifyDataSetChanged();
     }
     
