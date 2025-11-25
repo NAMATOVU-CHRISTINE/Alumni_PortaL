@@ -151,7 +151,9 @@ public class User {
     public boolean isVerified() { return isVerified; }
     public void setVerified(boolean verified) { isVerified = verified; }
 
+    @com.google.firebase.firestore.PropertyName("isAlumni")
     public boolean isAlumni() { return isAlumni; }
+    @com.google.firebase.firestore.PropertyName("isAlumni")
     public void setAlumni(boolean alumni) { isAlumni = alumni; }
 
     public String getUserType() { return userType; }
@@ -219,11 +221,17 @@ public class User {
         }
     }
 
+    @com.google.firebase.firestore.Exclude
     public String getSkillsAsString() {
         if (skills == null || skills.isEmpty()) {
             return "";
         }
         return String.join(", ", skills);
+    }
+
+    @com.google.firebase.firestore.Exclude
+    public void setSkillsAsString(String skillsString) {
+        setSkillsFromString(skillsString);
     }
 
     public void setSkillsFromString(String skillsString) {
