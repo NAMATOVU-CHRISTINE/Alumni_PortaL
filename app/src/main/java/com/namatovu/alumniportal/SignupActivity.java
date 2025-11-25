@@ -328,11 +328,7 @@ public class SignupActivity extends AppCompatActivity {
                                                             } else {
                                                                 hideLoadingIndicator();
                                                                 Toast.makeText(SignupActivity.this, "Registration successful! But verification email failed to send. Please try logging in.", Toast.LENGTH_LONG).show();
-                                                                // Navigate to login even if email fails
-                                                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                                                startActivity(intent);
-                                                                finish();
-                                                                // Sign out and go back to login
+                                                                // Sign out and navigate to login
                                                                 mAuth.signOut();
                                                                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                                                 startActivity(intent);
