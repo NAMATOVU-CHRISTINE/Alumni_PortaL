@@ -331,10 +331,13 @@ public class LoginActivity extends AppCompatActivity {
                                                 }
                                             })
                                             .addOnFailureListener(e -> {
+                                                hideLoadingIndicator();
                                                 Log.e(TAG, "Error checking deleted status", e);
                                                 Toast.makeText(LoginActivity.this, "Error verifying account status.", Toast.LENGTH_SHORT).show();
+                                                mAuth.signOut();
                                             });
                                 } else {
+                                    hideLoadingIndicator();
                                     Log.e(TAG, "Error reloading user", reloadTask.getException());
                                     Toast.makeText(LoginActivity.this, "Error checking email verification status.", Toast.LENGTH_SHORT).show();
                                 }
