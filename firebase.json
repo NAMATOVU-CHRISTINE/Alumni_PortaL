@@ -13,6 +13,14 @@
   "storage": {
     "rules": "storage.rules"
   },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
   "emulators": {
     "auth": {
       "port": 9099
