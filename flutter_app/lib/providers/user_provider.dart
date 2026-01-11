@@ -12,11 +12,13 @@ class UserProvider with ChangeNotifier {
 
   UserModel? _currentUser;
   List<UserModel> _alumniDirectory = [];
+  List<UserModel> _almaterDirectory = [];
   bool _isLoading = false;
   String? _error;
 
   UserModel? get currentUser => _currentUser;
   List<UserModel> get alumniDirectory => _alumniDirectory;
+  List<UserModel> get almaterDirectory => _almaterDirectory;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -73,59 +75,56 @@ class UserProvider with ChangeNotifier {
     try {
       _setLoading(true);
 
-      Query query = _firestore
-          .collection('users')
-          .where('deleted', isNotEqualTo: true);
+      Query query =
+          _firestore.collection('users').where('deleted', isNotEqualTo: true);
 
       final snapshot = await query.get();
 
       _alumniDirectory = snapshot.docs
           .map((doc) => UserModel.fromFirestore(doc))
           .where((user) {
-            // Apply search filter
-            if (searchQuery != null && searchQuery.isNotEmpty) {
-              final query = searchQuery.toLowerCase();
-              final matchesName =
-                  user.fullName?.toLowerCase().contains(query) ?? false;
-              final matchesUsername =
-                  user.username?.toLowerCase().contains(query) ?? false;
-              final matchesMajor =
-                  user.major?.toLowerCase().contains(query) ?? false;
-              final matchesCompany =
-                  user.company?.toLowerCase().contains(query) ?? false;
-              if (!matchesName &&
-                  !matchesUsername &&
-                  !matchesMajor &&
-                  !matchesCompany) {
-                return false;
-              }
-            }
+        // Apply search filter
+        if (searchQuery != null && searchQuery.isNotEmpty) {
+          final query = searchQuery.toLowerCase();
+          final matchesName =
+              user.fullName?.toLowerCase().contains(query) ?? false;
+          final matchesUsername =
+              user.username?.toLowerCase().contains(query) ?? false;
+          final matchesMajor =
+              user.major?.toLowerCase().contains(query) ?? false;
+          final matchesCompany =
+              user.company?.toLowerCase().contains(query) ?? false;
+          if (!matchesName &&
+              !matchesUsername &&
+              !matchesMajor &&
+              !matchesCompany) {
+            return false;
+          }
+        }
 
-            // Apply major filter
-            if (filterByMajor != null && filterByMajor.isNotEmpty) {
-              if (user.major?.toLowerCase() != filterByMajor.toLowerCase()) {
-                return false;
-              }
-            }
+        // Apply major filter
+        if (filterByMajor != null && filterByMajor.isNotEmpty) {
+          if (user.major?.toLowerCase() != filterByMajor.toLowerCase()) {
+            return false;
+          }
+        }
 
-            // Apply year filter
-            if (filterByYear != null && filterByYear.isNotEmpty) {
-              if (user.graduationYear != filterByYear) {
-                return false;
-              }
-            }
+        // Apply year filter
+        if (filterByYear != null && filterByYear.isNotEmpty) {
+          if (user.graduationYear != filterByYear) {
+            return false;
+          }
+        }
 
-            // Apply location filter
-            if (filterByLocation != null && filterByLocation.isNotEmpty) {
-              if (user.location?.toLowerCase() !=
-                  filterByLocation.toLowerCase()) {
-                return false;
-              }
-            }
+        // Apply location filter
+        if (filterByLocation != null && filterByLocation.isNotEmpty) {
+          if (user.location?.toLowerCase() != filterByLocation.toLowerCase()) {
+            return false;
+          }
+        }
 
-            return true;
-          })
-          .toList();
+        return true;
+      }).toList();
 
       // Sort by name
       _alumniDirectory.sort(
@@ -133,6 +132,85 @@ class UserProvider with ChangeNotifier {
       );
     } catch (e) {
       _setError('Failed to load alumni directory');
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> loadAlmaterDirectory({
+    String? searchQuery,
+    String? filterByMajor,
+    String? filterByUserType,
+  }) async {
+    try {
+      _setLoading(true);
+
+      Query query =
+          _firestore.collection('users').where('deleted', isNotEqualTo: true);
+
+      final snapshot = await query.get();
+
+      _almaterDirectory = snapshot.docs
+          .map((doc) => UserModel.fromFirestore(doc))
+          .where((user) {
+        // Only show students and staff (NOT alumni)
+        final userType = user.userType.toLowerCase();
+        if (userType != 'student' && userType != 'staff') {
+          return false;
+        }
+
+        // Apply user type filter
+        if (filterByUserType != null && filterByUserType.isNotEmpty) {
+          if (userType != filterByUserType.toLowerCase()) {
+            return false;
+          }
+        }
+
+        // Apply search filter
+        if (searchQuery != null && searchQuery.isNotEmpty) {
+          final query = searchQuery.toLowerCase();
+          final matchesName =
+              user.fullName?.toLowerCase().contains(query) ?? false;
+          final matchesUsername =
+              user.username?.toLowerCase().contains(query) ?? false;
+          final matchesMajor =
+              user.major?.toLowerCase().contains(query) ?? false;
+          final matchesCompany =
+              user.company?.toLowerCase().contains(query) ?? false;
+          final matchesBio = user.bio?.toLowerCase().contains(query) ?? false;
+          final matchesLocation =
+              user.location?.toLowerCase().contains(query) ?? false;
+          if (!matchesName &&
+              !matchesUsername &&
+              !matchesMajor &&
+              !matchesCompany &&
+              !matchesBio &&
+              !matchesLocation) {
+            return false;
+          }
+        }
+
+        // Apply major filter
+        if (filterByMajor != null && filterByMajor.isNotEmpty) {
+          if (!(user.major
+                  ?.toLowerCase()
+                  .contains(filterByMajor.toLowerCase()) ??
+              false)) {
+            return false;
+          }
+        }
+
+        // Check privacy settings
+        final showInDirectory = user.privacySettings['showInDirectory'] ?? true;
+        return showInDirectory;
+      }).toList();
+
+      // Sort by name
+      _almaterDirectory.sort(
+        (a, b) => (a.fullName ?? '').compareTo(b.fullName ?? ''),
+      );
+    } catch (e) {
+      _setError('Failed to load almater directory');
     } finally {
       _setLoading(false);
     }
@@ -207,9 +285,8 @@ class UserProvider with ChangeNotifier {
     String? location,
   }) async {
     try {
-      Query query = _firestore
-          .collection('users')
-          .where('isAlumni', isEqualTo: true);
+      Query query =
+          _firestore.collection('users').where('isAlumni', isEqualTo: true);
 
       final snapshot = await query.get();
 
