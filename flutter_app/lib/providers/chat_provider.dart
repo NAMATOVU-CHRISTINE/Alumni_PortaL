@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/models/chat_model.dart';
+import 'package:alumni_portal/services/notification_service.dart';
 
 class ChatProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -49,16 +50,15 @@ class ChatProvider with ChangeNotifier {
         .orderBy('lastMessageTimestamp', descending: true)
         .snapshots()
         .listen(
-          (snapshot) {
-            _chats = snapshot.docs
-                .map((doc) => ChatModel.fromFirestore(doc))
-                .toList();
-            notifyListeners();
-          },
-          onError: (e) {
-            _setError('Failed to load chats');
-          },
-        );
+      (snapshot) {
+        _chats =
+            snapshot.docs.map((doc) => ChatModel.fromFirestore(doc)).toList();
+        notifyListeners();
+      },
+      onError: (e) {
+        _setError('Failed to load chats');
+      },
+    );
   }
 
   void listenToMessages(String chatId) {
@@ -70,16 +70,16 @@ class ChatProvider with ChangeNotifier {
         .orderBy('timestamp', descending: false)
         .snapshots()
         .listen(
-          (snapshot) {
-            _messages = snapshot.docs
-                .map((doc) => ChatMessageModel.fromFirestore(doc))
-                .toList();
-            notifyListeners();
-          },
-          onError: (e) {
-            _setError('Failed to load messages');
-          },
-        );
+      (snapshot) {
+        _messages = snapshot.docs
+            .map((doc) => ChatMessageModel.fromFirestore(doc))
+            .toList();
+        notifyListeners();
+      },
+      onError: (e) {
+        _setError('Failed to load messages');
+      },
+    );
   }
 
   Future<String?> createOrGetChat(
@@ -102,18 +102,14 @@ class ChatProvider with ChangeNotifier {
       }
 
       // Get current user's name
-      final currentUserDoc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
+      final currentUserDoc =
+          await _firestore.collection('users').doc(userId).get();
       final currentUserName = currentUserDoc.data()?['fullName'] ?? 'User';
       final currentUserImage = currentUserDoc.data()?['profileImageUrl'];
 
       // Get other user's image
-      final otherUserDoc = await _firestore
-          .collection('users')
-          .doc(otherUserId)
-          .get();
+      final otherUserDoc =
+          await _firestore.collection('users').doc(otherUserId).get();
       final otherUserImage = otherUserDoc.data()?['profileImageUrl'];
 
       // Create new chat
@@ -189,6 +185,13 @@ class ChatProvider with ChangeNotifier {
         'updatedAt': DateTime.now().millisecondsSinceEpoch,
         'unreadCounts.$receiverId': FieldValue.increment(1),
       });
+
+      // Send notification
+      NotificationService.notifyNewMessage(
+        recipientId: receiverId,
+        senderName: senderName,
+        chatId: chatId,
+      );
 
       return true;
     } catch (e) {
