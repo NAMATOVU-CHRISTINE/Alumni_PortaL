@@ -11,11 +11,11 @@ dependencies:
     sdk: flutter
   
   # Firebase
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.16.0
-  cloud_firestore: ^4.14.0
-  firebase_storage: ^11.6.0
-  firebase_messaging: ^14.7.10
+  firebase_core: ^3.3.0
+  firebase_auth: ^5.1.0
+  cloud_firestore: ^5.2.0
+  firebase_storage: ^12.1.0
+  firebase_messaging: ^15.0.0
   
   # State Management
   provider: ^6.1.1
@@ -36,7 +36,6 @@ dependencies:
   
   # Image Handling
   image_picker: ^1.0.7
-  image_cropper: ^5.0.1
   
   # Local Storage
   shared_preferences: ^2.2.2
@@ -71,14 +70,3 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-  
-  fonts:
-    - family: Poppins
-      fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf
-        - asset: assets/fonts/Poppins-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Poppins-Bold.ttf
-          weight: 700
