@@ -220,11 +220,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
                     backgroundImage: user?.profileImageUrl != null
-                        CachedNetworkImageProvider(user!.profileImageUrl!)
+                        ? CachedNetworkImageProvider(user!.profileImageUrl!)
                         : null,
                     child: user?.profileImageUrl == null
-                        Text(
-                            user?.fullName?.substring(0, 1).toUpperCase()?
+                        ? Text(
+                            user?.fullName?.substring(0, 1).toUpperCase() ??
                                 'A',
                             style: const TextStyle(
                                 fontSize: 32, color: AppColors.primary),
@@ -233,10 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 accountName: Text(
-                  user?.fullName? 'Alumni User',
+                  user?.fullName ?? 'Alumni User',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                accountEmail: Text(user?.email? ''),
+                accountEmail: Text(user?.email ?? ''),
                 otherAccountsPictures: [
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.white),
@@ -337,14 +337,14 @@ class _HomeScreenState extends State<HomeScreen> {
       leading: Icon(
         icon,
         color: isDestructive
-            AppColors.error
-            : (isSelected AppColors.primary : null),
+            ? AppColors.error
+            : (isSelected ? AppColors.primary : null),
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isDestructive AppColors.error : null,
-          fontWeight: isSelected FontWeight.bold : null,
+          color: isDestructive ? AppColors.error : null,
+          fontWeight: isSelected ? FontWeight.bold : null,
         ),
       ),
       selected: isSelected,
@@ -369,11 +369,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 radius: 28,
                 backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                 backgroundImage: user?.profileImageUrl != null
-                    CachedNetworkImageProvider(user!.profileImageUrl!)
+                    ? CachedNetworkImageProvider(user!.profileImageUrl!)
                     : null,
                 child: user?.profileImageUrl == null
-                    Text(
-                        user?.fullName?.substring(0, 1).toUpperCase()? 'A',
+                    ? Text(
+                        user?.fullName?.substring(0, 1).toUpperCase() ?? 'A',
                         style: const TextStyle(
                           fontSize: 22,
                           color: AppColors.primary,
@@ -393,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
                   Text(
-                    user?.fullName?.split(' ').first? 'Alumni',
+                    user?.fullName?.split(' ').first ?? 'Alumni',
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold),
                   ),
@@ -504,7 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: isTablet 6 : 3,
+            crossAxisCount: isTablet ? 6 : 3,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: 1,
@@ -588,10 +588,10 @@ class _HomeScreenState extends State<HomeScreen> {
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: post.authorImageUrl != null
-              CachedNetworkImageProvider(post.authorImageUrl!)
+              ? CachedNetworkImageProvider(post.authorImageUrl!)
               : null,
           child: post.authorImageUrl == null
-              Text(post.authorName.substring(0, 1).toUpperCase())
+              ? Text(post.authorName.substring(0, 1).toUpperCase())
               : null,
         ),
         title: Text(
