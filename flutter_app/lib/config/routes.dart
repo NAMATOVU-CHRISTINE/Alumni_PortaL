@@ -32,6 +32,14 @@ import 'package:alumni_portal/screens/notifications/notifications_screen.dart';
 import 'package:alumni_portal/screens/settings/settings_screen.dart';
 import 'package:alumni_portal/screens/settings/notification_settings_screen.dart';
 import 'package:alumni_portal/screens/settings/privacy_settings_screen.dart';
+import 'package:alumni_portal/screens/feed/feed_screen.dart';
+import 'package:alumni_portal/screens/feed/create_post_screen.dart';
+import 'package:alumni_portal/screens/profile/badges_screen.dart';
+import 'package:alumni_portal/screens/profile/profile_viewers_screen.dart';
+import 'package:alumni_portal/screens/polls/polls_screen.dart';
+import 'package:alumni_portal/screens/polls/create_poll_screen.dart';
+import 'package:alumni_portal/screens/stories/create_story_screen.dart';
+import 'package:alumni_portal/screens/jobs/referrals_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -151,6 +159,48 @@ class AppRouter {
       GoRoute(
         path: '/almater-directory',
         builder: (context, state) => const AlmaterDirectoryScreen(),
+      ),
+
+      // Feed routes
+      GoRoute(
+        path: '/feed',
+        builder: (context, state) => const FeedScreen(),
+      ),
+      GoRoute(
+        path: '/create-post',
+        builder: (context, state) => const CreatePostScreen(),
+      ),
+
+      // Gamification routes
+      GoRoute(
+        path: '/badges',
+        builder: (context, state) => const BadgesScreen(),
+      ),
+      GoRoute(
+        path: '/profile-viewers',
+        builder: (context, state) => const ProfileViewersScreen(),
+      ),
+
+      // Polls routes
+      GoRoute(
+        path: '/polls',
+        builder: (context, state) => const PollsScreen(),
+      ),
+      GoRoute(
+        path: '/create-poll',
+        builder: (context, state) => const CreatePollScreen(),
+      ),
+
+      // Stories route
+      GoRoute(
+        path: '/create-story',
+        builder: (context, state) => const CreateStoryScreen(),
+      ),
+
+      // Referrals route
+      GoRoute(
+        path: '/referrals',
+        builder: (context, state) => const ReferralsScreen(),
       ),
 
       // News routes
