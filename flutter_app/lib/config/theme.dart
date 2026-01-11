@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF1E88E5);
-  static const Color primaryDark = Color(0xFF1565C0);
-  static const Color secondary = Color(0xFF26A69A);
-  static const Color accent = Color(0xFFFF7043);
+  // MUST (Mbarara University of Science & Technology) Green Theme
+  static const Color primary = Color(0xFF2E7D32); // MUST Green
+  static const Color primaryDark = Color(0xFF1B5E20); // Darker green
+  static const Color primaryLight = Color(0xFF4CAF50); // Lighter green
+  static const Color secondary = Color(0xFF388E3C); // Secondary green
+  static const Color accent =
+      Color(0xFFFFD700); // Gold accent (university accent)
   static const Color background = Color(0xFFF5F5F5);
   static const Color surface = Colors.white;
   static const Color error = Color(0xFFE53935);
