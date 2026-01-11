@@ -4,42 +4,42 @@ import 'package:alumni_portal/config/theme.dart';
 class CareerTipsScreen extends StatelessWidget {
   const CareerTipsScreen({super.key});
 
-  final List<Map<String, String>> _tips = const [
+  final List<Map<String, dynamic>> _tips = const [
     {
       'title': 'Build Your Network',
       'content':
           'Networking is key to career success. Connect with alumni, attend events, and maintain relationships.',
-      'icon': '🤝',
+      'icon': Icons.handshake,
     },
     {
       'title': 'Keep Learning',
       'content':
           'Stay updated with industry trends. Take courses, read books, and never stop growing.',
-      'icon': '📚',
+      'icon': Icons.menu_book,
     },
     {
       'title': 'Personal Branding',
       'content':
           'Build a strong online presence. Update your LinkedIn, create a portfolio, and showcase your work.',
-      'icon': '⭐',
+      'icon': Icons.star,
     },
     {
       'title': 'Seek Mentorship',
       'content':
           'Find mentors who can guide you. Learn from their experiences and avoid common mistakes.',
-      'icon': '🎯',
+      'icon': Icons.school,
     },
     {
       'title': 'Set Clear Goals',
       'content':
           'Define your career goals. Create a roadmap and track your progress regularly.',
-      'icon': '🚀',
+      'icon': Icons.flag,
     },
     {
       'title': 'Work-Life Balance',
       'content':
           'Maintain a healthy balance. Take breaks, exercise, and spend time with loved ones.',
-      'icon': '⚖️',
+      'icon': Icons.balance,
     },
   ];
 
@@ -61,11 +61,19 @@ class CareerTipsScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(tip['icon']!, style: const TextStyle(fontSize: 32)),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(tip['icon'] as IconData,
+                            color: AppColors.primary, size: 28),
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          tip['title']!,
+                          tip['title'] as String,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -76,7 +84,7 @@ class CareerTipsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    tip['content']!,
+                    tip['content'] as String,
                     style: const TextStyle(color: AppColors.textSecondary),
                   ),
                 ],

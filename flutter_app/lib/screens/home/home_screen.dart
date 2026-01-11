@@ -6,7 +6,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/providers/notification_provider.dart';
+import 'package:alumni_portal/providers/post_provider.dart';
+import 'package:alumni_portal/providers/gamification_provider.dart';
+import 'package:alumni_portal/providers/poll_provider.dart';
+import 'package:alumni_portal/providers/story_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/screens/home/connection_suggestions_widget.dart';
+import 'package:alumni_portal/screens/home/success_stories_widget.dart';
+import 'package:alumni_portal/screens/home/active_polls_widget.dart';
+import 'package:alumni_portal/screens/home/alumni_spotlight_widget.dart';
+import 'package:alumni_portal/screens/stories/stories_widget.dart';
+import 'package:alumni_portal/screens/profile/profile_completion_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,28 +30,32 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? _tipTimer;
 
   final List<String> _motivationalTips = [
-    "Keep connecting, keep growing! 🌱",
-    "Your network is your net worth 💎",
-    "Every connection is a new opportunity 🚀",
-    "Success is a journey, not a destination 🎯",
-    "Learn from those who've walked your path 👣",
-    "Great things never come from comfort zones 💪",
-    "The alumni network is your secret weapon 🔑",
-    "Today's networking is tomorrow's opportunity 🌟",
-    "Small steps lead to big dreams ✨",
+    "Keep connecting, keep growing!",
+    "Your network is your net worth",
+    "Every connection is a new opportunity �",
+    "Success is a journey, not a destination",
+    "Learn from those who've walked your path",
+    "Great things never come from comfort zones",
+    "The alumni network is your secret weapon",
+    "Today's networking is tomorrow's opportunity",
+    "Small steps lead to big dreams",
     "Stay curious, stay connected 🔗",
   ];
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _loadData();
     _startTipRotation();
   }
 
-  void _loadUserData() {
+  void _loadData() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<UserProvider>().loadCurrentUser();
+      context.read<PostProvider>().loadPosts();
+      context.read<GamificationProvider>().loadAchievements();
+      context.read<PollProvider>().loadPolls();
+      context.read<StoryProvider>().loadStories();
     });
   }
 
@@ -63,39 +77,108 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 600;
+
     return Scaffold(
       appBar: _buildAppBar(),
       drawer: _buildDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
           await context.read<UserProvider>().loadCurrentUser();
+          await context.read<PostProvider>().loadPosts();
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildWelcomeSection(),
-              const SizedBox(height: 24),
-              _buildMotivationalTip(),
-              const SizedBox(height: 24),
-              _buildQuickStats(),
-              const SizedBox(height: 24),
-              _buildQuickActions(),
-              const SizedBox(height: 24),
-              _buildFeatureCards(),
-            ],
-          ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildWelcomeSection(),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+            // Profile completion widget
+            const SliverToBoxAdapter(child: ProfileCompletionWidget()),
+            // Stories
+            const SliverToBoxAdapter(child: StoriesWidget()),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            // Motivational tip
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildMotivationalTip(),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Quick actions - responsive grid
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildQuickActionsGrid(isTablet),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Connection suggestions
+            const SliverToBoxAdapter(child: ConnectionSuggestionsWidget()),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Success stories
+            const SliverToBoxAdapter(child: SuccessStoriesWidget()),
+            const SizedBox(height: 24),
+            // Alumni Spotlight
+            const SliverToBoxAdapter(child: AlumniSpotlightWidget()),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Active polls
+            const SliverToBoxAdapter(child: ActivePollsWidget()),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Recent posts preview
+            SliverToBoxAdapter(child: _buildRecentPostsSection()),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Feature cards
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildFeatureCards(isTablet),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+          ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/create-post'),
+        icon: const Icon(Icons.edit),
+        label: const Text('Post'),
       ),
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: const Text('Alumni Portal'),
+      title: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Icon(Icons.school, color: AppColors.primary, size: 20),
+          ),
+          const SizedBox(width: 8),
+          const Text('Alumni Portal'),
+        ],
+      ),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () => context.go('/directory'),
+          tooltip: 'Search',
+        ),
         Consumer<NotificationProvider>(
           builder: (context, provider, _) => IconButton(
             icon: Badge(
@@ -119,83 +202,106 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, userProvider, _) {
         final user = userProvider.currentUser;
         return Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
+          child: Column(
             children: [
               UserAccountsDrawerHeader(
-                decoration: const BoxDecoration(color: AppColors.primary),
-                currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: user?.profileImageUrl != null
-                      ? CachedNetworkImageProvider(user!.profileImageUrl!)
-                      : null,
-                  child: user?.profileImageUrl == null
-                      ? Text(
-                          user?.fullName?.substring(0, 1).toUpperCase() ?? 'A',
-                          style: const TextStyle(
-                            fontSize: 32,
-                            color: AppColors.primary,
-                          ),
-                        )
-                      : null,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary, AppColors.primaryDark],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
-                accountName: Text(user?.fullName ?? 'Alumni User'),
-                accountEmail: Text(user?.email ?? ''),
+                currentAccountPicture: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.go('/profile');
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: user?.profileImageUrl != null
+                        CachedNetworkImageProvider(user!.profileImageUrl!)
+                        : null,
+                    child: user?.profileImageUrl == null
+                        Text(
+                            user?.fullName?.substring(0, 1).toUpperCase()?
+                                'A',
+                            style: const TextStyle(
+                                fontSize: 32, color: AppColors.primary),
+                          )
+                        : null,
+                  ),
+                ),
+                accountName: Text(
+                  user?.fullName? 'Alumni User',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                accountEmail: Text(user?.email? ''),
+                otherAccountsPictures: [
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      context.push('/edit-profile');
+                    },
+                  ),
+                ],
               ),
-              _buildDrawerItem(Icons.home, 'Home', () => context.go('/home')),
-              _buildDrawerItem(
-                Icons.person,
-                'Profile',
-                () => context.go('/profile'),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    _buildDrawerSection('Main', [
+                      _buildDrawerItem(
+                          Icons.home, 'Home', () => context.go('/home'), true),
+                      _buildDrawerItem(Icons.dynamic_feed, 'Feed',
+                          () => context.push('/feed'), false),
+                      _buildDrawerItem(Icons.person, 'Profile',
+                          () => context.go('/profile'), false),
+                    ]),
+                    _buildDrawerSection('Network', [
+                      _buildDrawerItem(Icons.people, 'Alumni Directory',
+                          () => context.go('/directory'), false),
+                      _buildDrawerItem(Icons.school, 'Almater Directory',
+                          () => context.push('/almater-directory'), false),
+                      _buildDrawerItem(Icons.handshake, 'Mentorship',
+                          () => context.push('/mentorship'), false),
+                      _buildDrawerItem(Icons.group, 'Groups',
+                          () => context.push('/groups'), false),
+                    ]),
+                    _buildDrawerSection('Career', [
+                      _buildDrawerItem(
+                          Icons.work, 'Jobs', () => context.go('/jobs'), false),
+                      _buildDrawerItem(Icons.share, 'Referrals',
+                          () => context.push('/referrals'), false),
+                      _buildDrawerItem(Icons.lightbulb, 'Career Tips',
+                          () => context.push('/career-tips'), false),
+                      _buildDrawerItem(Icons.book, 'Knowledge Hub',
+                          () => context.push('/knowledge'), false),
+                    ]),
+                    _buildDrawerSection('Discover', [
+                      _buildDrawerItem(Icons.event, 'Events',
+                          () => context.push('/events'), false),
+                      _buildDrawerItem(Icons.article, 'News',
+                          () => context.push('/news'), false),
+                      _buildDrawerItem(Icons.poll, 'Polls',
+                          () => context.push('/polls'), false),
+                    ]),
+                    _buildDrawerSection('Achievements', [
+                      _buildDrawerItem(Icons.emoji_events, 'Badges',
+                          () => context.push('/badges'), false),
+                      _buildDrawerItem(Icons.visibility, 'Who Viewed Me',
+                          () => context.push('/profile-viewers'), false),
+                    ]),
+                    const Divider(),
+                    _buildDrawerItem(Icons.settings, 'Settings',
+                        () => context.push('/settings'), false),
+                    _buildDrawerItem(
+                        Icons.logout, 'Logout', () => _handleLogout(), false,
+                        isDestructive: true),
+                  ],
+                ),
               ),
-              _buildDrawerItem(
-                Icons.people,
-                'Alumni Directory',
-                () => context.go('/directory'),
-              ),
-              _buildDrawerItem(
-                Icons.school,
-                'Almater Directory',
-                () => context.push('/almater-directory'),
-              ),
-              _buildDrawerItem(
-                Icons.handshake,
-                'Mentorship',
-                () => context.push('/mentorship'),
-              ),
-              _buildDrawerItem(Icons.work, 'Jobs', () => context.go('/jobs')),
-              _buildDrawerItem(
-                Icons.lightbulb,
-                'Career Tips',
-                () => context.push('/career-tips'),
-              ),
-              _buildDrawerItem(
-                Icons.book,
-                'Knowledge Hub',
-                () => context.push('/knowledge'),
-              ),
-              _buildDrawerItem(
-                Icons.event,
-                'Events',
-                () => context.push('/events'),
-              ),
-              _buildDrawerItem(
-                Icons.article,
-                'News',
-                () => context.push('/news'),
-              ),
-              _buildDrawerItem(
-                Icons.group,
-                'Groups',
-                () => context.push('/groups'),
-              ),
-              const Divider(),
-              _buildDrawerItem(
-                Icons.settings,
-                'Settings',
-                () => context.push('/settings'),
-              ),
-              _buildDrawerItem(Icons.logout, 'Logout', () => _handleLogout()),
             ],
           ),
         );
@@ -203,10 +309,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
+  Widget _buildDrawerSection(String title, List<Widget> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+        ...items,
+      ],
+    );
+  }
+
+  Widget _buildDrawerItem(
+      IconData icon, String title, VoidCallback onTap, bool isSelected,
+      {bool isDestructive = false}) {
     return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
+      leading: Icon(
+        icon,
+        color: isDestructive
+            AppColors.error
+            : (isSelected AppColors.primary : null),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: isDestructive AppColors.error : null,
+          fontWeight: isSelected FontWeight.bold : null,
+        ),
+      ),
+      selected: isSelected,
+      selectedTileColor: AppColors.primary.withValues(alpha: 0.1),
       onTap: () {
         Navigator.pop(context);
         onTap();
@@ -218,51 +360,63 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<UserProvider>(
       builder: (context, provider, _) {
         final user = provider.currentUser;
+        final greeting = _getGreeting();
         return Row(
           children: [
-            CircleAvatar(
-              radius: 32,
-              backgroundColor: AppColors.primary.withOpacity(0.1),
-              backgroundImage: user?.profileImageUrl != null
-                  ? CachedNetworkImageProvider(user!.profileImageUrl!)
-                  : null,
-              child: user?.profileImageUrl == null
-                  ? Text(
-                      user?.fullName?.substring(0, 1).toUpperCase() ?? 'A',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  : null,
+            GestureDetector(
+              onTap: () => context.go('/profile'),
+              child: CircleAvatar(
+                radius: 28,
+                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                backgroundImage: user?.profileImageUrl != null
+                    CachedNetworkImageProvider(user!.profileImageUrl!)
+                    : null,
+                child: user?.profileImageUrl == null
+                    Text(
+                        user?.fullName?.substring(0, 1).toUpperCase()? 'A',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : null,
+              ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome back,',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 14,
-                    ),
+                    greeting,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
                   ),
                   Text(
-                    user?.fullName ?? 'Alumni',
+                    user?.fullName?.split(' ').first? 'Alumni',
                     style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
+            ),
+            // Quick chat button
+            IconButton(
+              onPressed: () => context.go('/chats'),
+              icon: const Icon(Icons.chat_bubble_outline),
+              tooltip: 'Messages',
             ),
           ],
         );
       },
     );
+  }
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning,';
+    if (hour < 17) return 'Good afternoon,';
+    return 'Good evening,';
   }
 
   Widget _buildMotivationalTip() {
@@ -276,16 +430,30 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             colors: [AppColors.primary, AppColors.primaryDark],
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            const Icon(Icons.lightbulb, color: Colors.white, size: 28),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.lightbulb, color: Colors.white, size: 24),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 _motivationalTips[_currentTipIndex],
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 15),
               ),
             ),
           ],
@@ -294,42 +462,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildQuickStats() {
-    return Row(
-      children: [
-        Expanded(child: _buildStatCard('Connections', '0', Icons.people)),
-        const SizedBox(width: 12),
-        Expanded(child: _buildStatCard('Profile Views', '0', Icons.visibility)),
-      ],
-    );
-  }
+  Widget _buildQuickActionsGrid(bool isTablet) {
+    final actions = [
+      {
+        'icon': Icons.edit,
+        'label': 'Post',
+        'onTap': () => context.push('/create-post')
+      },
+      {
+        'icon': Icons.school,
+        'label': 'Mentors',
+        'onTap': () => context.push('/mentor-search')
+      },
+      {'icon': Icons.work, 'label': 'Jobs', 'onTap': () => context.go('/jobs')},
+      {
+        'icon': Icons.event,
+        'label': 'Events',
+        'onTap': () => context.push('/events')
+      },
+      {
+        'icon': Icons.article,
+        'label': 'News',
+        'onTap': () => context.push('/news')
+      },
+      {
+        'icon': Icons.group,
+        'label': 'Groups',
+        'onTap': () => context.push('/groups')
+      },
+    ];
 
-  Widget _buildStatCard(String label, String value, IconData icon) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(icon, color: AppColors.primary, size: 28),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickActions() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -338,72 +500,151 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionButton(
-                'Find Mentor',
-                Icons.school,
-                () => context.push('/mentor-search'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildActionButton(
-                'Browse Jobs',
-                Icons.work,
-                () => context.go('/jobs'),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildActionButton(
-                'Events',
-                Icons.event,
-                () => context.push('/events'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildActionButton(
-                'News',
-                Icons.article,
-                () => context.push('/news'),
-              ),
-            ),
-          ],
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isTablet 6 : 3,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 1,
+          ),
+          itemCount: actions.length,
+          itemBuilder: (context, index) {
+            final action = actions[index];
+            return _buildQuickActionItem(
+              action['icon'] as IconData,
+              action['label'] as String,
+              action['onTap'] as VoidCallback,
+            );
+          },
         ),
       ],
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, VoidCallback onTap) {
+  Widget _buildQuickActionItem(
+      IconData icon, String label, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: AppColors.primary),
-            const SizedBox(width: 8),
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+            Icon(icon, color: AppColors.primary, size: 28),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFeatureCards() {
+  Widget _buildRecentPostsSection() {
+    return Consumer<PostProvider>(
+      builder: (context, provider, _) {
+        final posts = provider.posts.take(3).toList();
+        if (posts.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Recent Posts',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () => context.push('/feed'),
+                    child: const Text('See all'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...posts.map((post) => _buildPostPreview(post)),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPostPreview(dynamic post) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: post.authorImageUrl != null
+              CachedNetworkImageProvider(post.authorImageUrl!)
+              : null,
+          child: post.authorImageUrl == null
+              Text(post.authorName.substring(0, 1).toUpperCase())
+              : null,
+        ),
+        title: Text(
+          post.authorName,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        subtitle: Text(
+          post.content,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 13),
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.favorite, size: 16, color: Colors.grey[400]),
+            Text('${post.totalReactions}',
+                style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+          ],
+        ),
+        onTap: () => context.push('/feed'),
+      ),
+    );
+  }
+
+  Widget _buildFeatureCards(bool isTablet) {
+    final features = [
+      {
+        'title': 'Feed',
+        'subtitle': 'See what alumni are sharing',
+        'icon': Icons.dynamic_feed,
+        'route': '/feed'
+      },
+      {
+        'title': 'Alumni Directory',
+        'subtitle': 'Connect with fellow alumni',
+        'icon': Icons.people,
+        'route': '/directory'
+      },
+      {
+        'title': 'Career Tips',
+        'subtitle': 'Grow your career',
+        'icon': Icons.lightbulb,
+        'route': '/career-tips'
+      },
+      {
+        'title': 'Alumni Groups',
+        'subtitle': 'Join interest groups',
+        'icon': Icons.group,
+        'route': '/groups'
+      },
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -412,43 +653,50 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
-        _buildFeatureCard(
-          'Alumni Directory',
-          'Connect with fellow alumni from your university',
-          Icons.people,
-          () => context.go('/directory'),
-        ),
-        const SizedBox(height: 12),
-        _buildFeatureCard(
-          'Career Tips',
-          'Get insights and advice for your career growth',
-          Icons.lightbulb,
-          () => context.push('/career-tips'),
-        ),
-        const SizedBox(height: 12),
-        _buildFeatureCard(
-          'Alumni Groups',
-          'Join groups based on your interests and graduation year',
-          Icons.group,
-          () => context.push('/groups'),
-        ),
+        if (isTablet)
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 2.5,
+            ),
+            itemCount: features.length,
+            itemBuilder: (context, index) {
+              final f = features[index];
+              return _buildFeatureCard(
+                f['title'] as String,
+                f['subtitle'] as String,
+                f['icon'] as IconData,
+                () => context.push(f['route'] as String),
+              );
+            },
+          )
+        else
+          ...features.map((f) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _buildFeatureCard(
+                  f['title'] as String,
+                  f['subtitle'] as String,
+                  f['icon'] as IconData,
+                  () => context.push(f['route'] as String),
+                ),
+              )),
       ],
     );
   }
 
   Widget _buildFeatureCard(
-    String title,
-    String subtitle,
-    IconData icon,
-    VoidCallback onTap,
-  ) {
+      String title, String subtitle, IconData icon, VoidCallback onTap) {
     return Card(
       child: ListTile(
         leading: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+            color: AppColors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: AppColors.primary),
         ),
@@ -463,20 +711,21 @@ class _HomeScreenState extends State<HomeScreen> {
   void _handleLogout() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Logout'),
         content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext);
               await context.read<AuthProvider>().signOut();
               if (mounted) context.go('/login');
             },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
             child: const Text('Logout'),
           ),
         ],
