@@ -49,6 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (authProvider.isAuthenticated) {
       // Check if user profile exists
       final userExists = await authProvider.checkUserExists();
+      if (!mounted) return;
       if (userExists) {
         context.go('/home');
       } else {
