@@ -10,6 +10,7 @@ import 'package:alumni_portal/screens/profile/profile_screen.dart';
 import 'package:alumni_portal/screens/profile/edit_profile_screen.dart';
 import 'package:alumni_portal/screens/profile/view_profile_screen.dart';
 import 'package:alumni_portal/screens/directory/alumni_directory_screen.dart';
+import 'package:alumni_portal/screens/directory/almater_directory_screen.dart';
 import 'package:alumni_portal/screens/jobs/jobs_screen.dart';
 import 'package:alumni_portal/screens/jobs/job_details_screen.dart';
 import 'package:alumni_portal/screens/jobs/post_job_screen.dart';
@@ -144,6 +145,12 @@ class AppRouter {
       GoRoute(
         path: '/mentor-search',
         builder: (context, state) => const MentorSearchScreen(),
+      ),
+
+      // Almater Directory route
+      GoRoute(
+        path: '/almater-directory',
+        builder: (context, state) => const AlmaterDirectoryScreen(),
       ),
 
       // News routes
