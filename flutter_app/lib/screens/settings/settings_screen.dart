@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:alumni_portal/providers/auth_provider.dart';
+import 'package:alumni_portal/providers/theme_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -31,6 +32,36 @@ class SettingsScreen extends StatelessWidget {
               Icons.notifications,
               'Notification Settings',
               () => context.push('/notification-settings'),
+            ),
+          ]),
+          _buildSection('Appearance', [
+            Consumer<ThemeProvider>(
+              builder: (context, themeProvider, _) => SwitchListTile(
+                secondary: const Icon(Icons.dark_mode),
+                title: const Text('Dark Mode'),
+                subtitle: Text(
+                  themeProvider.isDarkMode ? 'On' : 'Off',
+                  style: const TextStyle(color: AppColors.textSecondary),
+                ),
+                value: themeProvider.isDarkMode,
+                onChanged: (_) => themeProvider.toggleDarkMode(),
+              ),
+            ),
+            Consumer<ThemeProvider>(
+              builder: (context, themeProvider, _) => ListTile(
+                leading: const Icon(Icons.brightness_auto),
+                title: const Text('Theme Mode'),
+                subtitle: Text(
+                  themeProvider.isSystemMode
+                      ? 'System'
+                      : themeProvider.isDarkMode
+                          ? 'Dark'
+                          : 'Light',
+                  style: const TextStyle(color: AppColors.textSecondary),
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => _showThemeModeDialog(context),
+              ),
             ),
           ]),
           _buildSection('Support', [
@@ -107,6 +138,49 @@ class SettingsScreen extends StatelessWidget {
           'Connect with fellow alumni, find mentors, and grow your career.',
         ),
       ],
+    );
+  }
+
+  void _showThemeModeDialog(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Theme Mode'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<ThemeMode>(
+              title: const Text('System'),
+              subtitle: const Text('Follow device settings'),
+              value: ThemeMode.system,
+              groupValue: themeProvider.themeMode,
+              onChanged: (value) {
+                themeProvider.setThemeMode(value!);
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<ThemeMode>(
+              title: const Text('Light'),
+              value: ThemeMode.light,
+              groupValue: themeProvider.themeMode,
+              onChanged: (value) {
+                themeProvider.setThemeMode(value!);
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<ThemeMode>(
+              title: const Text('Dark'),
+              value: ThemeMode.dark,
+              groupValue: themeProvider.themeMode,
+              onChanged: (value) {
+                themeProvider.setThemeMode(value!);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
