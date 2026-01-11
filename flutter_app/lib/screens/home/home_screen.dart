@@ -154,6 +154,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 () => context.go('/directory'),
               ),
               _buildDrawerItem(
+                Icons.school,
+                'Almater Directory',
+                () => context.push('/almater-directory'),
+              ),
+              _buildDrawerItem(
                 Icons.handshake,
                 'Mentorship',
                 () => context.push('/mentorship'),
