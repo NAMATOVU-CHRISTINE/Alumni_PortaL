@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/user_model.dart';
-import 'package:alumni_portal/config/theme.dart';
 
 class MentorSearchScreen extends StatefulWidget {
   const MentorSearchScreen({super.key});
