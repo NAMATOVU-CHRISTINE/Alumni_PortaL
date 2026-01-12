@@ -128,13 +128,16 @@ class ProfileCompletionWidget extends StatelessWidget {
     if (user.profileImageUrl == null) missing.add('Profile Photo');
     if (user.bio == null || user.bio!.isEmpty) missing.add('Bio');
     if (user.major == null || user.major!.isEmpty) missing.add('Major');
-    if (user.graduationYear == null || user.graduationYear!.isEmpty)
+    if (user.graduationYear == null || user.graduationYear!.isEmpty) {
       missing.add('Graduation Year');
-    if (user.currentJob == null || user.currentJob!.isEmpty)
+    }
+    if (user.currentJob == null || user.currentJob!.isEmpty) {
       missing.add('Current Job');
+    }
     if (user.company == null || user.company!.isEmpty) missing.add('Company');
-    if (user.location == null || user.location!.isEmpty)
+    if (user.location == null || user.location!.isEmpty) {
       missing.add('Location');
+    }
     if (user.skills.isEmpty) missing.add('Skills');
 
     return missing.isEmpty ? ['All complete!'] : missing;

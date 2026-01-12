@@ -63,8 +63,9 @@ class ReferralProvider with ChangeNotifier {
   }) async {
     try {
       final currentUser = _auth.currentUser;
-      if (currentUser == null || currentUser.uid == referredUserId)
+      if (currentUser == null || currentUser.uid == referredUserId) {
         return false;
+      }
 
       // Check if already referred
       final existing = await _firestore

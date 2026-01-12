@@ -150,8 +150,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               );
                             }).toList(),
                             onChanged: (value) {
-                              if (value != null)
+                              if (value != null) {
                                 setState(() => _postType = value);
+                              }
                             },
                           ),
                         ),

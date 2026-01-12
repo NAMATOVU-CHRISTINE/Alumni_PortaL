@@ -18,7 +18,9 @@ class _StoriesWidgetState extends State<StoriesWidget> {
   @override
   void initState() {
     super.initState();
-    context.read<StoryProvider>().loadStories();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<StoryProvider>().loadStories();
+    });
   }
 
   @override
