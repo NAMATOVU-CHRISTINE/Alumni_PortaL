@@ -47,12 +47,13 @@ dependencies:
   url_launcher: ^6.2.4
   share_plus: ^7.2.2
   timeago: ^3.6.1
+  flutter_dotenv: ^5.1.0
+  http: ^1.2.0
+  crypto: ^3.0.3
+  permission_handler: ^11.0.1
   
   # Google Sign In
   google_sign_in: ^6.2.1
-  
-  # HTTP & Networking
-  http: ^1.2.0
   
   # Webview for news
   webview_flutter: ^4.5.0
@@ -70,3 +71,4 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
