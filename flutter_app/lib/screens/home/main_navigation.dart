@@ -27,11 +27,10 @@ class _MainNavigationState extends State<MainNavigation> {
   int _getSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/feed')) return 1;
-    if (location.startsWith('/directory')) return 2;
-    if (location.startsWith('/jobs')) return 3;
-    if (location.startsWith('/chats')) return 4;
-    if (location.startsWith('/profile')) return 5;
+    if (location.startsWith('/directory')) return 1;
+    if (location.startsWith('/create-post')) return 2;
+    if (location.startsWith('/notifications')) return 3;
+    if (location.startsWith('/profile')) return 4;
     return 0;
   }
 
@@ -41,18 +40,15 @@ class _MainNavigationState extends State<MainNavigation> {
         context.go('/home');
         break;
       case 1:
-        context.go('/feed');
-        break;
-      case 2:
         context.go('/directory');
         break;
+      case 2:
+        context.push('/create-post');
+        break;
       case 3:
-        context.go('/jobs');
+        context.push('/notifications');
         break;
       case 4:
-        context.go('/chats');
-        break;
-      case 5:
         context.go('/profile');
         break;
     }
@@ -150,9 +146,9 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   Widget _buildBottomNav() {
-    return Consumer2<ChatProvider, NotificationProvider>(
-      builder: (context, chatProvider, notificationProvider, _) {
-        final unreadChats = chatProvider.totalUnreadCount;
+    return Consumer<NotificationProvider>(
+      builder: (context, notificationProvider, _) {
+        final unreadNotifications = notificationProvider.unreadCount;
 
         return NavigationBar(
           selectedIndex: _getSelectedIndex(context),
@@ -165,32 +161,29 @@ class _MainNavigationState extends State<MainNavigation> {
               label: 'Home',
             ),
             const NavigationDestination(
-              icon: Icon(Icons.article_outlined),
-              selectedIcon: Icon(Icons.article),
-              label: 'Feed',
-            ),
-            const NavigationDestination(
               icon: Icon(Icons.people_outline),
               selectedIcon: Icon(Icons.people),
               label: 'Network',
             ),
             const NavigationDestination(
-              icon: Icon(Icons.work_outline),
-              selectedIcon: Icon(Icons.work),
-              label: 'Jobs',
+              icon: Icon(Icons.add_box_outlined),
+              selectedIcon: Icon(Icons.add_box),
+              label: 'Post',
             ),
             NavigationDestination(
               icon: Badge(
-                isLabelVisible: unreadChats > 0,
-                label: Text(unreadChats > 9 ? '9+' : '$unreadChats'),
-                child: const Icon(Icons.chat_bubble_outline),
+                isLabelVisible: unreadNotifications > 0,
+                label: Text(
+                    unreadNotifications > 9 ? '9+' : '$unreadNotifications'),
+                child: const Icon(Icons.notifications_outlined),
               ),
               selectedIcon: Badge(
-                isLabelVisible: unreadChats > 0,
-                label: Text(unreadChats > 9 ? '9+' : '$unreadChats'),
-                child: const Icon(Icons.chat_bubble),
+                isLabelVisible: unreadNotifications > 0,
+                label: Text(
+                    unreadNotifications > 9 ? '9+' : '$unreadNotifications'),
+                child: const Icon(Icons.notifications),
               ),
-              label: 'Messaging',
+              label: 'Notifications',
             ),
             const NavigationDestination(
               icon: Icon(Icons.person_outline),

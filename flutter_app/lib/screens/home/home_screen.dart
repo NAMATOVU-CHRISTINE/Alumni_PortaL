@@ -7,16 +7,9 @@ import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/providers/notification_provider.dart';
 import 'package:alumni_portal/providers/post_provider.dart';
-import 'package:alumni_portal/providers/gamification_provider.dart';
-import 'package:alumni_portal/providers/poll_provider.dart';
-import 'package:alumni_portal/providers/story_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
-import 'package:alumni_portal/screens/home/connection_suggestions_widget.dart';
-import 'package:alumni_portal/screens/home/success_stories_widget.dart';
-import 'package:alumni_portal/screens/home/active_polls_widget.dart';
-import 'package:alumni_portal/screens/home/alumni_spotlight_widget.dart';
+import 'package:alumni_portal/widgets/linkedin_post_card.dart';
 import 'package:alumni_portal/screens/stories/stories_widget.dart';
-import 'package:alumni_portal/screens/profile/profile_completion_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
