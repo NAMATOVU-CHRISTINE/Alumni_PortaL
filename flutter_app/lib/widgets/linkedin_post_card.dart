@@ -228,19 +228,23 @@ class LinkedInPostCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon,
                 size: 20,
                 color: color ?? Colors.grey[700],
               ),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: color ?? Colors.grey[700],
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: color ?? Colors.grey[700],
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
