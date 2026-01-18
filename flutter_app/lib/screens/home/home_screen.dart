@@ -81,12 +81,27 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Icon(Icons.school, color: Colors.white, size: 20),
+              child: Image.asset(
+                'assets/images/must_logo.png',
+                height: 32,
+                width: 32,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child:
+                        const Icon(Icons.school, color: Colors.white, size: 20),
+                  );
+                },
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -341,17 +356,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 accountName: Text(
-                  user?.fullName ?? 'Alumni User',
+                  user?.fullName ?? 'MUST Alumni',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 accountEmail: Text(user?.email ?? ''),
                 otherAccountsPictures: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      context.push('/edit-profile');
-                    },
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.asset(
+                      'assets/images/must_logo.png',
+                      height: 32,
+                      width: 32,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.school,
+                            color: AppColors.primary, size: 24);
+                      },
+                    ),
                   ),
                 ],
               ),
