@@ -27,10 +27,11 @@ class _MainNavigationState extends State<MainNavigation> {
   int _getSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/directory')) return 1;
-    if (location.startsWith('/jobs')) return 2;
-    if (location.startsWith('/chats')) return 3;
-    if (location.startsWith('/profile')) return 4;
+    if (location.startsWith('/feed')) return 1;
+    if (location.startsWith('/directory')) return 2;
+    if (location.startsWith('/jobs')) return 3;
+    if (location.startsWith('/chats')) return 4;
+    if (location.startsWith('/profile')) return 5;
     return 0;
   }
 
@@ -40,15 +41,18 @@ class _MainNavigationState extends State<MainNavigation> {
         context.go('/home');
         break;
       case 1:
-        context.go('/directory');
+        context.go('/feed');
         break;
       case 2:
-        context.go('/jobs');
+        context.go('/directory');
         break;
       case 3:
-        context.go('/chats');
+        context.go('/jobs');
         break;
       case 4:
+        context.go('/chats');
+        break;
+      case 5:
         context.go('/profile');
         break;
     }
@@ -107,9 +111,14 @@ class _MainNavigationState extends State<MainNavigation> {
               label: Text('Home'),
             ),
             const NavigationRailDestination(
+              icon: Icon(Icons.article_outlined),
+              selectedIcon: Icon(Icons.article),
+              label: Text('Feed'),
+            ),
+            const NavigationRailDestination(
               icon: Icon(Icons.people_outline),
               selectedIcon: Icon(Icons.people),
-              label: Text('Directory'),
+              label: Text('Network'),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.work_outline),
@@ -127,12 +136,12 @@ class _MainNavigationState extends State<MainNavigation> {
                 label: Text(unreadChats > 9 ? '9+' : '$unreadChats'),
                 child: const Icon(Icons.chat_bubble),
               ),
-              label: const Text('Chats'),
+              label: const Text('Messaging'),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.person_outline),
               selectedIcon: Icon(Icons.person),
-              label: Text('Profile'),
+              label: Text('Me'),
             ),
           ],
         );
@@ -156,9 +165,14 @@ class _MainNavigationState extends State<MainNavigation> {
               label: 'Home',
             ),
             const NavigationDestination(
+              icon: Icon(Icons.article_outlined),
+              selectedIcon: Icon(Icons.article),
+              label: 'Feed',
+            ),
+            const NavigationDestination(
               icon: Icon(Icons.people_outline),
               selectedIcon: Icon(Icons.people),
-              label: 'Directory',
+              label: 'Network',
             ),
             const NavigationDestination(
               icon: Icon(Icons.work_outline),
@@ -176,12 +190,12 @@ class _MainNavigationState extends State<MainNavigation> {
                 label: Text(unreadChats > 9 ? '9+' : '$unreadChats'),
                 child: const Icon(Icons.chat_bubble),
               ),
-              label: 'Chats',
+              label: 'Messaging',
             ),
             const NavigationDestination(
               icon: Icon(Icons.person_outline),
               selectedIcon: Icon(Icons.person),
-              label: 'Profile',
+              label: 'Me',
             ),
           ],
         );

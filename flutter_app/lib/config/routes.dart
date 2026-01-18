@@ -74,6 +74,10 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
+            path: '/feed',
+            builder: (context, state) => const FeedScreen(),
+          ),
+          GoRoute(
             path: '/directory',
             builder: (context, state) => const AlumniDirectoryScreen(),
           ),
