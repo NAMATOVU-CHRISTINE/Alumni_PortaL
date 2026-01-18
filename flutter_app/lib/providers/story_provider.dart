@@ -2,14 +2,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:alumni_portal/models/story_model.dart';
 import 'package:alumni_portal/services/notification_service.dart';
+import 'package:alumni_portal/services/cloudinary_service.dart';
 
 class StoryProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   List<UserStories> _userStories = [];
   List<StoryModel> _myStories = [];
@@ -90,11 +89,13 @@ class StoryProvider with ChangeNotifier {
 
       String? imageUrl;
       if (imageFile != null) {
-        final ref = _storage
-            .ref()
-            .child('stories/${DateTime.now().millisecondsSinceEpoch}.jpg');
-        await ref.putFile(imageFile);
-        imageUrl = await ref.getDownloadURL();
+        imageUrl = await CloudinaryService.uploadImage(
+          imageFile,
+          folder: 'stories',
+        );
+        if (imageUrl == null) {
+          throw Exception('Failed to upload image');
+        }
       }
 
       final story = StoryModel(
