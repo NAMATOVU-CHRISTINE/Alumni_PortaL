@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:alumni_portal/screens/landing_screen.dart';
 import 'package:alumni_portal/screens/splash_screen.dart';
 import 'package:alumni_portal/screens/auth/login_screen.dart';
 import 'package:alumni_portal/screens/auth/signup_screen.dart';
@@ -43,9 +44,13 @@ import 'package:alumni_portal/screens/jobs/referrals_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/landing',
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+      GoRoute(
+        path: '/landing',
+        builder: (context, state) => const LandingScreen(),
+      ),
 
       // Auth routes
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
