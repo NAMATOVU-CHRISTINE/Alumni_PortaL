@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // Success stories
             const SliverToBoxAdapter(child: SuccessStoriesWidget()),
-            const SizedBox(height: 24),
+            const SliverToBoxAdapter(child: SizedBox(height: 24)),
             // Alumni Spotlight
             const SliverToBoxAdapter(child: AlumniSpotlightWidget()),
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -160,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       title: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.all(6),
@@ -170,7 +171,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Icon(Icons.school, color: AppColors.primary, size: 20),
           ),
           const SizedBox(width: 8),
-          const Text('Alumni Portal'),
+          const Flexible(
+            child: Text(
+              'Alumni Portal',
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
       actions: [
