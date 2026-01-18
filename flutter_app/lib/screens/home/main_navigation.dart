@@ -30,7 +30,6 @@ class _MainNavigationState extends State<MainNavigation> {
     if (location.startsWith('/directory')) return 1;
     if (location.startsWith('/create-post')) return 2;
     if (location.startsWith('/notifications')) return 3;
-    if (location.startsWith('/profile')) return 4;
     return 0;
   }
 
@@ -47,9 +46,6 @@ class _MainNavigationState extends State<MainNavigation> {
         break;
       case 3:
         context.push('/notifications');
-        break;
-      case 4:
-        context.go('/profile');
         break;
     }
   }
@@ -184,11 +180,6 @@ class _MainNavigationState extends State<MainNavigation> {
                 child: const Icon(Icons.notifications),
               ),
               label: 'Notifications',
-            ),
-            const NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: 'Me',
             ),
           ],
         );
