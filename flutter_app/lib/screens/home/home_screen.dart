@@ -46,9 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<UserProvider>().loadCurrentUser();
       context.read<PostProvider>().loadPosts();
-      context.read<GamificationProvider>().loadAchievements();
-      context.read<PollProvider>().loadPolls();
-      context.read<StoryProvider>().loadStories();
     });
   }
 
@@ -70,82 +67,187 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isTablet = screenWidth > 600;
-
     return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: _buildDrawer(),
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Icon(Icons.school, color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Container(
+                height: 36,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon:
+                        Icon(Icons.search, size: 20, color: Colors.grey[600]),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                  onTap: () => context.go('/directory'),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.chat_bubble_outline, color: Colors.grey),
+            onPressed: () => context.push('/chats'),
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await context.read<UserProvider>().loadCurrentUser();
           await context.read<PostProvider>().loadPosts();
         },
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildWelcomeSection(),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
-            ),
-            // Profile completion widget
-            const SliverToBoxAdapter(child: ProfileCompletionWidget()),
             // Stories
-            const SliverToBoxAdapter(child: StoriesWidget()),
-            const SliverToBoxAdapter(child: SizedBox(height: 16)),
-            // Motivational tip
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildMotivationalTip(),
-              ),
+            const SliverToBoxAdapter(
+              child: StoriesWidget(),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Quick actions - responsive grid
+            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+
+            // Start a post card
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildQuickActionsGrid(isTablet),
-              ),
+              child: _buildStartPostCard(context),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Connection suggestions
-            const SliverToBoxAdapter(child: ConnectionSuggestionsWidget()),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Success stories
-            const SliverToBoxAdapter(child: SuccessStoriesWidget()),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Alumni Spotlight
-            const SliverToBoxAdapter(child: AlumniSpotlightWidget()),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Active polls
-            const SliverToBoxAdapter(child: ActivePollsWidget()),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Recent posts preview
-            SliverToBoxAdapter(child: _buildRecentPostsSection()),
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-            // Feature cards
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildFeatureCards(isTablet),
-              ),
+            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+
+            // Posts feed
+            Consumer<PostProvider>(
+              builder: (context, provider, _) {
+                if (provider.isLoading && provider.posts.isEmpty) {
+                  return const SliverFillRemaining(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (provider.posts.isEmpty) {
+                  return SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.article_outlined,
+                              size: 64, color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No posts yet',
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.grey[600]),
+                          ),
+                          const SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: () => context.push('/create-post'),
+                            child: const Text('Create your first post'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final post = provider.posts[index];
+                      final isLiked = provider.hasUserReacted(post, 'likes');
+
+                      return LinkedInPostCard(
+                        post: post,
+                        isLiked: isLiked,
+                        onLike: () => provider.toggleReaction(post.id, 'likes'),
+                        onComment: () {
+                          // TODO: Open comments
+                        },
+                        onRepost: () {
+                          // TODO: Implement repost
+                        },
+                        onSend: () {
+                          // TODO: Implement send
+                        },
+                        onProfileTap: () =>
+                            context.push('/view-profile/${post.authorId}'),
+                      );
+                    },
+                    childCount: provider.posts.length,
+                  ),
+                );
+              },
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/create-post'),
-        icon: const Icon(Icons.edit),
-        label: const Text('Post'),
+    );
+  }
+
+  Widget _buildStartPostCard(BuildContext context) {
+    final user = context.watch<UserProvider>().currentUser;
+
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+        side: BorderSide(color: Colors.grey[300]!),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundImage: user?.profileImageUrl != null
+                  ? CachedNetworkImageProvider(user!.profileImageUrl!)
+                  : null,
+              child: user?.profileImageUrl == null
+                  ? Text(
+                      user?.fullName?.substring(0, 1).toUpperCase() ?? 'A',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: InkWell(
+                onTap: () => context.push('/create-post'),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[400]!),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Text(
+                    'Start a post',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
