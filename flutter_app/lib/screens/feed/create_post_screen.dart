@@ -215,9 +215,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     minLines: 5,
                     decoration: InputDecoration(
                       hintText: _getHintText(),
+                      hintStyle: TextStyle(color: Colors.grey[600]),
                       border: InputBorder.none,
+                      filled: true,
+                      fillColor: Colors.grey[50],
                     ),
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
 
                   // Selected image preview

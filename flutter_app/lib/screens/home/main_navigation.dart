@@ -179,7 +179,7 @@ class _MainNavigationState extends State<MainNavigation> {
                     unreadNotifications > 9 ? '9+' : '$unreadNotifications'),
                 child: const Icon(Icons.notifications),
               ),
-              label: 'Notifications',
+              label: 'Alerts',
             ),
           ],
         );
