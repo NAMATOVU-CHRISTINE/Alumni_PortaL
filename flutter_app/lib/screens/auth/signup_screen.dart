@@ -29,6 +29,21 @@ class _SignupScreenState extends State<SignupScreen> {
   final List<String> _userTypes = ['Student', 'Alumni', 'Staff'];
 
   @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn();
+  }
+
+  void _checkIfLoggedIn() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = context.read<AuthProvider>();
+      if (authProvider.isAuthenticated) {
+        context.go('/home');
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _fullNameController.dispose();
     _usernameController.dispose();
