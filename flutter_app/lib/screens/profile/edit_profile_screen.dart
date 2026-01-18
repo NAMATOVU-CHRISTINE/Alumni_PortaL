@@ -60,7 +60,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _phoneController.text = user.phoneNumber ?? '';
       _skillsController.text = user.skillsAsString;
       _linkedinController.text = user.socialLinks['linkedin'] ?? '';
-      _selectedWorkStatus = user.workStatus;
+      // Only set work status if it's in the list
+      if (user.workStatus != null && _workStatuses.contains(user.workStatus)) {
+        _selectedWorkStatus = user.workStatus;
+      }
     }
   }
 
