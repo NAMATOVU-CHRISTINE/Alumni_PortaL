@@ -1,0 +1,4 @@
+# Development Notes
+- Working on alumni portal features
+- Multiple commits for better tracking
+
