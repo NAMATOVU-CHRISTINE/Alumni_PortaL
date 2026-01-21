@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
         );
       }
     } else {
-      context.go('/login');
+      context.go('/landing');
     }
   }
 

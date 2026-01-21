@@ -286,13 +286,87 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 const SizedBox(height: 24),
 
+                // Divider
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'OR',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Google Sign-In Button
+                Consumer<AuthProvider>(
+                  builder: (context, auth, _) => OutlinedButton.icon(
+                    onPressed: auth.isLoading
+                        ? null
+                        : () async {
+                            final success = await auth.signInWithGoogle();
+                            if (!mounted) return;
+                            if (success) {
+                              // Check if user profile exists
+                              final userExists = await auth.checkUserExists();
+                              if (!mounted) return;
+                              if (userExists) {
+                                context.go('/home');
+                              } else {
+                                // User needs to complete signup
+                                context.go(
+                                  '/complete-google-signup',
+                                  extra: auth.user?.email ?? '',
+                                );
+                              }
+                            } else if (auth.error != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(auth.error!),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                            }
+                          },
+                    icon: Image.asset(
+                      'assets/icons/google_logo.png',
+                      height: 24,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.g_mobiledata, size: 24);
+                      },
+                    ),
+                    label: const Text(
+                      'Sign up with Google',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(color: Colors.grey[300]!),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
                 // Back to login
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Already have an account? '),
                     TextButton(
-                      onPressed: () => context.pop(),
+                      onPressed: () => context.go('/login'),
                       child: const Text('Login'),
                     ),
                   ],

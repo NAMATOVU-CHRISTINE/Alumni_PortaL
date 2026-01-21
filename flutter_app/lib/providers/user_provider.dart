@@ -83,6 +83,12 @@ class UserProvider with ChangeNotifier {
       _alumniDirectory = snapshot.docs
           .map((doc) => UserModel.fromFirestore(doc))
           .where((user) {
+        // ONLY show alumni (not students or staff)
+        final userType = user.userType.toLowerCase();
+        if (userType != 'alumni') {
+          return false;
+        }
+
         // Apply search filter
         if (searchQuery != null && searchQuery.isNotEmpty) {
           final query = searchQuery.toLowerCase();

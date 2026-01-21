@@ -16,6 +16,7 @@ class GroupModel {
   final bool isPrivate;
   final String? graduationYear;
   final String? department;
+  final bool isOfficial;
 
   GroupModel({
     this.groupId,
@@ -33,6 +34,7 @@ class GroupModel {
     this.isPrivate = false,
     this.graduationYear,
     this.department,
+    this.isOfficial = false,
   });
 
   factory GroupModel.fromFirestore(DocumentSnapshot doc) {
@@ -53,6 +55,7 @@ class GroupModel {
       isPrivate: data['isPrivate'] ?? false,
       graduationYear: data['graduationYear'] as String?,
       department: data['department'] as String?,
+      isOfficial: data['isOfficial'] ?? false,
     );
   }
 
@@ -74,8 +77,7 @@ class GroupModel {
       'memberIds': memberIds,
       'adminIds': adminIds,
       'memberCount': memberCount,
-      'createdAt':
-          createdAt?.millisecondsSinceEpoch ??
+      'createdAt': createdAt?.millisecondsSinceEpoch ??
           DateTime.now().millisecondsSinceEpoch,
       'lastActivityAt': DateTime.now().millisecondsSinceEpoch,
       'isPrivate': isPrivate,

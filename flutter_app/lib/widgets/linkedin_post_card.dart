@@ -11,7 +11,9 @@ class LinkedInPostCard extends StatelessWidget {
   final VoidCallback onRepost;
   final VoidCallback onSend;
   final VoidCallback onProfileTap;
+  final VoidCallback? onDelete;
   final bool isLiked;
+  final bool isOwnPost;
 
   const LinkedInPostCard({
     super.key,
@@ -21,7 +23,9 @@ class LinkedInPostCard extends StatelessWidget {
     required this.onRepost,
     required this.onSend,
     required this.onProfileTap,
+    this.onDelete,
     this.isLiked = false,
+    this.isOwnPost = false,
   });
 
   @override
@@ -102,7 +106,7 @@ class LinkedInPostCard extends StatelessWidget {
                   ),
                   IconButton(
                     icon: const Icon(Icons.more_horiz),
-                    onPressed: () {},
+                    onPressed: () => _showPostOptions(context),
                     iconSize: 20,
                   ),
                 ],
@@ -250,6 +254,95 @@ class LinkedInPostCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showPostOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isOwnPost && onDelete != null) ...[
+              ListTile(
+                leading: const Icon(Icons.delete_outline, color: Colors.red),
+                title: const Text(
+                  'Delete Post',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _confirmDelete(context);
+                },
+              ),
+              const Divider(height: 1),
+            ],
+            ListTile(
+              leading: const Icon(Icons.bookmark_outline),
+              title: const Text('Save Post'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Post saved')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.link),
+              title: const Text('Copy Link'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Link copied to clipboard')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.report_outlined),
+              title: const Text('Report Post'),
+              onTap: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Post reported')),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Post'),
+        content: const Text(
+          'Are you sure you want to delete this post? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (onDelete != null) {
+                onDelete!();
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
       ),
     );
   }
