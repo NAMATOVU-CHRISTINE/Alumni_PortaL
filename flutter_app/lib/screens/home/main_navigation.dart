@@ -27,9 +27,10 @@ class _MainNavigationState extends State<MainNavigation> {
   int _getSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/directory')) return 1;
-    if (location.startsWith('/create-post')) return 2;
-    if (location.startsWith('/notifications')) return 3;
+    if (location.startsWith('/feed')) return 1;
+    if (location.startsWith('/directory')) return 2;
+    if (location.startsWith('/chats')) return 3;
+    if (location.startsWith('/profile')) return 4;
     return 0;
   }
 
@@ -39,13 +40,16 @@ class _MainNavigationState extends State<MainNavigation> {
         context.go('/home');
         break;
       case 1:
-        context.go('/directory');
+        context.go('/feed');
         break;
       case 2:
-        context.push('/create-post');
+        context.go('/directory');
         break;
       case 3:
-        context.push('/notifications');
+        context.go('/chats');
+        break;
+      case 4:
+        context.go('/profile');
         break;
     }
   }
@@ -84,18 +88,16 @@ class _MainNavigationState extends State<MainNavigation> {
           selectedIndex: selectedIndex,
           onDestinationSelected: _onItemTapped,
           labelType: NavigationRailLabelType.all,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          selectedIconTheme: const IconThemeData(color: AppColors.primary),
-          selectedLabelTextStyle: const TextStyle(
-              color: AppColors.primary, fontWeight: FontWeight.w600),
-          leading: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: FloatingActionButton(
-              onPressed: () => context.push('/create-post'),
-              mini: true,
-              child: const Icon(Icons.add),
-            ),
-          ),
+          backgroundColor:
+              Theme.of(context).navigationRailTheme.backgroundColor,
+          selectedIconTheme:
+              Theme.of(context).navigationRailTheme.selectedIconTheme,
+          selectedLabelTextStyle:
+              Theme.of(context).navigationRailTheme.selectedLabelTextStyle,
+          unselectedIconTheme:
+              Theme.of(context).navigationRailTheme.unselectedIconTheme,
+          unselectedLabelTextStyle:
+              Theme.of(context).navigationRailTheme.unselectedLabelTextStyle,
           destinations: [
             const NavigationRailDestination(
               icon: Icon(Icons.home_outlined),
@@ -103,8 +105,8 @@ class _MainNavigationState extends State<MainNavigation> {
               label: Text('Home'),
             ),
             const NavigationRailDestination(
-              icon: Icon(Icons.article_outlined),
-              selectedIcon: Icon(Icons.article),
+              icon: Icon(Icons.dynamic_feed_outlined),
+              selectedIcon: Icon(Icons.dynamic_feed),
               label: Text('Feed'),
             ),
             const NavigationRailDestination(
@@ -112,28 +114,20 @@ class _MainNavigationState extends State<MainNavigation> {
               selectedIcon: Icon(Icons.people),
               label: Text('Network'),
             ),
-            const NavigationRailDestination(
-              icon: Icon(Icons.work_outline),
-              selectedIcon: Icon(Icons.work),
-              label: Text('Jobs'),
-            ),
             NavigationRailDestination(
-              icon: Badge(
-                isLabelVisible: unreadChats > 0,
-                label: Text(unreadChats > 9 ? '9+' : '$unreadChats'),
-                child: const Icon(Icons.chat_bubble_outline),
-              ),
-              selectedIcon: Badge(
-                isLabelVisible: unreadChats > 0,
-                label: Text(unreadChats > 9 ? '9+' : '$unreadChats'),
-                child: const Icon(Icons.chat_bubble),
-              ),
-              label: const Text('Messaging'),
+              icon: unreadChats > 0
+                  ? Badge(
+                      label: Text('$unreadChats'),
+                      child: const Icon(Icons.chat_bubble_outline),
+                    )
+                  : const Icon(Icons.chat_bubble_outline),
+              selectedIcon: const Icon(Icons.chat_bubble),
+              label: const Text('Messages'),
             ),
             const NavigationRailDestination(
               icon: Icon(Icons.person_outline),
               selectedIcon: Icon(Icons.person),
-              label: Text('Me'),
+              label: Text('Profile'),
             ),
           ],
         );
@@ -142,9 +136,9 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   Widget _buildBottomNav() {
-    return Consumer<NotificationProvider>(
-      builder: (context, notificationProvider, _) {
-        final unreadNotifications = notificationProvider.unreadCount;
+    return Consumer<ChatProvider>(
+      builder: (context, chatProvider, _) {
+        final unreadChats = chatProvider.totalUnreadCount;
 
         return NavigationBar(
           selectedIndex: _getSelectedIndex(context),
@@ -157,29 +151,29 @@ class _MainNavigationState extends State<MainNavigation> {
               label: 'Home',
             ),
             const NavigationDestination(
+              icon: Icon(Icons.dynamic_feed_outlined),
+              selectedIcon: Icon(Icons.dynamic_feed),
+              label: 'Feed',
+            ),
+            const NavigationDestination(
               icon: Icon(Icons.people_outline),
               selectedIcon: Icon(Icons.people),
               label: 'Network',
             ),
-            const NavigationDestination(
-              icon: Icon(Icons.add_box_outlined),
-              selectedIcon: Icon(Icons.add_box),
-              label: 'Post',
-            ),
             NavigationDestination(
-              icon: Badge(
-                isLabelVisible: unreadNotifications > 0,
-                label: Text(
-                    unreadNotifications > 9 ? '9+' : '$unreadNotifications'),
-                child: const Icon(Icons.notifications_outlined),
-              ),
-              selectedIcon: Badge(
-                isLabelVisible: unreadNotifications > 0,
-                label: Text(
-                    unreadNotifications > 9 ? '9+' : '$unreadNotifications'),
-                child: const Icon(Icons.notifications),
-              ),
-              label: 'Alerts',
+              icon: unreadChats > 0
+                  ? Badge(
+                      label: Text('$unreadChats'),
+                      child: const Icon(Icons.chat_bubble_outline),
+                    )
+                  : const Icon(Icons.chat_bubble_outline),
+              selectedIcon: const Icon(Icons.chat_bubble),
+              label: 'Messages',
+            ),
+            const NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         );
