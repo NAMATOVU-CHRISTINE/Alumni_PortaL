@@ -42,15 +42,46 @@ class UserProvider with ChangeNotifier {
       if (doc.exists) {
         _currentUser = UserModel.fromFirestore(doc);
 
-        // Update last active
+        // Update last active and online status
         await _firestore.collection('users').doc(userId).update({
           'lastActive': DateTime.now().millisecondsSinceEpoch,
+          'isOnline': true,
         });
       }
     } catch (e) {
       _setError('Failed to load user profile');
     } finally {
       _setLoading(false);
+    }
+  }
+
+  // Method to update user activity status
+  Future<void> updateUserActivity() async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) return;
+
+      await _firestore.collection('users').doc(userId).update({
+        'lastActive': DateTime.now().millisecondsSinceEpoch,
+        'isOnline': true,
+      });
+    } catch (e) {
+      // Silently handle errors for activity updates
+    }
+  }
+
+  // Method to set user offline
+  Future<void> setUserOffline() async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) return;
+
+      await _firestore.collection('users').doc(userId).update({
+        'isOnline': false,
+        'lastActive': DateTime.now().millisecondsSinceEpoch,
+      });
+    } catch (e) {
+      // Silently handle errors
     }
   }
 
@@ -83,9 +114,11 @@ class UserProvider with ChangeNotifier {
       _alumniDirectory = snapshot.docs
           .map((doc) => UserModel.fromFirestore(doc))
           .where((user) {
-        // ONLY show alumni (not students or staff)
+        // Show alumni, students, and staff (all university community members)
         final userType = user.userType.toLowerCase();
-        if (userType != 'alumni') {
+        if (userType != 'alumni' &&
+            userType != 'student' &&
+            userType != 'staff') {
           return false;
         }
 
@@ -137,7 +170,7 @@ class UserProvider with ChangeNotifier {
         (a, b) => (a.fullName ?? '').compareTo(b.fullName ?? ''),
       );
     } catch (e) {
-      _setError('Failed to load alumni directory');
+      _setError('Failed to load university network');
     } finally {
       _setLoading(false);
     }
