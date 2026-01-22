@@ -46,7 +46,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     );
 
     if (chatId != null && mounted) {
-      context.push('/chat/$chatId', extra: _user!.fullName ?? 'Chat');
+      context.push(
+        '/chat/$chatId',
+        extra: {
+          'name': _user!.fullName ?? 'Chat',
+          'image': _user!.profileImageUrl,
+          'lastSeen': 'Last seen recently',
+        },
+      );
     }
   }
 
@@ -57,19 +64,19 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _user == null
-          ? const Center(child: Text('User not found'))
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildProfileHeader(),
-                  _buildProfileInfo(),
-                  _buildSkillsSection(),
-                  const SizedBox(height: 24),
-                  _buildActionButtons(),
-                  const SizedBox(height: 32),
-                ],
-              ),
-            ),
+              ? const Center(child: Text('User not found'))
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildProfileHeader(),
+                      _buildProfileInfo(),
+                      _buildSkillsSection(),
+                      const SizedBox(height: 24),
+                      _buildActionButtons(),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
     );
   }
 
@@ -234,7 +241,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 .map(
                   (skill) => Chip(
                     label: Text(skill),
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                    backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                   ),
                 )
                 .toList(),
