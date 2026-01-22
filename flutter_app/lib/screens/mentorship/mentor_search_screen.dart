@@ -138,7 +138,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
             ],
 
             // Skills/Expertise
-            if (mentor.skills != null && mentor.skills!.isNotEmpty) ...[
+            if (mentor.skills.isNotEmpty) ...[
               Text(
                 'Expertise',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -149,7 +149,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
               Wrap(
                 spacing: 8,
                 runSpacing: 4,
-                children: mentor.skills!
+                children: mentor.skills
                     .take(6)
                     .map((skill) => Chip(
                           label: Text(
@@ -218,9 +218,9 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => _connectWithMentor(mentor),
-                    icon: const Icon(Icons.message, size: 18),
-                    label: const Text('Connect'),
+                    onPressed: () => _sendMentorshipRequest(mentor),
+                    icon: const Icon(Icons.handshake, size: 18),
+                    label: const Text('Request Mentorship'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
@@ -234,11 +234,11 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     );
   }
 
-  void _connectWithMentor(UserModel mentor) {
-    // Navigate to chat or send connection request
+  void _sendMentorshipRequest(UserModel mentor) {
+    // Send mentorship request
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Connection request sent to ${mentor.fullName}!'),
+        content: Text('Mentorship request sent to ${mentor.fullName}!'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
     );

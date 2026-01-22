@@ -490,7 +490,7 @@ class PostCard extends StatelessWidget {
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

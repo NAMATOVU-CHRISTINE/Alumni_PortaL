@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/providers/notification_provider.dart';
-import 'package:alumni_portal/config/theme.dart';
 
 class MainNavigation extends StatefulWidget {
   final Widget child;

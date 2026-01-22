@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/screens/landing_screen.dart';
 import 'package:alumni_portal/screens/splash_screen.dart';
 import 'package:alumni_portal/screens/auth/login_screen.dart';
@@ -38,7 +39,6 @@ import 'package:alumni_portal/screens/feed/create_post_screen.dart';
 import 'package:alumni_portal/screens/profile/badges_screen.dart';
 import 'package:alumni_portal/screens/profile/profile_viewers_screen.dart';
 import 'package:alumni_portal/screens/polls/polls_screen.dart';
-import 'package:alumni_portal/screens/polls/create_poll_screen.dart';
 import 'package:alumni_portal/screens/stories/create_story_screen.dart';
 import 'package:alumni_portal/screens/jobs/referrals_screen.dart';
 import 'package:alumni_portal/screens/marketplace/support_donations_screen.dart';
@@ -49,7 +49,30 @@ import 'package:alumni_portal/screens/content/interactive_content_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/landing',
+    initialLocation: '/',
+    redirect: (context, state) async {
+      // Check if user is logged in
+      final user = FirebaseAuth.instance.currentUser;
+      final isLoggedIn = user != null;
+
+      // If on splash or landing and logged in, redirect to home
+      if (isLoggedIn &&
+          (state.uri.path == '/' || state.uri.path == '/landing')) {
+        return '/home';
+      }
+
+      // If not logged in and trying to access protected routes, redirect to landing
+      if (!isLoggedIn &&
+          state.uri.path != '/landing' &&
+          state.uri.path != '/login' &&
+          state.uri.path != '/signup' &&
+          state.uri.path != '/forgot-password' &&
+          state.uri.path != '/complete-google-signup') {
+        return '/landing';
+      }
+
+      return null; // No redirect needed
+    },
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
       GoRoute(

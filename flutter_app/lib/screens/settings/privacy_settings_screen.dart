@@ -98,7 +98,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
           _buildSection('Directory & Mentorship', [
             SwitchListTile(
               title: const Text('Show in Directory'),
-              subtitle: const Text('Appear in alumni directory'),
+              subtitle: const Text('Appear in university network'),
               value: _showInDirectory,
               onChanged: (v) => setState(() => _showInDirectory = v),
             ),

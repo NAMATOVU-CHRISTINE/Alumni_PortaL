@@ -1,0 +1,40 @@
+{
+  "merchandise": {
+    "MUST_hoodie": {
+      "name": "MUST Hoodie",
+      "price": 100000,
+      "currency": "UGX",
+      "image": "Merchandise images/MUST hoodie.jpeg"
+    },
+    "MUST_collar_shirts": {
+      "name": "MUST Collar Shirts",
+      "price": 60000,
+      "currency": "UGX",
+      "image": "Merchandise images/MUST Collar Shirts.jpeg"
+    },
+    "MUST_shirts": {
+      "name": "MUST Shirts",
+      "price": 50000,
+      "currency": "UGX",
+      "image": "Merchandise images/MUST Shirts.jpeg"
+    },
+    "MUST_cap": {
+      "name": "MUST Cap",
+      "price": 20000,
+      "currency": "UGX",
+      "image": "Merchandise images/MUST Cap.jpeg"
+    },
+    "MUST_signature_pack": {
+      "name": "MUST Alumni Signature Pack",
+      "price": 80000,
+      "currency": "UGX",
+      "image": "Merchandise images/MUST Signature Pack.jpeg"
+    },
+    "MUST_bottle": {
+      "name": "MUST Bottle",
+      "price": 30000,
+      "currency": "UGX",
+      "image": "Merchandise images/MUST Bottle.jpeg"
+    }
+  }
+}

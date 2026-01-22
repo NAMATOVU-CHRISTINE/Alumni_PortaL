@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/user_model.dart';
 import 'package:alumni_portal/config/theme.dart';
@@ -17,6 +18,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
   final _searchController = TextEditingController();
   String? _selectedMajor;
   String? _selectedYear;
+  String? _selectedUserType;
 
   @override
   void initState() {
@@ -42,6 +44,10 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text('University Network'),
         actions: [
           IconButton(
@@ -83,7 +89,25 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
                 }
 
                 final alumni = provider.alumniDirectory;
-                if (alumni.isEmpty) {
+
+                // Exclude current user
+                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                final filteredByUser = currentUserId != null
+                    ? alumni
+                        .where((user) => user.userId != currentUserId)
+                        .toList()
+                    : alumni;
+
+                // Apply user type filter locally
+                final filteredAlumni = _selectedUserType == null
+                    ? filteredByUser
+                    : filteredByUser
+                        .where((user) =>
+                            user.userType.toLowerCase() ==
+                            _selectedUserType!.toLowerCase())
+                        .toList();
+
+                if (filteredAlumni.isEmpty) {
                   return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -105,11 +129,18 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
 
                 return RefreshIndicator(
                   onRefresh: () async => _loadDirectory(),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: alumni.length,
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.65,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemCount: filteredAlumni.length,
                     itemBuilder: (context, index) =>
-                        _buildAlumniCard(alumni[index]),
+                        _buildAlumniCard(filteredAlumni[index]),
                   ),
                 );
               },
@@ -122,66 +153,138 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
 
   Widget _buildAlumniCard(UserModel user) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-          backgroundImage: user.profileImageUrl != null
-              ? CachedNetworkImageProvider(user.profileImageUrl!)
-              : null,
-          child: user.profileImageUrl == null
-              ? Text(
-                  user.fullName?.substring(0, 1).toUpperCase() ?? 'A',
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              : null,
-        ),
-        title: Text(
-          user.fullName ?? 'Member',
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () => context.push('/view-profile/${user.userId}'),
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (user.currentJob != null || user.company != null)
-              Text(
-                '${user.currentJob ?? ''} ${user.company != null ? "at ${user.company}" : ""}',
-                style: const TextStyle(fontSize: 12),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            if (user.major != null || user.graduationYear != null)
-              Text(
-                '${user.major ?? ''} ${user.graduationYear != null ? "• ${user.graduationYear}" : ""}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
+            // Profile Image
+            Expanded(
+              flex: 5,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                child: user.profileImageUrl != null
+                    ? ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(12)),
+                        child: CachedNetworkImage(
+                          imageUrl: user.profileImageUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          errorWidget: (context, url, error) => Center(
+                            child: Text(
+                              user.fullName?.substring(0, 1).toUpperCase() ??
+                                  'A',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 48,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          user.fullName?.substring(0, 1).toUpperCase() ?? 'A',
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 48,
+                          ),
+                        ),
+                      ),
               ),
+            ),
+            // User Info
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name
+                    Text(
+                      user.fullName ?? 'Member',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 3),
+                    // Job/Company or Bio
+                    if (user.currentJob != null || user.company != null)
+                      Text(
+                        user.currentJob ?? user.company ?? '',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: AppColors.textSecondary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    else if (user.bio != null && user.bio!.isNotEmpty)
+                      Text(
+                        user.bio!,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: AppColors.textSecondary,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    const SizedBox(height: 3),
+                    // Major or Location
+                    if (user.major != null)
+                      Text(
+                        user.major!,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          color: AppColors.textSecondary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    const Spacer(),
+                    // User Type Badge
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: _getUserTypeColor(user.userType)
+                              .withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          _getUserTypeLabel(user.userType),
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w600,
+                            color: _getUserTypeColor(user.userType),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
-        trailing: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: _getUserTypeColor(user.userType).withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            _getUserTypeLabel(user.userType),
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: _getUserTypeColor(user.userType),
-            ),
-          ),
-        ),
-        onTap: () => context.push('/view-profile/${user.userId}'),
       ),
     );
   }
@@ -192,62 +295,85 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Filter Members',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Major/Field',
-                prefixIcon: Icon(Icons.school),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Filter Members',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              onChanged: (value) =>
-                  _selectedMajor = value.isEmpty ? null : value,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Graduation Year',
-                prefixIcon: Icon(Icons.calendar_today),
+              const SizedBox(height: 24),
+              DropdownButtonFormField<String>(
+                initialValue: _selectedUserType,
+                decoration: const InputDecoration(
+                  labelText: 'User Type',
+                  prefixIcon: Icon(Icons.badge),
+                ),
+                items: const [
+                  DropdownMenuItem(value: null, child: Text('All')),
+                  DropdownMenuItem(value: 'alumni', child: Text('Alumni')),
+                  DropdownMenuItem(value: 'student', child: Text('Students')),
+                  DropdownMenuItem(value: 'staff', child: Text('Staff')),
+                ],
+                onChanged: (value) {
+                  setModalState(() => _selectedUserType = value);
+                },
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) =>
-                  _selectedYear = value.isEmpty ? null : value,
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      _selectedMajor = null;
-                      _selectedYear = null;
-                      _loadDirectory();
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Clear'),
-                  ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Major/Field',
+                  prefixIcon: Icon(Icons.school),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _loadDirectory();
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Apply'),
-                  ),
+                onChanged: (value) =>
+                    _selectedMajor = value.isEmpty ? null : value,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Graduation Year',
+                  prefixIcon: Icon(Icons.calendar_today),
                 ),
-              ],
-            ),
-          ],
+                keyboardType: TextInputType.number,
+                onChanged: (value) =>
+                    _selectedYear = value.isEmpty ? null : value,
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedMajor = null;
+                          _selectedYear = null;
+                          _selectedUserType = null;
+                        });
+                        _loadDirectory();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Clear'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {});
+                        _loadDirectory();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Apply'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

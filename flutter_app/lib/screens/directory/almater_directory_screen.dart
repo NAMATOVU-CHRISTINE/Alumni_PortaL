@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/user_model.dart';
 import 'package:alumni_portal/config/theme.dart';
@@ -42,7 +43,7 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Almater Directory'),
+        title: const Text('MUST Community'),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -105,10 +106,16 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
           // Results count
           Consumer<UserProvider>(
             builder: (context, provider, _) {
+              final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+              final filteredCount = currentUserId != null
+                  ? provider.almaterDirectory
+                      .where((user) => user.userId != currentUserId)
+                      .length
+                  : provider.almaterDirectory.length;
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  '${provider.almaterDirectory.length} members found',
+                  '$filteredCount members found',
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -127,7 +134,16 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
                 }
 
                 final members = provider.almaterDirectory;
-                if (members.isEmpty) {
+
+                // Exclude current user
+                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                final filteredMembers = currentUserId != null
+                    ? members
+                        .where((user) => user.userId != currentUserId)
+                        .toList()
+                    : members;
+
+                if (filteredMembers.isEmpty) {
                   return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -151,9 +167,9 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
                   onRefresh: () async => _loadDirectory(),
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: members.length,
+                    itemCount: filteredMembers.length,
                     itemBuilder: (context, index) =>
-                        _buildMemberCard(members[index]),
+                        _buildMemberCard(filteredMembers[index]),
                   ),
                 );
               },

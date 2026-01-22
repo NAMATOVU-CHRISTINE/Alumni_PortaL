@@ -36,18 +36,6 @@ class SettingsScreen extends StatelessWidget {
           ]),
           _buildSection('Appearance', [
             Consumer<ThemeProvider>(
-              builder: (context, themeProvider, _) => SwitchListTile(
-                secondary: const Icon(Icons.dark_mode),
-                title: const Text('Dark Mode'),
-                subtitle: Text(
-                  themeProvider.isDarkMode ? 'On' : 'Off',
-                  style: const TextStyle(color: AppColors.textSecondary),
-                ),
-                value: themeProvider.isDarkMode,
-                onChanged: (_) => themeProvider.toggleDarkMode(),
-              ),
-            ),
-            Consumer<ThemeProvider>(
               builder: (context, themeProvider, _) => ListTile(
                 leading: const Icon(Icons.brightness_auto),
                 title: const Text('Theme Mode'),
@@ -126,12 +114,30 @@ class SettingsScreen extends StatelessWidget {
   void _showAboutDialog(BuildContext context) {
     showAboutDialog(
       context: context,
-      applicationName: 'Alumni Portal',
+      applicationName: 'MUST Alumni Portal',
       applicationVersion: '1.1.0',
-      applicationIcon: const Icon(
-        Icons.school,
-        size: 48,
-        color: AppColors.primary,
+      applicationIcon: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            'assets/images/Launcher icon .jpeg',
+            width: 48,
+            height: 48,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(
+                Icons.school,
+                size: 48,
+                color: AppColors.primary,
+              );
+            },
+          ),
+        ),
       ),
       children: [
         const Text(

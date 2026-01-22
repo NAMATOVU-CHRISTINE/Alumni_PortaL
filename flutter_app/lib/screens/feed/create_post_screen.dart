@@ -486,7 +486,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ],
               ),
             );
-          }).toList(),
+          }),
           if (_pollOptions.length < 6)
             TextButton.icon(
               onPressed: _addPollOption,

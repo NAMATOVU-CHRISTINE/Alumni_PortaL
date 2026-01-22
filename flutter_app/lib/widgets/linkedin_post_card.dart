@@ -159,9 +159,9 @@ class LinkedInPostCard extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  if (post.totalComments > 0)
+                  if (post.commentCount > 0)
                     Text(
-                      '${post.totalComments} comments',
+                      '${post.commentCount} comments',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -174,8 +174,8 @@ class LinkedInPostCard extends StatelessWidget {
           const Divider(height: 1),
 
           // Action buttons
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -218,24 +218,26 @@ class LinkedInPostCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(4),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon,
-                size: 20,
+                size: 16,
                 color: isActive ? Colors.blue : Colors.grey[600],
               ),
-              const SizedBox(width: 4),
+              const SizedBox(height: 1),
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: FontWeight.w500,
                   color: isActive ? Colors.blue : Colors.grey[600],
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

@@ -106,15 +106,26 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.school,
-                          size: 64,
-                          color: AppColors.primary,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: Image.asset(
+                            'assets/images/Launcher icon .jpeg',
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.school,
+                                size: 64,
+                                color: AppColors.primary,
+                              );
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
                       const Text(
-                        'Alumni Portal',
+                        'MUST Alumni Portal',
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

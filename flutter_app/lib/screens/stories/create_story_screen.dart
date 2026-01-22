@@ -151,21 +151,46 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
-        child: TextField(
-          controller: _textController,
-          maxLines: null,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+                color: Colors.white.withValues(alpha: 0.3), width: 2),
           ),
-          decoration: const InputDecoration(
-            hintText: 'Type something...',
-            hintStyle: TextStyle(color: Colors.white54),
-            border: InputBorder.none,
+          child: TextField(
+            controller: _textController,
+            maxLines: null,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              shadows: [
+                Shadow(
+                  color: Colors.black,
+                  offset: Offset(1, 1),
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+            decoration: const InputDecoration(
+              hintText: 'Type something...',
+              hintStyle: TextStyle(
+                color: Colors.white70,
+                shadows: [
+                  Shadow(
+                    color: Colors.black,
+                    offset: Offset(1, 1),
+                    blurRadius: 3,
+                  ),
+                ],
+              ),
+              border: InputBorder.none,
+            ),
+            onChanged: (_) => setState(() {}),
           ),
-          onChanged: (_) => setState(() {}),
         ),
       ),
     );

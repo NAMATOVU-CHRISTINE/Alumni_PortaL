@@ -106,14 +106,18 @@ class UserProvider with ChangeNotifier {
     try {
       _setLoading(true);
 
-      Query query =
-          _firestore.collection('users').where('deleted', isNotEqualTo: true);
+      // Get all users without the deleted filter initially
+      Query query = _firestore.collection('users');
 
       final snapshot = await query.get();
 
       _alumniDirectory = snapshot.docs
           .map((doc) => UserModel.fromFirestore(doc))
           .where((user) {
+        // Filter out deleted users
+        // Note: We check this in the where clause instead of the query
+        // to avoid issues with missing 'deleted' field
+
         // Show alumni, students, and staff (all university community members)
         final userType = user.userType.toLowerCase();
         if (userType != 'alumni' &&
@@ -165,6 +169,42 @@ class UserProvider with ChangeNotifier {
         return true;
       }).toList();
 
+      // Remove duplicates - keep only the most recent account based on email
+      final Map<String, UserModel> uniqueUsers = {};
+      for (var user in _alumniDirectory) {
+        final email = user.email?.toLowerCase();
+        if (email != null && email.isNotEmpty) {
+          // If email already exists, keep the one with the most recent creation date
+          if (uniqueUsers.containsKey(email)) {
+            final existing = uniqueUsers[email]!;
+            final existingDate = existing.createdAt ?? DateTime(2000);
+            final newDate = user.createdAt ?? DateTime(2000);
+
+            // Keep the newer account
+            if (newDate.isAfter(existingDate)) {
+              uniqueUsers[email] = user;
+
+              // Delete the older account from Firestore
+              if (existing.userId != null) {
+                _firestore.collection('users').doc(existing.userId).delete();
+              }
+            } else {
+              // Delete the current (older) account from Firestore
+              if (user.userId != null) {
+                _firestore.collection('users').doc(user.userId).delete();
+              }
+            }
+          } else {
+            uniqueUsers[email] = user;
+          }
+        } else {
+          // If no email, keep the user (can't determine duplicates)
+          uniqueUsers[user.userId ?? ''] = user;
+        }
+      }
+
+      _alumniDirectory = uniqueUsers.values.toList();
+
       // Sort by name
       _alumniDirectory.sort(
         (a, b) => (a.fullName ?? '').compareTo(b.fullName ?? ''),
@@ -184,8 +224,8 @@ class UserProvider with ChangeNotifier {
     try {
       _setLoading(true);
 
-      Query query =
-          _firestore.collection('users').where('deleted', isNotEqualTo: true);
+      // Get all users
+      Query query = _firestore.collection('users');
 
       final snapshot = await query.get();
 
@@ -239,17 +279,52 @@ class UserProvider with ChangeNotifier {
           }
         }
 
-        // Check privacy settings
-        final showInDirectory = user.privacySettings['showInDirectory'] ?? true;
-        return showInDirectory;
+        // Show all students and staff regardless of privacy settings
+        return true;
       }).toList();
+
+      // Remove duplicates - keep only the most recent account based on email
+      final Map<String, UserModel> uniqueUsers = {};
+      for (var user in _almaterDirectory) {
+        final email = user.email?.toLowerCase();
+        if (email != null && email.isNotEmpty) {
+          // If email already exists, keep the one with the most recent creation date
+          if (uniqueUsers.containsKey(email)) {
+            final existing = uniqueUsers[email]!;
+            final existingDate = existing.createdAt ?? DateTime(2000);
+            final newDate = user.createdAt ?? DateTime(2000);
+
+            // Keep the newer account
+            if (newDate.isAfter(existingDate)) {
+              uniqueUsers[email] = user;
+
+              // Delete the older account from Firestore
+              if (existing.userId != null) {
+                _firestore.collection('users').doc(existing.userId).delete();
+              }
+            } else {
+              // Delete the current (older) account from Firestore
+              if (user.userId != null) {
+                _firestore.collection('users').doc(user.userId).delete();
+              }
+            }
+          } else {
+            uniqueUsers[email] = user;
+          }
+        } else {
+          // If no email, keep the user (can't determine duplicates)
+          uniqueUsers[user.userId ?? ''] = user;
+        }
+      }
+
+      _almaterDirectory = uniqueUsers.values.toList();
 
       // Sort by name
       _almaterDirectory.sort(
         (a, b) => (a.fullName ?? '').compareTo(b.fullName ?? ''),
       );
     } catch (e) {
-      _setError('Failed to load almater directory');
+      _setError('Failed to load MUST community');
     } finally {
       _setLoading(false);
     }

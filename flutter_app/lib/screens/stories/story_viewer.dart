@@ -23,6 +23,7 @@ class _StoryViewerState extends State<StoryViewer>
   late PageController _pageController;
   late AnimationController _progressController;
   int _currentIndex = 0;
+  final TextEditingController _replyController = TextEditingController();
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class _StoryViewerState extends State<StoryViewer>
   void dispose() {
     _pageController.dispose();
     _progressController.dispose();
+    _replyController.dispose();
     super.dispose();
   }
 
@@ -202,10 +204,140 @@ class _StoryViewerState extends State<StoryViewer>
                   ],
                 ),
               ),
+            // Reactions and Reply (for other users' stories)
+            if (widget.userStory.oderId != widget.provider.currentUserId)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: _buildInteractionBar(story),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildInteractionBar(StoryModel story) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        MediaQuery.of(context).padding.bottom + 16,
+      ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.transparent, Colors.black87],
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Quick reactions
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildReactionButton('❤️'),
+              _buildReactionButton('😂'),
+              _buildReactionButton('😮'),
+              _buildReactionButton('😢'),
+              _buildReactionButton('👏'),
+              _buildReactionButton('🔥'),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Reply input
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _replyController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Send a message...',
+                    hintStyle: const TextStyle(color: Colors.white60),
+                    filled: true,
+                    fillColor: Colors.white.withValues(alpha: 0.2),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                  ),
+                  onTap: () {
+                    _progressController.stop();
+                  },
+                  onSubmitted: (text) => _sendReply(story, text),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: () {
+                  if (_replyController.text.trim().isNotEmpty) {
+                    _sendReply(story, _replyController.text.trim());
+                  }
+                },
+                icon: const Icon(Icons.send, color: Colors.white),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white.withValues(alpha: 0.2),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReactionButton(String emoji) {
+    return GestureDetector(
+      onTap: () => _sendReaction(emoji),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.2),
+          shape: BoxShape.circle,
+        ),
+        child: Text(
+          emoji,
+          style: const TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+
+  void _sendReaction(String emoji) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Sent $emoji reaction'),
+        duration: const Duration(seconds: 1),
+        backgroundColor: Colors.white.withValues(alpha: 0.2),
+      ),
+    );
+    // TODO: Implement actual reaction sending to backend
+  }
+
+  void _sendReply(StoryModel story, String message) {
+    if (message.isEmpty) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Reply sent!'),
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    _replyController.clear();
+    _progressController.forward();
+
+    // TODO: Implement actual reply sending to backend (could be a DM)
   }
 
   Widget _buildStoryContent(StoryModel story) {

@@ -427,8 +427,9 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _shouldShowDateSeparator(
       ChatMessageModel message, ChatMessageModel? previousMessage) {
     if (previousMessage == null) return true;
-    if (message.timestamp == null || previousMessage.timestamp == null)
+    if (message.timestamp == null || previousMessage.timestamp == null) {
       return false;
+    }
 
     final messageDate = DateTime(
       message.timestamp!.year,

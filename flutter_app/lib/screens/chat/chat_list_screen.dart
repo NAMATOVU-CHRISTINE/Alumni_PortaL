@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/models/chat_model.dart';
 import 'package:alumni_portal/config/theme.dart';
-import 'package:alumni_portal/utils/time_formatter.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
