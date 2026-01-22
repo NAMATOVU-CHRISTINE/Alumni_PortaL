@@ -26,10 +26,10 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
 
   void _loadDirectory() {
     context.read<UserProvider>().loadAlumniDirectory(
-      searchQuery: _searchController.text,
-      filterByMajor: _selectedMajor,
-      filterByYear: _selectedYear,
-    );
+          searchQuery: _searchController.text,
+          filterByMajor: _selectedMajor,
+          filterByYear: _selectedYear,
+        );
   }
 
   @override
@@ -42,7 +42,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Alumni Directory'),
+        title: const Text('University Network'),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),
@@ -57,7 +57,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search alumni...',
+                hintText: 'Search alumni, students, staff...',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
@@ -95,7 +95,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'No alumni found',
+                          'No members found',
                           style: TextStyle(color: AppColors.textSecondary),
                         ),
                       ],
@@ -125,7 +125,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: AppColors.primary.withOpacity(0.1),
+          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
           backgroundImage: user.profileImageUrl != null
               ? CachedNetworkImageProvider(user.profileImageUrl!)
               : null,
@@ -140,11 +140,12 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
               : null,
         ),
         title: Text(
-          user.fullName ?? 'Alumni',
+          user.fullName ?? 'Member',
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (user.currentJob != null || user.company != null)
               Text(
@@ -160,23 +161,23 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
                   fontSize: 12,
                   color: AppColors.textSecondary,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
           ],
         ),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: user.isAlumni
-                ? AppColors.primary.withOpacity(0.1)
-                : AppColors.secondary.withOpacity(0.1),
+            color: _getUserTypeColor(user.userType).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            user.userType.toUpperCase(),
+            _getUserTypeLabel(user.userType),
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: user.isAlumni ? AppColors.primary : AppColors.secondary,
+              color: _getUserTypeColor(user.userType),
             ),
           ),
         ),
@@ -198,7 +199,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Filter Alumni',
+              'Filter Members',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
@@ -250,5 +251,31 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
         ),
       ),
     );
+  }
+
+  Color _getUserTypeColor(String userType) {
+    switch (userType.toLowerCase()) {
+      case 'alumni':
+        return AppColors.primary;
+      case 'student':
+        return Colors.green;
+      case 'staff':
+        return Colors.orange;
+      default:
+        return AppColors.secondary;
+    }
+  }
+
+  String _getUserTypeLabel(String userType) {
+    switch (userType.toLowerCase()) {
+      case 'alumni':
+        return 'ALUMNI';
+      case 'student':
+        return 'STUDENT';
+      case 'staff':
+        return 'STAFF';
+      default:
+        return userType.toUpperCase();
+    }
   }
 }
