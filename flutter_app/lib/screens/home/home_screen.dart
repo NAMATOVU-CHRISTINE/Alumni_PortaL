@@ -5,10 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
-import 'package:alumni_portal/providers/notification_provider.dart';
-import 'package:alumni_portal/providers/post_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
-import 'package:alumni_portal/widgets/linkedin_post_card.dart';
 import 'package:alumni_portal/screens/stories/stories_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentTipIndex = 0;
   Timer? _tipTimer;
+  Timer? _activityTimer;
 
   final List<String> _motivationalTips = [
     "Keep connecting, keep growing!",
@@ -40,12 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadData();
     _startTipRotation();
+    _startActivityTracking();
   }
 
   void _loadData() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<UserProvider>().loadCurrentUser();
-      context.read<PostProvider>().loadPosts();
     });
   }
 
@@ -59,32 +57,41 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _startActivityTracking() {
+    // Update user activity every 2 minutes
+    _activityTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
+      if (mounted) {
+        context.read<UserProvider>().updateUserActivity();
+      }
+    });
+  }
+
   @override
   void dispose() {
     _tipTimer?.cancel();
+    _activityTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.grey),
+            icon: const Icon(Icons.menu),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
         title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
                 'assets/images/must_logo.png',
@@ -94,127 +101,129 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child:
-                        const Icon(Icons.school, color: Colors.white, size: 20),
+                    child: const Icon(Icons.school,
+                        color: AppColors.primary, size: 20),
                   );
                 },
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Container(
-                height: 36,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon:
-                        Icon(Icons.search, size: 20, color: Colors.grey[600]),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                  onTap: () => context.go('/directory'),
-                ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                'MUST Alumni Portal',
+                style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.chat_bubble_outline, color: Colors.grey),
-            onPressed: () => context.push('/chats'),
+            icon: const Icon(Icons.notifications_outlined, size: 24),
+            onPressed: () => context.push('/notifications'),
+            tooltip: 'Notifications',
+            padding: const EdgeInsets.all(8),
           ),
+          const SizedBox(width: 8),
         ],
       ),
       drawer: _buildDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
-          await context.read<PostProvider>().loadPosts();
+          await context.read<UserProvider>().loadCurrentUser();
         },
         child: CustomScrollView(
           slivers: [
-            // Stories
-            const SliverToBoxAdapter(
-              child: StoriesWidget(),
+            // Stories Header
+            SliverToBoxAdapter(
+              child: Container(
+                color: Theme.of(context).cardColor,
+                padding: const EdgeInsets.all(20),
+                child: _buildInstagramStyleHeader(),
+              ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+            // Compact Motivational Tip
+            SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: _buildCompactTip(),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+            // Quick Actions Grid
+            SliverToBoxAdapter(
+              child: Container(
+                color: Theme.of(context).cardColor,
+                padding: const EdgeInsets.all(20),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isTablet = constraints.maxWidth > 600;
+                    return _buildQuickActionsGrid(isTablet);
+                  },
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
             // Start a post card
             SliverToBoxAdapter(
-              child: _buildStartPostCard(context),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: _buildStartPostCard(context),
+              ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 8)),
-
-            // Posts feed
-            Consumer<PostProvider>(
-              builder: (context, provider, _) {
-                if (provider.isLoading && provider.posts.isEmpty) {
-                  return const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                if (provider.posts.isEmpty) {
-                  return SliverFillRemaining(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.article_outlined,
-                              size: 64, color: Colors.grey[400]),
-                          const SizedBox(height: 16),
-                          Text(
-                            'No posts yet',
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.grey[600]),
-                          ),
-                          const SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () => context.push('/create-post'),
-                            child: const Text('Create your first post'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final post = provider.posts[index];
-                      final isLiked = provider.hasUserReacted(post, 'likes');
-
-                      return LinkedInPostCard(
-                        post: post,
-                        isLiked: isLiked,
-                        onLike: () => provider.toggleReaction(post.id, 'likes'),
-                        onComment: () {
-                          // TODO: Open comments
-                        },
-                        onRepost: () {
-                          // TODO: Implement repost
-                        },
-                        onSend: () {
-                          // TODO: Implement send
-                        },
-                        onProfileTap: () =>
-                            context.push('/view-profile/${post.authorId}'),
-                      );
-                    },
-                    childCount: provider.posts.length,
-                  ),
-                );
-              },
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildInstagramStyleHeader() {
+    return const Column(
+      children: [
+        // Stories section only
+        StoriesWidget(),
+      ],
+    );
+  }
+
+  Widget _buildCompactTip() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.lightbulb, color: AppColors.primary, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              child: Text(
+                _motivationalTips[_currentTipIndex],
+                key: ValueKey(_currentTipIndex),
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -224,13 +233,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Card(
       margin: EdgeInsets.zero,
-      elevation: 0,
+      elevation: 2,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-        side: BorderSide(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Theme.of(context).dividerColor),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             CircleAvatar(
@@ -246,77 +255,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : null,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: InkWell(
                 onTap: () => context.push('/create-post'),
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey[400]!),
-                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: Theme.of(context).dividerColor),
+                    borderRadius: BorderRadius.circular(25),
+                    color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                   child: Text(
-                    'Start a post',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.w500,
-                    ),
+                    'What\'s on your mind?',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ),
               ),
             ),
+            const SizedBox(width: 12),
+            IconButton(
+              onPressed: () => context.push('/create-post'),
+              icon: Icon(
+                Icons.edit_outlined,
+                color: AppColors.primary,
+                size: 24,
+              ),
+              tooltip: 'Create Post',
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Icons.school, color: AppColors.primary, size: 20),
-          ),
-          const SizedBox(width: 8),
-          const Flexible(
-            child: Text(
-              'Alumni Portal',
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () => context.go('/directory'),
-          tooltip: 'Search',
-        ),
-        Consumer<NotificationProvider>(
-          builder: (context, provider, _) => IconButton(
-            icon: Badge(
-              isLabelVisible: provider.unreadCount > 0,
-              label: Text('${provider.unreadCount}'),
-              child: const Icon(Icons.notifications_outlined),
-            ),
-            onPressed: () => context.push('/notifications'),
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          onPressed: () => context.push('/settings'),
-        ),
-      ],
     );
   }
 
@@ -359,41 +331,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   user?.fullName ?? 'MUST Alumni',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                accountEmail: Text(user?.email ?? ''),
-                otherAccountsPictures: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.asset(
-                      'assets/images/must_logo.png',
-                      height: 32,
-                      width: 32,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.school,
-                            color: AppColors.primary, size: 24);
-                      },
-                    ),
-                  ),
-                ],
+                accountEmail: null,
               ),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    _buildDrawerSection('Main', [
-                      _buildDrawerItem(
-                          Icons.home, 'Home', () => context.go('/home'), true),
-                      _buildDrawerItem(Icons.dynamic_feed, 'Feed',
-                          () => context.push('/feed'), false),
-                      _buildDrawerItem(Icons.person, 'Profile',
-                          () => context.go('/profile'), false),
-                    ]),
                     _buildDrawerSection('Network', [
-                      _buildDrawerItem(Icons.people, 'Alumni Directory',
-                          () => context.go('/directory'), false),
                       _buildDrawerItem(Icons.school, 'Almater Directory',
                           () => context.push('/almater-directory'), false),
                       _buildDrawerItem(Icons.handshake, 'Mentorship',
@@ -412,18 +356,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           () => context.push('/knowledge'), false),
                     ]),
                     _buildDrawerSection('Discover', [
-                      _buildDrawerItem(Icons.event, 'Events',
-                          () => context.push('/events'), false),
                       _buildDrawerItem(Icons.article, 'News',
                           () => context.push('/news'), false),
                       _buildDrawerItem(Icons.poll, 'Polls',
                           () => context.push('/polls'), false),
                     ]),
-                    _buildDrawerSection('Achievements', [
-                      _buildDrawerItem(Icons.emoji_events, 'Badges',
-                          () => context.push('/badges'), false),
-                      _buildDrawerItem(Icons.visibility, 'Who Viewed Me',
-                          () => context.push('/profile-viewers'), false),
+                    _buildDrawerSection('More', [
+                      _buildDrawerItem(Icons.emoji_events, 'Achievements',
+                          () => context.push('/achievements'), false),
+                      _buildDrawerItem(Icons.leaderboard, 'Leaderboard',
+                          () => context.push('/leaderboard'), false),
                     ]),
                     const Divider(),
                     _buildDrawerItem(Icons.settings, 'Settings',
@@ -488,112 +430,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWelcomeSection() {
-    return Consumer<UserProvider>(
-      builder: (context, provider, _) {
-        final user = provider.currentUser;
-        final greeting = _getGreeting();
-        return Row(
-          children: [
-            GestureDetector(
-              onTap: () => context.go('/profile'),
-              child: CircleAvatar(
-                radius: 28,
-                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                backgroundImage: user?.profileImageUrl != null
-                    ? CachedNetworkImageProvider(user!.profileImageUrl!)
-                    : null,
-                child: user?.profileImageUrl == null
-                    ? Text(
-                        user?.fullName?.substring(0, 1).toUpperCase() ?? 'A',
-                        style: const TextStyle(
-                          fontSize: 22,
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    : null,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    greeting,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                  ),
-                  Text(
-                    user?.fullName?.split(' ').first ?? 'Alumni',
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            // Quick chat button
-            IconButton(
-              onPressed: () => context.go('/chats'),
-              icon: const Icon(Icons.chat_bubble_outline),
-              tooltip: 'Messages',
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning,';
-    if (hour < 17) return 'Good afternoon,';
-    return 'Good evening,';
-  }
-
-  Widget _buildMotivationalTip() {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      child: Container(
-        key: ValueKey(_currentTipIndex),
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.primary, AppColors.primaryDark],
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.lightbulb, color: Colors.white, size: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                _motivationalTips[_currentTipIndex],
-                style: const TextStyle(color: Colors.white, fontSize: 15),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildQuickActionsGrid(bool isTablet) {
     final actions = [
       {
@@ -606,30 +442,44 @@ class _HomeScreenState extends State<HomeScreen> {
         'label': 'Mentors',
         'onTap': () => context.push('/mentor-search')
       },
-      {'icon': Icons.work, 'label': 'Jobs', 'onTap': () => context.go('/jobs')},
+      {
+        'icon': Icons.message,
+        'label': 'Messages',
+        'onTap': () => context.push('/chats')
+      },
       {
         'icon': Icons.event,
         'label': 'Events',
         'onTap': () => context.push('/events')
       },
       {
-        'icon': Icons.article,
-        'label': 'News',
-        'onTap': () => context.push('/news')
+        'icon': Icons.forum,
+        'label': 'Discuss',
+        'onTap': () => context.push('/discussions')
       },
       {
-        'icon': Icons.group,
-        'label': 'Groups',
-        'onTap': () => context.push('/groups')
+        'icon': Icons.favorite,
+        'label': 'Support',
+        'onTap': () => context.push('/support-donations')
+      },
+      {
+        'icon': Icons.rocket_launch,
+        'label': 'Career',
+        'onTap': () => context.push('/enhanced-career-center')
+      },
+      {
+        'icon': Icons.play_circle,
+        'label': 'Content',
+        'onTap': () => context.push('/interactive-content')
       },
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Quick Actions',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 12),
         GridView.builder(
@@ -669,173 +519,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: AppColors.primary, size: 28),
+            Icon(icon, color: AppColors.primary, size: 24),
             const SizedBox(height: 6),
             Text(
               label,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildRecentPostsSection() {
-    return Consumer<PostProvider>(
-      builder: (context, provider, _) {
-        final posts = provider.posts.take(3).toList();
-        if (posts.isEmpty) return const SizedBox.shrink();
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Recent Posts',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  TextButton(
-                    onPressed: () => context.push('/feed'),
-                    child: const Text('See all'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            ...posts.map((post) => _buildPostPreview(post)),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildPostPreview(dynamic post) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: post.authorImageUrl != null
-              ? CachedNetworkImageProvider(post.authorImageUrl!)
-              : null,
-          child: post.authorImageUrl == null
-              ? Text(post.authorName.substring(0, 1).toUpperCase())
-              : null,
-        ),
-        title: Text(
-          post.authorName,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-        ),
-        subtitle: Text(
-          post.content,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 13),
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.favorite, size: 16, color: Colors.grey[400]),
-            Text('${post.totalReactions}',
-                style: TextStyle(fontSize: 11, color: Colors.grey[600])),
-          ],
-        ),
-        onTap: () => context.push('/feed'),
-      ),
-    );
-  }
-
-  Widget _buildFeatureCards(bool isTablet) {
-    final features = [
-      {
-        'title': 'Feed',
-        'subtitle': 'See what alumni are sharing',
-        'icon': Icons.dynamic_feed,
-        'route': '/feed'
-      },
-      {
-        'title': 'Alumni Directory',
-        'subtitle': 'Connect with fellow alumni',
-        'icon': Icons.people,
-        'route': '/directory'
-      },
-      {
-        'title': 'Career Tips',
-        'subtitle': 'Grow your career',
-        'icon': Icons.lightbulb,
-        'route': '/career-tips'
-      },
-      {
-        'title': 'Alumni Groups',
-        'subtitle': 'Join interest groups',
-        'icon': Icons.group,
-        'route': '/groups'
-      },
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Explore',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        if (isTablet)
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 2.5,
-            ),
-            itemCount: features.length,
-            itemBuilder: (context, index) {
-              final f = features[index];
-              return _buildFeatureCard(
-                f['title'] as String,
-                f['subtitle'] as String,
-                f['icon'] as IconData,
-                () => context.push(f['route'] as String),
-              );
-            },
-          )
-        else
-          ...features.map((f) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: _buildFeatureCard(
-                  f['title'] as String,
-                  f['subtitle'] as String,
-                  f['icon'] as IconData,
-                  () => context.push(f['route'] as String),
-                ),
-              )),
-      ],
-    );
-  }
-
-  Widget _buildFeatureCard(
-      String title, String subtitle, IconData icon, VoidCallback onTap) {
-    return Card(
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: AppColors.primary),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
       ),
     );
   }
@@ -854,6 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(dialogContext);
+              await context.read<UserProvider>().setUserOffline();
               await context.read<AuthProvider>().signOut();
               if (mounted) context.go('/login');
             },
