@@ -41,7 +41,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.poppins(
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
@@ -58,7 +58,7 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: GoogleFonts.poppins(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -102,6 +102,46 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.surface,
+        indicatorColor: AppColors.primary.withValues(alpha: 0.1),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return GoogleFonts.poppins(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+            );
+          }
+          return GoogleFonts.poppins(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textSecondary,
+          );
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: AppColors.primary, size: 24);
+          }
+          return const IconThemeData(color: AppColors.textSecondary, size: 24);
+        }),
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: AppColors.surface,
+        selectedIconTheme: const IconThemeData(color: AppColors.primary),
+        unselectedIconTheme:
+            const IconThemeData(color: AppColors.textSecondary),
+        selectedLabelTextStyle: GoogleFonts.poppins(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+        ),
+        unselectedLabelTextStyle: GoogleFonts.poppins(
+          color: AppColors.textSecondary,
+          fontWeight: FontWeight.w500,
+          fontSize: 11,
+        ),
+      ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
@@ -115,24 +155,96 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.dark,
+        surface: AppColors.darkSurface,
+        background: AppColors.darkBackground,
       ),
       scaffoldBackgroundColor: AppColors.darkBackground,
-      textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+      textTheme:
+          GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
+        bodyLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        bodyMedium: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        bodySmall: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
+        headlineLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        headlineMedium: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        headlineSmall: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        titleLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        titleMedium: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        titleSmall: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        labelLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        labelMedium: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
+        labelSmall: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.darkSurface,
         foregroundColor: AppColors.darkTextPrimary,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.poppins(
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.w600,
           color: AppColors.darkTextPrimary,
         ),
+        iconTheme: const IconThemeData(color: AppColors.darkTextPrimary),
+        actionsIconTheme: const IconThemeData(color: AppColors.darkTextPrimary),
       ),
       cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         color: AppColors.darkSurface,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          side: const BorderSide(color: AppColors.primary),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.darkTextPrimary,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.darkSurface,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+              color: AppColors.darkTextSecondary.withValues(alpha: 0.3)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+              color: AppColors.darkTextSecondary.withValues(alpha: 0.3)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: AppColors.error),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        hintStyle: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
+        labelStyle: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.darkSurface,
@@ -141,6 +253,88 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.darkSurface,
+        indicatorColor: AppColors.primary.withValues(alpha: 0.2),
+        surfaceTintColor: AppColors.darkSurface,
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return GoogleFonts.poppins(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
+            );
+          }
+          return GoogleFonts.poppins(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: AppColors.darkTextSecondary,
+          );
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return const IconThemeData(color: AppColors.primary, size: 24);
+          }
+          return const IconThemeData(
+              color: AppColors.darkTextSecondary, size: 24);
+        }),
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: AppColors.darkSurface,
+        selectedIconTheme: const IconThemeData(color: AppColors.primary),
+        unselectedIconTheme:
+            const IconThemeData(color: AppColors.darkTextSecondary),
+        selectedLabelTextStyle: GoogleFonts.poppins(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+        ),
+        unselectedLabelTextStyle: GoogleFonts.poppins(
+          color: AppColors.darkTextSecondary,
+          fontWeight: FontWeight.w500,
+          fontSize: 11,
+        ),
+      ),
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+      ),
+      dividerTheme: DividerThemeData(
+        color: AppColors.darkTextSecondary.withValues(alpha: 0.2),
+        thickness: 0.5,
+      ),
+      listTileTheme: ListTileThemeData(
+        textColor: AppColors.darkTextPrimary,
+        iconColor: AppColors.darkTextSecondary,
+        tileColor: AppColors.darkSurface,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.darkSurface,
+        titleTextStyle: GoogleFonts.poppins(
+          color: AppColors.darkTextPrimary,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+        contentTextStyle: GoogleFonts.poppins(
+          color: AppColors.darkTextPrimary,
+          fontSize: 14,
+        ),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppColors.darkSurface,
+        modalBackgroundColor: AppColors.darkSurface,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: AppColors.darkSurface,
+        contentTextStyle: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+        actionTextColor: AppColors.primary,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: AppColors.darkSurface,
+        textStyle: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
+      ),
+      iconTheme: const IconThemeData(color: AppColors.darkTextSecondary),
+      primaryIconTheme: const IconThemeData(color: AppColors.primary),
     );
   }
 }
