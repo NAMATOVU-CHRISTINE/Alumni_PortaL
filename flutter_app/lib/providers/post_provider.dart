@@ -50,6 +50,7 @@ class PostProvider with ChangeNotifier {
     File? imageFile,
     String postType = 'update',
     String? linkUrl,
+    Map<String, dynamic>? pollData,
   }) async {
     try {
       _setLoading(true);
@@ -82,6 +83,7 @@ class PostProvider with ChangeNotifier {
         createdAt: DateTime.now(),
         postType: postType,
         linkUrl: linkUrl,
+        pollData: pollData != null ? PollData.fromMap(pollData) : null,
       );
 
       await _firestore.collection('posts').add(post.toMap());
