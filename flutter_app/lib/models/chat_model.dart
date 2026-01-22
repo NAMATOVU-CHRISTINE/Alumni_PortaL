@@ -5,6 +5,7 @@ class ChatModel {
   final List<String> participantIds;
   final Map<String, String> participantNames;
   final Map<String, String> participantImages;
+  final Map<String, DateTime> participantLastSeen;
   final String? lastMessageText;
   final String? lastMessageSenderId;
   final String? lastMessageType;
@@ -22,6 +23,7 @@ class ChatModel {
     this.participantIds = const [],
     this.participantNames = const {},
     this.participantImages = const {},
+    this.participantLastSeen = const {},
     this.lastMessageText,
     this.lastMessageSenderId,
     this.lastMessageType,
@@ -37,6 +39,18 @@ class ChatModel {
 
   factory ChatModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>? ?? {};
+
+    // Parse participantLastSeen map
+    final lastSeenData =
+        data['participantLastSeen'] as Map<String, dynamic>? ?? {};
+    final participantLastSeen = <String, DateTime>{};
+    lastSeenData.forEach((key, value) {
+      final parsedTime = _parseTimestamp(value);
+      if (parsedTime != null) {
+        participantLastSeen[key] = parsedTime;
+      }
+    });
+
     return ChatModel(
       chatId: doc.id,
       participantIds: List<String>.from(data['participantIds'] ?? []),
@@ -46,6 +60,7 @@ class ChatModel {
       participantImages: Map<String, String>.from(
         data['participantImages'] ?? {},
       ),
+      participantLastSeen: participantLastSeen,
       lastMessageText: data['lastMessageText'] as String?,
       lastMessageSenderId: data['lastMessageSenderId'] as String?,
       lastMessageType: data['lastMessageType'] as String?,
@@ -68,16 +83,22 @@ class ChatModel {
   }
 
   Map<String, dynamic> toMap() {
+    // Convert participantLastSeen to map with timestamps
+    final lastSeenMap = <String, int>{};
+    participantLastSeen.forEach((key, value) {
+      lastSeenMap[key] = value.millisecondsSinceEpoch;
+    });
+
     return {
       'participantIds': participantIds,
       'participantNames': participantNames,
       'participantImages': participantImages,
+      'participantLastSeen': lastSeenMap,
       'lastMessageText': lastMessageText,
       'lastMessageSenderId': lastMessageSenderId,
       'lastMessageType': lastMessageType,
       'lastMessageTimestamp': lastMessageTimestamp?.millisecondsSinceEpoch,
-      'createdAt':
-          createdAt?.millisecondsSinceEpoch ??
+      'createdAt': createdAt?.millisecondsSinceEpoch ??
           DateTime.now().millisecondsSinceEpoch,
       'updatedAt': DateTime.now().millisecondsSinceEpoch,
       'unreadCounts': unreadCounts,
@@ -109,6 +130,13 @@ class ChatModel {
   String? getOtherParticipantImage(String currentUserId) {
     final otherId = getOtherParticipantId(currentUserId);
     return otherId != null ? participantImages[otherId] : null;
+  }
+
+  String? getOtherParticipantLastSeen(String currentUserId) {
+    final otherId = getOtherParticipantId(currentUserId);
+    if (otherId == null) return null;
+    final lastSeenTime = participantLastSeen[otherId];
+    return lastSeenTime?.toIso8601String();
   }
 
   String getDisplayName(String currentUserId) {
@@ -236,8 +264,7 @@ class ChatMessageModel {
       'fileUrl': fileUrl,
       'fileName': fileName,
       'imageUrl': imageUrl,
-      'timestamp':
-          timestamp?.millisecondsSinceEpoch ??
+      'timestamp': timestamp?.millisecondsSinceEpoch ??
           DateTime.now().millisecondsSinceEpoch,
       'isRead': isRead,
       'isDelivered': isDelivered,
