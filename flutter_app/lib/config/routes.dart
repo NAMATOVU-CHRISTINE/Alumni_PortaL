@@ -41,6 +41,11 @@ import 'package:alumni_portal/screens/polls/polls_screen.dart';
 import 'package:alumni_portal/screens/polls/create_poll_screen.dart';
 import 'package:alumni_portal/screens/stories/create_story_screen.dart';
 import 'package:alumni_portal/screens/jobs/referrals_screen.dart';
+import 'package:alumni_portal/screens/marketplace/support_donations_screen.dart';
+import 'package:alumni_portal/screens/discussions/discussions_screen.dart';
+import 'package:alumni_portal/screens/gamification/achievements_screen.dart';
+import 'package:alumni_portal/screens/career/enhanced_career_center.dart';
+import 'package:alumni_portal/screens/content/interactive_content_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -65,7 +70,8 @@ class AppRouter {
       GoRoute(
         path: '/complete-google-signup',
         builder: (context, state) {
-          final email = state.extra as String? ?? '';
+          final extra = state.extra as Map<String, dynamic>?;
+          final email = (extra?['email'] as String?) ?? '';
           return CompleteGoogleSignupScreen(googleEmail: email);
         },
       ),
@@ -149,8 +155,16 @@ class AppRouter {
         path: '/chat/:chatId',
         builder: (context, state) {
           final chatId = state.pathParameters['chatId']!;
-          final otherUserName = state.extra as String? ?? 'Chat';
-          return ChatScreen(chatId: chatId, otherUserName: otherUserName);
+          final extra = state.extra as Map<String, dynamic>?;
+          final otherUserName = (extra?['name'] as String?) ?? 'Chat';
+          final otherUserImage = extra?['image'] as String?;
+          final lastSeen = extra?['lastSeen'] as String?;
+          return ChatScreen(
+            chatId: chatId,
+            otherUserName: otherUserName,
+            otherUserImage: otherUserImage,
+            lastSeen: lastSeen,
+          );
         },
       ),
 
@@ -197,7 +211,7 @@ class AppRouter {
       ),
       GoRoute(
         path: '/create-poll',
-        builder: (context, state) => const CreatePollScreen(),
+        builder: (context, state) => const CreatePostScreen(postType: 'poll'),
       ),
 
       // Stories route
@@ -256,6 +270,36 @@ class AppRouter {
       GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationsScreen(),
+      ),
+
+      // Support & Donations
+      GoRoute(
+        path: '/support-donations',
+        builder: (context, state) => const SupportDonationsScreen(),
+      ),
+
+      // Discussions
+      GoRoute(
+        path: '/discussions',
+        builder: (context, state) => const DiscussionsScreen(),
+      ),
+
+      // Achievements & Gamification
+      GoRoute(
+        path: '/achievements',
+        builder: (context, state) => const AchievementsScreen(),
+      ),
+
+      // Enhanced Career Center
+      GoRoute(
+        path: '/enhanced-career-center',
+        builder: (context, state) => const EnhancedCareerCenter(),
+      ),
+
+      // Interactive Content
+      GoRoute(
+        path: '/interactive-content',
+        builder: (context, state) => const InteractiveContentScreen(),
       ),
 
       // Settings routes
