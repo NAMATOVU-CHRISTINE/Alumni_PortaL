@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/event_model.dart';
 import 'package:alumni_portal/config/theme.dart';
 
@@ -11,9 +13,18 @@ class EventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Events')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/create-event'),
-        child: const Icon(Icons.add),
+      floatingActionButton: Consumer<UserProvider>(
+        builder: (context, userProvider, _) {
+          final user = userProvider.currentUser;
+          final isAdmin = user?.role == 'admin' || user?.role == 'super_admin';
+
+          return isAdmin
+              ? FloatingActionButton(
+                  onPressed: () => context.push('/create-event'),
+                  child: const Icon(Icons.add),
+                )
+              : const SizedBox.shrink();
+        },
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -42,7 +53,7 @@ class EventsScreen extends StatelessWidget {
                   leading: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
