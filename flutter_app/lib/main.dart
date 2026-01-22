@@ -45,7 +45,7 @@ class AlumniPortalApp extends StatelessWidget {
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) => MaterialApp.router(
-          title: 'Alumni Portal',
+          title: 'MUST Alumni Portal',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
