@@ -56,7 +56,7 @@ class _PollsScreenState extends State<PollsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/create-poll'),
+        onPressed: () => context.push('/create-post', extra: {'type': 'poll'}),
         icon: const Icon(Icons.add),
         label: const Text('Create Poll'),
       ),
@@ -81,7 +81,8 @@ class _PollsScreenState extends State<PollsScreen> {
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () => context.push('/create-poll'),
+            onPressed: () =>
+                context.push('/create-post', extra: {'type': 'poll'}),
             icon: const Icon(Icons.add),
             label: const Text('Create Poll'),
           ),
