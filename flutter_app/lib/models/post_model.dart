@@ -1,5 +1,69 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class PollData {
+  final List<PollOption> options;
+  final DateTime? expiresAt;
+  final bool allowMultipleChoices;
+  final int totalVotes;
+
+  PollData({
+    required this.options,
+    this.expiresAt,
+    this.allowMultipleChoices = false,
+    this.totalVotes = 0,
+  });
+
+  factory PollData.fromMap(Map<String, dynamic> data) {
+    return PollData(
+      options: (data['options'] as List<dynamic>)
+          .map((option) => PollOption.fromMap(option as Map<String, dynamic>))
+          .toList(),
+      expiresAt: data['expiresAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(data['expiresAt'])
+          : null,
+      allowMultipleChoices: data['allowMultipleChoices'] ?? false,
+      totalVotes: data['totalVotes'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'options': options.map((option) => option.toMap()).toList(),
+      'expiresAt': expiresAt?.millisecondsSinceEpoch,
+      'allowMultipleChoices': allowMultipleChoices,
+      'totalVotes': totalVotes,
+    };
+  }
+}
+
+class PollOption {
+  final String text;
+  final List<String> voters;
+  final int votes;
+
+  PollOption({
+    required this.text,
+    this.voters = const [],
+    this.votes = 0,
+  });
+
+  factory PollOption.fromMap(Map<String, dynamic> data) {
+    return PollOption(
+      text: data['text'] ?? '',
+      voters: List<String>.from(data['voters'] ?? []),
+      votes: data['votes'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'text': text,
+      'voters': voters,
+      'votes': votes,
+    };
+  }
+}
+
 class PostModel {
   final String id;
   final String authorId;
@@ -14,7 +78,9 @@ class PostModel {
   final int commentCount;
   final DateTime createdAt;
   final String? linkUrl;
-  final String postType; // 'update', 'achievement', 'job_update', 'article'
+  final String
+      postType; // 'update', 'achievement', 'job_update', 'article', 'poll'
+  final PollData? pollData;
 
   PostModel({
     required this.id,
@@ -31,6 +97,7 @@ class PostModel {
     required this.createdAt,
     this.linkUrl,
     this.postType = 'update',
+    this.pollData,
   });
 
   int get totalReactions => likes.length + celebrates.length + supports.length;
@@ -54,6 +121,9 @@ class PostModel {
           : DateTime.now(),
       linkUrl: data['linkUrl'],
       postType: data['postType'] ?? 'update',
+      pollData: data['pollData'] != null
+          ? PollData.fromMap(data['pollData'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -72,6 +142,7 @@ class PostModel {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'linkUrl': linkUrl,
       'postType': postType,
+      'pollData': pollData?.toMap(),
     };
   }
 }
