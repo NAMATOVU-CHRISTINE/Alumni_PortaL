@@ -47,6 +47,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   void initState() {
     super.initState();
     _postType = widget.postType;
+
+    // Check for query parameters
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final uri = Uri.parse(GoRouterState.of(context).uri.toString());
+      final typeParam = uri.queryParameters['type'];
+      if (typeParam != null && typeParam == 'poll') {
+        setState(() {
+          _postType = 'poll';
+        });
+      }
+    });
   }
 
   @override
@@ -88,20 +99,58 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       return;
     }
 
+    // Validate poll options if it's a poll
+    if (_postType == 'poll') {
+      final validOptions = _pollOptions
+          .where((controller) => controller.text.trim().isNotEmpty)
+          .toList();
+
+      if (validOptions.length < 2) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Please provide at least 2 poll options')),
+        );
+        return;
+      }
+    }
+
     setState(() => _isSubmitting = true);
+
+    // Prepare poll data if it's a poll
+    Map<String, dynamic>? pollData;
+    if (_postType == 'poll') {
+      final options = _pollOptions
+          .where((controller) => controller.text.trim().isNotEmpty)
+          .map((controller) => {
+                'text': controller.text.trim(),
+                'voters': <String>[],
+                'votes': 0,
+              })
+          .toList();
+
+      pollData = {
+        'options': options,
+        'expiresAt': null, // Could add expiration later
+        'allowMultipleChoices': false,
+        'totalVotes': 0,
+      };
+    }
 
     final success = await context.read<PostProvider>().createPost(
           content: _contentController.text.trim(),
           imageFile: _selectedImage,
           postType: _postType,
+          pollData: pollData,
         );
 
     setState(() => _isSubmitting = false);
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Post shared successfully!'),
+        SnackBar(
+          content: Text(_postType == 'poll'
+              ? 'Poll created successfully!'
+              : 'Post shared successfully!'),
           backgroundColor: AppColors.success,
         ),
       );
@@ -212,16 +261,35 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   TextField(
                     controller: _contentController,
                     maxLines: null,
-                    minLines: 5,
+                    minLines: _postType == 'poll' ? 2 : 5,
                     decoration: InputDecoration(
                       hintText: _getHintText(),
                       hintStyle: TextStyle(color: Colors.grey[600]),
-                      border: InputBorder.none,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            BorderSide(color: AppColors.primary, width: 2),
+                      ),
                       filled: true,
-                      fillColor: Colors.grey[50],
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.all(16),
                     ),
-                    style: const TextStyle(fontSize: 16, color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Colors.black87),
                   ),
+
+                  // Poll options (only show when poll type is selected)
+                  if (_postType == 'poll') ...[
+                    const SizedBox(height: 16),
+                    _buildPollOptions(),
+                  ],
 
                   // Selected image preview
                   if (_selectedImage != null) ...[
@@ -289,7 +357,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -2),
                 ),
@@ -339,8 +407,114 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         return 'Share your career update...';
       case 'article':
         return 'Share your thoughts or article...';
+      case 'poll':
+        return 'Ask a question to get community input...';
       default:
         return 'What\'s on your mind?';
+    }
+  }
+
+  Widget _buildPollOptions() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.grey[50],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.poll, color: AppColors.primary, size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Poll Options',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ..._pollOptions.asMap().entries.map((entry) {
+            final index = entry.key;
+            final controller = entry.value;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'Option ${index + 1}',
+                        prefixIcon: Icon(
+                          Icons.radio_button_unchecked,
+                          color: AppColors.primary,
+                          size: 20,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: AppColors.primary),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  if (_pollOptions.length > 2)
+                    IconButton(
+                      onPressed: () => _removePollOption(index),
+                      icon: const Icon(Icons.remove_circle_outline),
+                      color: Colors.red,
+                    ),
+                ],
+              ),
+            );
+          }).toList(),
+          if (_pollOptions.length < 6)
+            TextButton.icon(
+              onPressed: _addPollOption,
+              icon: const Icon(Icons.add),
+              label: const Text('Add Option'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _addPollOption() {
+    if (_pollOptions.length < 6) {
+      setState(() {
+        _pollOptions.add(TextEditingController());
+      });
+    }
+  }
+
+  void _removePollOption(int index) {
+    if (_pollOptions.length > 2) {
+      setState(() {
+        _pollOptions[index].dispose();
+        _pollOptions.removeAt(index);
+      });
     }
   }
 }
