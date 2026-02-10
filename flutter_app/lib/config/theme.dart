@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
-  // MUST (Mbarara University of Science & Technology) Green Theme
-  static const Color primary = Color(0xFF2E7D32); // MUST Green
-  static const Color primaryDark = Color(0xFF1B5E20); // Darker green
-  static const Color primaryLight = Color(0xFF4CAF50); // Lighter green
+  // MUST (Mbarara University of Science & Technology) Official Colors
+  static const Color primary = Color(0xFF006838); // MUST Official Green
+  static const Color primaryDark = Color(0xFF004d29); // Darker MUST Green
+  static const Color primaryLight = Color(0xFF2E7D32); // Lighter green
   static const Color secondary = Color(0xFF388E3C); // Secondary green
-  static const Color accent =
-      Color(0xFFFFD700); // Gold accent (university accent)
+  static const Color accent = Color(0xFFFFD700); // MUST Gold
+  static const Color mustMaroon = Color(0xFF800020); // MUST Maroon accent
   static const Color background = Color(0xFFF5F5F5);
   static const Color surface = Colors.white;
   static const Color error = Color(0xFFE53935);
@@ -23,6 +23,19 @@ class AppColors {
   static const Color darkSurface = Color(0xFF1E1E1E);
   static const Color darkTextPrimary = Color(0xFFE0E0E0);
   static const Color darkTextSecondary = Color(0xFF9E9E9E);
+
+  // Gradient colors for MUST branding
+  static const LinearGradient mustGradient = LinearGradient(
+    colors: [primary, primaryDark],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient mustAccentGradient = LinearGradient(
+    colors: [primary, secondary],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }
 
 class AppTheme {
@@ -34,7 +47,36 @@ class AppTheme {
         brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: AppColors.background,
-      textTheme: GoogleFonts.poppinsTextTheme(),
+      textTheme: GoogleFonts.poppinsTextTheme().copyWith(
+        // Headings
+        headlineLarge:
+            GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+        headlineMedium:
+            GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+        headlineSmall:
+            GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
+        // Titles
+        titleLarge:
+            GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600),
+        titleMedium:
+            GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600),
+        titleSmall:
+            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
+        // Body text
+        bodyLarge:
+            GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.normal),
+        bodyMedium:
+            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.normal),
+        bodySmall:
+            GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.normal),
+        // Labels
+        labelLarge:
+            GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500),
+        labelMedium:
+            GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500),
+        labelSmall:
+            GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w400),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
@@ -161,18 +203,58 @@ class AppTheme {
       scaffoldBackgroundColor: AppColors.darkBackground,
       textTheme:
           GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
-        bodyLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        bodyMedium: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        bodySmall: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
-        headlineLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        headlineMedium: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        headlineSmall: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        titleLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        titleMedium: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        titleSmall: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        labelLarge: GoogleFonts.poppins(color: AppColors.darkTextPrimary),
-        labelMedium: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
-        labelSmall: GoogleFonts.poppins(color: AppColors.darkTextSecondary),
+        // Headings
+        headlineLarge: GoogleFonts.poppins(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.darkTextPrimary),
+        headlineMedium: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.darkTextPrimary),
+        headlineSmall: GoogleFonts.poppins(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: AppColors.darkTextPrimary),
+        // Titles
+        titleLarge: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.darkTextPrimary),
+        titleMedium: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.darkTextPrimary),
+        titleSmall: GoogleFonts.poppins(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: AppColors.darkTextPrimary),
+        // Body text
+        bodyLarge: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            color: AppColors.darkTextPrimary),
+        bodyMedium: GoogleFonts.poppins(
+            fontSize: 13,
+            fontWeight: FontWeight.normal,
+            color: AppColors.darkTextPrimary),
+        bodySmall: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            color: AppColors.darkTextSecondary),
+        // Labels
+        labelLarge: GoogleFonts.poppins(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: AppColors.darkTextPrimary),
+        labelMedium: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: AppColors.darkTextSecondary),
+        labelSmall: GoogleFonts.poppins(
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
+            color: AppColors.darkTextSecondary),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.darkSurface,
