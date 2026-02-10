@@ -40,11 +40,17 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthState() async {
-    await Future.delayed(const Duration(seconds: 2));
+    // Wait for Firebase Auth to initialize
+    await Future.delayed(const Duration(milliseconds: 500));
 
     if (!mounted) return;
 
     final authProvider = context.read<AuthProvider>();
+
+    // Wait a bit more to ensure auth state is loaded
+    await Future.delayed(const Duration(milliseconds: 1500));
+
+    if (!mounted) return;
 
     if (authProvider.isAuthenticated) {
       // Check if user profile exists
@@ -56,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
         // User authenticated but no profile - needs to complete signup
         context.go(
           '/complete-google-signup',
-          extra: authProvider.user?.email ?? '',
+          extra: {'email': authProvider.user?.email ?? ''},
         );
       }
     } else {
