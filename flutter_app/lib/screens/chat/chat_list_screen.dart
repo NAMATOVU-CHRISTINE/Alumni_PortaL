@@ -194,8 +194,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
         ),
         onTap: () {
           context.read<ChatProvider>().markChatAsRead(chat.chatId!);
-          // Get the other participant's last seen time
-          final otherParticipantId = chat.getOtherParticipantId(currentUserId);
           final lastSeenTime = chat.getOtherParticipantLastSeen(currentUserId);
 
           context.push(
