@@ -304,9 +304,7 @@ class SharedPostCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ...pollData.options.asMap().entries.map((entry) {
-            final index = entry.key;
-            final option = entry.value;
+          ...pollData.options.map((option) {
             final percentage = pollData.totalVotes > 0
                 ? (option.votes / pollData.totalVotes * 100).round()
                 : 0;
