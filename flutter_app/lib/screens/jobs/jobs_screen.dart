@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:alumni_portal/models/job_model.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/widgets/safe_back_button.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({super.key});
@@ -26,10 +27,7 @@ class _JobsScreenState extends State<JobsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: const SafeBackButton(),
         title: const Text('Job Board'),
         actions: [
           IconButton(
@@ -145,7 +143,11 @@ class _JobsScreenState extends State<JobsScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        onTap: () => context.push('/job-details/${job.jobId}'),
+        onTap: () {
+          if (mounted) {
+            context.push('/job-details/${job.jobId}');
+          }
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -170,7 +172,7 @@ class _JobsScreenState extends State<JobsScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.1),
+                        color: AppColors.success.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
@@ -222,7 +224,7 @@ class _JobsScreenState extends State<JobsScreen> {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
