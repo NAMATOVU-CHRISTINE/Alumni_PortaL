@@ -414,9 +414,7 @@ class PostCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ...pollData.options.asMap().entries.map((entry) {
-            final index = entry.key;
-            final option = entry.value;
+          ...pollData.options.map((option) {
             final percentage = pollData.totalVotes > 0
                 ? (option.votes / pollData.totalVotes * 100).round()
                 : 0;
@@ -425,10 +423,7 @@ class PostCard extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               child: InkWell(
                 onTap: () {
-                  // Use a post-frame callback to avoid setState during build
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _votePoll(context, index);
-                  });
+                  // Poll voting functionality - placeholder
                 },
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
@@ -492,16 +487,6 @@ class PostCard extends StatelessWidget {
             );
           }),
         ],
-      ),
-    );
-  }
-
-  void _votePoll(BuildContext context, int optionIndex) {
-    // TODO: Implement poll voting functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Poll voting functionality coming soon!'),
-        duration: Duration(seconds: 2),
       ),
     );
   }
@@ -594,35 +579,6 @@ class PostCard extends StatelessWidget {
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildShareOption({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 32),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12),
           ),
         ],
       ),
