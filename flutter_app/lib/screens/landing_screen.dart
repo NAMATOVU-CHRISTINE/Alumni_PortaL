@@ -40,12 +40,12 @@ class LandingScreen extends StatelessWidget {
                             ),
                             child: ClipOval(
                               child: Image.asset(
-                                'assets/images/must_logo.jpg',
+                                'assets/images/convocation_log.jpeg',
                                 fit: BoxFit.contain,
                                 errorBuilder: (context, error, stackTrace) {
                                   // Fallback to PNG if JPG fails
                                   return Image.asset(
-                                    'assets/images/must_logo.png',
+                                    'assets/images/convocation_log.jpeg',
                                     fit: BoxFit.contain,
                                     errorBuilder:
                                         (context, error2, stackTrace2) {
