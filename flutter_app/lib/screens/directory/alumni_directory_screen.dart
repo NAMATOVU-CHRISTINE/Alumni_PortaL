@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/user_model.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/widgets/safe_back_button.dart';
 
 class AlumniDirectoryScreen extends StatefulWidget {
   const AlumniDirectoryScreen({super.key});
@@ -44,10 +45,7 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        leading: const SafeBackButton(),
         title: const Text('University Network'),
         actions: [
           IconButton(
