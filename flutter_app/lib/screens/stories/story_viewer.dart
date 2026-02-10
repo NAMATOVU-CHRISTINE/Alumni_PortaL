@@ -180,6 +180,11 @@ class _StoryViewerState extends State<StoryViewer>
                       ],
                     ),
                   ),
+                  if (widget.userStory.oderId == widget.provider.currentUserId)
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.white),
+                      onPressed: () => _deleteStory(story),
+                    ),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
@@ -338,6 +343,38 @@ class _StoryViewerState extends State<StoryViewer>
     _progressController.forward();
 
     // TODO: Implement actual reply sending to backend (could be a DM)
+  }
+
+  void _deleteStory(StoryModel story) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Story'),
+        content: const Text('Are you sure you want to delete this story?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context); // Close dialog
+              await widget.provider.deleteStory(story.id);
+              if (mounted) {
+                Navigator.pop(context); // Close story viewer
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Story deleted'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildStoryContent(StoryModel story) {
