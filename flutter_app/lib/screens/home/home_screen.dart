@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
-                'assets/images/must_logo.png',
+                'assets/images/convocation_log.jpeg',
                 height: 32,
                 width: 32,
                 errorBuilder: (context, error, stackTrace) {
@@ -361,6 +361,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       _buildDrawerItem(Icons.group, 'Groups',
                           () => context.push('/groups'), false),
                     ]),
+                    _buildDrawerSection('University', [
+                      _buildDrawerItem(
+                          Icons.workspace_premium,
+                          'Convocation Team',
+                          () => context.push('/convocation-team'),
+                          false),
+                      _buildDrawerItem(Icons.mic, 'Guest Lectures',
+                          () => context.push('/guest-lectures'), false),
+                    ]),
                     _buildDrawerSection('More', [
                       _buildDrawerItem(Icons.emoji_events, 'Achievements',
                           () => context.push('/achievements'), false),
@@ -453,14 +462,14 @@ class _HomeScreenState extends State<HomeScreen> {
         'onTap': () => context.push('/events')
       },
       {
-        'icon': Icons.forum,
-        'label': 'Discuss',
-        'onTap': () => context.push('/discussions')
+        'icon': Icons.workspace_premium,
+        'label': 'Convocation',
+        'onTap': () => context.push('/convocation-team')
       },
       {
-        'icon': Icons.favorite,
-        'label': 'Support',
-        'onTap': () => context.push('/support-donations')
+        'icon': Icons.mic,
+        'label': 'Lectures',
+        'onTap': () => context.push('/guest-lectures')
       },
       {
         'icon': Icons.rocket_launch,
@@ -468,9 +477,9 @@ class _HomeScreenState extends State<HomeScreen> {
         'onTap': () => context.push('/enhanced-career-center')
       },
       {
-        'icon': Icons.play_circle,
-        'label': 'Content',
-        'onTap': () => context.push('/interactive-content')
+        'icon': Icons.forum,
+        'label': 'Discuss',
+        'onTap': () => context.push('/discussions')
       },
     ];
 
