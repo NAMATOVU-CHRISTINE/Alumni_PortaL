@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/screens/landing_screen.dart';
@@ -46,28 +47,36 @@ import 'package:alumni_portal/screens/discussions/discussions_screen.dart';
 import 'package:alumni_portal/screens/gamification/achievements_screen.dart';
 import 'package:alumni_portal/screens/career/enhanced_career_center.dart';
 import 'package:alumni_portal/screens/content/interactive_content_screen.dart';
+import 'package:alumni_portal/screens/convocation/enhanced_convocation_team_screen.dart';
+import 'package:alumni_portal/screens/guest_lecture/enhanced_guest_lecture_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: '/',
-    redirect: (context, state) async {
+    refreshListenable: _AuthStateNotifier(),
+    redirect: (context, state) {
       // Check if user is logged in
       final user = FirebaseAuth.instance.currentUser;
       final isLoggedIn = user != null;
 
-      // If on splash or landing and logged in, redirect to home
-      if (isLoggedIn &&
-          (state.uri.path == '/' || state.uri.path == '/landing')) {
+      final isOnAuthPage = state.uri.path == '/landing' ||
+          state.uri.path == '/login' ||
+          state.uri.path == '/signup' ||
+          state.uri.path == '/forgot-password' ||
+          state.uri.path == '/complete-google-signup';
+
+      // If on splash and logged in, redirect to home
+      if (isLoggedIn && state.uri.path == '/') {
+        return '/home';
+      }
+
+      // If logged in and on auth pages, redirect to home
+      if (isLoggedIn && isOnAuthPage) {
         return '/home';
       }
 
       // If not logged in and trying to access protected routes, redirect to landing
-      if (!isLoggedIn &&
-          state.uri.path != '/landing' &&
-          state.uri.path != '/login' &&
-          state.uri.path != '/signup' &&
-          state.uri.path != '/forgot-password' &&
-          state.uri.path != '/complete-google-signup') {
+      if (!isLoggedIn && !isOnAuthPage && state.uri.path != '/') {
         return '/landing';
       }
 
@@ -325,6 +334,18 @@ class AppRouter {
         builder: (context, state) => const InteractiveContentScreen(),
       ),
 
+      // Convocation Team
+      GoRoute(
+        path: '/convocation-team',
+        builder: (context, state) => const EnhancedConvocationTeamScreen(),
+      ),
+
+      // Guest Lectures
+      GoRoute(
+        path: '/guest-lectures',
+        builder: (context, state) => const EnhancedGuestLectureScreen(),
+      ),
+
       // Settings routes
       GoRoute(
         path: '/settings',
@@ -340,4 +361,13 @@ class AppRouter {
       ),
     ],
   );
+}
+
+// Auth state notifier to refresh router when auth state changes
+class _AuthStateNotifier extends ChangeNotifier {
+  _AuthStateNotifier() {
+    FirebaseAuth.instance.authStateChanges().listen((_) {
+      notifyListeners();
+    });
+  }
 }
