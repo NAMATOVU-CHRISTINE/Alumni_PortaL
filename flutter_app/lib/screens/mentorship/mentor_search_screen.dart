@@ -84,30 +84,28 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                     children: [
                       Text(
                         mentor.fullName ?? 'Mentor',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       if (mentor.currentJob != null)
                         Text(
                           mentor.currentJob!,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       if (mentor.company != null)
                         Text(
                           mentor.company!,
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.color,
-                                  ),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
                         ),
                     ],
                   ),
@@ -119,18 +117,20 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
 
             // Bio/About section
             if (mentor.bio != null && mentor.bio!.isNotEmpty) ...[
-              Text(
+              const Text(
                 'About',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 mentor.bio!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      height: 1.4,
-                    ),
+                style: const TextStyle(
+                  fontSize: 13,
+                  height: 1.4,
+                ),
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -139,11 +139,12 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
 
             // Skills/Expertise
             if (mentor.skills.isNotEmpty) ...[
-              Text(
+              const Text(
                 'Expertise',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -173,25 +174,21 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
             Row(
               children: [
                 if (mentor.graduationYear != null) ...[
-                  Icon(Icons.school,
-                      size: 16,
-                      color: Theme.of(context).textTheme.bodySmall?.color),
+                  const Icon(Icons.school, size: 14, color: Colors.grey),
                   const SizedBox(width: 4),
                   Text(
                     'Class of ${mentor.graduationYear}',
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(width: 16),
                 ],
                 if (mentor.major != null) ...[
-                  Icon(Icons.book,
-                      size: 16,
-                      color: Theme.of(context).textTheme.bodySmall?.color),
+                  const Icon(Icons.book, size: 14, color: Colors.grey),
                   const SizedBox(width: 4),
                   Flexible(
                     child: Text(
                       mentor.major!,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -208,10 +205,11 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                   child: OutlinedButton.icon(
                     onPressed: () =>
                         context.push('/view-profile/${mentor.userId}'),
-                    icon: const Icon(Icons.person, size: 18),
-                    label: const Text('View Profile'),
+                    icon: const Icon(Icons.person, size: 16),
+                    label: const Text('View Profile',
+                        style: TextStyle(fontSize: 13)),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                   ),
                 ),
@@ -219,10 +217,11 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () => _sendMentorshipRequest(mentor),
-                    icon: const Icon(Icons.handshake, size: 18),
-                    label: const Text('Request Mentorship'),
+                    icon: const Icon(Icons.handshake, size: 16),
+                    label:
+                        const Text('Request', style: TextStyle(fontSize: 13)),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                   ),
                 ),
