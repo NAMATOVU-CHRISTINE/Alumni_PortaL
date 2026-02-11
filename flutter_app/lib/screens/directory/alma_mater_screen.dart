@@ -21,7 +21,10 @@ class _AlmaMaterScreenState extends State<AlmaMaterScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDirectory();
+    // Load directory after the first frame to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDirectory();
+    });
   }
 
   void _loadDirectory() {
