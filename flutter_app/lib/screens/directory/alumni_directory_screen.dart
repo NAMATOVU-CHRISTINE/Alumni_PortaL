@@ -24,7 +24,10 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDirectory();
+    // Load directory after the first frame to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDirectory();
+    });
   }
 
   void _loadDirectory() {
@@ -88,18 +91,10 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
 
                 final alumni = provider.alumniDirectory;
 
-                // Exclude current user
-                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-                final filteredByUser = currentUserId != null
-                    ? alumni
-                        .where((user) => user.userId != currentUserId)
-                        .toList()
-                    : alumni;
-
                 // Apply user type filter locally
                 final filteredAlumni = _selectedUserType == null
-                    ? filteredByUser
-                    : filteredByUser
+                    ? alumni
+                    : alumni
                         .where((user) =>
                             user.userType.toLowerCase() ==
                             _selectedUserType!.toLowerCase())
