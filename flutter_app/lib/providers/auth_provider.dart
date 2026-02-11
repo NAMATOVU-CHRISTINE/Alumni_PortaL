@@ -20,6 +20,10 @@ class AuthProvider with ChangeNotifier {
   String? get userId => _user?.uid;
 
   AuthProvider() {
+    // Initialize with current user if already logged in
+    _user = _auth.currentUser;
+
+    // Listen for auth state changes
     _auth.authStateChanges().listen((User? user) {
       _user = user;
       notifyListeners();
@@ -80,6 +84,11 @@ class AuthProvider with ChangeNotifier {
         await _auth.signOut();
         return false;
       }
+
+      // Update email verification status in Firestore
+      await _firestore.collection('users').doc(credential.user!.uid).update({
+        'emailVerified': true,
+      });
 
       // Update FCM token
       await _updateFcmToken();
