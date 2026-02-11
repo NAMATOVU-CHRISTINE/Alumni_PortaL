@@ -22,7 +22,10 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDirectory();
+    // Load directory after the first frame to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDirectory();
+    });
   }
 
   void _loadDirectory() {
@@ -106,16 +109,11 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
           // Results count
           Consumer<UserProvider>(
             builder: (context, provider, _) {
-              final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-              final filteredCount = currentUserId != null
-                  ? provider.almaterDirectory
-                      .where((user) => user.userId != currentUserId)
-                      .length
-                  : provider.almaterDirectory.length;
+              final count = provider.almaterDirectory.length;
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  '$filteredCount members found',
+                  '$count members found',
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -133,17 +131,35 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
+                if (provider.error != null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Colors.red,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          provider.error!,
+                          style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _loadDirectory,
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
                 final members = provider.almaterDirectory;
 
-                // Exclude current user
-                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-                final filteredMembers = currentUserId != null
-                    ? members
-                        .where((user) => user.userId != currentUserId)
-                        .toList()
-                    : members;
-
-                if (filteredMembers.isEmpty) {
+                if (members.isEmpty) {
                   return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -167,9 +183,9 @@ class _AlmaterDirectoryScreenState extends State<AlmaterDirectoryScreen> {
                   onRefresh: () async => _loadDirectory(),
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: filteredMembers.length,
+                    itemCount: members.length,
                     itemBuilder: (context, index) =>
-                        _buildMemberCard(filteredMembers[index]),
+                        _buildMemberCard(members[index]),
                   ),
                 );
               },
