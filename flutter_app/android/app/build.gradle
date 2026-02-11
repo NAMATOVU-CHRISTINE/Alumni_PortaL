@@ -43,19 +43,28 @@ android {
 
     defaultConfig {
         applicationId "com.namatovu.alumniportal"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion flutter.minSdkVersion  // Android 6.0 and above
         targetSdk flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
     }
 
+    signingConfigs {
+        release {
+            storeFile file('../../../keystore.jks')
+            storePassword 'android123'
+            keyAlias 'upload'
+            keyPassword 'android123'
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
