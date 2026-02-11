@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -105,6 +106,7 @@ class UserProvider with ChangeNotifier {
   }) async {
     try {
       _setLoading(true);
+      _error = null;
 
       // Get all users without the deleted filter initially
       Query query = _firestore.collection('users');
@@ -119,10 +121,17 @@ class UserProvider with ChangeNotifier {
         // to avoid issues with missing 'deleted' field
 
         // Show alumni, students, and staff (all university community members)
-        final userType = user.userType.toLowerCase();
-        if (userType != 'alumni' &&
-            userType != 'student' &&
-            userType != 'staff') {
+        final userType = (user.userType ?? 'student').toLowerCase().trim();
+        final isAlumni = user.isAlumni;
+
+        // Include alumni, students, and staff
+        final isValidUserType = userType == 'alumni' ||
+            userType == 'alumnus' ||
+            userType == 'student' ||
+            userType == 'staff' ||
+            isAlumni;
+
+        if (!isValidUserType) {
           return false;
         }
 
@@ -180,26 +189,18 @@ class UserProvider with ChangeNotifier {
             final existingDate = existing.createdAt ?? DateTime(2000);
             final newDate = user.createdAt ?? DateTime(2000);
 
-            // Keep the newer account
+            // Keep the newer account (don't delete from Firestore here)
             if (newDate.isAfter(existingDate)) {
               uniqueUsers[email] = user;
-
-              // Delete the older account from Firestore
-              if (existing.userId != null) {
-                _firestore.collection('users').doc(existing.userId).delete();
-              }
-            } else {
-              // Delete the current (older) account from Firestore
-              if (user.userId != null) {
-                _firestore.collection('users').doc(user.userId).delete();
-              }
             }
+            // else keep existing
           } else {
             uniqueUsers[email] = user;
           }
         } else {
           // If no email, keep the user (can't determine duplicates)
-          uniqueUsers[user.userId ?? ''] = user;
+          final key = user.userId ?? 'no_id_${uniqueUsers.length}';
+          uniqueUsers[key] = user;
         }
       }
 
@@ -209,8 +210,12 @@ class UserProvider with ChangeNotifier {
       _alumniDirectory.sort(
         (a, b) => (a.fullName ?? '').compareTo(b.fullName ?? ''),
       );
+
+      notifyListeners();
     } catch (e) {
-      _setError('Failed to load university network');
+      _setError('Failed to load university network: ${e.toString()}');
+      _alumniDirectory = [];
+      notifyListeners();
     } finally {
       _setLoading(false);
     }
@@ -223,24 +228,42 @@ class UserProvider with ChangeNotifier {
   }) async {
     try {
       _setLoading(true);
+      _error = null;
 
       // Get all users
       Query query = _firestore.collection('users');
 
+      if (kDebugMode) {
+        print('Loading almater directory...');
+      }
+
       final snapshot = await query.get();
+
+      if (kDebugMode) {
+        print('Fetched ${snapshot.docs.length} users from Firestore');
+      }
 
       _almaterDirectory = snapshot.docs
           .map((doc) => UserModel.fromFirestore(doc))
           .where((user) {
         // Only show students and staff (NOT alumni)
-        final userType = user.userType.toLowerCase();
-        if (userType != 'student' && userType != 'staff') {
+        final userType = (user.userType ?? 'student').toLowerCase().trim();
+        final isAlumni = user.isAlumni;
+
+        // Exclude alumni
+        if (isAlumni || userType == 'alumni' || userType == 'alumnus') {
+          return false;
+        }
+
+        // Include students and staff
+        final isStudentOrStaff = userType == 'student' || userType == 'staff';
+        if (!isStudentOrStaff) {
           return false;
         }
 
         // Apply user type filter
         if (filterByUserType != null && filterByUserType.isNotEmpty) {
-          if (userType != filterByUserType.toLowerCase()) {
+          if (userType != filterByUserType.toLowerCase().trim()) {
             return false;
           }
         }
@@ -294,26 +317,18 @@ class UserProvider with ChangeNotifier {
             final existingDate = existing.createdAt ?? DateTime(2000);
             final newDate = user.createdAt ?? DateTime(2000);
 
-            // Keep the newer account
+            // Keep the newer account (don't delete from Firestore here)
             if (newDate.isAfter(existingDate)) {
               uniqueUsers[email] = user;
-
-              // Delete the older account from Firestore
-              if (existing.userId != null) {
-                _firestore.collection('users').doc(existing.userId).delete();
-              }
-            } else {
-              // Delete the current (older) account from Firestore
-              if (user.userId != null) {
-                _firestore.collection('users').doc(user.userId).delete();
-              }
             }
+            // else keep existing
           } else {
             uniqueUsers[email] = user;
           }
         } else {
           // If no email, keep the user (can't determine duplicates)
-          uniqueUsers[user.userId ?? ''] = user;
+          final key = user.userId ?? 'no_id_${uniqueUsers.length}';
+          uniqueUsers[key] = user;
         }
       }
 
@@ -323,9 +338,23 @@ class UserProvider with ChangeNotifier {
       _almaterDirectory.sort(
         (a, b) => (a.fullName ?? '').compareTo(b.fullName ?? ''),
       );
+
+      if (kDebugMode) {
+        print('Loaded ${_almaterDirectory.length} almater directory members');
+      }
+
+      notifyListeners();
     } catch (e) {
-      _setError('Failed to load MUST community');
+      if (kDebugMode) {
+        print('Error loading almater directory: $e');
+      }
+      _setError('Failed to load MUST community: ${e.toString()}');
+      _almaterDirectory = [];
+      notifyListeners();
     } finally {
+      if (kDebugMode) {
+        print('Setting loading to false');
+      }
       _setLoading(false);
     }
   }
