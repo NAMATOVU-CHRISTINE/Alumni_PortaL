@@ -30,6 +30,8 @@ class PostProvider with ChangeNotifier {
   Future<void> loadPosts() async {
     try {
       _setLoading(true);
+      _error = null;
+
       final snapshot = await _firestore
           .collection('posts')
           .orderBy('createdAt', descending: true)
@@ -38,8 +40,12 @@ class PostProvider with ChangeNotifier {
 
       _posts =
           snapshot.docs.map((doc) => PostModel.fromFirestore(doc)).toList();
+
+      notifyListeners();
     } catch (e) {
-      _error = 'Failed to load posts';
+      _error = 'Failed to load posts: ${e.toString()}';
+      _posts = [];
+      notifyListeners();
     } finally {
       _setLoading(false);
     }
