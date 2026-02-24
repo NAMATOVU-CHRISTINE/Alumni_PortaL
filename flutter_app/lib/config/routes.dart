@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:alumni_portal/screens/landing_screen.dart';
 import 'package:alumni_portal/screens/splash_screen.dart';
 import 'package:alumni_portal/screens/auth/login_screen.dart';
@@ -54,7 +55,7 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: '/',
     refreshListenable: _AuthStateNotifier(),
-    redirect: (context, state) {
+    redirect: (context, state) async {
       // Check if user is logged in
       final user = FirebaseAuth.instance.currentUser;
       final isLoggedIn = user != null;
@@ -65,13 +66,38 @@ class AppRouter {
           state.uri.path == '/forgot-password' ||
           state.uri.path == '/complete-google-signup';
 
-      // If on splash and logged in, redirect to home
+      // If on splash and logged in, check if profile exists
       if (isLoggedIn && state.uri.path == '/') {
+        // Check if user has a Firestore document
+        try {
+          final doc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+          if (!doc.exists) {
+            return '/complete-google-signup';
+          }
+        } catch (e) {
+          // If error checking, let them through
+        }
         return '/home';
       }
 
-      // If logged in and on auth pages, redirect to home
-      if (isLoggedIn && isOnAuthPage) {
+      // If logged in and on auth pages, check if profile exists
+      if (isLoggedIn &&
+          isOnAuthPage &&
+          state.uri.path != '/complete-google-signup') {
+        try {
+          final doc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .get();
+          if (!doc.exists) {
+            return '/complete-google-signup';
+          }
+        } catch (e) {
+          // If error checking, let them through
+        }
         return '/home';
       }
 

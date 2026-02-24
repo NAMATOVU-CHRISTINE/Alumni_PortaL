@@ -40,19 +40,18 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthState() async {
-    // Wait for Firebase Auth to initialize
-    await Future.delayed(const Duration(milliseconds: 500));
+    // Wait for Firebase Auth to initialize and animations
+    await Future.delayed(const Duration(milliseconds: 2000));
 
     if (!mounted) return;
 
     final authProvider = context.read<AuthProvider>();
 
-    // Wait a bit more to ensure auth state is loaded
-    await Future.delayed(const Duration(milliseconds: 1500));
+    // Firebase Auth automatically persists sessions on mobile
+    // The user should be available immediately if they were logged in
+    final isAuthenticated = authProvider.user != null;
 
-    if (!mounted) return;
-
-    if (authProvider.isAuthenticated) {
+    if (isAuthenticated) {
       // Check if user profile exists
       final userExists = await authProvider.checkUserExists();
       if (!mounted) return;
