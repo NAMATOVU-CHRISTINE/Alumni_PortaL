@@ -101,24 +101,38 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Account'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: AppColors.textPrimary,
-      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'Join Alumni Portal',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            // MUST colored lines at the top (Blue and Orange)
+            Container(
+              height: 4,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.accent,      // Blue
+                    AppColors.accent,      // Blue
+                    AppColors.secondary,   // Orange
+                    AppColors.secondary,   // Orange
+                  ],
+                  stops: [0.0, 0.5, 0.5, 1.0],
                 ),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Create Account',
+                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.primary),
+                        textAlign: TextAlign.center,
+                      ),
                 const SizedBox(height: 8),
                 const Text(
                   'Create your account to connect with fellow alumni',
@@ -374,6 +388,9 @@ class _SignupScreenState extends State<SignupScreen> {
               ],
             ),
           ),
+        ),
+            ),
+          ],
         ),
       ),
     );
