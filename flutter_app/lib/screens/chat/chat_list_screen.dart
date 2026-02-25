@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/models/chat_model.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/widgets/empty_state_widget.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -30,27 +31,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
           final currentUserId = provider.currentUserId;
 
           if (chats.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.chat_bubble_outline,
-                    size: 64,
-                    color: AppColors.textSecondary,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'No conversations yet',
-                    style: TextStyle(color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => context.go('/directory'),
-                    child: const Text('Find alumni to connect'),
-                  ),
-                ],
-              ),
+            return EmptyStates.noChats(
+              onStartChat: () => context.go('/directory'),
             );
           }
 
