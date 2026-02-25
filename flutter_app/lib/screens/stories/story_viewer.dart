@@ -346,7 +346,7 @@ class _StoryViewerState extends State<StoryViewer>
       final currentUserId = widget.provider.currentUserId;
       if (currentUserId == null) return;
 
-      final story = widget.userStory.stories[_currentStoryIndex];
+      final story = widget.userStory.stories[_currentIndex];
       
       // Update reaction in Firestore
       await FirebaseFirestore.instance
