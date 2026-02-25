@@ -167,17 +167,7 @@ class FirebaseMessagingService {
     try {
       // Store the chatId for navigation
       _pendingChatId = response.payload!;
-      
-      // Try to navigate immediately if context is available
-      final context = NavigationService.context;
-      if (context != null && context.mounted) {
-        // Use a post-frame callback to ensure navigation happens after build
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) {
-            Navigator.of(context).pushNamed('/chat/$_pendingChatId');
-          }
-        });
-      }
+      print('Stored pending chat ID: $_pendingChatId');
     } catch (e) {
       print('Error handling notification tap: $e');
     }

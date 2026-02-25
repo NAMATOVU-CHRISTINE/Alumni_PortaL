@@ -9,6 +9,7 @@ import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/providers/notification_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/screens/stories/stories_widget.dart';
+import 'package:alumni_portal/services/firebase_messaging_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,7 +53,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ChatProvider>().listenToChats();
       context.read<NotificationProvider>().initialize();
+      
+      // Check for pending notification navigation
+      _checkPendingNotification();
     });
+  }
+
+  void _checkPendingNotification() {
+    final pendingChatId = FirebaseMessagingService.getPendingChatId();
+    if (pendingChatId != null && mounted) {
+      print('Navigating to pending chat: $pendingChatId');
+      // Navigate to the chat screen
+      context.push('/chat/$pendingChatId');
+    }
   }
 
   void _initializeAnimations() {
