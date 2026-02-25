@@ -83,14 +83,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 512,
-      maxHeight: 512,
-    );
-    if (pickedFile != null) {
-      setState(() => _selectedImage = File(pickedFile.path));
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      
+      if (pickedFile != null) {
+        final file = File(pickedFile.path);
+        
+        // Check if file exists
+        if (await file.exists()) {
+          print('Image selected: ${pickedFile.path}');
+          print('File size: ${await file.length()} bytes');
+          setState(() => _selectedImage = file);
+        } else {
+          print('Error: Selected file does not exist');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Failed to load selected image'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } else {
+        print('No image selected');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error selecting image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -104,7 +137,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       // Upload image if selected
       if (_selectedImage != null) {
-        await userProvider.uploadProfileImage(_selectedImage!);
+        final imageUrl = await userProvider.uploadProfileImage(_selectedImage!);
+        if (imageUrl == null && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(userProvider.error ?? 'Failed to upload profile picture'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          setState(() => _isSaving = false);
+          return;
+        }
       }
 
       // Parse skills
@@ -130,13 +173,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
 
       if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully'),
-            backgroundColor: AppColors.success,
-          ),
-        );
-        context.pop();
+        // Reload user to ensure profile picture is updated
+        await userProvider.loadCurrentUser();
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile updated successfully'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+          context.pop();
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -166,7 +214,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   // Profile Image
                   GestureDetector(
-                    onTap: _pickImage,
+                    onTap: _isSaving ? null : _pickImage,
                     child: Stack(
                       children: [
                         CircleAvatar(
@@ -188,6 +236,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 )
                               : null,
                         ),
+                        if (_selectedImage != null)
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.green,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ),
                         Positioned(
                           bottom: 0,
                           right: 0,
