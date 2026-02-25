@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "511866402860-jruad62fgo279bae97h134n6cv0vd9pr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.namatovu.alumniportal",
+            "certificate_hash": "75b35c3d76af9c94a399a6387d54689909369032"
+          }
+        },
+        {
           "client_id": "511866402860-ptl029fkdotgv581lgmunicgntu4707c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
