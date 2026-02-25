@@ -64,7 +64,7 @@ class _StoriesWidgetState extends State<StoriesWidget> {
                 color: Colors.grey[100],
                 border: Border.all(color: Colors.grey[300]!, width: 2),
               ),
-              child: const Icon(Icons.add, color: AppColors.primary, size: 28),
+              child: Icon(Icons.add, color: AppColors.primary, size: 28),
             ),
             const SizedBox(height: 4),
             const Text(
