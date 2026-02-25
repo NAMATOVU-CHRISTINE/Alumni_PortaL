@@ -75,30 +75,26 @@ class _CompleteGoogleSignupScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Decorative lines at top
-              Container(
-                height: 4,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.accent, AppColors.secondary],
-                  ),
+        child: Column(
+          children: [
+            // MUST colored lines at the top (Blue and Orange)
+            Container(
+              height: 4,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.accent,      // Blue
+                    AppColors.accent,      // Blue
+                    AppColors.secondary,   // Orange
+                    AppColors.secondary,   // Orange
+                  ],
+                  stops: [0.0, 0.5, 0.5, 1.0],
                 ),
               ),
-              const SizedBox(height: 2),
-              Container(
-                height: 2,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.accent, AppColors.secondary],
-                  ),
-                ),
-              ),
-              
-              Padding(
+            ),
+            
+            Expanded(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Form(
                   key: _formKey,
