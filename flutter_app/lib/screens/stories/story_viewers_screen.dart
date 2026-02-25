@@ -4,17 +4,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:go_router/go_router.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/models/story_model.dart';
 
 class StoryViewersScreen extends StatelessWidget {
   final String storyId;
   final List<String> viewerIds;
   final String ownerId;
+  final Map<String, String> reactions;
 
   const StoryViewersScreen({
     super.key,
     required this.storyId,
     required this.viewerIds,
     required this.ownerId,
+    this.reactions = const {},
   });
 
   @override
@@ -68,6 +71,7 @@ class StoryViewersScreen extends StatelessWidget {
                     final name = userData['fullName'] ?? 'Unknown';
                     final imageUrl = userData['profileImageUrl'] as String?;
                     final lastSeen = userData['lastSeen'] as int?;
+                    final reaction = reactions[viewerId]; // Get reaction for this viewer
 
                     return ListTile(
                       leading: CircleAvatar(
@@ -93,6 +97,19 @@ class StoryViewersScreen extends StatelessWidget {
                           ? Text(
                               'Active ${timeago.format(DateTime.fromMillisecondsSinceEpoch(lastSeen))}',
                               style: const TextStyle(fontSize: 12),
+                            )
+                          : null,
+                      trailing: reaction != null
+                          ? Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                reaction,
+                                style: const TextStyle(fontSize: 20),
+                              ),
                             )
                           : null,
                       onTap: () {

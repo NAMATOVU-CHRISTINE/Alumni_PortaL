@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:alumni_portal/providers/story_provider.dart';
+import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/models/story_model.dart';
 import 'package:alumni_portal/screens/stories/story_viewers_screen.dart';
 
@@ -338,32 +341,79 @@ class _StoryViewerState extends State<StoryViewer>
     );
   }
 
-  void _sendReaction(String emoji) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Sent $emoji reaction'),
-        duration: const Duration(seconds: 1),
-        backgroundColor: Colors.white.withValues(alpha: 0.2),
-      ),
-    );
-    // TODO: Implement actual reaction sending to backend
+  void _sendReaction(String emoji) async {
+    try {
+      final currentUserId = widget.provider.currentUserId;
+      if (currentUserId == null) return;
+
+      final story = widget.userStory.stories[_currentStoryIndex];
+      
+      // Update reaction in Firestore
+      await FirebaseFirestore.instance
+          .collection('stories')
+          .doc(story.id)
+          .update({
+        'reactions.$currentUserId': emoji,
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sent $emoji reaction'),
+            duration: const Duration(seconds: 1),
+            backgroundColor: Colors.white.withOpacity(0.2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error sending reaction: $e');
+    }
   }
 
-  void _sendReply(StoryModel story, String message) {
+  void _sendReply(StoryModel story, String message) async {
     if (message.isEmpty) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Reply sent!'),
-        duration: Duration(seconds: 1),
-        backgroundColor: Colors.green,
-      ),
-    );
+    try {
+      final chatProvider = context.read<ChatProvider>();
+      
+      // Create or get chat with story author
+      final chatId = await chatProvider.createOrGetChat(
+        story.authorId,
+        story.authorName,
+      );
 
-    _replyController.clear();
-    _progressController.forward();
+      if (chatId != null) {
+        // Send message with story reply indicator
+        await chatProvider.sendMessage(
+          chatId: chatId,
+          receiverId: story.authorId,
+          messageText: '📖 Replied to story: $message',
+        );
 
-    // TODO: Implement actual reply sending to backend (could be a DM)
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Reply sent!'),
+              duration: Duration(seconds: 1),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+
+        _replyController.clear();
+        _progressController.forward();
+      }
+    } catch (e) {
+      print('Error sending reply: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to send reply'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _deleteStory(StoryModel story) {
@@ -407,6 +457,7 @@ class _StoryViewerState extends State<StoryViewer>
           storyId: story.id,
           viewerIds: story.viewedBy,
           ownerId: story.authorId,
+          reactions: story.reactions,
         ),
       ),
     ).then((_) {

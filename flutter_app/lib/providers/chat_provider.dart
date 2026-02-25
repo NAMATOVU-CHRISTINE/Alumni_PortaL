@@ -209,6 +209,8 @@ class ChatProvider with ChangeNotifier {
         fileName: fileName,
         imageUrl: imageUrl,
         timestamp: DateTime.now(),
+        isRead: false, // Explicitly set to false
+        isDelivered: true, // Set to true when sent
       );
 
       // Add message to subcollection
@@ -248,13 +250,15 @@ class ChatProvider with ChangeNotifier {
       final userId = currentUserId;
       if (userId == null) return;
 
+      print('Marking chat as read for user: $userId');
+
       // Update chat document
       await _firestore.collection('chats').doc(chatId).update({
         'unreadCounts.$userId': 0,
         'lastSeenTimestamps.$userId': DateTime.now().millisecondsSinceEpoch,
       });
 
-      // Mark all messages from other user as read
+      // Mark all messages from other user as read (where current user is receiver)
       final messagesSnapshot = await _firestore
           .collection('chats')
           .doc(chatId)
@@ -263,13 +267,20 @@ class ChatProvider with ChangeNotifier {
           .where('isRead', isEqualTo: false)
           .get();
 
+      print('Found ${messagesSnapshot.docs.length} unread messages to mark as read');
+
       // Batch update all unread messages
       final batch = _firestore.batch();
       for (var doc in messagesSnapshot.docs) {
+        print('Marking message ${doc.id} as read');
         batch.update(doc.reference, {'isRead': true});
       }
       await batch.commit();
-    } catch (_) {}
+      
+      print('Successfully marked messages as read');
+    } catch (e) {
+      print('Error marking chat as read: $e');
+    }
   }
 
   Future<void> deleteChat(String chatId) async {

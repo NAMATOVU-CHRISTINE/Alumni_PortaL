@@ -11,6 +11,7 @@ class StoryModel {
   final DateTime createdAt;
   final DateTime expiresAt;
   final List<String> viewedBy;
+  final Map<String, String> reactions; // userId -> emoji
 
   StoryModel({
     required this.id,
@@ -23,6 +24,7 @@ class StoryModel {
     required this.createdAt,
     required this.expiresAt,
     this.viewedBy = const [],
+    this.reactions = const {},
   });
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
@@ -53,6 +55,7 @@ class StoryModel {
           ? DateTime.fromMillisecondsSinceEpoch(data['expiresAt'])
           : DateTime.now().add(const Duration(hours: 24)),
       viewedBy: List<String>.from(data['viewedBy'] ?? []),
+      reactions: Map<String, String>.from(data['reactions'] ?? {}),
     );
   }
 
@@ -67,6 +70,7 @@ class StoryModel {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'expiresAt': expiresAt.millisecondsSinceEpoch,
       'viewedBy': viewedBy,
+      'reactions': reactions,
     };
   }
 }
