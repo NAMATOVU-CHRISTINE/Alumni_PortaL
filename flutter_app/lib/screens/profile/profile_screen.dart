@@ -75,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           CircleAvatar(
+            key: ValueKey(user.profileImageUrl ?? 'no-image'),
             radius: 50,
             backgroundColor: Colors.white,
             backgroundImage: user.profileImageUrl != null
