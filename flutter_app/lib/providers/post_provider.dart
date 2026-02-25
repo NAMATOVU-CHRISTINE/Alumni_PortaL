@@ -259,5 +259,78 @@ class PostProvider with ChangeNotifier {
     }
   }
 
+  // Poll voting methods
+  bool hasUserVotedOnPoll(String postId) {
+    final userId = currentUserId;
+    if (userId == null) return false;
+
+    try {
+      final post = _posts.firstWhere((p) => p.id == postId);
+      if (post.pollData == null) return false;
+      return post.pollData!.options.any((option) => option.voters.contains(userId));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> voteOnPoll(String postId, int optionIndex) async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        _error = 'You must be logged in to vote';
+        return false;
+      }
+
+      if (hasUserVotedOnPoll(postId)) {
+        _error = 'You have already voted on this poll';
+        notifyListeners();
+        return false;
+      }
+
+      final postRef = _firestore.collection('posts').doc(postId);
+      final postDoc = await postRef.get();
+      if (!postDoc.exists) return false;
+
+      final data = postDoc.data()!;
+      final pollData = data['pollData'] as Map<String, dynamic>?;
+      if (pollData == null) return false;
+
+      final options = List<Map<String, dynamic>>.from(pollData['options'] ?? []);
+      if (optionIndex < 0 || optionIndex >= options.length) return false;
+
+      final option = options[optionIndex];
+      final votes = (option['votes'] as int? ?? 0) + 1;
+      final voters = List<String>.from(option['voters'] ?? []);
+      voters.add(userId);
+
+      options[optionIndex] = {...option, 'votes': votes, 'voters': voters};
+      final totalVotes = (pollData['totalVotes'] as int? ?? 0) + 1;
+
+      await postRef.update({
+        'pollData.options': options,
+        'pollData.totalVotes': totalVotes,
+      });
+
+      // Send notification to poll author
+      final authorId = data['authorId'] as String?;
+      if (authorId != null && authorId != userId) {
+        final userDoc = await _firestore.collection('users').doc(userId).get();
+        final userName = userDoc.data()?['fullName'] ?? 'Someone';
+        NotificationService.notifyPollVote(
+          pollAuthorId: authorId,
+          voterName: userName,
+          pollId: postId,
+        );
+      }
+
+      await loadPosts();
+      return true;
+    } catch (e) {
+      _error = 'Failed to vote: ${e.toString()}';
+      notifyListeners();
+      return false;
+    }
+  }
+
   void clearError() => _error = null;
 }
