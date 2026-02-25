@@ -1,12 +1,17 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/chat_provider.dart';
+import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/chat_model.dart';
+import 'package:alumni_portal/models/user_model.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/utils/time_formatter.dart';
+import 'package:alumni_portal/services/image_compression_service.dart';
+import 'package:alumni_portal/services/cloudinary_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatId;
@@ -31,6 +36,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final _scrollController = ScrollController();
   bool _isRecording = false;
   bool _hasText = false;
+  UserModel? _otherUser;
+  bool _isLoadingImage = false;
 
   @override
   void initState() {
@@ -44,6 +51,8 @@ class _ChatScreenState extends State<ChatScreen> {
         _hasText = _messageController.text.trim().isNotEmpty;
       });
     });
+
+    _loadOtherUser();
   }
 
   @override
@@ -52,6 +61,29 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollController.dispose();
     context.read<ChatProvider>().clearMessages();
     super.dispose();
+  }
+
+  Future<void> _loadOtherUser() async {
+    final chatProvider = context.read<ChatProvider>();
+    final userProvider = context.read<UserProvider>();
+    
+    final chat = chatProvider.chats.firstWhere(
+      (c) => c.chatId == widget.chatId,
+      orElse: () => ChatModel(),
+    );
+    
+    final otherUserId = chat.getOtherParticipantId(
+      chatProvider.currentUserId ?? '',
+    );
+    
+    if (otherUserId != null) {
+      final user = await userProvider.getUserById(otherUserId);
+      if (mounted) {
+        setState(() {
+          _otherUser = user;
+        });
+      }
+    }
   }
 
   void _sendMessage() {
@@ -96,13 +128,62 @@ class _ChatScreenState extends State<ChatScreen> {
     final image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null && mounted) {
-      // TODO: Upload image and send as message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Image selected! Upload feature coming soon.'),
-          backgroundColor: AppColors.success,
-        ),
-      );
+      setState(() => _isLoadingImage = true);
+      
+      try {
+        // Compress image
+        final imageFile = File(image.path);
+        final compressedImage = await ImageCompressionService.compressPostImage(imageFile);
+        
+        // Upload to Cloudinary
+        final imageUrl = await CloudinaryService.uploadImage(
+          compressedImage,
+          folder: 'chat_images',
+        );
+        
+        if (imageUrl != null && mounted) {
+          // Send image message
+          final chatProvider = context.read<ChatProvider>();
+          final chat = chatProvider.chats.firstWhere(
+            (c) => c.chatId == widget.chatId,
+            orElse: () => ChatModel(),
+          );
+          
+          final receiverId = chat.getOtherParticipantId(
+            chatProvider.currentUserId ?? '',
+          );
+          
+          if (receiverId != null) {
+            await chatProvider.sendMessage(
+              chatId: widget.chatId,
+              receiverId: receiverId,
+              messageText: '📷 Photo',
+              messageType: 'image',
+              imageUrl: imageUrl,
+            );
+          }
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to upload image'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoadingImage = false);
+        }
+      }
     }
   }
 
@@ -111,13 +192,62 @@ class _ChatScreenState extends State<ChatScreen> {
     final image = await picker.pickImage(source: ImageSource.camera);
 
     if (image != null && mounted) {
-      // TODO: Upload image and send as message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Photo taken! Upload feature coming soon.'),
-          backgroundColor: AppColors.success,
-        ),
-      );
+      setState(() => _isLoadingImage = true);
+      
+      try {
+        // Compress image
+        final imageFile = File(image.path);
+        final compressedImage = await ImageCompressionService.compressPostImage(imageFile);
+        
+        // Upload to Cloudinary
+        final imageUrl = await CloudinaryService.uploadImage(
+          compressedImage,
+          folder: 'chat_images',
+        );
+        
+        if (imageUrl != null && mounted) {
+          // Send image message
+          final chatProvider = context.read<ChatProvider>();
+          final chat = chatProvider.chats.firstWhere(
+            (c) => c.chatId == widget.chatId,
+            orElse: () => ChatModel(),
+          );
+          
+          final receiverId = chat.getOtherParticipantId(
+            chatProvider.currentUserId ?? '',
+          );
+          
+          if (receiverId != null) {
+            await chatProvider.sendMessage(
+              chatId: widget.chatId,
+              receiverId: receiverId,
+              messageText: '📷 Photo',
+              messageType: 'image',
+              imageUrl: imageUrl,
+            );
+          }
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to upload photo'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoadingImage = false);
+        }
+      }
     }
   }
 
@@ -296,25 +426,29 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     Consumer<ChatProvider>(
                       builder: (context, provider, _) {
+                        // Get online status from other user
+                        final onlineStatus = _otherUser != null
+                            ? TimeFormatter.formatOnlineStatusFromMillis(
+                                _otherUser!.lastActive?.millisecondsSinceEpoch,
+                              )
+                            : 'Offline';
+                        
                         final messageCount = provider.messages.length;
-                        final unreadCount = provider.chats
-                            .firstWhere(
-                              (c) => c.chatId == widget.chatId,
-                              orElse: () => ChatModel(),
-                            )
-                            .getUnreadCount(provider.currentUserId ?? '');
 
                         return Row(
                           children: [
-                            if (widget.lastSeen != null)
-                              Text(
-                                TimeFormatter.formatLastSeenFromString(
-                                    widget.lastSeen),
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                ),
+                            Text(
+                              onlineStatus,
+                              style: TextStyle(
+                                color: onlineStatus == 'Online' 
+                                    ? Colors.lightGreenAccent 
+                                    : Colors.white70,
+                                fontSize: 12,
+                                fontWeight: onlineStatus == 'Online' 
+                                    ? FontWeight.w600 
+                                    : FontWeight.normal,
                               ),
+                            ),
                             if (messageCount > 0) ...[
                               const SizedBox(width: 8),
                               Text(
@@ -322,25 +456,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                 style: const TextStyle(
                                   color: Colors.white60,
                                   fontSize: 11,
-                                ),
-                              ),
-                            ],
-                            if (unreadCount > 0) ...[
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  '$unreadCount',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
                                 ),
                               ),
                             ],
@@ -491,60 +606,109 @@ class _ChatScreenState extends State<ChatScreen> {
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: message.messageType == 'image' 
+            ? EdgeInsets.zero 
+            : const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.75,
         ),
         decoration: BoxDecoration(
-          color: isMe ? AppColors.primary : Colors.grey[200],
+          color: message.messageType == 'image' 
+              ? Colors.transparent 
+              : (isMe ? AppColors.primary : Colors.grey[200]),
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
             bottomLeft: Radius.circular(isMe ? 16 : 4),
             bottomRight: Radius.circular(isMe ? 4 : 16),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 2,
-              offset: const Offset(0, 1),
-            ),
-          ],
+          boxShadow: message.messageType == 'image' 
+              ? [] 
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                message.displayText,
-                style: TextStyle(
-                  color: isMe ? Colors.white : AppColors.textPrimary,
-                  fontSize: 16,
+            // Image message
+            if (message.messageType == 'image' && message.imageUrl != null)
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(16),
+                  topRight: const Radius.circular(16),
+                  bottomLeft: Radius.circular(isMe ? 16 : 4),
+                  bottomRight: Radius.circular(isMe ? 4 : 16),
+                ),
+                child: CachedNetworkImage(
+                  imageUrl: message.imageUrl!,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    height: 200,
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: 200,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.error),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 6),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  message.formattedTime,
+            // Text message
+            if (message.messageType == 'text')
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  message.displayText,
                   style: TextStyle(
-                    fontSize: 11,
-                    color: isMe ? Colors.white70 : AppColors.textSecondary,
-                    fontWeight: FontWeight.w400,
+                    color: isMe ? Colors.white : AppColors.textPrimary,
+                    fontSize: 16,
                   ),
                 ),
-                if (isMe) ...[
-                  const SizedBox(width: 4),
-                  Icon(
-                    message.isRead ? Icons.done_all : Icons.done,
-                    size: 16,
-                    color: message.isRead ? Colors.lightBlue : Colors.white70,
+              ),
+            const SizedBox(height: 6),
+            Container(
+              padding: message.messageType == 'image' 
+                  ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
+                  : EdgeInsets.zero,
+              decoration: message.messageType == 'image'
+                  ? BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(12),
+                    )
+                  : null,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    message.formattedTime,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: message.messageType == 'image'
+                          ? Colors.white
+                          : (isMe ? Colors.white70 : AppColors.textSecondary),
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
+                  if (isMe) ...[
+                    const SizedBox(width: 4),
+                    Icon(
+                      message.isRead ? Icons.done_all : Icons.done,
+                      size: 16,
+                      color: message.messageType == 'image'
+                          ? Colors.white
+                          : (message.isRead ? Colors.lightBlue : Colors.white70),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ],
         ),
@@ -566,58 +730,85 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
       child: SafeArea(
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              icon: Icon(
-                Icons.attach_file,
-                color: AppColors.primary,
-              ),
-              onPressed: _showAttachmentOptions,
-              tooltip: 'Attach file',
-            ),
-            Expanded(
-              child: TextField(
-                controller: _messageController,
-                decoration: InputDecoration(
-                  hintText: 'Type a message...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+            if (_isLoadingImage)
+              Container(
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Uploading image...',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
-                textCapitalization: TextCapitalization.sentences,
-                onSubmitted: (_) => _sendMessage(),
               ),
-            ),
-            const SizedBox(width: 8),
-            if (!_hasText)
-              CircleAvatar(
-                backgroundColor: _isRecording ? Colors.red : AppColors.primary,
-                child: IconButton(
+            Row(
+              children: [
+                IconButton(
                   icon: Icon(
-                    _isRecording ? Icons.stop : Icons.mic,
-                    color: Colors.white,
+                    Icons.attach_file,
+                    color: AppColors.primary,
                   ),
-                  onPressed: _toggleRecording,
-                  tooltip:
-                      _isRecording ? 'Stop recording' : 'Record voice note',
+                  onPressed: _isLoadingImage ? null : _showAttachmentOptions,
+                  tooltip: 'Attach file',
                 ),
-              )
-            else
-              CircleAvatar(
-                backgroundColor: AppColors.primary,
-                child: IconButton(
-                  icon: const Icon(Icons.send, color: Colors.white),
-                  onPressed: _sendMessage,
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    enabled: !_isLoadingImage,
+                    decoration: InputDecoration(
+                      hintText: 'Type a message...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                    ),
+                    textCapitalization: TextCapitalization.sentences,
+                    onSubmitted: (_) => _sendMessage(),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 8),
+                if (!_hasText)
+                  CircleAvatar(
+                    backgroundColor: _isRecording ? Colors.red : AppColors.primary,
+                    child: IconButton(
+                      icon: Icon(
+                        _isRecording ? Icons.stop : Icons.mic,
+                        color: Colors.white,
+                      ),
+                      onPressed: _isLoadingImage ? null : _toggleRecording,
+                      tooltip:
+                          _isRecording ? 'Stop recording' : 'Record voice note',
+                    ),
+                  )
+                else
+                  CircleAvatar(
+                    backgroundColor: AppColors.primary,
+                    child: IconButton(
+                      icon: const Icon(Icons.send, color: Colors.white),
+                      onPressed: _isLoadingImage ? null : _sendMessage,
+                    ),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
