@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.namatovu.alumniportal"
+    namespace "com.must.alumniportal"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.namatovu.alumniportal"
+        applicationId "com.must.alumniportal"
         minSdkVersion flutter.minSdkVersion  // Android 6.0 and above
         targetSdk flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
