@@ -248,10 +248,27 @@ class ChatProvider with ChangeNotifier {
       final userId = currentUserId;
       if (userId == null) return;
 
+      // Update chat document
       await _firestore.collection('chats').doc(chatId).update({
         'unreadCounts.$userId': 0,
         'lastSeenTimestamps.$userId': DateTime.now().millisecondsSinceEpoch,
       });
+
+      // Mark all messages from other user as read
+      final messagesSnapshot = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .where('receiverId', isEqualTo: userId)
+          .where('isRead', isEqualTo: false)
+          .get();
+
+      // Batch update all unread messages
+      final batch = _firestore.batch();
+      for (var doc in messagesSnapshot.docs) {
+        batch.update(doc.reference, {'isRead': true});
+      }
+      await batch.commit();
     } catch (_) {}
   }
 
