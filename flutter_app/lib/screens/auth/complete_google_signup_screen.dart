@@ -253,8 +253,8 @@ class _CompleteGoogleSignupScreenState
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
