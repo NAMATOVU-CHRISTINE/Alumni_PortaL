@@ -278,7 +278,7 @@ class LandingScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF1E3A8A),
+                              color: AppColors.accent,
                             ),
                             textAlign: TextAlign.center,
                           ),
