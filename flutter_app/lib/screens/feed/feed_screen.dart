@@ -7,7 +7,109 @@ import 'package:alumni_portal/providers/post_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/post_model.dart';
 import 'package:alumni_portal/config/theme.dart';
-import 'package:alumni_portal/widgets/post_card.dart';
+import 'package:alumni_portal/widgets/post_card_compact.dart';
+import 'package:alumni_portal/widgets/app_bar_decoration.dart';
+import 'package:alumni_portal/widgets/empty_state_widget.dart';
+
+class PostSearchDelegate extends SearchDelegate<String> {
+  @override
+  String get searchFieldLabel => 'Search posts...';
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return _buildSearchResults(context);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return _buildSearchResults(context);
+  }
+
+  Widget _buildSearchResults(BuildContext context) {
+    if (query.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Search for posts',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Consumer<PostProvider>(
+      builder: (context, provider, _) {
+        final searchResults = provider.posts.where((post) {
+          final searchLower = query.toLowerCase();
+          return post.content.toLowerCase().contains(searchLower) ||
+              post.authorName.toLowerCase().contains(searchLower);
+        }).toList();
+
+        if (searchResults.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(
+                  'No posts found for "$query"',
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemCount: searchResults.length,
+          itemBuilder: (context, index) {
+            final post = searchResults[index];
+            return SharedPostCard(
+              post: post,
+              onComment: () {
+                close(context, '');
+                // Navigate to post details or show comments
+              },
+              onShare: () {
+                close(context, '');
+                // Handle share
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -30,12 +132,18 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: MustAppBar(
         title: const Text('What\'s happening around?'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadFeed,
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              // TODO: Implement search functionality
+              showSearch(
+                context: context,
+                delegate: PostSearchDelegate(),
+              );
+            },
           ),
         ],
       ),
@@ -52,7 +160,7 @@ class _FeedScreenState extends State<FeedScreen> {
           return RefreshIndicator(
             onRefresh: () async => _loadFeed(),
             child: ListView.builder(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
               itemCount: provider.posts.length,
               itemBuilder: (context, index) {
                 final post = provider.posts[index];
@@ -96,29 +204,8 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.dynamic_feed, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          const Text(
-            'No posts yet',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Be the first to share something!',
-            style: TextStyle(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () => context.push('/create-post'),
-            icon: const Icon(Icons.add),
-            label: const Text('Create Post'),
-          ),
-        ],
-      ),
+    return EmptyStates.noPosts(
+      onCreatePost: () => context.push('/create-post'),
     );
   }
 }
