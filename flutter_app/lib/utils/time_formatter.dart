@@ -40,4 +40,28 @@ class TimeFormatter {
       return 'Unknown';
     }
   }
+
+  // Format online status for chat
+  static String formatOnlineStatus(DateTime? lastActive) {
+    if (lastActive == null) return 'Offline';
+
+    final now = DateTime.now();
+    final difference = now.difference(lastActive);
+
+    // Consider online if active within last 2 minutes
+    if (difference.inMinutes < 2) {
+      return 'Online';
+    }
+
+    // Show last seen
+    return 'Last seen ${formatLastSeen(lastActive)}';
+  }
+
+  // Format online status from milliseconds
+  static String formatOnlineStatusFromMillis(int? lastActiveMillis) {
+    if (lastActiveMillis == null) return 'Offline';
+    
+    final lastActive = DateTime.fromMillisecondsSinceEpoch(lastActiveMillis);
+    return formatOnlineStatus(lastActive);
+  }
 }
