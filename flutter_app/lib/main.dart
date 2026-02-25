@@ -18,11 +18,16 @@ import 'package:alumni_portal/providers/endorsement_provider.dart';
 import 'package:alumni_portal/providers/referral_provider.dart';
 import 'package:alumni_portal/providers/convocation_provider.dart';
 import 'package:alumni_portal/providers/guest_lecture_provider.dart';
+import 'package:alumni_portal/services/firebase_messaging_service.dart';
+import 'package:alumni_portal/services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize Firebase Messaging
+  await FirebaseMessagingService.initialize();
 
   // Note: Firebase Auth persistence is automatic on mobile platforms
   // setPersistence() is only for web
