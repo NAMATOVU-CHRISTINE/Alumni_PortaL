@@ -17,7 +17,7 @@ export const sendMessageNotification = functions.firestore
 
     try {
       // Get recipient user data
-      const recipientDoc = await db.collection("users").doc(message.toUid).get();
+      const recipientDoc = await db.collection("users").doc(message.receiverId).get();
       if (!recipientDoc.exists) {
         console.log("Recipient user not found");
         return;
@@ -32,9 +32,9 @@ export const sendMessageNotification = functions.firestore
       }
 
       // Get sender user data
-      const senderDoc = await db.collection("users").doc(message.fromUid).get();
+      const senderDoc = await db.collection("users").doc(message.senderId).get();
       const senderData = senderDoc.data();
-      const senderName = senderData?.name || "Alumni";
+      const senderName = senderData?.fullName || message.senderName || "Alumni";
 
       // Check if recipient has message notifications enabled
       const notificationPrefs = recipientData?.notificationPreferences || {};
@@ -43,31 +43,38 @@ export const sendMessageNotification = functions.firestore
         return;
       }
 
-      // Prepare notification payload
-      const payload = {
-        notification: {
-          title: `New Message from ${senderName}`,
-          body: message.messageText?.substring(0, 100) || "You have a new message",
-          clickAction: "FLUTTER_NOTIFICATION_CLICK",
-        },
-        data: {
-          chatId: chatId,
-          fromUid: message.fromUid,
-          type: "incoming_message",
-          senderName: senderName,
-        },
-      };
+      // Prepare message preview
+      let messagePreview = message.messageText || "";
+      if (message.messageType === "image") {
+        messagePreview = "📷 Photo";
+      } else if (message.messageType === "file") {
+        messagePreview = `📎 ${message.fileName || "File"}`;
+      } else if (messagePreview.length > 100) {
+        messagePreview = messagePreview.substring(0, 100) + "...";
+      }
 
       // Send notification
       await messaging.send({
         token: recipientFcmToken,
-        notification: payload.notification,
-        data: payload.data,
+        notification: {
+          title: senderName,
+          body: messagePreview,
+        },
+        data: {
+          chatId: chatId,
+          senderId: message.senderId,
+          receiverId: message.receiverId,
+          type: "message",
+          senderName: senderName,
+          messageType: message.messageType || "text",
+        },
         android: {
           priority: "high",
           notification: {
             sound: "default",
-            channelId: "messages",
+            channelId: "messages_channel",
+            color: "#8BC34A", // Lime green
+            tag: chatId, // Group notifications by chat
           },
         },
         apns: {
@@ -78,18 +85,20 @@ export const sendMessageNotification = functions.firestore
             aps: {
               sound: "default",
               badge: 1,
+              category: "MESSAGE",
+              threadId: chatId, // Group notifications by chat on iOS
             },
           },
         },
       });
 
-      console.log(`Notification sent to ${message.toUid}`);
+      console.log(`Message notification sent to ${message.receiverId}`);
 
       // Log to analytics
       await db.collection("notificationLogs").add({
         type: "message",
-        recipientId: message.toUid,
-        senderId: message.fromUid,
+        recipientId: message.receiverId,
+        senderId: message.senderId,
         chatId: chatId,
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
         status: "sent",
@@ -100,8 +109,8 @@ export const sendMessageNotification = functions.firestore
       // Log error
       await db.collection("notificationLogs").add({
         type: "message",
-        recipientId: message.toUid,
-        senderId: message.fromUid,
+        recipientId: message.receiverId,
+        senderId: message.senderId,
         chatId: chatId,
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
         status: "failed",
@@ -282,5 +291,199 @@ export const sendJobNotification = functions.firestore
       console.log(`Job notification sent to ${tokens.length} users`);
     } catch (error) {
       console.error("Error sending job notification:", error);
+    }
+  });
+
+
+/**
+ * Send notification when someone likes a post
+ */
+export const sendPostLikeNotification = functions.firestore
+  .document("posts/{postId}")
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const { postId } = context.params;
+
+    // Check if likes increased
+    const beforeLikes = before.likes?.length || 0;
+    const afterLikes = after.likes?.length || 0;
+
+    if (afterLikes <= beforeLikes) return;
+
+    // Get the new liker
+    const newLikers = after.likes.filter(id => !before.likes?.includes(id));
+    if (newLikers.length === 0) return;
+
+    const likerId = newLikers[0];
+    const postAuthorId = after.authorId;
+
+    // Don't notify if user liked their own post
+    if (likerId === postAuthorId) return;
+
+    try {
+      // Get author's FCM token
+      const authorDoc = await db.collection("users").doc(postAuthorId).get();
+      const authorData = authorDoc.data();
+      const fcmToken = authorData?.fcmToken;
+
+      if (!fcmToken) return;
+
+      // Check notification preferences
+      const notificationPrefs = authorData?.notificationPreferences || {};
+      if (notificationPrefs.likesEnabled === false) return;
+
+      // Get liker's name
+      const likerDoc = await db.collection("users").doc(likerId).get();
+      const likerName = likerDoc.data()?.fullName || "Someone";
+
+      // Send notification
+      await messaging.send({
+        token: fcmToken,
+        notification: {
+          title: "Post Liked",
+          body: `${likerName} liked your post`,
+        },
+        data: {
+          type: "post_like",
+          postId: postId,
+          likerId: likerId,
+        },
+        android: {
+          priority: "high",
+          notification: {
+            sound: "default",
+            channelId: "high_importance_channel",
+            color: "#8BC34A",
+          },
+        },
+      });
+
+      console.log(`Post like notification sent to ${postAuthorId}`);
+    } catch (error) {
+      console.error("Error sending post like notification:", error);
+    }
+  });
+
+/**
+ * Send notification when someone views a story
+ */
+export const sendStoryViewNotification = functions.firestore
+  .document("stories/{storyId}")
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const { storyId } = context.params;
+
+    // Check if viewedBy increased
+    const beforeViews = before.viewedBy?.length || 0;
+    const afterViews = after.viewedBy?.length || 0;
+
+    if (afterViews <= beforeViews) return;
+
+    // Get the new viewer
+    const newViewers = after.viewedBy.filter(id => !before.viewedBy?.includes(id));
+    if (newViewers.length === 0) return;
+
+    const viewerId = newViewers[0];
+    const storyAuthorId = after.authorId;
+
+    // Don't notify if user viewed their own story
+    if (viewerId === storyAuthorId) return;
+
+    try {
+      // Get author's FCM token
+      const authorDoc = await db.collection("users").doc(storyAuthorId).get();
+      const authorData = authorDoc.data();
+      const fcmToken = authorData?.fcmToken;
+
+      if (!fcmToken) return;
+
+      // Check notification preferences
+      const notificationPrefs = authorData?.notificationPreferences || {};
+      if (notificationPrefs.storiesEnabled === false) return;
+
+      // Get viewer's name
+      const viewerDoc = await db.collection("users").doc(viewerId).get();
+      const viewerName = viewerDoc.data()?.fullName || "Someone";
+
+      // Send notification
+      await messaging.send({
+        token: fcmToken,
+        notification: {
+          title: "Story Viewed",
+          body: `${viewerName} viewed your story`,
+        },
+        data: {
+          type: "story_view",
+          storyId: storyId,
+          viewerId: viewerId,
+        },
+        android: {
+          priority: "default",
+          notification: {
+            sound: "default",
+            channelId: "high_importance_channel",
+            color: "#8BC34A",
+          },
+        },
+      });
+
+      console.log(`Story view notification sent to ${storyAuthorId}`);
+    } catch (error) {
+      console.error("Error sending story view notification:", error);
+    }
+  });
+
+/**
+ * Send notification when someone follows a user
+ */
+export const sendFollowerNotification = functions.firestore
+  .document("followers/{followId}")
+  .onCreate(async (snap, context) => {
+    const followData = snap.data();
+    const followedUserId = followData.followedUserId;
+    const followerId = followData.followerId;
+
+    try {
+      // Get followed user's FCM token
+      const userDoc = await db.collection("users").doc(followedUserId).get();
+      const userData = userDoc.data();
+      const fcmToken = userData?.fcmToken;
+
+      if (!fcmToken) return;
+
+      // Check notification preferences
+      const notificationPrefs = userData?.notificationPreferences || {};
+      if (notificationPrefs.followersEnabled === false) return;
+
+      // Get follower's name
+      const followerDoc = await db.collection("users").doc(followerId).get();
+      const followerName = followerDoc.data()?.fullName || "Someone";
+
+      // Send notification
+      await messaging.send({
+        token: fcmToken,
+        notification: {
+          title: "New Follower",
+          body: `${followerName} started following you`,
+        },
+        data: {
+          type: "new_follower",
+          followerId: followerId,
+        },
+        android: {
+          priority: "high",
+          notification: {
+            sound: "default",
+            channelId: "high_importance_channel",
+            color: "#8BC34A",
+          },
+        },
+      });
+
+      console.log(`Follower notification sent to ${followedUserId}`);
+    } catch (error) {
+      console.error("Error sending follower notification:", error);
     }
   });
