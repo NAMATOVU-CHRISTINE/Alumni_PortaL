@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:alumni_portal/services/error_handler_service.dart';
 
 class AuthProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+    serverClientId: '511866402860-rtp3f0a1k9j6bmigtn8vbsv36kh2d9h2.apps.googleusercontent.com',
+  );
 
   User? _user;
   bool _isLoading = false;
@@ -95,10 +99,10 @@ class AuthProvider with ChangeNotifier {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      _setError(e.message ?? 'Authentication failed');
+      _setError(ErrorHandlerService.getAuthErrorMessage(e));
       return false;
     } catch (e) {
-      _setError('An error occurred. Please try again.');
+      _setError('An unexpected error occurred. Please try again.');
       return false;
     } finally {
       _setLoading(false);
@@ -174,10 +178,10 @@ class AuthProvider with ChangeNotifier {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      _setError(e.message ?? 'Registration failed');
+      _setError(ErrorHandlerService.getAuthErrorMessage(e));
       return false;
     } catch (e) {
-      _setError('An error occurred. Please try again.');
+      _setError('An unexpected error occurred during registration.');
       return false;
     } finally {
       _setLoading(false);
@@ -227,8 +231,11 @@ class AuthProvider with ChangeNotifier {
       await _updateFcmToken();
 
       return true;
+    } on FirebaseAuthException catch (e) {
+      _setError(ErrorHandlerService.getAuthErrorMessage(e));
+      return false;
     } catch (e) {
-      _setError('Google sign in failed');
+      _setError('Google sign-in failed. Please try again.');
       return false;
     } finally {
       _setLoading(false);
