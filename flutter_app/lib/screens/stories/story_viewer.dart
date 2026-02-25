@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:alumni_portal/providers/story_provider.dart';
 import 'package:alumni_portal/models/story_model.dart';
+import 'package:alumni_portal/screens/stories/story_viewers_screen.dart';
 
 class StoryViewer extends StatefulWidget {
   final UserStories userStory;
@@ -197,16 +198,36 @@ class _StoryViewerState extends State<StoryViewer>
               Positioned(
                 bottom: MediaQuery.of(context).padding.bottom + 16,
                 left: 16,
-                child: Row(
-                  children: [
-                    const Icon(Icons.visibility,
-                        color: Colors.white70, size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${story.viewCount} views',
-                      style: const TextStyle(color: Colors.white70),
+                child: GestureDetector(
+                  onTap: () => _showViewers(story),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
                     ),
-                  ],
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.visibility,
+                            color: Colors.white, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${story.viewCount} ${story.viewCount == 1 ? 'view' : 'views'}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.chevron_right,
+                            color: Colors.white, size: 18),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             // Reactions and Reply (for other users' stories)
@@ -375,6 +396,21 @@ class _StoryViewerState extends State<StoryViewer>
         ],
       ),
     );
+  }
+
+  void _showViewers(StoryModel story) {
+    _progressController.stop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StoryViewersScreen(
+          storyId: story.id,
+          viewerIds: story.viewedBy,
+        ),
+      ),
+    ).then((_) {
+      _progressController.forward();
+    });
   }
 
   Widget _buildStoryContent(StoryModel story) {
