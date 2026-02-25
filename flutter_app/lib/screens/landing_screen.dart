@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:alumni_portal/config/theme.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -11,6 +12,21 @@ class LandingScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            // MUST colored lines at the top (Blue and Orange)
+            Container(
+              height: 4,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.accent,      // Blue (matching login)
+                    AppColors.accent,      // Blue
+                    AppColors.secondary,   // Orange (matching login)
+                    AppColors.secondary,   // Orange
+                  ],
+                  stops: [0.0, 0.5, 0.5, 1.0],
+                ),
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
