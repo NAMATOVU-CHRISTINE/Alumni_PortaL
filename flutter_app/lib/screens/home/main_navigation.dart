@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/providers/notification_provider.dart';
+import 'package:alumni_portal/config/theme.dart';
 
 class MainNavigation extends StatefulWidget {
   final Widget child;
@@ -139,40 +140,60 @@ class _MainNavigationState extends State<MainNavigation> {
       builder: (context, chatProvider, _) {
         final unreadChats = chatProvider.totalUnreadCount;
 
-        return NavigationBar(
-          selectedIndex: _getSelectedIndex(context),
-          onDestinationSelected: _onItemTapped,
-          animationDuration: const Duration(milliseconds: 300),
-          destinations: [
-            const NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'Home',
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // MUST colored lines
+            Container(
+              height: 4,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.accent,      // Blue
+                    AppColors.accent,      // Blue
+                    AppColors.secondary,   // Orange
+                    AppColors.secondary,   // Orange
+                  ],
+                  stops: [0.0, 0.5, 0.5, 1.0],
+                ),
+              ),
             ),
-            const NavigationDestination(
-              icon: Icon(Icons.dynamic_feed_outlined),
-              selectedIcon: Icon(Icons.dynamic_feed),
-              label: 'Feed',
-            ),
-            const NavigationDestination(
-              icon: Icon(Icons.people_outline),
-              selectedIcon: Icon(Icons.people),
-              label: 'Network',
-            ),
-            NavigationDestination(
-              icon: unreadChats > 0
-                  ? Badge(
-                      label: Text('$unreadChats'),
-                      child: const Icon(Icons.chat_bubble_outline),
-                    )
-                  : const Icon(Icons.chat_bubble_outline),
-              selectedIcon: const Icon(Icons.chat_bubble),
-              label: 'Messages',
-            ),
-            const NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: 'Profile',
+            NavigationBar(
+              selectedIndex: _getSelectedIndex(context),
+              onDestinationSelected: _onItemTapped,
+              animationDuration: const Duration(milliseconds: 300),
+              destinations: [
+                const NavigationDestination(
+                  icon: Icon(Icons.home_outlined),
+                  selectedIcon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                const NavigationDestination(
+                  icon: Icon(Icons.dynamic_feed_outlined),
+                  selectedIcon: Icon(Icons.dynamic_feed),
+                  label: 'Feed',
+                ),
+                const NavigationDestination(
+                  icon: Icon(Icons.people_outline),
+                  selectedIcon: Icon(Icons.people),
+                  label: 'Network',
+                ),
+                NavigationDestination(
+                  icon: unreadChats > 0
+                      ? Badge(
+                          label: Text('$unreadChats'),
+                          child: const Icon(Icons.chat_bubble_outline),
+                        )
+                      : const Icon(Icons.chat_bubble_outline),
+                  selectedIcon: const Icon(Icons.chat_bubble),
+                  label: 'Messages',
+                ),
+                const NavigationDestination(
+                  icon: Icon(Icons.person_outline),
+                  selectedIcon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
             ),
           ],
         );
