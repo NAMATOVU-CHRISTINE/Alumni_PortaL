@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:alumni_portal/config/theme.dart';
 import '../../providers/guest_lecture_provider.dart';
-import '../../config/theme.dart';
 import 'guest_lecture_application_form.dart';
 import 'my_applications_screen.dart';
 import 'scheduled_lectures_screen.dart';
