@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/chat_model.dart';
@@ -82,6 +83,47 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           _otherUser = user;
         });
+      }
+    }
+  }
+
+  Future<void> _makePhoneCall() async {
+    if (_otherUser?.phoneNumber == null || _otherUser!.phoneNumber!.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Phone number not available'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+      return;
+    }
+
+    final phoneNumber = _otherUser!.phoneNumber!;
+    final uri = Uri.parse('tel:$phoneNumber');
+    
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cannot make phone calls on this device'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -471,20 +513,9 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.videocam, color: Colors.white),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Video call coming soon!')),
-              );
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.call, color: Colors.white),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Voice call coming soon!')),
-              );
-            },
+            onPressed: _makePhoneCall,
+            tooltip: 'Voice call',
           ),
         ],
       ),
