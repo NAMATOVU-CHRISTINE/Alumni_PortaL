@@ -94,8 +94,8 @@ class UserModel {
       lastActive: _parseTimestamp(data['lastActive']),
       updatedAt: _parseTimestamp(data['updatedAt']),
       emailVerified: data['emailVerified'] ?? false,
-      socialLinks: Map<String, dynamic>.from(data['socialLinks'] ?? {}),
-      privacySettings: Map<String, dynamic>.from(data['privacySettings'] ?? {}),
+      socialLinks: _parseMap(data['socialLinks']),
+      privacySettings: _parseMap(data['privacySettings']),
       fcmToken: data['fcmToken'] as String?,
       industry: data['industry'] as String?,
     );
@@ -106,6 +106,16 @@ class UserModel {
     if (value is Timestamp) return value.toDate();
     if (value is int) return DateTime.fromMillisecondsSinceEpoch(value);
     return null;
+  }
+
+  static Map<String, dynamic> _parseMap(dynamic value) {
+    if (value == null) return {};
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) {
+      return Map<String, dynamic>.from(value);
+    }
+    // If it's a string or other type, return empty map
+    return {};
   }
 
   Map<String, dynamic> toMap() {
