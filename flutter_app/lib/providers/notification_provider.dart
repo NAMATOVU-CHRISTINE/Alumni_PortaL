@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:alumni_portal/models/notification_model.dart';
+import 'package:alumni_portal/services/firebase_messaging_service.dart';
 
 class NotificationProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -33,17 +34,8 @@ class NotificationProvider with ChangeNotifier {
   }
 
   Future<void> initialize() async {
-    // Request permission
-    await _messaging.requestPermission(alert: true, badge: true, sound: true);
-
-    // Get and save FCM token
-    final token = await _messaging.getToken();
-    if (token != null) {
-      await _updateFcmToken(token);
-    }
-
-    // Listen for token refresh
-    _messaging.onTokenRefresh.listen(_updateFcmToken);
+    // Initialize Firebase Messaging Service
+    await FirebaseMessagingService.initialize();
 
     // Start listening to notifications
     listenToNotifications();
