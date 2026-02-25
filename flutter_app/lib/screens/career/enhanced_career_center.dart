@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/widgets/app_bar_decoration.dart';
 
 class EnhancedCareerCenter extends StatefulWidget {
   const EnhancedCareerCenter({super.key});
@@ -12,16 +13,27 @@ class EnhancedCareerCenter extends StatefulWidget {
 class _EnhancedCareerCenterState extends State<EnhancedCareerCenter>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  AnimationController? _animationController;
+  Animation<double>? _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController!, curve: Curves.easeIn),
+    );
+    _animationController!.forward();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 
@@ -29,69 +41,140 @@ class _EnhancedCareerCenterState extends State<EnhancedCareerCenter>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      body: CustomScrollView(
-        slivers: [
-          // Custom App Bar with gradient
-          SliverAppBar(
-            expandedHeight: 200,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Career Center'),
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.primary, AppColors.primaryDark],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      appBar: MustAppBar(
+        title: const Text('Career Center'),
+      ),
+      body: Column(
+        children: [
+          // Header with decorative line
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primary.withOpacity(0.05),
+                  AppColors.accent.withOpacity(0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+                  child: Row(
                     children: [
-                      Icon(Icons.rocket_launch, size: 48, color: Colors.white),
-                      SizedBox(height: 8),
-                      Text(
-                        'Fuel Your Career Growth',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [AppColors.primary, AppColors.accent],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.rocket_launch,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Fuel Your Career',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            Text(
+                              'Tools & resources for success',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
+                // Decorative line
+                Container(
+                  height: 3,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        AppColors.primary,
+                        AppColors.accent,
+                        AppColors.secondary,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
             ),
-            bottom: TabBar(
+          ),
+
+          // Tabs
+          Container(
+            color: Colors.white,
+            child: TabBar(
               controller: _tabController,
               isScrollable: true,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white70,
-              indicatorColor: Colors.white,
+              labelColor: AppColors.primary,
+              unselectedLabelColor: AppColors.textSecondary,
+              indicatorColor: AppColors.accent,
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
               tabs: const [
                 Tab(text: 'Overview'),
-                Tab(text: 'Resume Builder'),
-                Tab(text: 'Interview Prep'),
-                Tab(text: 'Salary Insights'),
-                Tab(text: 'Skills Assessment'),
+                Tab(text: 'Resume'),
+                Tab(text: 'Interview'),
+                Tab(text: 'Salary'),
+                Tab(text: 'Skills'),
               ],
             ),
           ),
 
           // Tab Content
-          SliverFillRemaining(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildOverviewTab(),
-                _buildResumeBuilderTab(),
-                _buildInterviewPrepTab(),
-                _buildSalaryInsightsTab(),
-                _buildSkillsAssessmentTab(),
-              ],
-            ),
+          Expanded(
+            child: _fadeAnimation != null
+                ? FadeTransition(
+                    opacity: _fadeAnimation!,
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildOverviewTab(),
+                        _buildResumeBuilderTab(),
+                        _buildInterviewPrepTab(),
+                        _buildSalaryInsightsTab(),
+                        _buildSkillsAssessmentTab(),
+                      ],
+                    ),
+                  )
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildOverviewTab(),
+                      _buildResumeBuilderTab(),
+                      _buildInterviewPrepTab(),
+                      _buildSalaryInsightsTab(),
+                      _buildSkillsAssessmentTab(),
+                    ],
+                  ),
           ),
         ],
       ),
@@ -620,27 +703,33 @@ class _EnhancedCareerCenterState extends State<EnhancedCareerCenter>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
+                  color: color.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 24),
               ),
               const SizedBox(height: 8),
-              Text(
-                title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              Flexible(
+                child: Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
