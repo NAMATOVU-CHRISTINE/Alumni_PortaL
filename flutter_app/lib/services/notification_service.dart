@@ -157,14 +157,15 @@ class NotificationService {
   static Future<void> notifyNewMessage({
     required String recipientId,
     required String senderName,
-    required String chatId,
+    required String senderId,
+    String? messagePreview,
   }) async {
     await _createNotification(
       userId: recipientId,
-      title: 'New Message 💬',
-      message: '$senderName sent you a message',
+      title: senderName,
+      message: messagePreview ?? 'sent you a message',
       type: 'message',
-      referenceId: chatId,
+      referenceId: senderId, // Use sender's ID so we can navigate to their chat
     );
   }
 
@@ -234,6 +235,51 @@ class NotificationService {
       title: 'Story Viewed 👀',
       message: '$viewerName viewed your story',
       type: 'story_view',
+    );
+  }
+
+  // New follower notification
+  static Future<void> notifyNewFollower({
+    required String userId,
+    required String followerName,
+    required String followerId,
+  }) async {
+    await _createNotification(
+      userId: userId,
+      title: 'New Follower',
+      message: '$followerName started following you',
+      type: 'new_follower',
+      referenceId: followerId,
+    );
+  }
+
+  // Story like notification
+  static Future<void> notifyStoryLike({
+    required String storyAuthorId,
+    required String likerName,
+    required String storyId,
+  }) async {
+    await _createNotification(
+      userId: storyAuthorId,
+      title: 'Story Liked',
+      message: '$likerName liked your story',
+      type: 'story_like',
+      referenceId: storyId,
+    );
+  }
+
+  // Post like notification
+  static Future<void> notifyPostLike({
+    required String postAuthorId,
+    required String likerName,
+    required String postId,
+  }) async {
+    await _createNotification(
+      userId: postAuthorId,
+      title: 'Post Liked',
+      message: '$likerName liked your post',
+      type: 'post_like',
+      referenceId: postId,
     );
   }
 
