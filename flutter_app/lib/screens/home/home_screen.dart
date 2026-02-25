@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
+import 'package:alumni_portal/providers/chat_provider.dart';
+import 'package:alumni_portal/providers/notification_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/screens/stories/stories_widget.dart';
 
@@ -15,10 +17,12 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentTipIndex = 0;
   Timer? _tipTimer;
   Timer? _activityTimer;
+  List<AnimationController>? _cardControllers;
+  List<Animation<double>>? _cardAnimations;
 
   final List<String> _motivationalTips = [
     "Keep connecting, keep growing!",
@@ -39,6 +43,39 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadData();
     _startTipRotation();
     _startActivityTracking();
+    _initializeAnimations();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() {
+    // Initialize chat provider to listen for messages
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ChatProvider>().listenToChats();
+      context.read<NotificationProvider>().initialize();
+    });
+  }
+
+  void _initializeAnimations() {
+    _cardControllers = List.generate(
+      9,
+      (index) => AnimationController(
+        duration: const Duration(milliseconds: 400),
+        vsync: this,
+      ),
+    );
+    
+    _cardAnimations = _cardControllers!.map((controller) {
+      return Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: controller, curve: Curves.easeOutBack),
+      );
+    }).toList();
+    
+    // Start staggered animations
+    for (int i = 0; i < _cardControllers!.length; i++) {
+      Future.delayed(Duration(milliseconds: i * 60), () {
+        if (mounted) _cardControllers![i].forward();
+      });
+    }
   }
 
   void _loadData() {
@@ -60,9 +97,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void _startActivityTracking() {
     // Update user activity every 2 minutes
     _activityTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
+  void _startActivityTracking() {
+    // Update user activity every 2 minutes
+    _activityTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
       if (mounted) {
         context.read<UserProvider>().updateUserActivity();
       }
+    });
+    
+    // Update immediately on start
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<UserProvider>().updateUserActivity();
     });
   }
 
@@ -70,6 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _tipTimer?.cancel();
     _activityTimer?.cancel();
+    if (_cardControllers != null) {
+      for (var controller in _cardControllers!) {
+        controller.dispose();
+      }
+    }
+    // Set user offline when leaving app
+    context.read<UserProvider>().setUserOffline();
     super.dispose();
   }
 
@@ -503,11 +555,22 @@ class _HomeScreenState extends State<HomeScreen> {
           itemCount: actions.length,
           itemBuilder: (context, index) {
             final action = actions[index];
-            return _buildQuickActionItem(
-              action['icon'] as IconData,
-              action['label'] as String,
-              action['onTap'] as VoidCallback,
-            );
+            return _cardAnimations != null
+                ? ScaleTransition(
+                    scale: _cardAnimations![index],
+                    child: _AnimatedQuickActionItem(
+                      icon: action['icon'] as IconData,
+                      label: action['label'] as String,
+                      onTap: action['onTap'] as VoidCallback,
+                      index: index,
+                    ),
+                  )
+                : _AnimatedQuickActionItem(
+                    icon: action['icon'] as IconData,
+                    label: action['label'] as String,
+                    onTap: action['onTap'] as VoidCallback,
+                    index: index,
+                  );
           },
         ),
       ],
@@ -516,28 +579,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildQuickActionItem(
       IconData icon, String label, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: AppColors.primary, size: 24),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      ),
-    );
+    return _AnimatedQuickActionItem(icon: icon, label: label, onTap: onTap, index: 0);
   }
 
   void _handleLogout() {
@@ -566,3 +608,129 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+class _AnimatedQuickActionItem extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final int index;
+
+  const _AnimatedQuickActionItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.index,
+  });
+
+  @override
+  State<_AnimatedQuickActionItem> createState() => _AnimatedQuickActionItemState();
+}
+
+class _AnimatedQuickActionItemState extends State<_AnimatedQuickActionItem>
+    with SingleTickerProviderStateMixin {
+  bool _isPressed = false;
+  late AnimationController _bounceController;
+  late Animation<double> _bounceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bounceController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _bounceAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
+      CurvedAnimation(parent: _bounceController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _bounceController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() => _isPressed = true);
+        _bounceController.forward();
+      },
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        _bounceController.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () {
+        setState(() => _isPressed = false);
+        _bounceController.reverse();
+      },
+      child: ScaleTransition(
+        scale: _bounceAnimation,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: _isPressed
+                  ? [AppColors.primary.withValues(alpha: 0.2), AppColors.primary.withValues(alpha: 0.15)]
+                  : [AppColors.primary.withValues(alpha: 0.1), AppColors.primary.withValues(alpha: 0.05)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: _isPressed ? AppColors.primary.withValues(alpha: 0.5) : AppColors.primary.withValues(alpha: 0.3),
+              width: _isPressed ? 2 : 1,
+            ),
+            boxShadow: _isPressed
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: Colors.grey.withValues(alpha: 0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: _isPressed
+                      ? AppColors.primary.withValues(alpha: 0.3)
+                      : AppColors.primary.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  widget.icon,
+                  color: AppColors.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                widget.label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[800],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
