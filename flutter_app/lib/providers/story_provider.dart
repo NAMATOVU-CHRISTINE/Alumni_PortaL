@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/models/story_model.dart';
 import 'package:alumni_portal/services/notification_service.dart';
 import 'package:alumni_portal/services/cloudinary_service.dart';
+import 'package:alumni_portal/services/image_compression_service.dart';
 
 class StoryProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -89,8 +90,11 @@ class StoryProvider with ChangeNotifier {
 
       String? imageUrl;
       if (imageFile != null) {
+        // Compress image before upload
+        final compressedImage = await ImageCompressionService.compressStoryImage(imageFile);
+        
         imageUrl = await CloudinaryService.uploadImage(
-          imageFile,
+          compressedImage,
           folder: 'stories',
         );
         if (imageUrl == null) {
