@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:alumni_portal/models/chat_model.dart';
 import 'package:alumni_portal/services/notification_service.dart';
+import 'package:alumni_portal/services/firebase_messaging_service.dart';
 
 class ChatProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -51,6 +52,18 @@ class ChatProvider with ChangeNotifier {
         .snapshots()
         .listen(
       (snapshot) {
+        // Check for new messages and show notifications
+        for (var change in snapshot.docChanges) {
+          if (change.type == DocumentChangeType.modified) {
+            final chat = ChatModel.fromFirestore(change.doc);
+            // Only notify if the last message is not from current user
+            if (chat.lastMessageSenderId != userId && 
+                chat.lastMessageSenderId != null) {
+              _showMessageNotification(chat);
+            }
+          }
+        }
+        
         _chats =
             snapshot.docs.map((doc) => ChatModel.fromFirestore(doc)).toList();
         notifyListeners();
@@ -59,6 +72,35 @@ class ChatProvider with ChangeNotifier {
         _setError('Failed to load chats');
       },
     );
+  }
+
+  Future<void> _showMessageNotification(ChatModel chat) async {
+    try {
+      final userId = currentUserId;
+      if (userId == null) return;
+
+      // Get sender name
+      final senderId = chat.lastMessageSenderId;
+      final senderName = chat.participantNames[senderId] ?? 'Someone';
+      
+      // Prepare message preview
+      String messagePreview = chat.lastMessageText ?? '';
+      if (chat.lastMessageType == 'image') {
+        messagePreview = '📷 Photo';
+      } else if (chat.lastMessageType == 'file') {
+        messagePreview = '📎 File';
+      }
+
+      // Import and use FirebaseMessagingService to show notification
+      await FirebaseMessagingService.showNotification(
+        title: senderName,
+        body: messagePreview,
+        notificationType: 'message',
+        payload: chat.chatId,
+      );
+    } catch (e) {
+      print('Error showing notification: $e');
+    }
   }
 
   void listenToMessages(String chatId) {
@@ -190,7 +232,8 @@ class ChatProvider with ChangeNotifier {
       NotificationService.notifyNewMessage(
         recipientId: receiverId,
         senderName: senderName,
-        chatId: chatId,
+        senderId: userId,
+        messagePreview: messageText,
       );
 
       return true;
