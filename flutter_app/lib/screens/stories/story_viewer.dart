@@ -406,6 +406,7 @@ class _StoryViewerState extends State<StoryViewer>
         builder: (context) => StoryViewersScreen(
           storyId: story.id,
           viewerIds: story.viewedBy,
+          ownerId: story.userId,
         ),
       ),
     ).then((_) {

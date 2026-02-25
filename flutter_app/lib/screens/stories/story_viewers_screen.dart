@@ -8,22 +8,27 @@ import 'package:alumni_portal/config/theme.dart';
 class StoryViewersScreen extends StatelessWidget {
   final String storyId;
   final List<String> viewerIds;
+  final String ownerId;
 
   const StoryViewersScreen({
     super.key,
     required this.storyId,
     required this.viewerIds,
+    required this.ownerId,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Filter out the owner from viewers list
+    final actualViewers = viewerIds.where((id) => id != ownerId).toList();
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text('${viewerIds.length} Views'),
+        title: Text('${actualViewers.length} Views'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
-      body: viewerIds.isEmpty
+      body: actualViewers.isEmpty
           ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -38,9 +43,9 @@ class StoryViewersScreen extends StatelessWidget {
               ),
             )
           : ListView.builder(
-              itemCount: viewerIds.length,
+              itemCount: actualViewers.length,
               itemBuilder: (context, index) {
-                final viewerId = viewerIds[index];
+                final viewerId = actualViewers[index];
                 return FutureBuilder<DocumentSnapshot>(
                   future: FirebaseFirestore.instance
                       .collection('users')
