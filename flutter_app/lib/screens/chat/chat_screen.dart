@@ -39,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _hasText = false;
   UserModel? _otherUser;
   bool _isLoadingImage = false;
+  ChatMessageModel? _replyToMessage;
 
   @override
   void initState() {
@@ -147,9 +148,14 @@ class _ChatScreenState extends State<ChatScreen> {
       chatId: widget.chatId,
       receiverId: receiverId,
       messageText: text,
+      replyToMessageId: _replyToMessage?.messageId,
+      replyToText: _replyToMessage?.displayText,
     );
 
     _messageController.clear();
+    setState(() {
+      _replyToMessage = null;
+    });
     _scrollToBottom();
   }
 
@@ -618,111 +624,178 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageBubble(ChatMessageModel message, bool isMe) {
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: message.messageType == 'image' 
-            ? EdgeInsets.zero 
-            : const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
+    return Dismissible(
+      key: Key(message.messageId ?? DateTime.now().toString()),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) async {
+        // Set reply message and don't actually dismiss
+        setState(() {
+          _replyToMessage = message;
+        });
+        return false;
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: const Icon(
+          Icons.reply,
+          color: AppColors.primary,
+          size: 28,
         ),
-        decoration: BoxDecoration(
-          color: message.messageType == 'image' 
-              ? Colors.transparent 
-              : (isMe ? AppColors.primary : Colors.grey[200]),
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: Radius.circular(isMe ? 16 : 4),
-            bottomRight: Radius.circular(isMe ? 4 : 16),
-          ),
-          boxShadow: message.messageType == 'image' 
-              ? [] 
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 2,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-        ),
+      ),
+      child: Align(
+        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            // Image message
-            if (message.messageType == 'image' && message.imageUrl != null)
-              ClipRRect(
+            // Show replied message if exists
+            if (message.replyToText != null && message.replyToText!.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border(
+                    left: BorderSide(
+                      color: AppColors.primary,
+                      width: 3,
+                    ),
+                  ),
+                ),
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.75,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Replying to',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      message.replyToText!.length > 50
+                          ? '${message.replyToText!.substring(0, 47)}...'
+                          : message.replyToText!,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: message.messageType == 'image' 
+                  ? EdgeInsets.zero 
+                  : const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
+              ),
+              decoration: BoxDecoration(
+                color: message.messageType == 'image' 
+                    ? Colors.transparent 
+                    : (isMe ? AppColors.primary : Colors.grey[200]),
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(16),
                   topRight: const Radius.circular(16),
                   bottomLeft: Radius.circular(isMe ? 16 : 4),
                   bottomRight: Radius.circular(isMe ? 4 : 16),
                 ),
-                child: CachedNetworkImage(
-                  imageUrl: message.imageUrl!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.error),
-                  ),
-                ),
+                boxShadow: message.messageType == 'image' 
+                    ? [] 
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 2,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
               ),
-            // Text message
-            if (message.messageType == 'text')
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  message.displayText,
-                  style: TextStyle(
-                    color: isMe ? Colors.white : AppColors.textPrimary,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 6),
-            Container(
-              padding: message.messageType == 'image' 
-                  ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
-                  : EdgeInsets.zero,
-              decoration: message.messageType == 'image'
-                  ? BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(12),
-                    )
-                  : null,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    message.formattedTime,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: message.messageType == 'image'
-                          ? Colors.white
-                          : (isMe ? Colors.white70 : AppColors.textSecondary),
-                      fontWeight: FontWeight.w400,
+                  // Image message
+                  if (message.messageType == 'image' && message.imageUrl != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(16),
+                        topRight: const Radius.circular(16),
+                        bottomLeft: Radius.circular(isMe ? 16 : 4),
+                        bottomRight: Radius.circular(isMe ? 4 : 16),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: message.imageUrl!,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          height: 200,
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 200,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                  // Text message
+                  if (message.messageType == 'text')
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        message.displayText,
+                        style: TextStyle(
+                          color: isMe ? Colors.white : AppColors.textPrimary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 6),
+                  Container(
+                    padding: message.messageType == 'image' 
+                        ? const EdgeInsets.symmetric(horizontal: 8, vertical: 4)
+                        : EdgeInsets.zero,
+                    decoration: message.messageType == 'image'
+                        ? BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(12),
+                          )
+                        : null,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          message.formattedTime,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: message.messageType == 'image'
+                                ? Colors.white
+                                : (isMe ? Colors.white70 : AppColors.textSecondary),
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        if (isMe) ...[
+                          const SizedBox(width: 4),
+                          Icon(
+                            message.isRead ? Icons.done_all : Icons.done,
+                            size: 16,
+                            color: message.messageType == 'image'
+                                ? Colors.white
+                                : (message.isRead ? Colors.lightBlue : Colors.white70),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                  if (isMe) ...[
-                    const SizedBox(width: 4),
-                    Icon(
-                      message.isRead ? Icons.done_all : Icons.done,
-                      size: 16,
-                      color: message.messageType == 'image'
-                          ? Colors.white
-                          : (message.isRead ? Colors.lightBlue : Colors.white70),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -749,6 +822,60 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Reply preview
+            if (_replyToMessage != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border(
+                    left: BorderSide(
+                      color: AppColors.primary,
+                      width: 3,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Replying to',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _replyToMessage!.displayText.length > 50
+                                ? '${_replyToMessage!.displayText.substring(0, 47)}...'
+                                : _replyToMessage!.displayText,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          _replyToMessage = null;
+                        });
+                      },
+                      color: AppColors.textSecondary,
+                    ),
+                  ],
+                ),
+              ),
             if (_isLoadingImage)
               Container(
                 padding: const EdgeInsets.all(8),

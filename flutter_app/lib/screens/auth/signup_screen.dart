@@ -292,10 +292,33 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 // Sign Up Button
                 Consumer<AuthProvider>(
-                  builder: (context, auth, _) => LoadingButton(
-                    onPressed: _handleSignup,
-                    isLoading: auth.isLoading,
-                    text: 'Create Account',
+                  builder: (context, auth, _) => ElevatedButton(
+                    onPressed: auth.isLoading ? null : _handleSignup,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: auth.isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Text(
+                            'CREATE ACCOUNT',
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -353,7 +376,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       'assets/icons/google_logo.png',
                       height: 24,
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.g_mobiledata, size: 24);
+                        return const Icon(Icons.g_mobiledata, size: 24, color: AppColors.accent);
                       },
                     ),
                     label: const Text(
@@ -361,6 +384,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: AppColors.accent,
                       ),
                     ),
                     style: OutlinedButton.styleFrom(

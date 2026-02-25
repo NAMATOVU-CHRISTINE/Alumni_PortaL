@@ -195,6 +195,8 @@ class ChatProvider with ChangeNotifier {
     String? fileUrl,
     String? fileName,
     String? imageUrl,
+    String? replyToMessageId,
+    String? replyToText,
   }) async {
     try {
       final userId = currentUserId;
@@ -219,6 +221,8 @@ class ChatProvider with ChangeNotifier {
         timestamp: DateTime.now(),
         isRead: false, // Explicitly set to false
         isDelivered: true, // Set to true when sent
+        replyToMessageId: replyToMessageId,
+        replyToText: replyToText,
       );
 
       // Add message to subcollection

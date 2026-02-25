@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (context, auth, _) => ElevatedButton(
                           onPressed: auth.isLoading ? null : _handleLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accent,
+                            backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
