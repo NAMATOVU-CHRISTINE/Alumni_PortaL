@@ -154,7 +154,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               Icon(
                 Icons.done_all,
                 size: 16,
-                color: chat.lastMessageText != null ? Colors.blue : Colors.grey,
+                color: chat.isLastMessageRead(currentUserId) ? Colors.blue : Colors.grey,
               ),
               const SizedBox(width: 4),
             ],

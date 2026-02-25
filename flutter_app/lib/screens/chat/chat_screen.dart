@@ -474,34 +474,19 @@ class _ChatScreenState extends State<ChatScreen> {
                                 _otherUser!.lastActive?.millisecondsSinceEpoch,
                               )
                             : 'Offline';
-                        
-                        final messageCount = provider.messages.length;
 
-                        return Row(
-                          children: [
-                            Text(
-                              onlineStatus,
-                              style: TextStyle(
-                                color: onlineStatus == 'Online' 
-                                    ? Colors.lightGreenAccent 
-                                    : Colors.white70,
-                                fontSize: 12,
-                                fontWeight: onlineStatus == 'Online' 
-                                    ? FontWeight.w600 
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                            if (messageCount > 0) ...[
-                              const SizedBox(width: 8),
-                              Text(
-                                '• $messageCount messages',
-                                style: const TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ],
-                          ],
+                        return Text(
+                          onlineStatus,
+                          style: TextStyle(
+                            color: onlineStatus == 'Online' 
+                                ? Colors.lightGreenAccent 
+                                : Colors.white70,
+                            fontSize: 12,
+                            fontWeight: onlineStatus == 'Online' 
+                                ? FontWeight.w600 
+                                : FontWeight.normal,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         );
                       },
                     ),

@@ -146,6 +146,17 @@ class ChatModel {
 
   int getUnreadCount(String userId) => unreadCounts[userId] ?? 0;
 
+  bool isLastMessageRead(String currentUserId) {
+    // If current user sent the last message, check if other user has read it
+    if (lastMessageSenderId == currentUserId) {
+      final otherId = getOtherParticipantId(currentUserId);
+      if (otherId == null) return false;
+      // If other user has 0 unread messages, they've read it
+      return getUnreadCount(otherId) == 0;
+    }
+    return false;
+  }
+
   String get lastMessageDisplayText {
     if (lastMessageText == null || lastMessageText!.isEmpty) {
       return 'No messages yet';
