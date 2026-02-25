@@ -97,9 +97,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void _startActivityTracking() {
     // Update user activity every 2 minutes
     _activityTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
-  void _startActivityTracking() {
-    // Update user activity every 2 minutes
-    _activityTimer = Timer.periodic(const Duration(minutes: 2), (timer) {
       if (mounted) {
         context.read<UserProvider>().updateUserActivity();
       }
