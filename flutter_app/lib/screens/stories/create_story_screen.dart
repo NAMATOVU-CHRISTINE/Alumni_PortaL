@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:alumni_portal/providers/story_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/screens/stories/image_editor_screen.dart';
+import 'package:alumni_portal/services/image_compression_service.dart';
 
 class CreateStoryScreen extends StatefulWidget {
   const CreateStoryScreen({super.key});
@@ -41,10 +43,35 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      setState(() {
-        _selectedImage = File(image.path);
-        _isTextMode = false;
-      });
+      // Show loading
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
+        );
+      }
+      
+      // Compress image
+      final compressed = await ImageCompressionService.compressStoryImage(File(image.path));
+      
+      if (mounted) Navigator.pop(context); // Hide loading
+      
+      // Open editor
+      final editedImage = await Navigator.push<File>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageEditorScreen(imageFile: compressed),
+        ),
+      );
+      if (editedImage != null) {
+        setState(() {
+          _selectedImage = editedImage;
+          _isTextMode = false;
+        });
+      }
     }
   }
 
@@ -52,10 +79,35 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.camera);
     if (image != null) {
-      setState(() {
-        _selectedImage = File(image.path);
-        _isTextMode = false;
-      });
+      // Show loading
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
+        );
+      }
+      
+      // Compress image
+      final compressed = await ImageCompressionService.compressStoryImage(File(image.path));
+      
+      if (mounted) Navigator.pop(context); // Hide loading
+      
+      // Open editor
+      final editedImage = await Navigator.push<File>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageEditorScreen(imageFile: compressed),
+        ),
+      );
+      if (editedImage != null) {
+        setState(() {
+          _selectedImage = editedImage;
+          _isTextMode = false;
+        });
+      }
     }
   }
 
@@ -197,9 +249,37 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
   }
 
   Widget _buildImagePreview() {
-    return Image.file(
-      _selectedImage!,
-      fit: BoxFit.contain,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.file(
+          _selectedImage!,
+          fit: BoxFit.contain,
+        ),
+        Positioned(
+          top: 16,
+          right: 16,
+          child: IconButton(
+            onPressed: () async {
+              final editedImage = await Navigator.push<File>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImageEditorScreen(imageFile: _selectedImage!),
+                ),
+              );
+              if (editedImage != null) {
+                setState(() {
+                  _selectedImage = editedImage;
+                });
+              }
+            },
+            icon: const Icon(Icons.edit, color: Colors.white),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.black54,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
