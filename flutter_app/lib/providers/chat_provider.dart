@@ -16,6 +16,7 @@ class ChatProvider with ChangeNotifier {
   String? _error;
   StreamSubscription? _chatsSubscription;
   StreamSubscription? _messagesSubscription;
+  String? _currentOpenChatId; // Track currently open chat
 
   List<ChatModel> get chats => _chats;
   List<ChatMessageModel> get messages => _messages;
@@ -79,6 +80,12 @@ class ChatProvider with ChangeNotifier {
       final userId = currentUserId;
       if (userId == null) return;
 
+      // Don't show notification if this chat is currently open
+      if (_currentOpenChatId == chat.chatId) {
+        print('Chat is currently open, skipping notification');
+        return;
+      }
+
       // Get sender name
       final senderId = chat.lastMessageSenderId;
       final senderName = chat.participantNames[senderId] ?? 'Someone';
@@ -104,6 +111,7 @@ class ChatProvider with ChangeNotifier {
   }
 
   void listenToMessages(String chatId) {
+    _currentOpenChatId = chatId; // Set current open chat
     _messagesSubscription?.cancel();
     _messagesSubscription = _firestore
         .collection('chats')
@@ -300,6 +308,7 @@ class ChatProvider with ChangeNotifier {
 
   void clearMessages() {
     _messages = [];
+    _currentOpenChatId = null; // Clear current open chat
     notifyListeners();
   }
 
