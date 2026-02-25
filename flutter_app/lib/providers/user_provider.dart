@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:alumni_portal/models/user_model.dart';
+import 'package:alumni_portal/services/cloudinary_service.dart';
 
 class UserProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -382,21 +383,43 @@ class UserProvider with ChangeNotifier {
     try {
       _setLoading(true);
       final userId = _auth.currentUser?.uid;
-      if (userId == null) return null;
+      if (userId == null) {
+        _setError('User not logged in');
+        return null;
+      }
 
-      final ref = _storage.ref().child('profile_images/$userId.jpg');
-      await ref.putFile(imageFile);
-      final url = await ref.getDownloadURL();
+      print('Uploading profile image to Cloudinary for user: $userId');
+      
+      // Upload to Cloudinary
+      final url = await CloudinaryService.uploadImage(
+        imageFile,
+        folder: 'profile_images',
+      );
+      
+      if (url == null) {
+        _setError('Failed to upload image to Cloudinary');
+        return null;
+      }
+      
+      print('Cloudinary upload successful. URL: $url');
 
+      // Update Firestore with Cloudinary URL
       await _firestore.collection('users').doc(userId).update({
         'profileImageUrl': url,
         'updatedAt': DateTime.now().millisecondsSinceEpoch,
       });
 
+      print('Firestore updated, reloading user...');
+      
+      // Reload user data to reflect changes immediately
       await loadCurrentUser();
+      notifyListeners();
+      
+      print('Profile image upload successful!');
       return url;
     } catch (e) {
-      _setError('Failed to upload image');
+      print('Error uploading profile image: $e');
+      _setError('Failed to upload image: ${e.toString()}');
       return null;
     } finally {
       _setLoading(false);
