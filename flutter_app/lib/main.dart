@@ -23,11 +23,27 @@ import 'package:alumni_portal/services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    print('Error loading .env file: $e');
+  }
+  
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    print('Firebase initialized successfully');
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+    // Continue anyway to show error screen
+  }
 
   // Initialize Firebase Messaging
-  await FirebaseMessagingService.initialize();
+  try {
+    await FirebaseMessagingService.initialize();
+  } catch (e) {
+    print('Error initializing Firebase Messaging: $e');
+  }
 
   // Note: Firebase Auth persistence is automatic on mobile platforms
   // setPersistence() is only for web

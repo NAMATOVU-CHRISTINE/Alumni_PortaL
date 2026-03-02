@@ -19,7 +19,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDbfdl9IsTtrMIOyW8pmuWYXqhJvvnRfH8',
-    appId: '1:511866402860:web:YOUR_WEB_APP_ID',
+    appId: '1:511866402860:web:5ac7f30fd0cea70ff3b989',
     messagingSenderId: '511866402860',
     projectId: 'alumniportal-198ec',
     storageBucket: 'alumniportal-198ec.firebasestorage.app',
@@ -28,7 +28,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDbfdl9IsTtrMIOyW8pmuWYXqhJvvnRfH8',
-    appId: '1:511866402860:android:5ac7f30fd0cea70ff3b989',
+    appId: '1:511866402860:android:fe63612d9563517bf3b989',
     messagingSenderId: '511866402860',
     projectId: 'alumniportal-198ec',
     storageBucket: 'alumniportal-198ec.firebasestorage.app',

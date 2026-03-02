@@ -187,7 +187,7 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              const Icon(Icons.auto_awesome, color: Colors.amber, size: 20),
+              const Icon(Icons.workspace_premium, color: Colors.amber, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Notable Alumni',
@@ -200,7 +200,7 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
         ),
         const SizedBox(height: 12),
         SizedBox(
-          height: 200,
+          height: 220,
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -249,6 +249,9 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
           onTap: () {
             if (alumni['userId'] != null && !alumni['userId'].toString().startsWith('sample')) {
               context.push('/view-profile/${alumni['userId']}');
+            } else {
+              // Show full info dialog for sample data
+              _showAlumniDetailsDialog(alumni);
             }
           },
           child: Container(
@@ -266,7 +269,7 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
               padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
-                  // Profile image with star badge
+                  // Profile image with badge
                   Stack(
                     children: [
                       Container(
@@ -313,7 +316,7 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
                             border: Border.all(color: Colors.white, width: 2),
                           ),
                           child: const Icon(
-                            Icons.star,
+                            Icons.verified,
                             color: Colors.white,
                             size: 16,
                           ),
@@ -339,28 +342,74 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (alumni['currentJob'] != null) ...[
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.work_outline,
+                                color: Colors.white70,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  alumni['currentJob'],
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 13,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (alumni['company'] != null) ...[
                           const SizedBox(height: 4),
-                          Text(
-                            '${alumni['currentJob']}${alumni['company'] != null ? ' at ${alumni['company']}' : ''}',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.business,
+                                color: Colors.white70,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  alumni['company'],
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 13,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                         if (alumni['graduationYear'] != null) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            'Class of ${alumni['graduationYear']}',
-                            style: const TextStyle(
-                              color: Colors.white60,
-                              fontSize: 12,
-                            ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.school,
+                                color: Colors.white60,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Class of ${alumni['graduationYear']}',
+                                style: const TextStyle(
+                                  color: Colors.white60,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 10,
@@ -390,26 +439,13 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  maxLines: 1,
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        if (alumni['quote'] != null) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            '"${alumni['quote']}"',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              fontSize: 11,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -422,6 +458,219 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showAlumniDetailsDialog(Map<String, dynamic> alumni) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        content: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.primary.withValues(alpha: 0.9),
+                AppColors.primaryDark,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header with close button
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Notable Alumni',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              // Profile section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.white24,
+                          backgroundImage: alumni['profileImageUrl'] != null
+                              ? CachedNetworkImageProvider(
+                                  alumni['profileImageUrl'])
+                              : null,
+                          child: alumni['profileImageUrl'] == null
+                              ? Text(
+                                  (alumni['fullName'] as String)
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : null,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: const Icon(
+                              Icons.verified,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      alumni['fullName'] ?? '',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    if (alumni['currentJob'] != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        alumni['currentJob'],
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                    if (alumni['company'] != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        alumni['company'],
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                    if (alumni['graduationYear'] != null) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          'Class of ${alumni['graduationYear']}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.emoji_events,
+                            color: Colors.amber,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              alumni['achievement'] ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (alumni['quote'] != null) ...[
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.format_quote,
+                              color: Colors.white60,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                alumni['quote'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
