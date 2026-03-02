@@ -36,7 +36,9 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        final futures = snapshot.docs.map((doc) async {
+        final alumniList = <Map<String, dynamic>>[];
+        
+        for (var doc in snapshot.docs) {
           final data = doc.data();
           // Get user details
           final userDoc = await FirebaseFirestore.instance
@@ -46,7 +48,7 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
 
           if (userDoc.exists) {
             final userData = userDoc.data()!;
-            return {
+            alumniList.add({
               'userId': data['userId'],
               'fullName': userData['fullName'] ?? 'Notable Alumni',
               'profileImageUrl': userData['profileImageUrl'],
@@ -55,13 +57,11 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
               'graduationYear': userData['graduationYear'] ?? data['graduationYear'],
               'achievement': data['achievement'] ?? 'Distinguished Alumni',
               'quote': data['quote'],
-            };
+            });
           }
-          return <String, dynamic>{};
-        }).toList();
+        }
         
-        final results = await Future.wait(futures);
-        _notableAlumni = results.where((element) => element.isNotEmpty).toList();
+        _notableAlumni = alumniList;
       }
 
       // Fallback: Get alumni with notable achievements
