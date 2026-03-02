@@ -36,32 +36,32 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        _notableAlumni = await Future.wait(
-          snapshot.docs.map((doc) async {
-            final data = doc.data();
-            // Get user details
-            final userDoc = await FirebaseFirestore.instance
-                .collection('users')
-                .doc(data['userId'])
-                .get();
+        final futures = snapshot.docs.map((doc) async {
+          final data = doc.data();
+          // Get user details
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(data['userId'])
+              .get();
 
-            if (userDoc.exists) {
-              final userData = userDoc.data()!;
-              return {
-                'userId': data['userId'],
-                'fullName': userData['fullName'] ?? 'Notable Alumni',
-                'profileImageUrl': userData['profileImageUrl'],
-                'currentJob': userData['currentJob'] ?? data['position'],
-                'company': userData['company'] ?? data['company'],
-                'graduationYear': userData['graduationYear'] ?? data['graduationYear'],
-                'achievement': data['achievement'] ?? 'Distinguished Alumni',
-                'quote': data['quote'],
-              };
-            }
-            return null;
-          }).toList(),
-        );
-        _notableAlumni.removeWhere((element) => element == null);
+          if (userDoc.exists) {
+            final userData = userDoc.data()!;
+            return {
+              'userId': data['userId'],
+              'fullName': userData['fullName'] ?? 'Notable Alumni',
+              'profileImageUrl': userData['profileImageUrl'],
+              'currentJob': userData['currentJob'] ?? data['position'],
+              'company': userData['company'] ?? data['company'],
+              'graduationYear': userData['graduationYear'] ?? data['graduationYear'],
+              'achievement': data['achievement'] ?? 'Distinguished Alumni',
+              'quote': data['quote'],
+            };
+          }
+          return <String, dynamic>{};
+        }).toList();
+        
+        final results = await Future.wait(futures);
+        _notableAlumni = results.where((element) => element.isNotEmpty).toList();
       }
 
       // Fallback: Get alumni with notable achievements
