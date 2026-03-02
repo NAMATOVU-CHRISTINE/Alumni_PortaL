@@ -10,6 +10,7 @@ import 'package:alumni_portal/providers/notification_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/screens/stories/stories_widget.dart';
 import 'package:alumni_portal/services/firebase_messaging_service.dart';
+import 'package:alumni_portal/screens/home/notable_alumni_carousel.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -233,6 +234,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   },
                 ),
               ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+            // Notable Alumni Carousel
+            const SliverToBoxAdapter(
+              child: NotableAlumniCarousel(),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
