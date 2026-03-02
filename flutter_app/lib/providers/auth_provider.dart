@@ -193,22 +193,33 @@ class AuthProvider with ChangeNotifier {
       _setLoading(true);
       _setError(null);
 
-      // Sign out first to show account picker
-      await _googleSignIn.signOut();
+      UserCredential userCredential;
 
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        _setError('Google sign in cancelled');
-        return false;
+      if (kIsWeb) {
+        // For web, use Firebase's popup sign-in
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.setCustomParameters({'prompt': 'select_account'});
+        
+        userCredential = await _auth.signInWithPopup(googleProvider);
+      } else {
+        // For mobile, use google_sign_in package
+        await _googleSignIn.signOut();
+
+        final googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) {
+          _setError('Google sign in cancelled');
+          return false;
+        }
+
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        userCredential = await _auth.signInWithCredential(credential);
       }
 
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential = await _auth.signInWithCredential(credential);
       final userId = userCredential.user!.uid;
 
       // Check if user exists in Firestore
