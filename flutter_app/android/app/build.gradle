@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         applicationId "com.must.alumniportal"
-        minSdkVersion flutter.minSdkVersion  // Android 6.0 and above
+        minSdkVersion flutter.minSdkVersion  // Android 5.0 and above (supports 95%+ devices)
         targetSdk flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
