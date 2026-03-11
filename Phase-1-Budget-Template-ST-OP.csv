@@ -1,0 +1,55 @@
+MUST Alumni Portal - Phase 1 Budget Template,,
+Project: Alumni Portal Development,,
+Total Budget: UGX 2000000,,
+,,
+Budget Category,Amount (UGX),Percentage
+Development & Design,1150000,57.5%
+Cloud Services,450000,22.5%
+Third-Party Services,270000,13.5%
+Deployment,130000,6.5%
+,,
+TOTAL PROJECT COST,2000000,100%
+,,
+Maintenance (Annual),300000,
+,,
+Payment Schedule,,
+Phase 1,500000,25%
+Phase 2,600000,30%
+Phase 3,500000,25%
+Phase 4,400000,20%
+,,
+TOTAL PAYMENTS,2000000,100%
+,,
+Development Team Breakdown,,
+Development Team,1150000,
+- Frontend Development,400000,
+- Backend Development,350000,
+- Mobile App Development,250000,
+- UI/UX Design,150000,
+,,
+Cloud Services Breakdown,,
+Firebase Hosting,150000,
+Database Services,120000,
+Storage Services,80000,
+Authentication Services,50000,
+Analytics & Monitoring,50000,
+,,
+Third-Party Services,,
+Email Services,70000,
+Push Notifications,50000,
+Payment Gateway,80000,
+SMS Services,40000,
+API Integrations,30000,
+,,
+Deployment & Setup,,
+App Store Fees,30000,
+SSL Certificates,20000,
+Domain & Hosting Setup,40000,
+Testing & QA,40000,
+,,
+Notes:,,
+- All amounts in Uganda Shillings (UGX),
+- Maintenance covers annual hosting and updates,
+- Payment schedule can be adjusted based on milestones,
+- Development team consolidated into single role,
+- Budget status: Pending Review,
