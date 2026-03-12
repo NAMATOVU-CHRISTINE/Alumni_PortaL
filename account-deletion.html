@@ -228,4 +228,12 @@ Please process this account deletion request. I understand this action is perman
             // Create mailto link
             const mailtoLink = `mailto:christine@must.ac.ug?subject=Account Deletion Request - ${fullName}&body=${encodeURIComponent(emailBody)}`;
             
+            // Open email client
+            window.location.href = mailtoLink;
             
+            // Show confirmation message
+            alert('Your email client should open with a pre-filled deletion request. Please send the email to complete your request.');
+        });
+    </script>
+</body>
+</html>
