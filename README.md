@@ -218,19 +218,22 @@ flutter build ios --release
 - **Minimum SDK**: Android 5.0 (API 21)
 - **Target SDK**: Android 14 (API 34)
 - **Compile SDK**: Android 14 (API 34)
+- **Flutter Version**: 3.x compatible
+- **Dart Version**: 3.x compatible
 
 ## Google Play Console Compliance
 
 ### Account Deletion
 The app provides a compliant account deletion mechanism as required by Google Play policies:
 
-**Account Deletion URL**: https://namatovu-christine.github.io/Alumni_PortaL/account-deletion.html
+**Account Deletion URL**: https://namatovu-christine.github.io/Deletemyaccount/account-deletion.html
 
 This page allows users to:
 - Request permanent account deletion
 - Understand the implications of deletion
 - Contact support for assistance
 - Submit deletion requests via email
+- Comply with Google Play Console requirements
 
 ### Data Safety Declaration
 The app collects the following user data types:
@@ -362,26 +365,80 @@ To contribute to this project:
 4. Test thoroughly
 5. Submit a pull request
 
-## License
+## License and Usage
 
-This project is proprietary and intended for Makerere University alumni.
+This project is proprietary software developed for Mbarara University of Science and Technology (MUST) alumni community. 
 
-## Support
+### Usage Rights
+- Intended for MUST alumni, students, and staff
+- Educational and networking purposes
+- Non-commercial use within the university community
 
-For issues or questions:
-- Check existing GitHub issues
-- Create a new issue with detailed description
-- Contact the development team
+### Restrictions
+- No redistribution without permission
+- No commercial use without authorization
+- Source code access limited to development team
+
+### Third-Party Libraries
+This project uses various open-source libraries and frameworks:
+- Firebase SDK (Google)
+- Flutter Framework (Google)
+- Material Design Components
+- Various Android and Flutter packages (see build files for complete list)
+
+All third-party components are used in accordance with their respective licenses.
+
+## Support and Contact
+
+For technical support or questions:
+- **Email**: christine@must.ac.ug
+- **GitHub Issues**: Create detailed issue reports
+- **Account Deletion**: Use the dedicated deletion page
+- **Development Team**: Contact through university channels
+
+### Reporting Issues
+When reporting issues, please include:
+- Device model and Android version
+- App version number
+- Steps to reproduce the issue
+- Screenshots if applicable
+- Error messages or logs
+
+### Feature Requests
+Submit feature requests through GitHub issues with:
+- Clear description of the requested feature
+- Use case and benefits
+- Priority level
+- Any relevant mockups or examples
 
 ## Version History
 
-Version 1.1 (Current)
-- Added push notifications
-- Improved chat functionality
-- Enhanced user profiles
-- Optimized for Play Store
+### Version 1.3.0 (Current)
+- Added Notable Alumni Carousel with auto-scrolling functionality
+- Fixed Google Sign-In for web platform using Firebase popup authentication
+- Updated Firebase configuration with correct Android App ID
+- Improved account deletion compliance page for Google Play Console
+- Enhanced UI with Material Design 3 components
+- Optimized build configuration for Google Play Store
+- Added comprehensive budget documentation and templates
+- Fixed JavaScript errors in web components
+- Updated minimum SDK to Android 5.0 for broader compatibility
 
-Version 1.0
-- Initial release
-- Core features implemented
-- Firebase integration
+### Version 1.2.0
+- Added push notifications with Firebase Cloud Messaging
+- Improved chat functionality with real-time messaging
+- Enhanced user profiles with better image handling
+- Added stories feature for community engagement
+- Implemented mentor search and connection system
+
+### Version 1.1.0
+- Enhanced notification system
+- Improved chat functionality
+- Better user profile management
+- Optimized for Play Store submission
+
+### Version 1.0.0
+- Initial release with core features
+- Firebase integration for backend services
+- Basic authentication and user management
+- Alumni directory and networking features
