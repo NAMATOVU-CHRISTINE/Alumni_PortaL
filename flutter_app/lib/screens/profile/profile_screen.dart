@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Consumer<AuthProvider>(
             builder: (context, authProvider, _) {
               final currentUserId = authProvider.user?.uid;
-              final isOwnProfile = currentUserId == user.uid;
+              final isOwnProfile = currentUserId == user.userId;
               
               if (isOwnProfile) {
                 return Column(
