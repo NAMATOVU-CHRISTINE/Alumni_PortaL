@@ -442,8 +442,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     _buildDrawerSection('More', [
                       _buildDrawerItem(Icons.emoji_events, 'Achievements',
                           () => context.push('/achievements'), false),
+                      _buildDrawerItem(Icons.store, 'Marketplace',
+                          () => context.push('/marketplace'), false),
                       _buildDrawerItem(Icons.favorite, 'Support & Donations',
                           () => context.push('/support-donations'), false),
+                      _buildDrawerItem(Icons.card_membership, 'Annual Subscriptions',
+                          () => context.push('/annual-subscriptions'), false),
                     ]),
                     const Divider(),
                     _buildDrawerItem(Icons.settings, 'Settings',

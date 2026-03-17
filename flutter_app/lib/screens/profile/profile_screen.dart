@@ -182,6 +182,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           if (user.workStatus != null)
             _buildInfoRow(Icons.work, 'Work Status', user.workStatus!),
+          // Show subscription info only for current user (private profile)
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, _) {
+              final currentUserId = authProvider.currentUser?.uid;
+              final isOwnProfile = currentUserId == user.uid;
+              
+              if (isOwnProfile) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    const Divider(),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Membership',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        TextButton(
+                          onPressed: () => context.push('/annual-subscriptions'),
+                          child: const Text('Manage'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _buildSubscriptionCard(),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
     );
@@ -317,6 +350,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: const Text('Logout'),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSubscriptionCard() {
+    // TODO: Get actual subscription status from user data or Firebase
+    final hasActiveSubscription = true; // Example - replace with actual data
+    final subscriptionType = 'Premium Alumni'; // Example - replace with actual data
+    final expiryDate = '2024-12-31'; // Example - replace with actual data
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: hasActiveSubscription 
+                        ? AppColors.primary.withValues(alpha: 0.1)
+                        : Colors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    hasActiveSubscription ? Icons.card_membership : Icons.card_membership_outlined,
+                    color: hasActiveSubscription ? AppColors.primary : Colors.grey,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        hasActiveSubscription ? subscriptionType : 'No Active Subscription',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        hasActiveSubscription 
+                            ? 'Expires: $expiryDate'
+                            : 'Subscribe to unlock premium features',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: hasActiveSubscription ? Colors.green : Colors.orange,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    hasActiveSubscription ? 'ACTIVE' : 'INACTIVE',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (hasActiveSubscription) ...[
+              const SizedBox(height: 12),
+              const Divider(),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.check_circle, color: AppColors.primary, size: 16),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Premium features unlocked',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
