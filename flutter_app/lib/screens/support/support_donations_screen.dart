@@ -9,48 +9,74 @@ class SupportDonationsScreen extends StatefulWidget {
 }
 
 class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
-  final List<Map<String, dynamic>> _donationCauses = [
+  final List<Map<String, dynamic>> _marketplaceItems = [
     {
       'id': '1',
-      'title': 'Student Scholarship Fund',
-      'description': 'Support deserving students with financial assistance for their education',
-      'target': 10000000,
-      'raised': 6500000,
-      'donors': 245,
-      'image': 'assets/images/scholarship.jpg',
-      'category': 'Education',
+      'title': 'MUST Alumni T-Shirt',
+      'description': 'Official MUST Alumni branded t-shirt in various sizes and colors',
+      'price': 'UGX 35,000',
+      'category': 'Apparel',
+      'seller': 'MUST Store',
+      'rating': 4.5,
+      'reviews': 23,
     },
     {
       'id': '2',
-      'title': 'Library Expansion Project',
-      'description': 'Help expand the university library with modern facilities and resources',
-      'target': 25000000,
-      'raised': 18200000,
-      'donors': 156,
-      'image': 'assets/images/library.jpg',
-      'category': 'Infrastructure',
+      'title': 'University Mug',
+      'description': 'Ceramic mug with MUST logo and alumni branding',
+      'price': 'UGX 15,000',
+      'category': 'Accessories',
+      'seller': 'MUST Store',
+      'rating': 4.8,
+      'reviews': 45,
     },
     {
       'id': '3',
-      'title': 'Research Equipment Fund',
-      'description': 'Provide state-of-the-art research equipment for science departments',
-      'target': 15000000,
-      'raised': 8900000,
-      'donors': 89,
-      'image': 'assets/images/research.jpg',
-      'category': 'Research',
+      'title': 'Alumni Directory Book',
+      'description': 'Comprehensive directory of MUST alumni contacts and achievements',
+      'price': 'UGX 50,000',
+      'category': 'Books',
+      'seller': 'MUST Publications',
+      'rating': 4.2,
+      'reviews': 12,
+    },
+    {
+      'id': '4',
+      'title': 'MUST Hoodie',
+      'description': 'Comfortable hoodie with university logo and alumni branding',
+      'price': 'UGX 65,000',
+      'category': 'Apparel',
+      'seller': 'MUST Store',
+      'rating': 4.7,
+      'reviews': 31,
+    },
+    {
+      'id': '5',
+      'title': 'University Cap',
+      'description': 'Official MUST baseball cap with embroidered logo',
+      'price': 'UGX 25,000',
+      'category': 'Accessories',
+      'seller': 'MUST Store',
+      'rating': 4.4,
+      'reviews': 18,
+    },
+    {
+      'id': '6',
+      'title': 'Alumni Notebook Set',
+      'description': 'Set of 3 premium notebooks with MUST alumni branding',
+      'price': 'UGX 30,000',
+      'category': 'Stationery',
+      'seller': 'MUST Publications',
+      'rating': 4.6,
+      'reviews': 27,
     },
   ];
-
-  final List<int> _quickAmounts = [10000, 25000, 50000, 100000, 250000, 500000];
-  int? _selectedAmount;
-  final TextEditingController _customAmountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Support & Donations'),
+        title: const Text('Marketplace'),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -72,13 +98,13 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(
-                    Icons.favorite,
+                    Icons.store,
                     color: Colors.white,
                     size: 48,
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Give Back to MUST',
+                    'MUST Marketplace',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -87,7 +113,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Your contributions help build a brighter future for current and future students',
+                    'Shop official MUST merchandise and alumni products',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
@@ -103,15 +129,15 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
               child: Row(
                 children: [
                   Expanded(
-                    child: _buildStatCard('Total Raised', 'UGX 33.6M', Icons.monetization_on),
+                    child: _buildStatCard('Products', '25+', Icons.inventory),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildStatCard('Active Donors', '490+', Icons.people),
+                    child: _buildStatCard('Happy Customers', '150+', Icons.people),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildStatCard('Projects', '12', Icons.assignment),
+                    child: _buildStatCard('Categories', '4', Icons.category),
                   ),
                 ],
               ),
@@ -124,7 +150,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Current Campaigns',
+                    'Featured Products',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -132,12 +158,12 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                   ),
                   const SizedBox(height: 16),
                   
-                  ...(_donationCauses.map((cause) => _buildDonationCard(cause))),
+                  ...(_marketplaceItems.map((item) => _buildMarketplaceCard(item))),
                 ],
               ),
             ),
 
-            // How to donate section
+            // How to shop section
             Container(
               margin: const EdgeInsets.all(20),
               padding: const EdgeInsets.all(20),
@@ -152,12 +178,12 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                   Row(
                     children: [
                       Icon(
-                        Icons.info_outline,
+                        Icons.shopping_bag,
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 8),
                       const Text(
-                        'How to Donate',
+                        'How to Shop',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -166,10 +192,10 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  _buildHowToStep('1', 'Choose a cause', 'Select from our active campaigns'),
-                  _buildHowToStep('2', 'Select amount', 'Choose or enter your donation amount'),
-                  _buildHowToStep('3', 'Make payment', 'Use Mobile Money, Bank Transfer, or Card'),
-                  _buildHowToStep('4', 'Get receipt', 'Receive confirmation and tax receipt'),
+                  _buildHowToStep('1', 'Browse products', 'Explore our merchandise collection'),
+                  _buildHowToStep('2', 'Add to cart', 'Select items and quantities'),
+                  _buildHowToStep('3', 'Checkout', 'Use Mobile Money, Bank Transfer, or Card'),
+                  _buildHowToStep('4', 'Delivery', 'Get your items delivered or pick up'),
                 ],
               ),
             ),
@@ -192,14 +218,14 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                       ),
                       const SizedBox(height: 12),
                       const Text(
-                        'Contact our donations team for assistance or questions about giving.',
+                        'Contact our store team for product inquiries or order assistance.',
                       ),
                       const SizedBox(height: 16),
                       Row(
                         children: [
                           Icon(Icons.email, color: AppColors.primary),
                           const SizedBox(width: 8),
-                          const Text('donations@must.ac.ug'),
+                          const Text('store@must.ac.ug'),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -207,7 +233,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                         children: [
                           Icon(Icons.phone, color: AppColors.primary),
                           const SizedBox(width: 8),
-                          const Text('+256 485 421 373'),
+                          const Text('+256 485 421 374'),
                         ],
                       ),
                     ],
@@ -254,10 +280,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
     );
   }
 
-  Widget _buildDonationCard(Map<String, dynamic> cause) {
-    final progress = (cause['raised'] / cause['target']).clamp(0.0, 1.0);
-    final progressPercentage = (progress * 100).round();
-
+  Widget _buildMarketplaceCard(Map<String, dynamic> item) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -268,8 +291,8 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
             Row(
               children: [
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(8),
@@ -277,6 +300,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                   child: Icon(
                     Icons.image,
                     color: Colors.grey[400],
+                    size: 32,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -285,7 +309,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        cause['title'],
+                        item['title'],
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -293,10 +317,39 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        cause['description'],
+                        item['description'],
                         style: const TextStyle(
                           color: Colors.grey,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text(
+                            item['price'],
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Row(
+                            children: [
+                              Icon(Icons.star, color: Colors.amber, size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${item['rating']} (${item['reviews']})',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -305,64 +358,42 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Progress bar
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'UGX ${_formatAmount(cause['raised'])}',
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '$progressPercentage%',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                Chip(
+                  label: Text(item['category']),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                 ),
-                const SizedBox(height: 4),
-                LinearProgressIndicator(
-                  value: progress,
-                  backgroundColor: Colors.grey[200],
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Goal: UGX ${_formatAmount(cause['target'])}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Text(
-                      '${cause['donors']} donors',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                const SizedBox(width: 8),
+                Text(
+                  'Sold by: ${item['seller']}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
             
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => _showDonationDialog(cause),
-                child: const Text('Donate Now'),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _showItemDetails(item),
+                    icon: const Icon(Icons.info_outline),
+                    label: const Text('View Details'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _addToCart(item),
+                    icon: const Icon(Icons.shopping_cart),
+                    label: const Text('Add to Cart'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -427,94 +458,96 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen> {
     return amount.toString();
   }
 
-  void _showDonationDialog(Map<String, dynamic> cause) {
+  void _showItemDetails(Map<String, dynamic> item) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Donate to ${cause['title']}'),
+        title: Text(item['title']),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select donation amount:'),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _quickAmounts.map((amount) => 
-                ChoiceChip(
-                  label: Text('UGX ${_formatAmount(amount)}'),
-                  selected: _selectedAmount == amount,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedAmount = selected ? amount : null;
-                      if (selected) {
-                        _customAmountController.clear();
-                      }
-                    });
-                  },
-                ),
-              ).toList(),
+            Container(
+              width: double.infinity,
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.image,
+                color: Colors.grey[400],
+                size: 48,
+              ),
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _customAmountController,
-              decoration: const InputDecoration(
-                labelText: 'Custom Amount (UGX)',
-                border: OutlineInputBorder(),
+            Text(
+              item['description'],
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Price: ${item['price']}',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                Chip(
+                  label: Text(item['category']),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.star, color: Colors.amber, size: 16),
+                const SizedBox(width: 4),
+                Text('${item['rating']} (${item['reviews']} reviews)'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Seller: ${item['seller']}',
+              style: TextStyle(
+                color: Colors.grey[600],
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  setState(() {
-                    _selectedAmount = null;
-                  });
-                }
-              },
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Close'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              _processDonation(cause);
+              _addToCart(item);
             },
-            child: const Text('Proceed to Payment'),
+            child: const Text('Add to Cart'),
           ),
         ],
       ),
     );
   }
 
-  void _processDonation(Map<String, dynamic> cause) {
-    final amount = _selectedAmount ?? 
-        (int.tryParse(_customAmountController.text) ?? 0);
-    
-    if (amount > 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Processing donation of UGX ${_formatAmount(amount)} to ${cause['title']} - Feature coming soon!',
-          ),
-          duration: const Duration(seconds: 3),
+  void _addToCart(Map<String, dynamic> item) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${item['title']} added to cart!'),
+        action: SnackBarAction(
+          label: 'View Cart',
+          onPressed: () {
+            // TODO: Navigate to cart
+          },
         ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select or enter a donation amount'),
-        ),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _customAmountController.dispose();
-    super.dispose();
+      ),
+    );
   }
 }
