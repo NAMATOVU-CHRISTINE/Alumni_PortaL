@@ -52,6 +52,14 @@ class CareerTipsScreen extends StatelessWidget {
         itemCount: _tips.length,
         itemBuilder: (context, index) {
           final tip = _tips[index];
+          // Cycle through different theme colors
+          final colors = [
+            AppColors.primary,    // Green
+            AppColors.accent,     // Blue  
+            AppColors.secondary,  // Orange
+          ];
+          final color = colors[index % colors.length];
+          
           return Card(
             margin: const EdgeInsets.only(bottom: 16),
             child: Padding(
@@ -64,11 +72,11 @@ class CareerTipsScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
+                          color: color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(tip['icon'] as IconData,
-                            color: AppColors.primary, size: 28),
+                            color: color, size: 28),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
