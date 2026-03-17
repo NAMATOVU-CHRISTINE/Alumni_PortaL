@@ -15,7 +15,7 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
     {
       'id': 'basic',
       'name': 'Basic Alumni',
-      'price': 'UGX 50,000',
+      'price': 'UGX 20,000',
       'duration': 'Annual',
       'features': [
         'Access to alumni directory',
@@ -24,12 +24,12 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
         'Monthly newsletter',
       ],
       'color': Colors.blue,
-      'popular': false,
+      'popular': true,
     },
     {
       'id': 'premium',
       'name': 'Premium Alumni',
-      'price': 'UGX 120,000',
+      'price': 'UGX 50,000',
       'duration': 'Annual',
       'features': [
         'All Basic features',
@@ -40,12 +40,12 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
         'Alumni merchandise discounts',
       ],
       'color': AppColors.primary,
-      'popular': true,
+      'popular': false,
     },
     {
       'id': 'lifetime',
       'name': 'Lifetime Member',
-      'price': 'UGX 500,000',
+      'price': 'UGX 200,000',
       'duration': 'One-time',
       'features': [
         'All Premium features',

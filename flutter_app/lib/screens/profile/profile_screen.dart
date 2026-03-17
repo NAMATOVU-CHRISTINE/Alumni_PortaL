@@ -357,7 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildSubscriptionCard() {
     // TODO: Get actual subscription status from user data or Firebase
     final hasActiveSubscription = true; // Example - replace with actual data
-    final subscriptionType = 'Premium Alumni'; // Example - replace with actual data
+    final subscriptionType = 'Basic Alumni'; // Example - replace with actual data
     final expiryDate = '2024-12-31'; // Example - replace with actual data
 
     return Card(
