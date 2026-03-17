@@ -267,16 +267,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildCompactTip() {
+    // Cycle through theme colors for the tip
+    final colors = [AppColors.primary, AppColors.accent, AppColors.secondary];
+    final color = colors[_currentTipIndex % colors.length];
+    
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
-          Icon(Icons.lightbulb, color: AppColors.primary, size: 20),
+          Icon(Icons.lightbulb, color: color, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: AnimatedSwitcher(
@@ -285,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 _motivationalTips[_currentTipIndex],
                 key: ValueKey(_currentTipIndex),
                 style: TextStyle(
-                  color: AppColors.primary,
+                  color: color,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
@@ -443,9 +447,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       _buildDrawerItem(Icons.emoji_events, 'Achievements',
                           () => context.push('/achievements'), false),
                       _buildDrawerItem(Icons.store, 'Marketplace',
-                          () => context.push('/support-donations'), false),
+                          () => context.push('/marketplace'), false),
                       _buildDrawerItem(Icons.favorite, 'Support & Donations',
-                          () => context.push('/support-projects'), false),
+                          () => context.push('/support-donations'), false),
                       _buildDrawerItem(Icons.card_membership, 'Annual Subscriptions',
                           () => context.push('/annual-subscriptions'), false),
                     ]),
