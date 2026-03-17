@@ -42,22 +42,6 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
       'color': AppColors.primary,
       'popular': false,
     },
-    {
-      'id': 'lifetime',
-      'name': 'Lifetime Member',
-      'price': 'UGX 200,000',
-      'duration': 'One-time',
-      'features': [
-        'All Premium features',
-        'Lifetime access',
-        'VIP event access',
-        'Personal alumni advisor',
-        'Legacy program participation',
-        'University board voting rights',
-      ],
-      'color': Colors.amber[700]!,
-      'popular': false,
-    },
   ];
 
   String? _currentSubscription;
