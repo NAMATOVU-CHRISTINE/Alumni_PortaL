@@ -43,7 +43,9 @@ import 'package:alumni_portal/screens/profile/profile_viewers_screen.dart';
 import 'package:alumni_portal/screens/polls/polls_screen.dart';
 import 'package:alumni_portal/screens/stories/create_story_screen.dart';
 import 'package:alumni_portal/screens/jobs/referrals_screen.dart';
-import 'package:alumni_portal/screens/marketplace/support_donations_screen.dart';
+import 'package:alumni_portal/screens/support/support_donations_screen.dart';
+import 'package:alumni_portal/screens/marketplace/marketplace_screen.dart';
+import 'package:alumni_portal/screens/subscriptions/annual_subscriptions_screen.dart';
 import 'package:alumni_portal/screens/discussions/discussions_screen.dart';
 import 'package:alumni_portal/screens/gamification/achievements_screen.dart';
 import 'package:alumni_portal/screens/career/enhanced_career_center.dart';
@@ -330,10 +332,22 @@ class AppRouter {
         builder: (context, state) => const NotificationsScreen(),
       ),
 
+      // Marketplace
+      GoRoute(
+        path: '/marketplace',
+        builder: (context, state) => const MarketplaceScreen(),
+      ),
+
       // Support & Donations
       GoRoute(
         path: '/support-donations',
         builder: (context, state) => const SupportDonationsScreen(),
+      ),
+
+      // Annual Subscriptions
+      GoRoute(
+        path: '/annual-subscriptions',
+        builder: (context, state) => const AnnualSubscriptionsScreen(),
       ),
 
       // Discussions
