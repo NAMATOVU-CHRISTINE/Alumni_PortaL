@@ -23,7 +23,7 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
         'Event notifications',
         'Monthly newsletter',
       ],
-      'color': Colors.blue,
+      'color': AppColors.accent,
       'popular': true,
     },
     {
@@ -37,9 +37,9 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
         'Mentorship program access',
         'Exclusive events',
         'Career counseling sessions',
-        'Alumni merchandise discounts',
+        'Marketplace discounts',
       ],
-      'color': AppColors.primary,
+      'color': AppColors.secondary,
       'popular': false,
     },
   ];
@@ -82,7 +82,7 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
                       children: [
                         Icon(
                           Icons.card_membership,
-                          color: AppColors.primary,
+                          color: AppColors.secondary,
                           size: 28,
                         ),
                         const SizedBox(width: 12),
@@ -111,15 +111,15 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
 
             // Current subscription status
             if (_currentSubscription != null) ...[
-              Card(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                Card(
+                color: AppColors.accent.withValues(alpha: 0.1),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
                       Icon(
                         Icons.check_circle,
-                        color: AppColors.primary,
+                        color: AppColors.accent,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -135,7 +135,7 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
                             Text(
                               _getSubscriptionName(_currentSubscription!),
                               style: TextStyle(
-                                color: AppColors.primary,
+                                color: AppColors.accent,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -214,7 +214,7 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(
                 color: isCurrentPlan 
-                    ? AppColors.primary 
+                    ? AppColors.accent 
                     : (isPremium ? plan['color'] : Colors.transparent),
                 width: isCurrentPlan ? 2 : (isPremium ? 1 : 0),
               ),
@@ -227,29 +227,33 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            plan['name'],
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: plan['color'],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              plan['name'],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: plan['color'],
+                              ),
                             ),
-                          ),
-                          Text(
-                            plan['duration'],
-                            style: const TextStyle(
-                              color: Colors.grey,
+                            Text(
+                              plan['duration'],
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       Text(
                         plan['price'],
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: plan['color'],
                         ),
@@ -263,6 +267,7 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(
                             Icons.check,
@@ -271,7 +276,10 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
                           ),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: Text(feature),
+                            child: Text(
+                              feature,
+                              style: const TextStyle(fontSize: 14),
+                            ),
                           ),
                         ],
                       ),
@@ -343,12 +351,12 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: AppColors.secondary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
-              color: AppColors.primary,
+              color: AppColors.secondary,
               size: 20,
             ),
           ),
