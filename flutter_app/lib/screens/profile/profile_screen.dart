@@ -185,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Show subscription info only for current user (private profile)
           Consumer<AuthProvider>(
             builder: (context, authProvider, _) {
-              final currentUserId = authProvider.currentUser?.uid;
+              final currentUserId = authProvider.user?.uid;
               final isOwnProfile = currentUserId == user.uid;
               
               if (isOwnProfile) {
