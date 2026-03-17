@@ -9,38 +9,67 @@ class MarketplaceScreen extends StatefulWidget {
 }
 
 class _MarketplaceScreenState extends State<MarketplaceScreen> {
+  final List<Map<String, dynamic>> _cartItems = [];
+  
   final List<Map<String, dynamic>> _marketplaceItems = [
     {
       'id': '1',
       'title': 'MUST Alumni T-Shirt',
-      'description': 'Official MUST Alumni branded t-shirt in various sizes',
+      'description': 'Official MUST Alumni branded t-shirt in various sizes and colors',
       'price': 'UGX 35,000',
-      'image': 'assets/images/tshirt.jpg',
+      'image': 'assets/images/merchandise/MUST Shirts.jpeg',
       'category': 'Apparel',
       'seller': 'MUST Store',
     },
     {
       'id': '2',
-      'title': 'University Mug',
-      'description': 'Ceramic mug with MUST logo and alumni branding',
-      'price': 'UGX 15,000',
-      'image': 'assets/images/mug.jpg',
-      'category': 'Accessories',
+      'title': 'MUST Hoodie',
+      'description': 'Comfortable hoodie with university logo and alumni branding',
+      'price': 'UGX 65,000',
+      'image': 'assets/images/merchandise/MUST hoodie.jpeg',
+      'category': 'Apparel',
       'seller': 'MUST Store',
     },
     {
       'id': '3',
-      'title': 'Alumni Directory Book',
-      'description': 'Comprehensive directory of MUST alumni contacts',
-      'price': 'UGX 50,000',
-      'image': 'assets/images/directory.jpg',
-      'category': 'Books',
-      'seller': 'MUST Publications',
+      'title': 'MUST Collar Shirts',
+      'description': 'Professional collar shirts with MUST branding',
+      'price': 'UGX 45,000',
+      'image': 'assets/images/merchandise/MUST Collar Shirts.jpeg',
+      'category': 'Apparel',
+      'seller': 'MUST Store',
+    },
+    {
+      'id': '4',
+      'title': 'MUST Cap',
+      'description': 'Official MUST baseball cap with embroidered logo',
+      'price': 'UGX 25,000',
+      'image': 'assets/images/merchandise/MUST Cap.jpeg',
+      'category': 'Accessories',
+      'seller': 'MUST Store',
+    },
+    {
+      'id': '5',
+      'title': 'MUST Bottle',
+      'description': 'Reusable water bottle with MUST logo',
+      'price': 'UGX 20,000',
+      'image': 'assets/images/merchandise/MUST Bottle.jpeg',
+      'category': 'Accessories',
+      'seller': 'MUST Store',
+    },
+    {
+      'id': '6',
+      'title': 'MUST Signature Pack',
+      'description': 'Complete merchandise package with multiple items',
+      'price': 'UGX 150,000',
+      'image': 'assets/images/merchandise/MUST Signature Pack.jpeg',
+      'category': 'Bundles',
+      'seller': 'MUST Store',
     },
   ];
 
   String _selectedCategory = 'All';
-  final List<String> _categories = ['All', 'Apparel', 'Accessories', 'Books', 'Services'];
+  final List<String> _categories = ['All', 'Apparel', 'Accessories', 'Bundles'];
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +85,37 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              // TODO: Implement cart
-            },
+            icon: Stack(
+              children: [
+                const Icon(Icons.shopping_cart),
+                if (_cartItems.isNotEmpty)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        '${_cartItems.length}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            onPressed: _showCart,
           ),
         ],
       ),
@@ -95,29 +151,43 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           ),
           // Items grid
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: _getFilteredItems().length,
-              itemBuilder: (context, index) {
-                final item = _getFilteredItems()[index];
-                return _buildMarketplaceItem(item);
-              },
-            ),
+            child: _getFilteredItems().isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.store,
+                          size: 80,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'No items in this category',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: _getFilteredItems().length,
+                    itemBuilder: (context, index) {
+                      final item = _getFilteredItems()[index];
+                      return _buildMarketplaceItem(item);
+                    },
+                  ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Add new item
-          _showAddItemDialog();
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }
@@ -143,60 +213,63 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image placeholder
+            // Image
             Expanded(
               flex: 3,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
                 ),
-                child: Icon(
-                  Icons.image,
-                  size: 48,
-                  color: Colors.grey[400],
+                child: Image.asset(
+                  item['image'],
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[200],
+                    child: Icon(
+                      Icons.image,
+                      size: 48,
+                      color: Colors.grey[400],
+                    ),
+                  ),
                 ),
               ),
             ),
             // Item details
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item['title'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+            Padding(
+              padding: const EdgeInsets.all(6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    item['title'],
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      item['price'],
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    item['price'],
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
                     ),
-                    const Spacer(),
-                    Text(
-                      item['seller'],
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 12,
-                      ),
+                  ),
+                  Text(
+                    item['seller'],
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 10,
                     ),
-                  ],
-                ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
           ],
@@ -209,41 +282,75 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(item['title']),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item['description'],
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Price: ${item['price']}',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+        contentPadding: EdgeInsets.zero,
+        title: Text(
+          item['title'],
+          style: const TextStyle(fontSize: 16),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  item['image'],
+                  width: double.infinity,
+                  height: 180,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    height: 180,
+                    color: Colors.grey[200],
+                    child: Icon(Icons.image, size: 48, color: Colors.grey[400]),
                   ),
                 ),
-                Chip(
-                  label: Text(item['category']),
-                  backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Seller: ${item['seller']}',
-              style: TextStyle(
-                color: Colors.grey[600],
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['description'],
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          item['price'],
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Chip(
+                          label: Text(
+                            item['category'],
+                            style: const TextStyle(fontSize: 11),
+                          ),
+                          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Seller: ${item['seller']}',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -253,9 +360,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              _showContactSeller(item);
+              _addToCart(item);
             },
-            child: const Text('Contact Seller'),
+            child: const Text('Add to Cart'),
           ),
         ],
       ),
@@ -270,6 +377,241 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           label: 'OK',
           onPressed: () {},
         ),
+      ),
+    );
+  }
+
+  void _addToCart(Map<String, dynamic> item) {
+    setState(() {
+      _cartItems.add(item);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${item['title']} added to cart'),
+        action: SnackBarAction(
+          label: 'View Cart',
+          onPressed: _showCart,
+        ),
+      ),
+    );
+  }
+
+  void _showCart() {
+    if (_cartItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Your cart is empty')),
+      );
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Shopping Cart',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${_cartItems.length} items',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: _cartItems.length,
+                itemBuilder: (context, index) {
+                  final item = _cartItems[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          item['image'],
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            width: 60,
+                            height: 60,
+                            color: Colors.grey[200],
+                            child: Icon(Icons.image, color: Colors.grey[400]),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        item['title'],
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(item['price']),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            _cartItems.removeAt(index);
+                          });
+                          Navigator.pop(context);
+                          if (_cartItems.isNotEmpty) {
+                            _showCart();
+                          }
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withValues(alpha: 0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        _calculateTotal(),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _checkout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text(
+                        'Checkout',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _calculateTotal() {
+    int total = 0;
+    for (var item in _cartItems) {
+      final priceStr = item['price'].toString().replaceAll(RegExp(r'[^0-9]'), '');
+      total += int.tryParse(priceStr) ?? 0;
+    }
+    return 'UGX ${total.toString().replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    )}';
+  }
+
+  void _checkout() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Checkout'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Total: ${_calculateTotal()}'),
+            const SizedBox(height: 16),
+            const Text(
+              'Payment methods:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text('• Mobile Money (MTN, Airtel)'),
+            const Text('• Bank Transfer'),
+            const Text('• Credit/Debit Card'),
+            const SizedBox(height: 16),
+            const Text(
+              'Feature coming soon!',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              setState(() {
+                _cartItems.clear();
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Order placed successfully!'),
+                ),
+              );
+            },
+            child: const Text('Place Order'),
+          ),
+        ],
       ),
     );
   }
