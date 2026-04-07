@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/services/payment_helper.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -564,6 +565,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   }
 
   void _checkout() {
+    final total = _calculateTotal();
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -572,23 +575,23 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Total: ${_calculateTotal()}'),
-            const SizedBox(height: 16),
-            const Text(
-              'Payment methods:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              'Total Items: ${_cartItems.length}',
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            const Text('• Mobile Money (MTN, Airtel)'),
-            const Text('• Bank Transfer'),
-            const Text('• Credit/Debit Card'),
+            Text(
+              'Total: $total',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
+            ),
             const SizedBox(height: 16),
             const Text(
-              'Feature coming soon!',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                color: Colors.grey,
-              ),
+              'Payment via Mobile Money (MTN, Airtel)',
+              style: TextStyle(fontSize: 14),
             ),
           ],
         ),
@@ -600,16 +603,30 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
+              
+              // Extract amount from total string
+              final amountString = total.replaceAll(RegExp(r'[^\d]'), '');
+              final amount = double.tryParse(amountString) ?? 0;
+              
+              // Show Africas Talking payment dialog
+              PaymentHelper.showMarketplacePayment(
+                context,
+                amount: amount,
+                itemName: '${_cartItems.length} item(s) from Marketplace',
+              );
+              
+              // Clear cart after payment initiated
               setState(() {
                 _cartItems.clear();
               });
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Order placed successfully!'),
-                ),
-              );
             },
-            child: const Text('Place Order'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+            ),
+            child: const Text(
+              'Pay Now',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
