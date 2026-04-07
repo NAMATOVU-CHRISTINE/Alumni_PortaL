@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
+import 'package:alumni_portal/services/payment_helper.dart';
 
 class AnnualSubscriptionsScreen extends StatefulWidget {
   const AnnualSubscriptionsScreen({super.key});
@@ -430,12 +431,25 @@ class _AnnualSubscriptionsScreenState extends State<AnnualSubscriptionsScreen> {
   }
 
   void _processPayment(Map<String, dynamic> plan) {
-    // TODO: Implement payment processing
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Payment processing for ${plan['name']} - Feature coming soon!'),
-        duration: const Duration(seconds: 3),
-      ),
+    // Extract price from string (e.g., "UGX 20,000/year" -> 20000)
+    final priceString = plan['price'].toString().replaceAll(RegExp(r'[^\d]'), '');
+    final amount = double.tryParse(priceString) ?? 0;
+    
+    if (amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid subscription amount'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    
+    // Show Africas Talking payment dialog
+    PaymentHelper.showSubscriptionPayment(
+      context,
+      amount: amount,
+      subscriptionType: plan['name'],
     );
   }
 
