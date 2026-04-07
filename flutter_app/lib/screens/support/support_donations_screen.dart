@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/services/payment_helper.dart';
 
 class SupportDonationsScreen extends StatefulWidget {
   const SupportDonationsScreen({super.key});
@@ -1319,14 +1320,28 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen>
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Processing donation for $title - Feature coming soon!',
+                final amount = selectedAmount ?? 
+                    (customAmountController.text.isNotEmpty 
+                        ? double.tryParse(customAmountController.text) 
+                        : null);
+                
+                if (amount == null || amount <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please select or enter a valid amount'),
+                      backgroundColor: Colors.red,
                     ),
-                    backgroundColor: color,
-                  ),
+                  );
+                  return;
+                }
+                
+                Navigator.pop(context);
+                
+                // Show Africas Talking payment dialog
+                PaymentHelper.showDonationPayment(
+                  context,
+                  amount: amount.toDouble(),
+                  purpose: 'Donation to $title',
                 );
               },
               style: ElevatedButton.styleFrom(
