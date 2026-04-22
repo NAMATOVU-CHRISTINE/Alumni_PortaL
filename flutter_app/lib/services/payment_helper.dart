@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:alumni_portal/widgets/payment_dialog.dart';
+import 'package:alumni_portal/widgets/flutterwave_payment_dialog.dart';
 
 class PaymentHelper {
   // Show payment dialog for donations
@@ -10,7 +10,7 @@ class PaymentHelper {
   }) {
     showDialog(
       context: context,
-      builder: (context) => PaymentDialog(
+      builder: (context) => FlutterwavePaymentDialog(
         amount: amount,
         purpose: purpose,
         onComplete: (success, message) {
@@ -33,9 +33,46 @@ class PaymentHelper {
   }) {
     showDialog(
       context: context,
-      builder: (context) => PaymentDialog(
+      builder: (context) => FlutterwavePaymentDialog(
         amount: amount,
         purpose: 'Convocation Subscription: $subscriptionType',
+        onComplete: (success, message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(success
+                  ? 'Subscription activated! $message'
+                  : message),
+              backgroundColor: success ? Colors.green : Colors.red,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // Show payment dialog for marketplace purchases
+  static void showMarketplacePayment(
+    BuildContext context, {
+    required double amount,
+    required String itemName,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => FlutterwavePaymentDialog(
+        amount: amount,
+        purpose: 'Purchase: $itemName',
+        onComplete: (success, message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(message),
+              backgroundColor: success ? Colors.green : Colors.red,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
         onComplete: (success, message) {
           if (success) {
             // Update user subscription status in Firebase
