@@ -9,10 +9,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     
     <application
-        android:label="MUST Alumni Portal"
+        android:label="The Convocation"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true"
         android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".MainActivity"
@@ -35,8 +36,36 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        
+        <!-- Firebase Cloud Messaging Service -->
+        <service
+            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        
+        <!-- Default notification icon and color for FCM -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/launcher_icon" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_color" />
+        
+        <!-- Enable automatic notification display when app is in background -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="high_importance_channel" />
+        
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        
+        <!-- Google API Key for Firebase services -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDbfdl9IsTtrMIOyW8pmuWYXqhJvvnRfH8" />
     </application>
 </manifest>

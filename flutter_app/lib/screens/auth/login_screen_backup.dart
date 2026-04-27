@@ -116,7 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Join Alumni Portal',
+                  'Join The Convocation',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),

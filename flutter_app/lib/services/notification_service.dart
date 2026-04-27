@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:alumni_portal/services/firebase_messaging_service.dart';
 
 class NotificationService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -18,6 +19,7 @@ class NotificationService {
     if (userId == _currentUserId) return;
 
     try {
+      // Save notification to Firestore
       await _firestore.collection('notifications').add({
         'userId': userId,
         'title': title,
@@ -27,7 +29,20 @@ class NotificationService {
         'read': false,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
       });
+
+      // Send push notification via Firebase Cloud Messaging
+      await FirebaseMessagingService.sendNotificationToUser(
+        userId: userId,
+        title: title,
+        body: message,
+        data: {
+          'type': type,
+          'referenceId': referenceId ?? '',
+          'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        },
+      );
     } catch (e) {
+      print('Error creating notification: $e');
       // Silently fail - notifications are not critical
     }
   }

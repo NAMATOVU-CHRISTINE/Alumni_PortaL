@@ -97,9 +97,9 @@ public class AlumniDirectoryActivity extends AppCompatActivity {
             return;
         }
         
-        String subject = "Hello from Alumni Portal - " + user.getFullName();
+        String subject = "Hello from The Convocation - " + user.getFullName();
         String body = "Hi " + user.getFullName() + ",\n\n" +
-                     "I found your profile on the Alumni Portal and would like to connect.\n\n" +
+                     "I found your profile on The Convocation and would like to connect.\n\n" +
                      "Best regards";
         
         // Create implicit intent for email

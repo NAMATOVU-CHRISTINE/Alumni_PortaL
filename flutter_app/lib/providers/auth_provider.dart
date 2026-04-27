@@ -9,8 +9,7 @@ class AuthProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
-    serverClientId: '511866402860-rtp3f0a1k9j6bmigtn8vbsv36kh2d9h2.apps.googleusercontent.com',
+    scopes: ['email', 'profile'],
   );
 
   User? _user;

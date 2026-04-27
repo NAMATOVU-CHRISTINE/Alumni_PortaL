@@ -10,6 +10,7 @@ import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/widgets/post_card_compact.dart';
 import 'package:alumni_portal/widgets/app_bar_decoration.dart';
 import 'package:alumni_portal/widgets/empty_state_widget.dart';
+import 'package:alumni_portal/widgets/custom_app_bar.dart';
 
 class PostSearchDelegate extends SearchDelegate<String> {
   @override
@@ -132,13 +133,12 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MustAppBar(
-        title: const Text('What\'s happening around?'),
+      appBar: CustomAppBar(
+        title: 'What\'s happening around?',
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // TODO: Implement search functionality
               showSearch(
                 context: context,
                 delegate: PostSearchDelegate(),

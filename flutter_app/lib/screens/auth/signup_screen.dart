@@ -5,6 +5,7 @@ import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/widgets/custom_text_field.dart';
 import 'package:alumni_portal/widgets/loading_button.dart';
+import 'package:alumni_portal/widgets/google_logo.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -344,7 +345,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 // Google Sign-In Button
                 Consumer<AuthProvider>(
-                  builder: (context, auth, _) => OutlinedButton.icon(
+                  builder: (context, auth, _) => OutlinedButton(
                     onPressed: auth.isLoading
                         ? null
                         : () async {
@@ -372,27 +373,27 @@ class _SignupScreenState extends State<SignupScreen> {
                               );
                             }
                           },
-                    icon: Image.asset(
-                      'assets/icons/google_logo.png',
-                      height: 24,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.g_mobiledata, size: 24, color: AppColors.accent);
-                      },
-                    ),
-                    label: const Text(
-                      'Sign up with Google',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.accent,
-                      ),
-                    ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       side: BorderSide(color: Colors.grey[300]!),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const GoogleLogo(size: 24),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Sign up with Google',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.accent,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

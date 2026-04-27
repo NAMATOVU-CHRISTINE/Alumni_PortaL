@@ -64,7 +64,7 @@ class MustBrandingHeader extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Alumni Portal',
+                          'The Convocation',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.9),

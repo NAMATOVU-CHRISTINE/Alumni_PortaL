@@ -143,7 +143,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements CommentA
         shareIntent.putExtra(Intent.EXTRA_TEXT, 
             title + "\n\n" + 
             content + "\n\n" +
-            "Shared from Alumni Portal Knowledge Hub 📚");
+            "Shared from The Convocation Knowledge Hub 📚");
         
         startActivity(Intent.createChooser(shareIntent, "Share Article"));
     }

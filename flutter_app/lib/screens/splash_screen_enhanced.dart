@@ -122,7 +122,7 @@ class _EnhancedSplashScreenState extends State<EnhancedSplashScreen>
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Alumni Portal',
+                            'The Convocation',
                             style: TextStyle(
                               fontSize: 20,
                               color: AppColors.accent,

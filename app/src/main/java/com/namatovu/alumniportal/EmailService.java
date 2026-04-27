@@ -176,7 +176,7 @@ public class EmailService {
         // Additional fields for Cloud Function compatibility
         data.put("to", recipient.getEmail()); // Alias for recipientEmail
         data.put("body", getNotificationMessage(notificationType, userName, otherUserName)); // Alias for message
-        data.put("fromEmail", "Alumni Portal <noreply@alumni-portal.com>");
+        data.put("fromEmail", "The Convocation <noreply@theconvocation.com>");
         data.put("priority", "normal");
         
         return data;
@@ -224,16 +224,16 @@ public class EmailService {
         switch (type) {
             case "request":
                 return "You have received a new mentorship request from " + userName + ". " +
-                       "Please check the Alumni Portal app to review and respond to this request.";
+                       "Please check The Convocation app to review and respond to this request.";
             case "accepted":
                 return "Great news! " + otherUserName + " has accepted your mentorship request. " +
-                       "You can now start chatting with your mentor through the Alumni Portal app.";
+                       "You can now start chatting with your mentor through The Convocation app.";
             case "rejected":
                 return "Your mentorship request has been updated. " +
-                       "Please check the Alumni Portal app for more details.";
+                       "Please check The Convocation app for more details.";
             default:
                 return "You have a new mentorship update from " + otherUserName + ". " +
-                       "Please check the Alumni Portal app for details.";
+                       "Please check The Convocation app for details.";
         }
     }
 

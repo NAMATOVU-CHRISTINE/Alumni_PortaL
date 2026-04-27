@@ -9,10 +9,21 @@ import 'package:alumni_portal/services/navigation_service.dart';
 String? _pendingChatId;
 
 // Top-level function for background message handling
+// This runs even when the app is terminated/closed
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling background message: ${message.messageId}');
-  // Handle background message
+  print('🔔 Background message received: ${message.messageId}');
+  print('Title: ${message.notification?.title}');
+  print('Body: ${message.notification?.body}');
+  print('Data: ${message.data}');
+  
+  // Note: Local notifications are automatically shown by Firebase when app is in background/terminated
+  // This handler is for additional processing like saving to database
+  
+  // You can add custom logic here like:
+  // - Saving notification to local database
+  // - Updating app badge count
+  // - Processing data payloads
 }
 
 class FirebaseMessagingService {
@@ -74,8 +85,8 @@ class FirebaseMessagingService {
       _handleMessageOpenedApp(initialMessage);
     }
 
-    // Set background message handler
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // Note: Background message handler is registered in main.dart
+    // FirebaseMessaging.onBackgroundMessage() should only be called once
   }
 
   /// Initialize local notifications plugin
@@ -208,12 +219,18 @@ class FirebaseMessagingService {
     String? payload,
     String notificationType = 'general',
   }) async {
-    // Use different channel for messages
-    bool isMessage = notificationType == 'message';
+    // Determine notification style based on type
+    bool isMessage = notificationType == 'message' || notificationType == 'chat';
+    bool isNews = notificationType == 'news';
+    bool isEvent = notificationType == 'event';
+    
+    // Choose appropriate channel
+    String channelId = isMessage ? 'messages_channel' : 'high_importance_channel';
+    String channelName = isMessage ? 'Messages' : 'High Importance Notifications';
     
     final androidDetails = AndroidNotificationDetails(
-      isMessage ? 'messages_channel' : 'high_importance_channel',
-      isMessage ? 'Messages' : 'High Importance Notifications',
+      channelId,
+      channelName,
       channelDescription: isMessage 
           ? 'Notifications for new messages'
           : 'This channel is used for important notifications.',
@@ -225,7 +242,7 @@ class FirebaseMessagingService {
       enableVibration: true,
       enableLights: true,
       color: const Color(0xFF8BC34A), // Lime green color
-      // WhatsApp-style notification
+      // WhatsApp-style notification with appropriate styling
       styleInformation: isMessage 
           ? MessagingStyleInformation(
               Person(name: 'You'),
@@ -233,12 +250,33 @@ class FirebaseMessagingService {
               messages: [
                 Message(body, DateTime.now(), Person(name: title)),
               ],
+              groupConversation: false,
             )
           : BigTextStyleInformation(
               body,
               contentTitle: title,
+              summaryText: _getNotificationSummary(notificationType),
             ),
-      category: isMessage ? AndroidNotificationCategory.message : null,
+      category: isMessage 
+          ? AndroidNotificationCategory.message 
+          : (isEvent ? AndroidNotificationCategory.event : null),
+      // Add action buttons for messages
+      actions: isMessage ? [
+        const AndroidNotificationAction(
+          'reply',
+          'Reply',
+          showsUserInterface: true,
+          inputs: [
+            AndroidNotificationActionInput(
+              label: 'Type a message',
+            ),
+          ],
+        ),
+        const AndroidNotificationAction(
+          'mark_read',
+          'Mark as Read',
+        ),
+      ] : null,
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -246,6 +284,7 @@ class FirebaseMessagingService {
       presentBadge: true,
       presentSound: true,
       interruptionLevel: InterruptionLevel.timeSensitive,
+      categoryIdentifier: 'message_category',
     );
 
     final details = NotificationDetails(
@@ -260,6 +299,25 @@ class FirebaseMessagingService {
       details,
       payload: payload,
     );
+  }
+
+  /// Get notification summary text based on type
+  static String _getNotificationSummary(String type) {
+    switch (type) {
+      case 'news':
+        return 'The Convocation News';
+      case 'event':
+        return 'The Convocation Events';
+      case 'chat':
+      case 'message':
+        return 'The Convocation Messages';
+      case 'job':
+        return 'The Convocation Jobs';
+      case 'mentorship':
+        return 'The Convocation Mentorship';
+      default:
+        return 'The Convocation';
+    }
   }
 
   /// Save FCM token to Firestore

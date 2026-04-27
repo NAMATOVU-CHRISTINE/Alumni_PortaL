@@ -5,6 +5,7 @@ import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/widgets/custom_text_field.dart';
 import 'package:alumni_portal/services/error_handler_service.dart';
+import 'package:alumni_portal/widgets/google_logo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -144,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Sign in to continue to Alumni Portal',
+                        'Sign in to continue to The Convocation',
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                         textAlign: TextAlign.center,
                       ),
@@ -220,15 +221,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: auth.isLoading ? null : _handleGoogleSignIn,
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: AppColors.mustNavy, width: 2),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.network('https://www.google.com/favicon.ico', width: 24, height: 24, errorBuilder: (_, __, ___) => const Icon(Icons.g_mobiledata)),
+                              const GoogleLogo(size: 24),
                               const SizedBox(width: 12),
-                              const Text('Continue with Google', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.mustNavy)),
+                              const Text(
+                                'Continue with Google',
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.mustNavy),
+                              ),
                             ],
                           ),
                         ),

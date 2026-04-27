@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Alumni Portal</string>
+    <string name="app_name">The Convocation</string>
 
     <!-- Welcome Messages for Home Screen -->
     <string name="welcome_message">Welcome, %1$s!</string>
@@ -52,7 +52,7 @@
     <string name="app_settings">App Settings</string>
 
     <!-- Strings for Login, Signup, and Forgot Password from build errors -->
-    <string name="alumni_portal">Alumni Portal</string>
+    <string name="alumni_portal">The Convocation</string>
     <string name="email_hint">Email</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>

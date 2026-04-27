@@ -58,9 +58,9 @@ public class InitialDataLoader {
         
         // News 1
         Map<String, Object> news1 = new HashMap<>();
-        news1.put("title", "Welcome to MUST Alumni Portal");
+        news1.put("title", "Welcome to MUST The Convocation");
         news1.put("summary", "Connect with fellow alumni, access exclusive opportunities, and stay updated with university news.");
-        news1.put("content", "The MUST Alumni Portal is your gateway to lifelong connections with the university community.");
+        news1.put("content", "The MUST Convocation is your gateway to lifelong connections with the university community.");
         news1.put("category", "UNIVERSITY");
         news1.put("author", "Alumni Office");
         news1.put("publishedAt", System.currentTimeMillis());

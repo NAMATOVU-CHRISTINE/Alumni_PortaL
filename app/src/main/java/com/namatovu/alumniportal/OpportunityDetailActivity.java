@@ -183,7 +183,7 @@ public class OpportunityDetailActivity extends AppCompatActivity {
         String shareText = "Check out this opportunity: " + opportunityTitle + 
                           " at " + opportunityCompany + 
                           "\n\nDeadline: " + opportunityDeadline +
-                          "\n\nShared via Alumni Portal";
+                          "\n\nShared via The Convocation";
         
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");

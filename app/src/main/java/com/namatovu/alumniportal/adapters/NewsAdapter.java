@@ -97,7 +97,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             
             textTitle.setText(article.getTitle() != null ? article.getTitle() : "Untitled");
             textSummary.setText(article.getSummary() != null ? article.getSummary() : "No summary available");
-            textAuthor.setText(article.getAuthor() != null ? article.getAuthor() : "Alumni Portal");
+            textAuthor.setText(article.getAuthor() != null ? article.getAuthor() : "The Convocation");
             textCategory.setText(article.getCategory() != null ? article.getCategory() : "News");
             
             // Format published date

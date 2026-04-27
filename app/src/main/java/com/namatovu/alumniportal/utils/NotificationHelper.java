@@ -463,7 +463,7 @@ public class NotificationHelper {
         emailData.put("subject", "Event Update: " + eventTitle);
         emailData.put("body", "There's a new update on the event: " + eventTitle + "\n\n" +
                 "Action: " + action + "\n\n" +
-                "Check the Alumni Portal app for more details.");
+                "Check The Convocation app for more details.");
         emailData.put("type", "event_update");
         emailData.put("eventId", eventId);
         emailData.put("timestamp", System.currentTimeMillis());
@@ -487,7 +487,7 @@ public class NotificationHelper {
         emailData.put("body", "A new article has been published!\n\n" +
                 "Title: " + newsTitle + "\n" +
                 "Author: " + authorName + "\n\n" +
-                "Read the full article in the Alumni Portal app.");
+                "Read the full article in The Convocation app.");
         emailData.put("type", "news_update");
         emailData.put("newsId", newsId);
         emailData.put("authorName", authorName);
@@ -524,7 +524,7 @@ public class NotificationHelper {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 String channelName = getChannelName(type);
                 NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription("Alumni Portal " + channelName);
+                channel.setDescription("The Convocation " + channelName);
                 channel.enableVibration(true);
                 channel.enableLights(true);
                 notificationManager.createNotificationChannel(channel);
@@ -580,7 +580,7 @@ public class NotificationHelper {
             String channelId = "alumni_message";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(channelId, "Messages", NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription("Alumni Portal Messages");
+                channel.setDescription("The Convocation Messages");
                 channel.enableVibration(true);
                 channel.enableLights(true);
                 notificationManager.createNotificationChannel(channel);

@@ -114,7 +114,7 @@ class SettingsScreen extends StatelessWidget {
   void _showAboutDialog(BuildContext context) {
     showAboutDialog(
       context: context,
-      applicationName: 'MUST Alumni Portal',
+      applicationName: 'The Convocation',
       applicationVersion: '1.1.0',
       applicationIcon: Container(
         width: 48,

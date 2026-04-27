@@ -114,7 +114,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
         
         // Create share content
-        String shareText = "Check out " + viewedUser.getFullName() + "'s profile on Alumni Portal!\n\n";
+        String shareText = "Check out " + viewedUser.getFullName() + "'s profile on The Convocation!\n\n";
         
         if (viewedUser.getCurrentJob() != null && !viewedUser.getCurrentJob().isEmpty()) {
             shareText += "Position: " + viewedUser.getCurrentJob();

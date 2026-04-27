@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/models/news_model.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/widgets/custom_app_bar.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   const NewsFeedScreen({super.key});
@@ -15,6 +16,9 @@ class NewsFeedScreen extends StatefulWidget {
 class _NewsFeedScreenState extends State<NewsFeedScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  String _searchQuery = '';
 
   final List<String> _categories = [
     'All',
@@ -35,6 +39,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -116,12 +121,117 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('News'),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabs: _categories.map((category) => Tab(text: category)).toList(),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (_isSearching) {
+              setState(() {
+                _isSearching = false;
+                _searchQuery = '';
+                _searchController.clear();
+              });
+            } else if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
+          tooltip: _isSearching ? 'Close Search' : 'Back',
+        ),
+        title: _isSearching
+            ? Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    hintText: 'Search news...',
+                    hintStyle: TextStyle(color: Colors.grey[600]),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(Icons.clear, color: Colors.grey[600], size: 20),
+                            onPressed: () {
+                              setState(() {
+                                _searchController.clear();
+                                _searchQuery = '';
+                              });
+                            },
+                          )
+                        : null,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
+                ),
+              )
+            : const Text('News'),
+        actions: [
+          if (!_isSearching)
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                setState(() {
+                  _isSearching = true;
+                });
+              },
+            ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(51),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                color: Colors.white,
+                child: TabBar(
+                  controller: _tabController,
+                  isScrollable: true,
+                  indicatorColor: AppColors.primary,
+                  indicatorWeight: 3,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey[600],
+                  labelStyle: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.3,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  tabs: _categories.map((category) => Tab(
+                    text: category,
+                    height: 48,
+                  )).toList(),
+                ),
+              ),
+              Container(
+                height: 3,
+                child: Row(
+                  children: [
+                    Expanded(child: Container(color: AppColors.primary)),
+                    Expanded(child: Container(color: AppColors.accent)),
+                    Expanded(child: Container(color: AppColors.secondary)),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -202,12 +312,47 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
   }
 
   Widget _buildAllTabView(List<NewsModel> articles) {
+    // Filter articles based on search query
+    final filteredArticles = _searchQuery.isEmpty
+        ? articles
+        : articles.where((article) {
+            final title = article.title?.toLowerCase() ?? '';
+            final summary = article.summary?.toLowerCase() ?? '';
+            final content = article.content?.toLowerCase() ?? '';
+            return title.contains(_searchQuery) ||
+                summary.contains(_searchQuery) ||
+                content.contains(_searchQuery);
+          }).toList();
+
+    if (filteredArticles.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _searchQuery.isEmpty ? 'No news available' : 'No results found for "$_searchQuery"',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final List<Widget> allWidgets = [];
     final Map<String, List<NewsModel>> groupedNews = {};
 
-    print('Building All tab with ${articles.length} articles');
+    print('Building All tab with ${filteredArticles.length} articles');
 
-    for (var article in articles) {
+    for (var article in filteredArticles) {
       final category = _categorizeNews(article);
       if (!groupedNews.containsKey(category)) {
         groupedNews[category] = [];
@@ -308,13 +453,46 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
   }
 
   Widget _buildFilteredTabView(List<NewsModel> articles, String category) {
-    final filteredNews = articles
+    // Filter by category first
+    final categoryFiltered = articles
         .where((article) => _categorizeNews(article) == category)
         .toList();
 
+    // Then filter by search query
+    final filteredNews = _searchQuery.isEmpty
+        ? categoryFiltered
+        : categoryFiltered.where((article) {
+            final title = article.title?.toLowerCase() ?? '';
+            final summary = article.summary?.toLowerCase() ?? '';
+            final content = article.content?.toLowerCase() ?? '';
+            return title.contains(_searchQuery) ||
+                summary.contains(_searchQuery) ||
+                content.contains(_searchQuery);
+          }).toList();
+
     if (filteredNews.isEmpty) {
       return Center(
-        child: Text('No $category news available'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _searchQuery.isEmpty ? Icons.article_outlined : Icons.search_off,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _searchQuery.isEmpty
+                  ? 'No $category news available'
+                  : 'No results found for "$_searchQuery" in $category',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       );
     }
 

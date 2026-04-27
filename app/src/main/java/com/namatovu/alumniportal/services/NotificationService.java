@@ -44,8 +44,8 @@ public class NotificationService {
             "New Mentorship Request from " + menteeName,
             "Hi " + mentorName + ",\n\n" +
             menteeName + " has sent you a mentorship request.\n\n" +
-            "Please check the Alumni Portal app to review and respond to this request.\n\n" +
-            "Best regards,\nAlumni Portal Team",
+            "Please check The Convocation app to review and respond to this request.\n\n" +
+            "Best regards,\nThe Convocation Team",
             "mentorship_request",
             connectionId
         );
@@ -71,7 +71,7 @@ public class NotificationService {
             "There's a new update on the event: " + eventTitle + "\n\n" +
             "Update: " + action + "\n\n" +
             (eventDescription != null ? "Details: " + eventDescription + "\n\n" : "") +
-            "Check the Alumni Portal app for more details.",
+            "Check The Convocation app for more details.",
             "event_update",
             eventId
         );
@@ -99,7 +99,7 @@ public class NotificationService {
             "Title: " + newsTitle + "\n" +
             "Author: " + authorName + "\n\n" +
             (newsDescription != null ? "Summary: " + newsDescription + "\n\n" : "") +
-            "Read the full article in the Alumni Portal app.",
+            "Read the full article in The Convocation app.",
             "news_update",
             newsId
         );
@@ -131,7 +131,7 @@ public class NotificationService {
             "Hi " + recipientName + ",\n\n" +
             senderName + " has " + statusMessage.toLowerCase() + " your mentorship request.\n\n" +
             getStatusEmailBody(status) +
-            "\nBest regards,\nAlumni Portal Team",
+            "\nBest regards,\nThe Convocation Team",
             "mentorship_status",
             connectionId
         );

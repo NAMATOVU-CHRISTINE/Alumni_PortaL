@@ -1248,7 +1248,7 @@ public class CareerTipsActivity extends AppCompatActivity implements GestureDete
         CareerTip currentTip = filteredTips.get(currentTipIndex);
         String shareText = " Career Tip: " + currentTip.getText() +
                           "\n\n Category: " + currentTip.getCategory() +
-                          "\n\nShared from Alumni Portal Career Tips";
+                          "\n\nShared from The Convocation Career Tips";
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

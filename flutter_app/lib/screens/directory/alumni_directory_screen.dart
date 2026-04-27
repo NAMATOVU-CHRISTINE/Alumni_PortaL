@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/models/user_model.dart';
 import 'package:alumni_portal/config/theme.dart';
-import 'package:alumni_portal/widgets/safe_back_button.dart';
+import 'package:alumni_portal/widgets/custom_app_bar.dart';
 
 class AlumniDirectoryScreen extends StatefulWidget {
   const AlumniDirectoryScreen({super.key});
@@ -46,9 +46,8 @@ class _AlumniDirectoryScreenState extends State<AlumniDirectoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const SafeBackButton(),
-        title: const Text('University Network'),
+      appBar: CustomAppBar(
+        title: 'University Network',
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list),

@@ -50,7 +50,7 @@ class BadgeModel {
         BadgeModel(
             id: 'newcomer',
             name: 'Newcomer',
-            description: 'Welcome to Alumni Portal!',
+            description: 'Welcome to The Convocation!',
             icon: '👋',
             category: 'engagement',
             pointsRequired: 0),

@@ -398,14 +398,14 @@ public class MentorshipService {
                 subject = "New Mentorship Request from " + senderName;
                 body = "Hi " + mentorName + ",\n\n" +
                        senderName + " has sent you a mentorship request.\n\n" +
-                       "Log in to the Alumni Portal to view and respond to the request.\n\n" +
-                       "Best regards,\nAlumni Portal Team";
+                       "Log in to The Convocation to view and respond to the request.\n\n" +
+                       "Best regards,\nThe Convocation Team";
             } else if ("accepted".equals(action)) {
                 subject = "Your Mentorship Request Has Been Accepted!";
                 body = "Hi,\n\n" +
                        "Great news! " + mentorName + " has accepted your mentorship request.\n\n" +
-                       "You can now start your mentorship journey. Log in to the Alumni Portal to connect.\n\n" +
-                       "Best regards,\nAlumni Portal Team";
+                       "You can now start your mentorship journey. Log in to The Convocation to connect.\n\n" +
+                       "Best regards,\nThe Convocation Team";
             } else {
                 return;
             }

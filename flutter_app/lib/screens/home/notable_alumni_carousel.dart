@@ -114,33 +114,61 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
     return [
       {
         'userId': 'sample1',
-        'fullName': 'Dr. Sarah Nakato',
-        'profileImageUrl': null,
-        'currentJob': 'Chief Medical Officer',
-        'company': 'Mulago Hospital',
-        'graduationYear': '2012',
-        'achievement': 'Leading healthcare innovation in Uganda',
-        'quote': 'MUST gave me the foundation to make a difference',
+        'fullName': 'Dr. Monica Musenero',
+        'profileImageUrl': 'https://newvision-media.s3.amazonaws.com/cms/d9322ce7-fe13-4796-a546-be425b172239.jpg',
+        'currentJob': 'Senior Presidential Advisor on Epidemics',
+        'company': 'Office of the President, Uganda',
+        'graduationYear': '1995',
+        'achievement': 'Leading Uganda\'s COVID-19 response & vaccine development',
+        'quote': 'Science and innovation are key to solving Africa\'s challenges',
+        'linkedin': 'https://www.linkedin.com/in/monica-musenero',
+        'twitter': 'https://twitter.com/MonicaMusenero',
       },
       {
         'userId': 'sample2',
-        'fullName': 'Eng. David Okello',
-        'profileImageUrl': null,
-        'currentJob': 'Software Engineering Manager',
-        'company': 'Google',
-        'graduationYear': '2015',
-        'achievement': 'Building technology solutions for Africa',
-        'quote': 'Excellence is a journey, not a destination',
+        'fullName': 'Prof. Celestino Obua',
+        'profileImageUrl': 'https://softpower.ug/wp-content/uploads/2025/01/Gh-AHK1WsAAauCt.jpg',
+        'currentJob': 'Vice Chancellor',
+        'company': 'Mbarara University of Science & Technology',
+        'graduationYear': '1998',
+        'achievement': 'Leading academic excellence and research innovation',
+        'quote': 'Education transforms lives and builds nations',
+        'linkedin': 'https://www.linkedin.com/in/celestino-obua',
       },
       {
         'userId': 'sample3',
-        'fullName': 'Prof. Grace Namugga',
-        'profileImageUrl': null,
-        'currentJob': 'Research Scientist',
-        'company': 'WHO',
-        'graduationYear': '2010',
-        'achievement': 'Pioneering research in tropical diseases',
-        'quote': 'Science has the power to transform lives',
+        'fullName': 'Dr. Jackson Orem',
+        'profileImageUrl': 'https://uci.or.ug/wp-content/uploads/2025/08/Orem.jpeg',
+        'currentJob': 'Executive Director',
+        'company': 'Uganda Cancer Institute',
+        'graduationYear': '2000',
+        'achievement': 'Pioneering cancer research and treatment in East Africa',
+        'quote': 'Every patient deserves access to quality cancer care',
+        'linkedin': 'https://www.linkedin.com/in/jackson-orem',
+        'twitter': 'https://twitter.com/JacksonOrem',
+      },
+      {
+        'userId': 'sample4',
+        'fullName': 'Dr. Sarah Kiguli',
+        'profileImageUrl': 'https://som.mak.ac.ug/wp-content/uploads/2022/04/Professor-Sarah-Kiguli.jpg',
+        'currentJob': 'Principal',
+        'company': 'Makerere University College of Health Sciences',
+        'graduationYear': '1997',
+        'achievement': 'Advancing medical education and pediatric care',
+        'quote': 'Investing in health education is investing in our future',
+        'linkedin': 'https://www.linkedin.com/in/sarah-kiguli',
+      },
+      {
+        'userId': 'sample5',
+        'fullName': 'Eng. Dr. Silver Mugisha',
+        'profileImageUrl': 'https://cioviews.com/wp-content/uploads/2023/08/1.-Silver-Mugisha.jpg',
+        'currentJob': 'Managing Director',
+        'company': 'National Water and Sewerage Corporation',
+        'graduationYear': '2002',
+        'achievement': 'Transforming Uganda\'s water and sanitation infrastructure',
+        'quote': 'Clean water is a fundamental human right',
+        'linkedin': 'https://www.linkedin.com/in/silver-mugisha',
+        'twitter': 'https://twitter.com/SilverMugisha',
       },
     ];
   }
@@ -157,6 +185,14 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
         curve: Curves.easeInOut,
       );
     });
+  }
+
+  String _getInitials(String name) {
+    final parts = name.split(' ');
+    if (parts.length >= 2) {
+      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+    }
+    return name.substring(0, 1).toUpperCase();
   }
 
   @override
@@ -286,19 +322,17 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
                         ),
                         child: CircleAvatar(
                           radius: 40,
-                          backgroundColor: Colors.white24,
+                          backgroundColor: Colors.white,
                           backgroundImage: alumni['profileImageUrl'] != null
                               ? CachedNetworkImageProvider(
                                   alumni['profileImageUrl'])
                               : null,
                           child: alumni['profileImageUrl'] == null
                               ? Text(
-                                  (alumni['fullName'] as String)
-                                      .substring(0, 1)
-                                      .toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 32,
+                                  _getInitials(alumni['fullName'] ?? 'NA'),
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 28,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 )
@@ -335,10 +369,11 @@ class _NotableAlumniCarouselState extends State<NotableAlumniCarousel> {
                           alumni['fullName'] ?? '',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
+                            height: 1.2,
                           ),
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (alumni['currentJob'] != null) ...[

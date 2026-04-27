@@ -1,0 +1,1328 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta name="csrf-token" content="JCtxO8jPALZds6ldzhAKXn2bKr73B9DPxgoI4Ixo">
+<link rel="manifest" href="https://nilepost.co.ug/manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="theme-color" content="#E63946">
+<meta name="google-adsense-account" content="ca-pub-7772268480955574">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="robots" content="index, follow, noemailcollection">
+<meta charset="utf-8">
+
+
+
+
+<!-- Standard Meta Tags -->
+<title>Gsearch - Latest News</title>
+
+<!--  -->
+
+
+<!-- Canonical URL for both AMP and Non-AMP -->
+<link rel="canonical" href="https://nilepost.co.ug/gsearch" />
+
+<!-- If this is the non-AMP page, include a link to the AMP version -->
+
+
+
+
+
+<meta name="description" content="Gsearch">
+<meta name="keywords" content="Gsearch">
+<meta name="author" content="NILE POST">
+
+<meta name="item_name" content="gsearch">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="Gsearch - Latest News">
+<meta property="og:description" content="Gsearch">
+<meta property="og:image" content="https://nilepost.co.ug/logo/nilepost-logo.png">
+<meta property="og:url" content="https://nilepost.co.ug/gsearch">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nilepost News">
+<meta property="fb:page" content="https://www.facebook.com/nilepostnews">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="=@nilepostnews">
+<meta name="twitter:title" content="Gsearch - Latest News">
+<meta name="twitter:description" content="Gsearch">
+<meta name="twitter:image" content="https://nilepost.co.ug/logo/nilepost-logo.png">
+
+<script type="text/javascript" src="/ruxitagentjs_ICA2NQVfqru_10277231024135831.js" data-dtconfig="rid=RID_-122853654|rpid=220922539|domain=nilepost.co.ug|reportUrl=/rb_54e824d4-6ad7-4b5f-90ed-597e2e27c2ff|app=ea7c4b59f27d43eb|featureHash=ICA2NQVfqru|msl=153600|vcv=2|rdnt=1|uxrgce=1|bp=3|cuc=dqghn91d|srms=2,1,0,0%2Ftextarea%2Cinput%2Cselect%2Coption;0%2Fdatalist;0%2Fform%20button;0%2F%5Bdata-dtrum-input%5D;0%2F.data-dtrum-input;1%2F%5Edata%28%28%5C-.%2B%24%29%7C%24%29|mel=100000|dpvc=1|ssv=4|lastModification=1748436186694|tp=500,50,0,1|agentUri=/ruxitagentjs_ICA2NQVfqru_10277231024135831.js"></script><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Nilepost News",
+  "url": "https://nilepost.co.ug",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://nilepost.co.ug/logo/nilepost-logo60x60.jpg",
+    "width": 60,
+    "height": 60
+  },
+  "sameAs": [
+    "=@nilepostnews",
+    "https://www.facebook.com/nilepostnews",
+    null,
+    null,
+    null
+  ]
+}
+</script>
+
+<!-- Structured Data for SearchAction -->
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://nilepost.co.ug",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://nilepost.co.ug/gsearch?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+</script>
+
+<!-- Structured Data for NewsArticle or CollectionPage -->
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "headline": "Gsearch - Latest News",
+        "description": "Gsearch",
+        "image": ["https://nilepost.co.ug/logo/nilepost-logo.png"],
+        "publisher": {
+        "@type": "Organization",
+        "name": "Nilepost News",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://nilepost.co.ug/logo/nilepost-logo.png"
+        }
+    },
+    "url": "https://nilepost.co.ug/gsearch",
+    "articleSection": "gsearch"
+
+    
+
+    }
+</script>
+
+<!-- Breadcrumbs -->
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://nilepost.co.ug"
+        },            {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Gsearch",
+            "item": "https://nilepost.co.ug/gsearch"
+        }        ]
+}
+</script>
+
+    
+</head>
+
+<!-- Favicon Icons -->
+<link rel="icon" href="https://nilepost.co.ug/logo/favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nilepost.co.ug/logo/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://nilepost.co.ug/logo/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://nilepost.co.ug/logo/android-icon-192x192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/owlcarousel/css/owl.carousel.min.css">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/owlcarousel/owl.theme.default.min.css">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/css/bootstrap.min.css">
+ 
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://db.onlinewebfonts.com/c/216084d270e5189e352167b2940ab48a?family=Proxima+Nova+Extra+Condensed+Black" rel="stylesheet">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/css/animate.css">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/css/style.css?v=13">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/css/responsive.css?v=9">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/css/theme.css?v=5">
+<link rel="stylesheet" href="https://nilepost.co.ug/assets/css/style_2025.css?v=abc">
+
+<style>
+    .navbar-dark.bg-normal,
+    .scrolled {
+        display: none;
+    }
+
+    @media (min-width:993px) {
+
+        .navbar-dark.bg-normal,
+        .scrolled {
+            display: flex !important;
+        }
+
+        .show-small {
+            display: none !important;
+        }
+    }
+</style>
+
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7772268480955574"
+        crossorigin="anonymous"></script>
+
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"></script>
+<script>
+  window.googletag = window.googletag || {cmd: []};
+
+  googletag.cmd.push(function () {
+                  googletag.defineSlot('/23301111017/BillboardAd', ["fluid",[970,250],[970,90],[728,90],[300,250]], 'div-gpt-ad-1749730976084-0')
+          .addService(googletag.pubads());
+                        googletag.defineSlot('/23301111017/In_Article_Ad', [[300,250],[336,280]], 'div-gpt-ad-1749731216611-0')
+          .addService(googletag.pubads());
+                        googletag.defineOutOfPageSlot('/23301111017/OutOfPageAllPages', 'div-gpt-ad-1749731245872-0')
+          .addService(googletag.pubads());
+                        googletag.defineOutOfPageSlot('/23301111017/ScreenTakeOver', 'div-gpt-ad-1749731275854-0')
+          .addService(googletag.pubads());
+                        googletag.defineSlot('/23301111017/square_banner_3', [[336,280],[300,250]], 'div-gpt-ad-1749749125383-0')
+          .addService(googletag.pubads());
+                        googletag.defineSlot('/23301111017/square_banner_2', [[300,250],[336,280]], 'div-gpt-ad-1749749197889-0')
+          .addService(googletag.pubads());
+                        googletag.defineSlot('/23301111017/square_banner_1', [[300,250],[336,280]], 'div-gpt-ad-1749749241933-0')
+          .addService(googletag.pubads());
+          
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs();
+    googletag.enableServices();
+  });
+</script>
+
+
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8D3REF7MC3"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+
+// Initialise GA4
+gtag('js', new Date());
+
+// Core config — send user context
+gtag('config', 'G-8D3REF7MC3', {
+  'user_id': '',        // null if unregistered
+  'user_type': 'unregistered',    // registered | unregistered
+  'username': 'anonymous'       // actual name or 'anonymous'
+});
+
+// Send page_view with author info
+gtag('event', 'page_view', {
+  'author': "Unknown Author",
+  'user_type': 'unregistered',
+  'username': 'anonymous'
+});
+</script>
+ 
+
+<script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({article:'auto'});
+  !function (e, f, u, i) {
+    if (!document.getElementById(i)){
+      e.async = 1;
+      e.src = u;
+      e.id = i;
+      f.parentNode.insertBefore(e, f);
+    }
+  }(document.createElement('script'),
+  document.getElementsByTagName('script')[0],
+  '//cdn.taboola.com/libtrc/nextmedia-nilepost/loader.js',
+  'tb_loader_script');
+  if(window.performance && typeof window.performance.mark == 'function')
+    {window.performance.mark('tbl_ic');}
+</script>
+    
+        
+    
+</head>
+
+<body class="">
+ 
+
+
+
+    
+    <div class="scrolled">
+    <div class="container w-100 justify-content-between px-0 d-none d-md-flex">
+                        <span class="nav-item active">
+                        <a class="nav-link" href="https://nilepost.co.ug">
+                            <img src="https://nilepost.co.ug/assets/img/light-logo.png" class="logo" alt="logo">
+                            <img src="https://nilepost.co.ug/assets/img/logo.png" class="logo d-none" alt="logo"> <span class="text-normal"></span></a>
+                        </span>
+    <li class="nav-item d-flex text-normal">
+                  <span class="dropdown">
+                    <span class="nav-link search d-md-flex">
+                      <!-- Billboard Ad (Max Height: 90px) -->
+<div id="div-gpt-ad-1749730976084-0"
+     style="min-width:300px; height:90px; max-height:90px; overflow:hidden; display:flex; justify-content:center; align-items:center;">
+  <script>
+    googletag.cmd.push(function() {
+      googletag.display('div-gpt-ad-1749730976084-0');
+    });
+  </script>
+</div>                    </span>
+                    <a class="nav-link search d-md-none">
+                      </a><div class="nav-item d-flex d-md-none ms-5"><a class="nav-link search d-md-none">
+                        </a><a class="nav-link text-right mx-1 fs-30" href="#"><i class="fa-regular fa-circle-user"></i></a>
+                        <a class="nav-link text-right mx-2 fs-30 ">
+                          <svg role="img" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 80 80">
+    <path fill="#fff" d="M80 69 61.8 51c3.3-5.1 5.2-11.2 5.2-17.8C67 14.9 52 0 33.5 0S0 14.9 0 33.3c0 18.3 15 33.3 33.5 33.3 6.3 0 12.1-1.7 17.1-4.7L69 80l11-11zM12.5 33.3c0-11.5 9.4-20.9 21-20.9s21 9.4 21 20.9c0 11.5-9.4 20.9-21 20.9s-21-9.4-21-20.9z"></path>
+  </svg></a>
+                        <a class="nav-link text-right ms-1 fs-30" href="#"><svg xmlns="http://www.w3.org/2000/svg" role="img" width="21" height="21" viewBox="0 0 80 80">
+    <path fill="#fff" d="M80 22.9H0V9.5h80v13.4zm0 10.3H0v13.5h80V33.2zm0 23.9H0v13.4h80V57.1z"></path>
+  </svg></a>
+                    </div>
+                  </span>
+    </li>
+</div>
+
+<style>
+    .card-text.text-muted, .card-text.text-muted span, .justify-content-between small, .byline {
+    flex-wrap: wrap;
+    font-size: 10px;
+    font-weight: normal;
+    font-style: italic;
+    line-height: 32px;
+    text-transform: uppercase;
+    text-align: left;
+    padding-bottom: 0.375rem;
+    font-family: "Source Sans Pro",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+</style>
+</div>
+
+<header class="sticky-top">
+    <nav class=" navbar mb-0 navbar-expand-md navbar-light d-s-none">
+        <div class="w-100 flex-column" id="navbar">
+
+            <div class="navbar-dark w-100 bg-normal shadow">
+                <ul class="menu container justify-content-between d-flex px-md-1 w-100 mb-0">
+
+                                        <!-- Parent Category with Subcategories -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="https://nilepost.co.ug/news">
+                        News
+                    </a>
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                    <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/2026-election-watch">2026 Election Watch</a></li>
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/climate-change">Climate Change</a></li>
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/security">Security</a></li>
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/investigations">Investigations</a></li>
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/education">Education</a></li>
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/exclusive">Exclusive</a></li>
+                                            </ul>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/businesses">
+                        Business
+                    </a>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/education-2">
+                        Education
+                    </a>
+                </li>
+                                                <!-- Parent Category with Subcategories -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="https://nilepost.co.ug/health-2">
+                        Health
+                    </a>
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                    <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="https://nilepost.co.ug/coronavirus-outbreak">Coronavirus outbreak</a></li>
+                                            </ul>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/crime">
+                        Crime
+                    </a>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/opinions">
+                        Opinions
+                    </a>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/politics">
+                        Politics
+                    </a>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/sports">
+                        Sports
+                    </a>
+                </li>
+                                                <!-- Parent Category Without Subcategories -->
+                <li class="nav-item">
+                    <a class="nav-link" href="https://nilepost.co.ug/dismis">
+                        Dismis
+                    </a>
+                </li>
+                    
+                    <!-- Show this if the user is not logged in -->
+            <li class="nav-item">
+                <a class="nav-link" href="https://nilepost.co.ug/login/google">
+                    <i class="fa-regular fa-circle-user"> login </i>
+                </a>
+            </li>
+                <li class="nav-item">
+            <a class="nav-link text-right ms-3 fs-30" href="https://nilepost.co.ug/gsearch?q=nilepost">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 80 80">
+    <path fill="#fff" d="M80 69 61.8 51c3.3-5.1 5.2-11.2 5.2-17.8C67 14.9 52 0 33.5 0S0 14.9 0 33.3c0 18.3 15 33.3 33.5 33.3 6.3 0 12.1-1.7 17.1-4.7L69 80l11-11zM12.5 33.3c0-11.5 9.4-20.9 21-20.9s21 9.4 21 20.9c0 11.5-9.4 20.9-21 20.9s-21-9.4-21-20.9z"></path>
+  </svg>
+            </a>
+        </li>
+
+
+
+
+
+
+
+
+
+
+
+
+    </ul>
+            </div>
+        </div>
+
+    </nav>
+    <nav class="navbar navbar-expand-lg navbar-dark show-small py-md-2 mb-0 shadow-sm">
+        <div class="container-fluid">
+            <div class="navbar-toggler nav-link text-right mx-1 fs-30 text-muted border-0 pe-2" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" role="img" width="21" height="21" viewBox="0 0 80 80">
+                    <path fill="#fff" d="M80 22.9H0V9.5h80v13.4zm0 10.3H0v13.5h80V33.2zm0 23.9H0v13.4h80V57.1z"></path>
+                </svg>
+            </div>
+
+            <a class="nav-link" href="https://nilepost.co.ug">
+                <img src="https://nilepost.co.ug/assets/img/light-logo.png?v2" class="logo" alt="">
+                <img src="https://nilepost.co.ug/assets/img/logo.png?v2" class="logo d-none" alt=""> <span class="text-normal"></span></a>
+
+            <a class="nav-link text-muted text-right mx-2 fs-30 " href="https://nilepost.co.ug/gsearch">
+                <svg role="img" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 80 80">
+                    <path fill="#fff" d="M80 69 61.8 51c3.3-5.1 5.2-11.2 5.2-17.8C67 14.9 52 0 33.5 0S0 14.9 0 33.3c0 18.3 15 33.3 33.5 33.3 6.3 0 12.1-1.7 17.1-4.7L69 80l11-11zM12.5 33.3c0-11.5 9.4-20.9 21-20.9s21 9.4 21 20.9c0 11.5-9.4 20.9-21 20.9s-21-9.4-21-20.9z"></path>
+                </svg></a>
+
+            
+            
+            
+            
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 pt-3">
+                                                            <!-- Parent Category with Subcategories -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="https://nilepost.co.ug/news">
+                            News
+                        </a>
+                        
+                        <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/2026-election-watch">2026 Election Watch </a></li>
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/climate-change">Climate Change </a></li>
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/security">Security </a></li>
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/investigations">Investigations </a></li>
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/education">Education </a></li>
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/exclusive">Exclusive </a></li>
+                                                    </ul>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/businesses">
+                            Business
+                        </a>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/education-2">
+                            Education
+                        </a>
+                    </li>
+                                                                                <!-- Parent Category with Subcategories -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="https://nilepost.co.ug/health-2">
+                            Health
+                        </a>
+                        
+                        <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="https://nilepost.co.ug/coronavirus-outbreak">Coronavirus outbreak </a></li>
+                                                    </ul>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/crime">
+                            Crime
+                        </a>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/opinions">
+                            Opinions
+                        </a>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/politics">
+                            Politics
+                        </a>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/sports">
+                            Sports
+                        </a>
+                    </li>
+                                                                                <!-- Parent Category Without Subcategories -->
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://nilepost.co.ug/dismis">
+                            Dismis
+                        </a>
+                    </li>
+                                                                                <!-- Show this if the user is not logged in -->
+                    <li class="nav-item">
+
+                       
+
+                        <a class="nav-link" href="https://nilepost.co.ug/login/google">
+                            <i class="fa-regular fa-circle-user"> login </i>
+                        </a>
+                    </li>
+                                        <li class="nav-item d-md-flex d-none ms-md-5">
+                        <a class="nav-link text-right mx-3 fs-30" href="https://nilepost.co.ug/gsearch"><i class="fa-regular fa-circle-user"></i></a>
+                        <a class="nav-link text-right mx-3 fs-30 " href="https://nilepost.co.ug/gsearch">
+                            <svg role="img" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 80 80">
+                                <path fill="#fff" d="M80 69 61.8 51c3.3-5.1 5.2-11.2 5.2-17.8C67 14.9 52 0 33.5 0S0 14.9 0 33.3c0 18.3 15 33.3 33.5 33.3 6.3 0 12.1-1.7 17.1-4.7L69 80l11-11zM12.5 33.3c0-11.5 9.4-20.9 21-20.9s21 9.4 21 20.9c0 11.5-9.4 20.9-21 20.9s-21-9.4-21-20.9z"></path>
+                            </svg></a>
+                        <a class="nav-link text-right ms-3 fs-30" href="https://nilepost.co.ug/gsearch?q=nilepost"><svg xmlns="http://www.w3.org/2000/svg" role="img" width="21" height="21" viewBox="0 0 80 80">
+                                <path fill="#fff" d="M80 22.9H0V9.5h80v13.4zm0 10.3H0v13.5h80V33.2zm0 23.9H0v13.4h80V57.1z"></path>
+                            </svg></a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</header>
+    
+        <div style="display: flex; justify-content: center; width: 100%;">
+        <div class="gcse-search" style="width: 100%; max-width: 600px; margin: auto;"></div>
+    </div>
+
+    
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<div id="g_id_onload"
+     data-client_id="718171191793-ai6r05smp6e16jvtef479elji7rht945.apps.googleusercontent.com"
+     data-login_uri="https://nilepost.co.ug/auth/google/onetap"
+     data-source_url="https://nilepost.co.ug/gsearch"
+     data-auto_prompt="true"
+     data-csrf_token="JCtxO8jPALZds6ldzhAKXn2bKr73B9DPxgoI4Ixo"
+     data-_token="JCtxO8jPALZds6ldzhAKXn2bKr73B9DPxgoI4Ixo"
+     data-your_own_param_2_to_login="https://nilepost.co.ug/gsearch">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large"
+     data-theme="outline"
+     data-text="signin_with"
+     data-shape="rectangular"
+     data-logo_alignment="left">
+</div>    
+    
+   
+   <!-- Sticky Anchor Ad Wrapper -->
+<div id="rgk_floating_ad_anchor">
+  <div class="ad-inner-wrapper">
+    <div id="div-gpt-ad-1749731369497-0"></div>
+  </div>
+</div>
+
+<style>
+  #rgk_floating_ad_anchor {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    z-index: 9998;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    text-align: center;
+    padding: 0.5rem 0;
+    min-height: 50px;
+  }
+
+  .ad-inner-wrapper {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Optional: prevent any overflow */
+  #div-gpt-ad-1749731369497-0,
+  #div-gpt-ad-1749731369497-0 iframe {
+    max-width: 100%;
+  }
+
+  @media print {
+    #rgk_floating_ad_anchor {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  window.googletag = window.googletag || { cmd: [] };
+
+  googletag.cmd.push(function () {
+    const mapping = googletag.sizeMapping()
+      .addSize([1920, 0], [[1920, 100], [1440, 100]])
+      .addSize([1366, 0], [[1366, 100], [1280, 100]])
+      .addSize([1200, 0], [[1200, 100], [1024, 100], [970, 90]])
+      .addSize([1024, 0], [[1200, 100], [1024, 100], [970, 90]])
+      .addSize([768, 0], [[728, 90]])
+      .addSize([0, 0], [
+        [360, 100],  // ✅ NEW
+        [320, 100],
+        [320, 50],
+        [300, 100],
+        [300, 50]
+      ])
+      .build();
+
+    googletag.defineSlot('/23301111017/StickyAnchorAd', [
+      [1920, 100], [1440, 100], [1366, 100], [1280, 100],
+      [1200, 100],
+      [1024, 100], [970, 90], [728, 90],
+      [360, 100],  // ✅ NEW
+      [320, 100],
+      [320, 50],
+      [300, 50], [300, 100]
+    ], 'div-gpt-ad-1749731369497-0')
+      .defineSizeMapping(mapping)
+      .addService(googletag.pubads());
+
+    googletag.pubads().collapseEmptyDivs();
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+
+    googletag.display('div-gpt-ad-1749731369497-0');
+
+    googletag.pubads().addEventListener('slotRenderEnded', function (event) {
+      if (event.slot.getSlotElementId() === 'div-gpt-ad-1749731369497-0' && !event.isEmpty) {
+        document.getElementById('rgk_floating_ad_anchor').style.display = 'block';
+      }
+    });
+  });
+</script>
+
+    
+    <footer class="bg-dark py-3 text-white mt-4">
+    <div class="container">
+        
+        
+        <div class="row">
+            <h4 class="mb-3">
+                <b>
+                    <a href="https://nextmedia.co.ug/" target="_blank">Nile Post, a product of NEXT MEDIA</a>
+                </b>
+            </h4>
+        </div>
+
+        
+        <!-- <div class="row">
+            <div class="col-md-2 col-6">
+                <p><a href="http://nbs.ug/" target="_blank">NBS Television</a></p>
+                <p><a href="https://sanyukatv.ug/" target="_blank">Sanyuka TV</a></p>
+            </div>
+
+            <div class="col-md-2 col-6 border-left">
+                <p><a href="https://twitter.com/NBSportUg" target="_blank">NBS Sport</a></p>
+                <p><a href="https://salamtv.ug/" target="_blank">Salam TV</a></p>
+            </div>
+
+            <div class="col-md-2 col-6 border-left">
+                <p><a href="https://nextradio.co.ug/" target="_blank">Next Radio</a></p>
+                <p><a href="https://afromobile.ug/" target="_blank">Afro Mobile</a></p>
+            </div>
+
+            <div class="col-md-2 col-6 border-left">
+                <p>Next Com</p>
+                <p><a href="https://nextcom.co.ug/" target="_blank">Next Productions</a></p>
+            </div>
+
+            <div class="col-md-2 col-6 border-left">
+                <p>Sanyuka Prime</p>
+            </div>
+        </div> -->
+        <div class="np_logos_wrapper my-4 position-relative">
+    <!-- Navigation arrows -->
+    <button class="np_logos_nav np_logos_nav_left d-none d-md-flex" onclick="np_logos_scroll(this, -1)">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="np_logos_nav np_logos_nav_right d-none d-md-flex" onclick="np_logos_scroll(this, 1)">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Logos scrollable container -->
+    <div class="np_logos_container d-flex align-items-center overflow-auto">
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/PulseRadiologo02.png" alt="PulseRadiologo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NBSLIVElogo02.png" alt="NBSLIVElogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/AfroMobilelogo02.png" alt="AfroMobilelogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NextEventslogo02.png" alt="NextEventslogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NextTicketlogo02.png" alt="NextTicketlogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NileScooplogo02.png" alt="NileScooplogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NextRadiologo02.png" alt="NextRadiologo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/sanyukalogo02.png" alt="sanyukalogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NPLlogo02.png" alt="NPLlogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/Nextcomlogo02.png" alt="Nextcomlogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/Hillcomlogo02.png" alt="Hillcomlogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/Salamlogo02.png" alt="Salamlogo02" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NextContentHubFinallogoF12.png" alt="NextContentHubFinallogoF12" class="np_logos_img">
+                </a>
+            </div>
+                    <div class="np_logos_item mx-2 flex-shrink-0">
+                <a href="https://nextmedia.co.ug/" target="_blank" rel="noopener noreferrer">
+                    <img src="https://nilepost.co.ug/logo/NextInfluencermainlogo04.png" alt="NextInfluencermainlogo04" class="np_logos_img">
+                </a>
+            </div>
+            </div>
+</div>
+
+<style>
+    .np_logos_wrapper {
+        background-color: #e7f2f3;
+        border-radius: 8px;
+        padding: 15px;
+        position: relative;
+    }
+
+    .np_logos_container {
+        scroll-behavior: smooth;
+        white-space: nowrap;
+    }
+
+    .np_logos_item {
+        width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .np_logos_img {
+        max-height: 60px;
+        max-width: 100px;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .np_logos_img:hover {
+        transform: scale(1.05);
+    }
+
+    .np_logos_nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #ffffffcc;
+        border: none;
+        z-index: 10;
+        padding: 6px 10px;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        color: #333;
+        transition: background 0.2s;
+    }
+
+    .np_logos_nav:hover {
+        background-color: #ffffff;
+    }
+
+    .np_logos_nav_left {
+        left: 5px;
+    }
+
+    .np_logos_nav_right {
+        right: 5px;
+    }
+
+    @media (max-width: 768px) {
+        .np_logos_nav {
+            display: none !important;
+        }
+    }
+</style>
+
+    <script>
+        function np_logos_scroll(button, direction) {
+            const wrapper = button.closest('.np_logos_wrapper');
+            const container = wrapper.querySelector('.np_logos_container');
+            const scrollAmount = 200 * direction;
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    </script>
+ 
+
+        <hr>
+
+        
+        <div class="d-md-flex justify-content-between">
+            <div class="sm-50">
+                <a href="/privacy"><small>Privacy Policy</small></a>
+            </div>
+            <div class="sm-50">
+                <a href="/contactus"><small>Contact Us</small></a>
+            </div>
+            <div class="sm-50">
+                <a href="/advertise"><small>Advertise with Us</small></a>
+            </div>
+            <div class="sm-50">
+                <a href="/terms"><small>Terms of Use</small></a>
+            </div>
+        </div>
+
+        
+        <div class="text-center py-3">
+            <small>&copy; 2026 Nile Post. All Rights Reserved.</small>
+        </div>
+    </div>
+
+    
+    <script>
+        $(document).ready(function () {
+            $('.whatsapp-follow').hover(
+                function () { $(this).addClass('animated shake'); },
+                function () { $(this).removeClass('animated shake'); }
+            );
+        });
+    </script>
+</footer>
+    
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var cseScript = document.createElement('script');
+            cseScript.type = 'text/javascript';
+            cseScript.async = true;
+            cseScript.src = 'https://cse.google.com/cse.js?cx=87273b5282a1648d8';
+            document.body.appendChild(cseScript);
+        });
+    </script>
+
+    
+    <script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({flush: true});
+</script>
+    
+    <style>
+    .whatsapp-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #25D366;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+    }
+
+    .whatsapp-link:hover {
+        background-color: #1DA851;
+        color: #fff !important;
+    }
+
+    .whatsapp-link i {
+        font-size: 18px;
+    }
+</style>
+
+<div id="whatsapp-float" style="position: fixed; z-index: 100000; left: 20px; bottom: 100px;">
+    <a href="https://api.whatsapp.com/send?utm_source=whatsapp&amp;utm_medium=social&amp;utm_campaign=pass_this_breaking_update_along_now&amp;text=Check+out+this+story+from+NilePost%3A+https%3A%2F%2Fnilepost.co.ug%2Fgsearch%3Fq%3Dwp-content%2520uploads%25202025%252001%2520IMG-20250113-WA0011.jpg" 
+       target="_blank" 
+       class="whatsapp-link" 
+       aria-label="Pass this breaking update along now">
+        <i class="fab fa-whatsapp"></i> Pass this breaking update along now
+    </a>
+</div>
+    
+    <style>
+    :root {
+        --nilepost_push_overlay: rgba(0, 0, 0, 0.6);
+        --nilepost_push_bg: #0F111A; /* Deep dark navy for sophistication */
+        --nilepost_push_text: #FFFFFF;
+        --nilepost_push_primary: #D72638; /* NilePost red */
+        --nilepost_push_secondary: #00A8B5; /* Teal/Cyan accent */
+        --nilepost_push_hover: #FF5F73; /* Brighter red hover */
+        --nilepost_push_radius: 10px;
+        --nilepost_push_shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    #pushNotificationModal {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--nilepost_push_overlay);
+        z-index: 1050;
+    }
+
+    .push-modal-content {
+        background: var(--nilepost_push_bg);
+        padding: 24px;
+        border-radius: var(--nilepost_push_radius);
+        box-shadow: var(--nilepost_push_shadow);
+        text-align: center;
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .push-modal-logo {
+        max-width: 90px;
+        margin-bottom: 18px;
+    }
+
+    .push-modal-content p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--nilepost_push_text);
+        margin-bottom: 24px;
+    }
+
+    .push-modal-actions {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+    }
+
+    .btn-primary {
+        background-color: var(--nilepost_push_primary);
+        color: var(--nilepost_push_text);
+        padding: 10px 18px;
+        border: none;
+        border-radius: var(--nilepost_push_radius);
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--nilepost_push_hover);
+    }
+
+    .btn-secondary {
+        background-color: transparent;
+        border: 1.5px solid var(--nilepost_push_secondary);
+        color: var(--nilepost_push_secondary);
+        padding: 10px 18px;
+        border-radius: var(--nilepost_push_radius);
+        cursor: pointer;
+        font-weight: bold;
+        transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--nilepost_push_hover);
+        color: var(--nilepost_push_hover);
+    }
+
+    @media (max-width: 600px) {
+        .push-modal-content {
+            padding: 18px;
+            max-width: 90%;
+        }
+
+        .push-modal-content p {
+            font-size: 14px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 8px 14px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<!-- NilePost Push Notification Modal -->
+<div id="pushNotificationModal">
+    <div class="push-modal-content">
+        <img src="https://nilepost.co.ug/assets/img/logo.png" alt="NilePost Logo" class="push-modal-logo">
+        <p>
+            <strong>Get Ahead of the News.</strong><br>
+            Stay in the know with real-time breaking news alerts, exclusive reports, and updates that matter to you. <br><br>
+            Tap <strong>‘Yes, Keep Me Updated’</strong> and never miss what’s happening in Uganda and beyond—<em>first and fast</em> from NilePost.
+        </p>
+
+        <div class="push-modal-actions">
+            <button id="pushDecline" class="btn btn-secondary">Not Now</button>
+            <button id="pushAccept" class="btn btn-primary">Yes, Keep Me Updated</button>
+        </div>
+    </div>
+</div>
+<script>
+    function cleanOldServiceWorkers() {
+        const CLEANUP_DATE = new Date('2024-03-17T14:44:00Z'); // UTC Time
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    // Check registration time (fallback to now if not available)
+                    const installTime = new Date(registration.installing?.scriptURL || registration.active?.scriptURL || Date.now());
+
+                    if (installTime < CLEANUP_DATE) {
+                        console.log('Service Worker registered before cleanup date, unregistering...');
+
+                        registration.unregister().then(() => {
+                            console.log('Old Service Worker unregistered.');
+
+                            // Clear any local subscription data to ensure resubscription
+                            localStorage.removeItem('pushPromptShown');
+                        });
+                    } else {
+                        console.log('Service Worker is up-to-date and does not need unregistering.');
+                    }
+                });
+            }).catch(error => {
+                console.error('Error fetching service worker registrations:', error);
+            });
+        } else {
+            console.warn('Service Workers are not supported in this browser.');
+        }
+    }
+
+    cleanOldServiceWorkers();
+</script>
+
+
+<!-- Push Notification Modal Logic -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("pushNotificationModal");
+        const pushAccept = document.getElementById("pushAccept");
+        const pushDecline = document.getElementById("pushDecline");
+
+        // Show modal after delay if user hasn't been prompted
+        // setTimeout(() => {
+        //     if (!localStorage.getItem("pushPromptShown") && Notification.permission === "default") {
+        //         modal.style.display = "flex"; // Show the modal
+        //     }
+        // }, 2000);
+
+
+        setTimeout(() => {
+            const lastPrompt = parseInt(localStorage.getItem("pushPromptShown"), 10);
+            const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+            if (
+                Notification.permission === "default" &&
+                (!lastPrompt || (Date.now() - lastPrompt > oneWeek))
+            ) {
+                modal.style.display = "flex"; // Show modal
+            }
+        }, 2000);
+
+
+
+        // Handle "Yes, Thanks" button click
+        pushAccept.addEventListener("click", () => {
+            console.log("User clicked 'Yes, Thanks'.");
+            Notification.requestPermission()
+                .then((permission) => {
+                    console.log(`Notification permission: ${permission}`);
+                    if (permission === "granted") {
+                        // localStorage.setItem("pushPromptShown", "true");
+                        localStorage.setItem("pushPromptShown", Date.now());
+                        subscribeToPushNotifications();
+                    }
+                })
+                .catch((error) => console.error("Error requesting notification permission:", error));
+            modal.style.display = "none"; // Hide the modal
+        });
+
+        // Handle "No" button click
+        pushDecline.addEventListener("click", () => {
+            console.log("User declined push notifications.");
+            // localStorage.setItem("pushPromptShown", "true");
+            localStorage.setItem("pushPromptShown", Date.now());
+            modal.style.display = "none"; // Hide the modal
+        });
+
+        if (Notification.permission === "granted") {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.pushManager.getSubscription().then(sub => {
+                    if (!sub) {
+                        subscribeToPushNotifications();
+                    } else {
+                        console.log("✅ Already subscribed:", sub);
+                    }
+                });
+            });
+        }
+
+        // 🔐 ESC key closes modal
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                modal.style.display = "none";
+                // localStorage.setItem("pushPromptShown", "true");
+                localStorage.setItem("pushPromptShown", Date.now());
+            }
+        });
+    });
+
+
+
+
+
+
+    function subscribeToPushNotifications() {
+        if (!("serviceWorker" in navigator)) {
+            console.error("Service Workers are not supported in this browser.");
+            return;
+        }
+        if (!("PushManager" in window)) {
+            console.error("Push Notifications are not supported in this browser.");
+            return;
+        }
+
+        navigator.serviceWorker.ready.then((registration) => {
+            const applicationServerKey = urlBase64ToUint8Array(
+                "BG0KsmwktWW82Vz4VGraLxqKd0lHjdx7ATE8G2DQG8mwXS4sEUXD8W2KI9PKoPnqyhCCXeAtoNkjhjbCS_Ql1FI"
+            );
+
+            registration.pushManager
+                .subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey,
+                })
+                .then((subscription) => {
+                    console.log("User subscribed:", subscription);
+
+                    const payload = {
+                        subscription,
+                        content_encoding: "aes128gcm",
+                    };
+
+                    // Send subscription to backend
+
+                    fetch(`/push-subscription`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                            },
+                            body: JSON.stringify(payload),
+                        })
+                        .then((response) => {
+                            if (!response.ok) {
+                                return response.json().then((error) => {
+                                    console.error("Failed to save subscription:", error);
+                                });
+                            }
+                            console.log("Subscription saved successfully!");
+                        })
+                        .catch((error) => console.error("Fetch error:", error));
+                })
+                .catch((error) => {
+                    if (error.name === "NotAllowedError") {
+                        console.error("Push subscription failed: User denied permissions.");
+                    } else if (error.name === "AbortError") {
+                        console.error("Push subscription failed: Operation aborted.");
+                    } else {
+                        console.error("Push subscription failed:", error);
+                    }
+                });
+        });
+    }
+
+    // Utility: Convert VAPID key to Uint8Array
+    function urlBase64ToUint8Array(base64String) {
+        const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+        const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+</script>
+
+<!-- Service Worker Registration -->
+<script>
+    const SW_NAME = "MuGeraPushNotifications";
+
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+        const cacheBuster = "002" + new Date().getTime();
+
+        // Register the service worker
+        navigator.serviceWorker
+            .register(`/sw.js?${cacheBuster}`)
+            .catch(() => {}); // Silently handle registration errors
+
+
+
+        // Listen for messages from the Service Worker
+        navigator.serviceWorker.addEventListener("message", (event) => {
+            if (event.data && event.data.type === "trackPageView") {
+                let authorName = document.querySelector('meta[name="author"]')?.getAttribute("content") || "Unknown Author";
+                let pageUrl = event.data.url || window.location.href;
+
+                if (!window.__gaPageViewSent) { // Prevent duplicate tracking
+                    console.log("Tracking GA4 Page View:", pageUrl);
+                    gtag("event", "page_view", {
+                        page_title: document.title,
+                        page_location: pageUrl,
+                        author: authorName
+                    });
+                    window.__gaPageViewSent = true; // Mark as sent
+                } else {
+                    console.warn("Duplicate GA4 Page View blocked:", pageUrl);
+                }
+            }
+        });
+
+
+
+        // Track PWA Standalone Mode Views with Author
+        function trackStandaloneView() {
+            if (
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true // iOS Safari standalone mode
+            ) {
+                // Get author name from meta tag
+                let authorName = document.querySelector('meta[name="author"]')?.getAttribute("content") || "Unknown Author";
+
+                // Send GA4 event for PWA installed view
+                gtag('event', 'pwa_installed_view', {
+                    page_title: document.title,
+                    page_location: window.location.href,
+                    author: authorName
+                });
+            }
+        }
+
+        // Check if running in PWA mode on page load
+        trackStandaloneView();
+
+        // Also track when visibility changes (e.g., user switches back to PWA)
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") {
+                trackStandaloneView();
+            }
+        });
+    }
+</script>
+    
+    <script src="https://nilepost.co.ug/assets/js/jquery.min.js?v=1.1" defer></script>
+<script src="https://nilepost.co.ug/assets/owlcarousel/owl.carousel.js?v=1.2" defer></script>
+<script src="https://nilepost.co.ug/assets/js/bootstrap.bundle.min.js?v=1.3" defer></script>
+<script src="https://nilepost.co.ug/assets/js/theme.js?v=1.6" defer></script>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f2d7ff90a9cc84d',t:'MTc3NzI4OTQ3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+</html>

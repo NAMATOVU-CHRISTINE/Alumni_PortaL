@@ -346,7 +346,7 @@ public class DataSyncService extends Service {
     
     private Notification createNotification(String message) {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Alumni Portal")
+            .setContentTitle("The Convocation")
             .setContentText(message)
             .setSmallIcon(R.drawable.ic_notification)
             .setPriority(NotificationCompat.PRIORITY_LOW)

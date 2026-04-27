@@ -37,7 +37,7 @@ public class GmailService {
     private static final String TAG = "GmailService";
     private static final String PREF_NAME = "gmail_auth";
     private static final String PREF_REFRESH_TOKEN = "refresh_token";
-    private static final String APPLICATION_NAME = "Alumni Portal";
+    private static final String APPLICATION_NAME = "The Convocation";
     
     private Context context;
     private Gmail gmailService;

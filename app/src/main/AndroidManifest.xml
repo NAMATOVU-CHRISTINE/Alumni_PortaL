@@ -271,6 +271,11 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/must_green" />
+        
+        <!-- Google API Key for Firebase services -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDbfdl9IsTtrMIOyW8pmuWYXqhJvvnRfH8" />
     </application>
 
 </manifest>

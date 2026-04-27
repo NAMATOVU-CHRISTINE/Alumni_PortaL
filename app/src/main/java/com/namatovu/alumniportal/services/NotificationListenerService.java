@@ -153,7 +153,7 @@ public class NotificationListenerService {
         try {
             // Validate and set defaults for null values
             if (title == null || title.isEmpty()) {
-                title = "Alumni Portal";
+                title = "The Convocation";
             }
             if (message == null || message.isEmpty()) {
                 message = "You have a new notification";
@@ -267,7 +267,7 @@ public class NotificationListenerService {
      */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Alumni Portal Notifications";
+            CharSequence name = "The Convocation Notifications";
             String description = "Notifications for mentorship requests and updates";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             

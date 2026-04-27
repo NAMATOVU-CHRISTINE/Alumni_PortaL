@@ -227,7 +227,7 @@ public class KnowledgeActivity extends AppCompatActivity implements ArticleAdapt
         shareIntent.putExtra(Intent.EXTRA_TEXT, 
             article.getTitle() + "\n\n" + 
             article.getDescription() + "\n\n" +
-            "Shared from Alumni Portal Knowledge Hub 📚");
+            "Shared from The Convocation Knowledge Hub 📚");
         
         startActivity(Intent.createChooser(shareIntent, "Share Article"));
     }

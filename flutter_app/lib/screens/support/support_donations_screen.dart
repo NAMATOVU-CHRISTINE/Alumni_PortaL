@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/services/payment_helper.dart';
+import 'package:alumni_portal/widgets/custom_app_bar.dart';
 
 class SupportDonationsScreen extends StatefulWidget {
   const SupportDonationsScreen({super.key});
@@ -50,17 +51,18 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Support MUST'),
-        elevation: 0,
+      backgroundColor: Colors.grey[50],
+      appBar: CustomAppBar(
+        title: 'Support MUST',
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
           labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
+          unselectedLabelColor: Colors.white.withValues(alpha: 0.7),
+          indicatorWeight: 3,
           tabs: const [
-            Tab(text: 'Projects', icon: Icon(Icons.assignment)),
-            Tab(text: 'Emergency Fund', icon: Icon(Icons.warning_amber_rounded)),
+            Tab(text: 'Projects', icon: Icon(Icons.assignment, size: 20)),
+            Tab(text: 'Emergency Fund', icon: Icon(Icons.warning_amber_rounded, size: 20)),
           ],
         ),
       ),
@@ -82,9 +84,7 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Statistics
-          _buildStatisticsStatic(projects, AppColors.accent),
-
+          const SizedBox(height: 20),
           // Projects list
           Padding(
             padding: const EdgeInsets.all(20),
@@ -161,9 +161,6 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen>
                   ],
                 ),
               ),
-
-              // Statistics
-              _buildStatisticsStatic(emergencies, AppColors.secondary),
 
               // Emergency list
               Padding(
@@ -327,36 +324,54 @@ class _SupportDonationsScreenState extends State<SupportDonationsScreen>
   }
 
   Widget _buildStatCard(String title, String value, IconData icon, Color color) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
               icon,
               color: color,
-              size: 28,
+              size: 24,
             ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[900],
             ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+          ),
+        ],
       ),
     );
   }

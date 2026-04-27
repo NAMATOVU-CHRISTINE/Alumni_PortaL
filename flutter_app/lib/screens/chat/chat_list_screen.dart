@@ -6,6 +6,7 @@ import 'package:alumni_portal/providers/chat_provider.dart';
 import 'package:alumni_portal/models/chat_model.dart';
 import 'package:alumni_portal/config/theme.dart';
 import 'package:alumni_portal/widgets/empty_state_widget.dart';
+import 'package:alumni_portal/widgets/custom_app_bar.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -24,7 +25,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Messages')),
+      appBar: const CustomAppBar(title: 'Messages'),
       body: Consumer<ChatProvider>(
         builder: (context, provider, _) {
           final chats = provider.chats;

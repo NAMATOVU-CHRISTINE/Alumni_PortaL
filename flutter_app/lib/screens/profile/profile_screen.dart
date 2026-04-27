@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:alumni_portal/providers/auth_provider.dart';
 import 'package:alumni_portal/providers/user_provider.dart';
 import 'package:alumni_portal/config/theme.dart';
+import 'package:alumni_portal/widgets/custom_app_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -25,8 +26,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
+      appBar: CustomAppBar(
+        title: 'Profile',
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),

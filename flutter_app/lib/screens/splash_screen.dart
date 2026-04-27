@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _checkAuthState() async {
     // Wait for Firebase Auth to initialize and animations
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     if (!mounted) return;
 
@@ -143,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                             const SizedBox(height: 32),
                             const Text(
-                              'MUST Alumni Portal',
+                              'The Convocation',
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
