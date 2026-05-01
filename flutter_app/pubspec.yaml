@@ -1,7 +1,7 @@
 name: alumni_portal
 description: The Convocation - Connect, Network, and Grow
 publish_to: 'none'
-version: 1.1.0+1
+version: 1.2.0+3
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
