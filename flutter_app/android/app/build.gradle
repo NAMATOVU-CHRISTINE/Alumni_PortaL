@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.must.alumniportal"
+    namespace "com.theconvocation.must"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.must.alumniportal"
+        applicationId "com.theconvocation.must"
         minSdkVersion flutter.minSdkVersion  // Android 5.0 and above (supports 95%+ devices)
         targetSdk flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
